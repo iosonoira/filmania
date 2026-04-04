@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Profile - The Curator</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "tertiary-fixed-dim": "#ffb688",
+                "on-surface": "#e5e1e8",
+                "error-container": "#93000a",
+                "on-primary-fixed-variant": "#4f00d0",
+                "on-error": "#690005",
+                "outline-variant": "#494455",
+                "on-secondary": "#332b4c",
+                "outline": "#948ea1",
+                "on-tertiary-container": "#fff7f4",
+                "on-error-container": "#ffdad6",
+                "on-secondary-fixed": "#1e1636",
+                "tertiary-fixed": "#ffdbc7",
+                "on-primary-fixed": "#20005f",
+                "inverse-primary": "#6833ea",
+                "secondary-container": "#4c4466",
+                "secondary": "#ccc1ea",
+                "on-secondary-container": "#beb3db",
+                "on-tertiary-fixed-variant": "#733600",
+                "inverse-on-surface": "#313035",
+                "surface-container-lowest": "#0e0e12",
+                "surface": "#141318",
+                "background": "#141318",
+                "on-primary-container": "#fcf6ff",
+                "surface-bright": "#3a383e",
+                "secondary-fixed": "#e8ddff",
+                "on-tertiary": "#512400",
+                "surface-variant": "#36343a",
+                "tertiary": "#ffb688",
+                "surface-dim": "#141318",
+                "on-primary": "#370096",
+                "error": "#ffb4ab",
+                "tertiary-container": "#b55800",
+                "primary": "#cdbdff",
+                "surface-container-highest": "#36343a",
+                "secondary-fixed-dim": "#ccc1ea",
+                "primary-fixed": "#e8deff",
+                "surface-container": "#201f24",
+                "on-surface-variant": "#cac3d8",
+                "primary-container": "#7c4dff",
+                "surface-container-high": "#2b292f",
+                "primary-fixed-dim": "#cdbdff",
+                "inverse-surface": "#e5e1e8",
+                "on-background": "#e5e1e8",
+                "on-tertiary-fixed": "#311300",
+                "surface-tint": "#cdbdff",
+                "on-secondary-fixed-variant": "#4a4264",
+                "surface-container-low": "#1c1b20"
+            },
+            "borderRadius": {
+                "DEFAULT": "1rem",
+                "lg": "2rem",
+                "xl": "3rem",
+                "full": "9999px"
+            },
+            "fontFamily": {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #141318;
+        color: #e5e1e8;
+        font-family: 'Inter', sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .glass-card {
+        background: rgba(43, 41, 47, 0.4);
+        backdrop-filter: blur(20px);
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 0px;
+      }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="custom-scrollbar overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#141318]/80 backdrop-blur-xl flex justify-between items-center px-6 py-4 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/20">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="professional cinematic portrait of a creative individual with soft moody purple lighting and bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz-floSNqsCvHkpG0n09eVmlO-6Ii_oiiDmrButScKO0A9l58HP4_PQ6N1L9qqrBSHMxaJYg1aKPF0LDyNvJ14eybmA2dfJlCHbE0Jytf9ty37Pb2_hdQwdu3_CbDm5F9ELocOIhr_xScpACWuqNYpTSrKJ5XnoDC6scUWjygLgAZxqNNO3Xb6EvvgknoenHSvxtBHRmVpueZGowbAuRXd9ERyh1IzEeTDfC_F1XePYhn9ulRUantelCIYqicpZBJTRyMTGdildEBU"/>
+</div>
+<h1 class="font-['Manrope'] font-bold text-lg tracking-tight text-[#cdbdff]">The Curator</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-[#cdbdff] hover:bg-[#cdbdff]/10 transition-colors duration-300 ease-in-out">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-5xl mx-auto space-y-12">
+<!-- Hero Profile Section -->
+<section class="flex flex-col md:flex-row gap-8 items-start">
+<div class="relative group">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-xl overflow-hidden shadow-[0_0_40px_rgba(124,77,255,0.2)]">
+<img alt="Profile" class="w-full h-full object-cover" data-alt="close-up portrait of a stylish young adult with soft purple ambient light reflecting on their skin, cinematic photography style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAj_y2c8xNqXTfNIYBjnJBrUjtTIKfLPLiKL9zVohy2J5yD_jl-nmpC4hpKxx3Y6hAy7g8qy2b_23oM0BNjrbyMXFMZWIRou0QSVzxnOGqu6kRAR1pgdbCcZeaxEUJQfAptDQG3vfD9_ZT9g8RBZkH2n_VxirzWwPNbtrd6pZW9MFpv_Qq2ggAQxOT6Y14a1dfmxv5xaI5CJa2n5fySG6c0TD_9Cy2-p1JezLNh4QNSIzi0h4inDLDv3F4ke10VXCj9y8SLbe9J-Hp7"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-xs font-bold tracking-widest uppercase">
+                    Level 42
+                </div>
+</div>
+<div class="flex-1 space-y-4">
+<div class="space-y-1">
+<h2 class="font-headline font-extrabold text-4xl md:text-5xl text-on-surface tracking-tighter">Alex Sterling</h2>
+<p class="font-label text-primary/70 font-medium tracking-wide">CINEPHILE ELITE • JOINED SEPT 2023</p>
+</div>
+<div class="flex flex-wrap gap-3">
+<div class="px-4 py-2 bg-surface-container-high rounded-full flex items-center gap-2 outline outline-1 outline-outline-variant/15">
+<span class="material-symbols-outlined text-sm text-tertiary">military_tech</span>
+<span class="text-sm font-medium">Grand Master</span>
+</div>
+<div class="px-4 py-2 bg-surface-container-high rounded-full flex items-center gap-2 outline outline-1 outline-outline-variant/15">
+<span class="material-symbols-outlined text-sm text-primary">verified</span>
+<span class="text-sm font-medium">Top 1% Reviewer</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Main Stat: Time Spent -->
+<div class="md:col-span-2 p-8 rounded-xl bg-surface-container-low flex flex-col justify-between outline outline-1 outline-outline-variant/15 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-9xl">schedule</span>
+</div>
+<div class="space-y-2">
+<p class="font-label text-on-surface-variant text-sm font-medium tracking-widest uppercase">Total Watch Time</p>
+<h3 class="font-headline font-bold text-6xl text-primary tracking-tighter">1,248<span class="text-2xl ml-2 text-on-surface-variant font-medium tracking-normal">hrs</span></h3>
+</div>
+<div class="mt-8 flex gap-8">
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest mb-1">Movies</p>
+<p class="text-xl font-bold">412</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest mb-1">TV Shows</p>
+<p class="text-xl font-bold">84</p>
+</div>
+<div>
+<p class="text-xs text-on-surface-variant uppercase tracking-widest mb-1">Episodes</p>
+<p class="text-xl font-bold">2,810</p>
+</div>
+</div>
+</div>
+<!-- Rank Progress -->
+<div class="p-8 rounded-xl bg-surface-container-high outline outline-1 outline-outline-variant/15 flex flex-col items-center justify-center text-center space-y-4">
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary-container" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364" stroke-dashoffset="100" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-extrabold">72%</span>
+<span class="text-[10px] uppercase tracking-tighter opacity-70">Next Rank</span>
+</div>
+</div>
+<div>
+<h4 class="font-headline font-bold text-lg">Cinema Sage</h4>
+<p class="text-sm text-on-surface-variant">250xp to Cine-Wizard</p>
+</div>
+</div>
+</section>
+<!-- Achievements -->
+<section class="space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline font-bold text-2xl tracking-tight">Unlocked Badges</h3>
+<button class="text-primary text-sm font-medium hover:underline">View All (34)</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-6 rounded-xl bg-surface-container-low outline outline-1 outline-outline-variant/15 flex flex-col items-center gap-4 group transition-all hover:bg-surface-container">
+<div class="w-16 h-16 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary-fixed-dim shadow-[0_0_20px_rgba(181,88,0,0.1)]">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+</div>
+<div class="text-center">
+<p class="font-bold text-sm">30 Day Streak</p>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant">Daily Curating</p>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low outline outline-1 outline-outline-variant/15 flex flex-col items-center gap-4 group transition-all hover:bg-surface-container">
+<div class="w-16 h-16 rounded-full bg-primary-container/20 flex items-center justify-center text-primary shadow-[0_0_20px_rgba(124,77,255,0.1)]">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">movie_filter</span>
+</div>
+<div class="text-center">
+<p class="font-bold text-sm">Director's Eye</p>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant">100 Reviews</p>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low outline outline-1 outline-outline-variant/15 flex flex-col items-center gap-4 group transition-all hover:bg-surface-container">
+<div class="w-16 h-16 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary shadow-[0_0_20px_rgba(76,68,102,0.1)]">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">nightlight</span>
+</div>
+<div class="text-center">
+<p class="font-bold text-sm">Night Owl</p>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant">10 Midnight Premiers</p>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-low outline outline-1 outline-outline-variant/15 flex flex-col items-center gap-4 group transition-all hover:bg-surface-container">
+<div class="w-16 h-16 rounded-full bg-outline-variant/10 flex items-center justify-center text-outline-variant">
+<span class="material-symbols-outlined text-3xl">public</span>
+</div>
+<div class="text-center">
+<p class="font-bold text-sm">Global Viewer</p>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant">5 Countries</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Activity History -->
+<section class="space-y-6">
+<h3 class="font-headline font-bold text-2xl tracking-tight">Recent Activity</h3>
+<div class="space-y-3">
+<!-- Activity Item -->
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center gap-4 hover:bg-surface-container transition-colors group">
+<div class="w-14 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Movie" class="w-full h-full object-cover" data-alt="movie poster of a stylized sci-fi futuristic city with neon lights and deep purple shadows, cinematic digital art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSMmTUp2vdCmZXhvhel_5dg90dujiFN4C44e_jeNCanwyu-xWfPgfajGIhkv2kfvWEBRZ6X5VB6OTho1C23PZMKsHEy5uZH4rjJRUJoTWUo28qKkcyc7NgVRD1MNM1mGxlJwkbt0VuFpcv9bXNsrdfJOzUS_GNYJE1Ssk9inEjktF_iaNikM54k44sWJiZThbT0nVx_QpHAlrou8uCDTpyaE15vfbMjYvG49zM5lJlmAxwGqLfIIOVlipPPkUsz1_32fNnKDE8Dv47"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-on-surface group-hover:text-primary transition-colors truncate">Neon Horizon</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">Watched yesterday • Season 2 Episode 4</p>
+</div>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">star</span>
+</div>
+</div>
+<div class="mt-2 h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[100%]"></div>
+</div>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center gap-4 hover:bg-surface-container transition-colors group">
+<div class="w-14 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Movie" class="w-full h-full object-cover" data-alt="movie poster of a solitary explorer in a vast golden desert with giant rock formations, atmospheric cinematic lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAgMyJj6rPVDG78V1om5fgjTlayfaKIGuDh80nD1SqY32CYwciG0duC9SKDpyYFhRJwAdd07GZdH9HM0fVl6bV9l5TExLmmsc6ibiVNouJRUrVOIiLdj1y_qXHgbuWcJ-XeDIPxXjfmLdQbv75ezszOVY6mra96gdmD-8LHsHazs4jQtIsDD1_p6SCqjdYSYsltBIjxviXFH-RWbzv3br-iMYa8ruw0FQPHu3h06GBfmsqJnwQjbyZJigt3SZPXshPUNNkrPCMZP6Qe"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-on-surface group-hover:text-primary transition-colors truncate">The Silent Echo</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">Watched 2 days ago • Feature Film</p>
+</div>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+</div>
+</div>
+<div class="mt-2 h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[100%]"></div>
+</div>
+</div>
+</div>
+<!-- Activity Item -->
+<div class="p-4 rounded-xl bg-surface-container-low flex items-center gap-4 hover:bg-surface-container transition-colors group">
+<div class="w-14 h-20 rounded-lg overflow-hidden flex-shrink-0">
+<img alt="Movie" class="w-full h-full object-cover" data-alt="movie poster of a noir detective scene with long shadows, raindrops on a window, and deep blue and violet tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcxsPB5eKVbvtGyYJWLAo9axkfMXZ9z5Jz171JsCkvjLcCPyRhAYVHqZNX4IAHSz14U0e-nz_itjQiq-P6SZ73a8SN3AbVycyoNRoT6EgFZjemGQxn7GvTzU1sdRqOOeDFk0oXtaHGK7CaV-wH17JsQjPxyK9KGqLA64_F7EO31_dbGbhAHzkt-HfXdJs1pXDj6YLjxKhQeGijatgPerqlzD8SvEF73ZEd7zuNhP7i1z2mx91CcC6fCZLldpCVAK_N3t20sFb4krd0"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-bold text-on-surface group-hover:text-primary transition-colors truncate">Shadow Protocol</h4>
+<p class="text-xs text-on-surface-variant mt-0.5">Watched 4 days ago • Season 1 Episode 12</p>
+</div>
+<div class="flex gap-0.5">
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-tertiary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">star</span>
+<span class="material-symbols-outlined text-on-surface-variant text-sm">star</span>
+</div>
+</div>
+<div class="mt-2 h-1 w-full bg-surface-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[100%]"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-[#141318]/80 backdrop-blur-2xl z-50 rounded-t-[24dp] shadow-[0_-4px_24px_rgba(124,77,255,0.08)]">
+<a class="flex flex-col items-center justify-center text-[#938f99] px-5 py-2 hover:text-[#cdbdff] transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#938f99] px-5 py-2 hover:text-[#cdbdff] transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined mb-1">explore</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase">Discover</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#938f99] px-5 py-2 hover:text-[#cdbdff] transition-all active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined mb-1">bookmarks</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase">Watchlist</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#7C4DFF]/20 text-[#cdbdff] rounded-[24dp] px-5 py-2 ring-1 ring-[#cdbdff]/10 active:scale-95 duration-200" href="#">
+<span class="material-symbols-outlined mb-1" style="font-variation-settings: 'FILL' 1;">person</span>
+<span class="font-['Inter'] text-[10px] font-medium tracking-wide uppercase">Profile</span>
+</a>
+</nav>
+</body></html>
