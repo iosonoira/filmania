@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../widgets/login_form.dart';
+import '../widgets/register_form.dart';
 
-class LoginPage extends ConsumerWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     
     return Scaffold(
@@ -44,7 +43,7 @@ class LoginPage extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'Cura la tua galleria personale\ndi opere cinematografiche.',
+                'Crea il tuo pass d\'ingresso\nper il mondo del cinema.',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: colors.onSurfaceSecondary,
                   height: 1.5,
@@ -59,7 +58,7 @@ class LoginPage extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(AppSpacing.radius + 8),
                 ),
-                child: const LoginForm(),
+                child: const RegisterForm(),
               ),
             ],
           ),

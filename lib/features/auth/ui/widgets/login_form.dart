@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
@@ -155,7 +156,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 style: TextStyle(color: colors.onSurfaceSecondary),
               ),
               TextButton(
-                onPressed: isLoading ? null : () {},
+                onPressed: isLoading ? null : () => context.go('/register'),
                 child: const Text('Richiedilo qui'),
               ),
             ],

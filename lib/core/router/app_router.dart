@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/ui/pages/login_page.dart';
+import '../../features/auth/ui/pages/register_page.dart';
 import '../../features/auth/ui/providers/auth_notifier.dart';
 
 part 'app_router.g.dart';
@@ -13,6 +14,7 @@ part 'app_router.g.dart';
 // ---------------------------------------------------------------------------
 abstract class AppRoutes {
   static const login = '/login';
+  static const register = '/register';
   static const home = '/home';
 }
 
@@ -47,6 +49,10 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
+        path: AppRoutes.register,
+        builder: (context, state) => const RegisterPage(),
+      ),
+      GoRoute(
         path: AppRoutes.home,
         builder: (context, state) => const _HomePage(),
       ),
@@ -59,9 +65,14 @@ GoRouter appRouter(Ref ref) {
 
       final isAuthenticated = authAsync.value != null;
       final isOnLogin = state.matchedLocation == AppRoutes.login;
+      final isOnRegister = state.matchedLocation == AppRoutes.register;
+      final isAuthRoute = isOnLogin || isOnRegister;
 
-      if (!isAuthenticated && !isOnLogin) return AppRoutes.login;
-      if (isAuthenticated && isOnLogin) return AppRoutes.home;
+      // Unauthenticated users can only be on login or register explicitly
+      if (!isAuthenticated && !isAuthRoute) return AppRoutes.login;
+      
+      // Authenticated users should go to home
+      if (isAuthenticated && isAuthRoute) return AppRoutes.home;
 
       return null; // No redirect needed.
     },

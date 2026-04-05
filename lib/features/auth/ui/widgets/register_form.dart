@@ -1,32 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 
-class LoginForm extends ConsumerStatefulWidget {
-  const LoginForm({super.key});
+class RegisterForm extends ConsumerStatefulWidget {
+  const RegisterForm({super.key});
 
   @override
-  ConsumerState<LoginForm> createState() => _LoginFormState();
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _LoginFormState extends ConsumerState<LoginForm> {
+class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  
+  final _usernameFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
+  
   final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
     _emailController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
     super.dispose();
+  }
+
+  void _handleSubmit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      ref.read(authProvider.notifier).register(
+            _emailController.text,
+            _passwordController.text,
+            _usernameController.text,
+          );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final loginState = ref.watch(authProvider);
-    final isLoading = loginState is AsyncLoading;
+    final authState = ref.watch(authProvider);
+    final isLoading = authState is AsyncLoading;
     final colors = AppColors.of(context);
 
     // Rule: Use ref.listen for side-effects like snackbars (Rule 120 State Management)
@@ -36,15 +59,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           SnackBar(
             content: Text(next.error.toString()),
             backgroundColor: colors.error,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          ),
-        );
-      } else if (next is AsyncData && !next.isLoading && previous is AsyncLoading) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Accesso completato'),
-            backgroundColor: colors.primary,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           ),
@@ -63,18 +77,58 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               hintText: 'Indirizzo Email',
             ),
             keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _usernameFocusNode.requestFocus(),
+            validator: (value) {
+              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+              if (value == null || !emailRegex.hasMatch(value)) {
+                return 'Inserisci una email valida';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: AppSpacing.md),
+          TextFormField(
+            controller: _usernameController,
+            focusNode: _usernameFocusNode,
+            decoration: const InputDecoration(
+              hintText: 'Nome utente',
+            ),
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
             validator: (value) =>
-                (value?.contains('@') ?? false) ? null : 'Inserisci una email valida',
+                (value?.length ?? 0) >= 3 ? null : 'Minimo 3 caratteri',
           ),
           const SizedBox(height: AppSpacing.md),
           TextFormField(
             controller: _passwordController,
+            focusNode: _passwordFocusNode,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _confirmPasswordFocusNode.requestFocus(),
             decoration: const InputDecoration(
               hintText: 'Password',
             ),
             obscureText: true,
             validator: (value) =>
                 (value?.length ?? 0) >= 6 ? null : 'Minimo 6 caratteri',
+          ),
+          const SizedBox(height: AppSpacing.md),
+          TextFormField(
+            controller: _confirmPasswordController,
+            focusNode: _confirmPasswordFocusNode,
+            decoration: const InputDecoration(
+              hintText: 'Conferma Password',
+            ),
+            obscureText: true,
+            validator: (value) {
+              if ((value?.length ?? 0) < 6) {
+                return 'Minimo 6 caratteri';
+              }
+              if (value != _passwordController.text) {
+                return 'Le password non coincidono';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: AppSpacing.xl),
           
@@ -101,16 +155,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(AppSpacing.radius),
-                onTap: isLoading
-                    ? null
-                    : () {
-                        if (_formKey.currentState?.validate() ?? false) {
-                          ref.read(authProvider.notifier).login(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                        }
-                      },
+                onTap: isLoading ? null : _handleSubmit,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: AppSpacing.md + 4),
                   child: Center(
@@ -124,7 +169,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                             ),
                           )
                         : const Text(
-                            'Entra nel Cinema',
+                            'Crea il tuo pass',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -137,25 +182,18 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ),
             ),
           ),
-          const SizedBox(height: AppSpacing.lg),
+          const SizedBox(height: AppSpacing.xl),
           
-          Center(
-            child: TextButton(
-              onPressed: isLoading ? null : () {},
-              child: const Text('Password dimenticata?'),
-            ),
-          ),
-          const SizedBox(height: AppSpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Non hai un pass?',
+                'Hai già un pass?',
                 style: TextStyle(color: colors.onSurfaceSecondary),
               ),
               TextButton(
-                onPressed: isLoading ? null : () {},
-                child: const Text('Richiedilo qui'),
+                onPressed: isLoading ? null : () => context.go('/login'),
+                child: const Text('Entra'),
               ),
             ],
           ),

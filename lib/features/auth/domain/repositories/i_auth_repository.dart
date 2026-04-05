@@ -6,6 +6,12 @@ abstract interface class IAuthRepository {
     required String password,
   });
 
+  Future<AuthUser?> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String username,
+  });
+
   Future<void> signOut();
 
   Stream<AuthUser?> watchAuthState();

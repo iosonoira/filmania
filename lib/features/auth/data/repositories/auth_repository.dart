@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
@@ -32,10 +33,11 @@ class AuthRepository implements IAuthRepository {
       return AuthUser(
         id: user.id,
         email: user.email ?? '',
-        displayName: user.userMetadata?['display_name'] as String?,
+        username: user.userMetadata?['username'] as String?,
         photoUrl: user.userMetadata?['avatar_url'] as String?,
       );
     } on AuthException catch (e) {
+      debugPrint('AuthRepository.signIn Error: ${e.message} (Code: ${e.code})');
       if (e.message.contains('Invalid login credentials') ||
           e.statusCode == '400' ||
           e.code == 'invalid_credentials' ||
@@ -43,9 +45,51 @@ class AuthRepository implements IAuthRepository {
         throw const InvalidCredentials();
       }
       throw UnknownAuthFailure(e.message);
-    } on SocketException {
+    } on SocketException catch (e) {
+      debugPrint('AuthRepository.signIn Network Error: $e');
       throw const NetworkError();
-    } catch (e) {
+    } catch (e, stack) {
+      debugPrint('AuthRepository.signIn Unexpected Error: $e\n$stack');
+      throw UnknownAuthFailure(e.toString());
+    }
+  }
+
+  @override
+  Future<AuthUser?> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String username,
+  }) async {
+    try {
+      final response = await _supabase.auth.signUp(
+        email: email,
+        password: password,
+        data: {'username': username},
+      );
+
+      if (response.user == null) return null;
+
+      final user = response.user!;
+      return AuthUser(
+        id: user.id,
+        email: user.email ?? '',
+        username: user.userMetadata?['username'] as String?,
+        photoUrl: user.userMetadata?['avatar_url'] as String?,
+      );
+    } on AuthException catch (e) {
+      debugPrint('AuthRepository.signUp Error: ${e.message} (Code: ${e.code})');
+      if (e.code == 'user_already_exists') {
+        throw const EmailAlreadyInUse();
+      }
+      if (e.code == 'over_email_send_rate_limit') {
+        throw const RateLimitExceeded();
+      }
+      throw UnknownAuthFailure(e.message);
+    } on SocketException catch (e) {
+      debugPrint('AuthRepository.signUp Network Error: $e');
+      throw const NetworkError();
+    } catch (e, stack) {
+      debugPrint('AuthRepository.signUp Unexpected Error: $e\n$stack');
       throw UnknownAuthFailure(e.toString());
     }
   }
@@ -63,7 +107,7 @@ class AuthRepository implements IAuthRepository {
       return AuthUser(
         id: user.id,
         email: user.email ?? '',
-        displayName: user.userMetadata?['display_name'] as String?,
+        username: user.userMetadata?['username'] as String?,
         photoUrl: user.userMetadata?['avatar_url'] as String?,
       );
     });

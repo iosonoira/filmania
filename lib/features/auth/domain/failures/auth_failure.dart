@@ -17,3 +17,11 @@ class NetworkError extends AuthFailure {
 class UnknownAuthFailure extends AuthFailure {
   const UnknownAuthFailure([super.message = 'Si è verificato un errore imprevisto durante l\'autenticazione.']);
 }
+
+class EmailAlreadyInUse extends AuthFailure {
+  const EmailAlreadyInUse([super.message = 'Questo indirizzo email è già in uso da un altro account.']);
+}
+
+class RateLimitExceeded extends AuthFailure {
+  const RateLimitExceeded([super.message = 'Troppi tentativi. Riprova tra qualche minuto.']);
+}
