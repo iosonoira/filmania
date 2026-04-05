@@ -7,15 +7,15 @@ part 'auth_user_model.g.dart';
 class AuthUserDto {
   final String id;
   final String email;
-  @JsonKey(name: 'display_name')
-  final String? displayName;
+  @JsonKey(name: 'username')
+  final String? username;
   @JsonKey(name: 'photo_url')
   final String? photoUrl;
 
   const AuthUserDto({
     required this.id,
     required this.email,
-    this.displayName,
+    this.username,
     this.photoUrl,
   });
 
@@ -29,7 +29,7 @@ extension AuthUserDtoMapper on AuthUserDto {
   AuthUser toEntity() => AuthUser(
         id: id,
         email: email,
-        displayName: displayName,
+        username: username,
         photoUrl: photoUrl,
       );
 }
