@@ -1,12 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/ui/pages/login_page.dart';
 import '../../features/auth/ui/pages/register_page.dart';
 import '../../features/auth/ui/providers/auth_notifier.dart';
 import '../../features/home/ui/pages/home_page.dart';
+import '../widgets/main_scaffold.dart';
+import '../../features/discover/ui/pages/discover_page.dart';
+import '../../features/watchlist/ui/pages/watchlist_page.dart';
+import '../../features/profile/ui/pages/profile_page.dart';
 
 part 'app_router.g.dart';
 
@@ -17,6 +21,11 @@ abstract class AppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const home = '/home';
+  static const discover = '/discover';
+  static const watchlist = '/watchlist';
+  static const profile = '/profile';
+
+  static const shellRoutes = [home, discover, watchlist, profile];
 }
 
 // ---------------------------------------------------------------------------
@@ -39,9 +48,46 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.register,
         builder: (context, state) => const RegisterPage(),
       ),
-      GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) => const HomePage(),
+      
+      // Main Application Shell
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return MainScaffold(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                builder: (context, state) => const HomePage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.discover,
+                builder: (context, state) => const DiscoverPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.watchlist,
+                builder: (context, state) => const WatchlistPage(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.profile,
+                builder: (context, state) => const ProfilePage(),
+              ),
+            ],
+          ),
+        ],
       ),
     ],
     redirect: (context, state) {

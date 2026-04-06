@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/home_widgets.dart';
 
@@ -40,14 +39,6 @@ class HomePage extends ConsumerWidget {
             child: SizedBox(height: 140),
           ),
         ],
-      ),
-      bottomNavigationBar: const FloatingBottomNavBar(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.of(context).primary,
-        foregroundColor: Colors.white,
-        elevation: 12,
-        child: const Icon(Icons.add, size: 28),
       ),
     );
   }

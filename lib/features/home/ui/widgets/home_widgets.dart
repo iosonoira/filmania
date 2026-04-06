@@ -716,7 +716,14 @@ class CuratedSection extends StatelessWidget {
 
 // --- Floating Bottom Navigation Bar ---
 class FloatingBottomNavBar extends StatelessWidget {
-  const FloatingBottomNavBar({super.key});
+  final int currentIndex;
+  final ValueChanged<int> onDestinationSelected;
+
+  const FloatingBottomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onDestinationSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -744,30 +751,34 @@ class FloatingBottomNavBar extends StatelessWidget {
               _NavBarItem(
                 icon: Icons.home_filled,
                 label: 'Home',
-                isSelected: true,
+                isSelected: currentIndex == 0,
                 color: colors.primary,
                 textTheme: textTheme,
+                onTap: () => onDestinationSelected(0),
               ),
               _NavBarItem(
                 icon: Icons.explore_outlined,
                 label: 'Discover',
-                isSelected: false,
+                isSelected: currentIndex == 1,
                 color: colors.onSurfaceSecondary,
                 textTheme: textTheme,
+                onTap: () => onDestinationSelected(1),
               ),
               _NavBarItem(
                 icon: Icons.bookmark_border_rounded,
                 label: 'Watchlist',
-                isSelected: false,
+                isSelected: currentIndex == 2,
                 color: colors.onSurfaceSecondary,
                 textTheme: textTheme,
+                onTap: () => onDestinationSelected(2),
               ),
               _NavBarItem(
                 icon: Icons.person_outline_rounded,
                 label: 'Profile',
-                isSelected: false,
+                isSelected: currentIndex == 3,
                 color: colors.onSurfaceSecondary,
                 textTheme: textTheme,
+                onTap: () => onDestinationSelected(3),
               ),
             ],
           ),
@@ -783,6 +794,7 @@ class _NavBarItem extends StatelessWidget {
   final bool isSelected;
   final Color color;
   final TextTheme textTheme;
+  final VoidCallback onTap;
 
   const _NavBarItem({
     required this.icon,
@@ -790,34 +802,41 @@ class _NavBarItem extends StatelessWidget {
     required this.isSelected,
     required this.color,
     required this.textTheme,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: isSelected
-          ? BoxDecoration(
-              color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: color.withValues(alpha: 0.1)),
-            )
-          : null,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: isSelected ? color : color.withValues(alpha: 0.8)),
-          const SizedBox(height: 2),
-          Text(
-            label.toUpperCase(),
-            style: textTheme.labelSmall?.copyWith(
-              color: isSelected ? color : color.withValues(alpha: 0.8),
-              fontWeight: FontWeight.w600,
-              fontSize: 10,
-              letterSpacing: 0.5,
+    final itemColor = isSelected ? AppColors.of(context).primary : color;
+
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: isSelected
+            ? BoxDecoration(
+                color: itemColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: itemColor.withValues(alpha: 0.1)),
+              )
+            : null,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: isSelected ? itemColor : color.withValues(alpha: 0.8)),
+            const SizedBox(height: 2),
+            Text(
+              label.toUpperCase(),
+              style: textTheme.labelSmall?.copyWith(
+                color: isSelected ? itemColor : color.withValues(alpha: 0.8),
+                fontWeight: FontWeight.w600,
+                fontSize: 10,
+                letterSpacing: 0.5,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
