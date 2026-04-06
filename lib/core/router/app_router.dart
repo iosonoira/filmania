@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/auth/ui/pages/login_page.dart';
 import '../../features/auth/ui/pages/register_page.dart';
 import '../../features/auth/ui/providers/auth_notifier.dart';
+import '../../features/home/ui/pages/home_page.dart';
 
 part 'app_router.g.dart';
 
@@ -16,20 +17,6 @@ abstract class AppRoutes {
   static const login = '/login';
   static const register = '/register';
   static const home = '/home';
-}
-
-// ---------------------------------------------------------------------------
-// Placeholder home page (replace when the Home feature is built)
-// ---------------------------------------------------------------------------
-class _HomePage extends StatelessWidget {
-  const _HomePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: Text('Home')),
-    );
-  }
 }
 
 // ---------------------------------------------------------------------------
@@ -54,7 +41,7 @@ GoRouter appRouter(Ref ref) {
       ),
       GoRoute(
         path: AppRoutes.home,
-        builder: (context, state) => const _HomePage(),
+        builder: (context, state) => const HomePage(),
       ),
     ],
     redirect: (context, state) {
