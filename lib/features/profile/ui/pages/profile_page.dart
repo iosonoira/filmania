@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../home/ui/widgets/home_widgets.dart';
+import '../../../auth/ui/providers/auth_notifier.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
@@ -45,7 +47,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   Text(
-                    'The Curator',
+                    'Filmania',
                     style: textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.5,
@@ -60,13 +62,13 @@ class ProfilePage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xl),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _CompactStat(label: 'Watched', value: '184'),
-                      const SizedBox(width: AppSpacing.lg),
+                      SizedBox(width: AppSpacing.lg),
                       _CompactStat(label: 'Reviews', value: '42'),
-                      const SizedBox(width: AppSpacing.lg),
+                      SizedBox(width: AppSpacing.lg),
                       _CompactStat(label: 'Followers', value: '1.2k'),
                     ],
                   ),
@@ -90,7 +92,9 @@ class ProfilePage extends StatelessWidget {
                   ),
                    const SizedBox(height: AppSpacing.xl),
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      ref.read(authProvider.notifier).logout();
+                    },
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.redAccent,
                       side: const BorderSide(color: Colors.redAccent),

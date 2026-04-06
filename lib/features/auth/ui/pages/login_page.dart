@@ -24,22 +24,21 @@ class LoginPage extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Editorial Branding: Filmania
-              Text(
-                'Fil',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1.5,
-                  height: 1.0,
-                  color: colors.onSurfacePrimary,
-                ),
-              ),
-              Text(
-                'mania.',
-                style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: -1.5,
-                  color: colors.primary,
-                  height: 1.0,
+              Text.rich(
+                TextSpan(
+                  text: 'Fil',
+                  style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: -1.5,
+                    height: 1.0,
+                    color: colors.onSurfacePrimary,
+                  ),
+                  children: [
+                    TextSpan(
+                      text: 'mania.',
+                      style: TextStyle(color: colors.primary),
+                    ),
+                  ],
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),

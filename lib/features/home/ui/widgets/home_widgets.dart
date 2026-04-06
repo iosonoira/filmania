@@ -75,7 +75,7 @@ class GlassmorphicAppBar extends StatelessWidget
                   ),
                   const SizedBox(width: AppSpacing.md),
                   Text(
-                    'The Curator',
+                    'Filmania',
                     style: textTheme.titleLarge?.copyWith(
                       fontFamily: 'Manrope',
                       fontWeight: FontWeight.bold,
