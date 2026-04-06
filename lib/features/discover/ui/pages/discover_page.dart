@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../home/ui/widgets/home_widgets.dart';
+import '../../../movies/ui/providers/movies_provider.dart';
+import '../widgets/discover_widgets.dart';
+import '../providers/discover_providers.dart';
 
-class DiscoverPage extends StatelessWidget {
+class DiscoverPage extends ConsumerWidget {
   const DiscoverPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    
+    final query = ref.watch(movieSearchQueryProvider);
+    final discoverAsync = query.isEmpty 
+        ? ref.watch(discoverMoviesProvider())
+        : ref.watch(searchMoviesProvider(query));
 
     return Scaffold(
       extendBody: true,
@@ -36,27 +45,49 @@ class DiscoverPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: AppSpacing.md),
-                  Container(
-                    height: 56,
-                    decoration: BoxDecoration(
-                      color: colors.onSurfacePrimary.withValues(alpha: 0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: colors.onSurfacePrimary.withValues(alpha: 0.1),
+                  GlassOverlay(
+                    sigma: 12,
+                    color: colors.primary.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(AppSpacing.xl),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.sm,
                       ),
-                    ),
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                    child: Row(
-                      children: [
-                        Icon(Icons.search_rounded, color: colors.onSurfaceSecondary),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          'Search movies, actors, genres...',
-                          style: textTheme.bodyLarge?.copyWith(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.search_rounded,
+                            color: colors.primary.withValues(alpha: 0.7),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Expanded(
+                            child: TextField(
+                              onChanged: (value) => 
+                                  ref.read(movieSearchQueryProvider.notifier).update(value),
+                              style: textTheme.bodyLarge?.copyWith(
+                                color: colors.onSurfacePrimary,
+                              ),
+                              decoration: InputDecoration(
+                                hintText: 'Search for movies, actors, directors...',
+                                hintStyle: textTheme.bodyLarge?.copyWith(
+                                  color: colors.onSurfaceSecondary,
+                                ),
+                                border: InputBorder.none,
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                filled: false,
+                                contentPadding: EdgeInsets.zero,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          Icon(
+                            Icons.tune_rounded,
                             color: colors.onSurfaceSecondary,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -66,43 +97,48 @@ class DiscoverPage extends StatelessWidget {
           const SliverToBoxAdapter(
             child: SizedBox(height: AppSpacing.xxl),
           ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            sliver: SliverToBoxAdapter(
-              child: GlassOverlay(
-                borderRadius: BorderRadius.circular(24),
-                color: colors.primary.withValues(alpha: 0.05),
-                sigma: 10,
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.xl),
-                  child: Column(
-                    children: [
-                      Icon(
-                        Icons.explore_off_outlined,
-                        size: 64,
-                        color: colors.primary.withValues(alpha: 0.5),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        'Exploration Coming Soon',
-                        style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: colors.primary,
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        'We are Curating the best content just for you.',
-                        textAlign: TextAlign.center,
-                        style: textTheme.bodyMedium?.copyWith(
-                          color: colors.onSurfaceSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
+          
+          discoverAsync.when(
+            data: (movies) => SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              sliver: SliverGrid(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 0.7,
+                  crossAxisSpacing: AppSpacing.md,
+                  mainAxisSpacing: AppSpacing.md,
+                ),
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    final movie = movies[index];
+                    return MovieGridCard(
+                      movie: movie,
+                      onTap: () {
+                        // TODO: Navigate to Movie Details
+                      },
+                    );
+                  },
+                  childCount: movies.length,
                 ),
               ),
             ),
+            loading: () => const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            ),
+            error: (err, stack) => SliverFillRemaining(
+              child: Center(
+                child: Text(
+                  'Error loading movies: $err',
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyLarge?.copyWith(color: colors.error),
+                ),
+              ),
+            ),
+          ),
+          
+          // Bottom padding for the navigation bar
+          const SliverToBoxAdapter(
+            child: SizedBox(height: 120),
           ),
         ],
       ),
