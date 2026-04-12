@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import 'package:filmania/core/env/env.dart';
+import 'tmdb_auth_interceptor.dart';
+
 part 'tmdb_client.g.dart';
 
 @Riverpod(keepAlive: true)
@@ -14,15 +17,7 @@ Dio tmdbClient(Ref ref) {
   );
 
   dio.interceptors.add(
-    InterceptorsWrapper(
-      onRequest: (options, handler) {
-        const token = String.fromEnvironment('TMDB_API_KEY');
-        if (token.isNotEmpty) {
-          options.headers['Authorization'] = 'Bearer $token';
-        }
-        return handler.next(options);
-      },
-    ),
+    TmdbAuthInterceptor(apiToken: Env.tmdbApiKey),
   );
 
   return dio;

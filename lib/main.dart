@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'core/env/env.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Load environment variables via --dart-define
-  const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
-  const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
-
-  // Initialize Supabase
   await Supabase.initialize(
-    url: supabaseUrl.isNotEmpty ? supabaseUrl : 'https://placeholder.supabase.co',
-    anonKey: supabaseAnonKey.isNotEmpty ? supabaseAnonKey : 'placeholder',
+    url: Env.supabaseUrl,
+    anonKey: Env.supabaseAnonKey,
   );
 
   runApp(const ProviderScope(child: MyApp()));
