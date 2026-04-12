@@ -5,15 +5,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'tv_series_provider.g.dart';
 
 @riverpod
-Future<List<TVSeries>> trendingTVSeries(Ref ref, {int page = 1}) {
-  final repository = ref.watch(tvSeriesRepositoryProvider);
-  return repository.getTrendingTVSeries(page: page);
+class TrendingTVSeries extends _$TrendingTVSeries {
+  @override
+  FutureOr<List<TVSeries>> build({int page = 1}) async {
+    final repository = ref.watch(tvSeriesRepositoryProvider);
+    return repository.getTrendingTVSeries(page: page);
+  }
+
+  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
+  // @override
+  // PersistenceConfig get persistence => PersistenceConfig(key: 'trending_tv_p$page');
 }
 
 @riverpod
-Future<List<TVSeries>> discoverTVSeries(Ref ref, {int page = 1}) {
-  final repository = ref.watch(tvSeriesRepositoryProvider);
-  return repository.discoverTVSeries(page: page);
+class DiscoverTVSeries extends _$DiscoverTVSeries {
+  @override
+  FutureOr<List<TVSeries>> build({int page = 1}) async {
+    final repository = ref.watch(tvSeriesRepositoryProvider);
+    return repository.discoverTVSeries(page: page);
+  }
+
+  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
+  // @override
+  // PersistenceConfig get persistence => PersistenceConfig(key: 'discover_tv_p$page');
 }
 
 @riverpod

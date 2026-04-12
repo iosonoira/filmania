@@ -7,6 +7,7 @@ import '../../domain/entities/tv_series.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../discover/ui/providers/discover_providers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
 
 class TVSeriesDetailsPage extends ConsumerWidget {
@@ -71,10 +72,13 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                       ],
                     ),
                   ),
-                  child: Image.network(
-                    series.fullBackdropUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: series.fullBackdropUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
+                    placeholder: (context, url) => Container(
+                      color: colors.surface.withValues(alpha: 0.1),
+                    ),
+                    errorWidget: (context, url, error) => Container(
                       color: colors.surface.withValues(alpha: 0.1),
                       child: const Center(
                         child: Icon(Icons.broken_image_rounded, color: Colors.grey),
@@ -105,10 +109,14 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: Image.network(
-                          series.fullPosterUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: series.fullPosterUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          memCacheWidth: 300,
+                          placeholder: (context, url) => Container(
+                            color: colors.surface.withValues(alpha: 0.1),
+                          ),
+                          errorWidget: (context, url, error) => Container(
                             color: colors.surface.withValues(alpha: 0.1),
                             child: const Center(
                               child: Icon(Icons.broken_image_rounded, color: Colors.grey),

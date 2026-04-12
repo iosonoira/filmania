@@ -9,17 +9,11 @@ part of 'movies_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(trendingMovies)
+@ProviderFor(TrendingMovies)
 final trendingMoviesProvider = TrendingMoviesFamily._();
 
 final class TrendingMoviesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<Movie>>,
-          List<Movie>,
-          FutureOr<List<Movie>>
-        >
-    with $FutureModifier<List<Movie>>, $FutureProvider<List<Movie>> {
+    extends $AsyncNotifierProvider<TrendingMovies, List<Movie>> {
   TrendingMoviesProvider._({
     required TrendingMoviesFamily super.from,
     required int super.argument,
@@ -43,15 +37,7 @@ final class TrendingMoviesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<Movie>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<Movie>> create(Ref ref) {
-    final argument = this.argument as int;
-    return trendingMovies(ref, page: argument);
-  }
+  TrendingMovies create() => TrendingMovies();
 
   @override
   bool operator ==(Object other) {
@@ -64,10 +50,17 @@ final class TrendingMoviesProvider
   }
 }
 
-String _$trendingMoviesHash() => r'82bfd6d488e9359279202d040311ac505158cdd3';
+String _$trendingMoviesHash() => r'7c29a4c52dc04a2d8b018d505be98d5809842d35';
 
 final class TrendingMoviesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<Movie>>, int> {
+    with
+        $ClassFamilyOverride<
+          TrendingMovies,
+          AsyncValue<List<Movie>>,
+          List<Movie>,
+          FutureOr<List<Movie>>,
+          int
+        > {
   TrendingMoviesFamily._()
     : super(
         retry: null,
@@ -84,17 +77,32 @@ final class TrendingMoviesFamily extends $Family
   String toString() => r'trendingMoviesProvider';
 }
 
-@ProviderFor(discoverMovies)
+abstract class _$TrendingMovies extends $AsyncNotifier<List<Movie>> {
+  late final _$args = ref.$arg as int;
+  int get page => _$args;
+
+  FutureOr<List<Movie>> build({int page = 1});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<Movie>>, List<Movie>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Movie>>, List<Movie>>,
+              AsyncValue<List<Movie>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(page: _$args));
+  }
+}
+
+@ProviderFor(DiscoverMovies)
 final discoverMoviesProvider = DiscoverMoviesFamily._();
 
 final class DiscoverMoviesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<Movie>>,
-          List<Movie>,
-          FutureOr<List<Movie>>
-        >
-    with $FutureModifier<List<Movie>>, $FutureProvider<List<Movie>> {
+    extends $AsyncNotifierProvider<DiscoverMovies, List<Movie>> {
   DiscoverMoviesProvider._({
     required DiscoverMoviesFamily super.from,
     required int super.argument,
@@ -118,15 +126,7 @@ final class DiscoverMoviesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<Movie>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<Movie>> create(Ref ref) {
-    final argument = this.argument as int;
-    return discoverMovies(ref, page: argument);
-  }
+  DiscoverMovies create() => DiscoverMovies();
 
   @override
   bool operator ==(Object other) {
@@ -139,10 +139,17 @@ final class DiscoverMoviesProvider
   }
 }
 
-String _$discoverMoviesHash() => r'71bfbe8a9c3e8b65d5ab9ba713ab7a1130194dbb';
+String _$discoverMoviesHash() => r'436758a7cdc26c31e3101a0b1af3331b898f5c16';
 
 final class DiscoverMoviesFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<Movie>>, int> {
+    with
+        $ClassFamilyOverride<
+          DiscoverMovies,
+          AsyncValue<List<Movie>>,
+          List<Movie>,
+          FutureOr<List<Movie>>,
+          int
+        > {
   DiscoverMoviesFamily._()
     : super(
         retry: null,
@@ -157,6 +164,27 @@ final class DiscoverMoviesFamily extends $Family
 
   @override
   String toString() => r'discoverMoviesProvider';
+}
+
+abstract class _$DiscoverMovies extends $AsyncNotifier<List<Movie>> {
+  late final _$args = ref.$arg as int;
+  int get page => _$args;
+
+  FutureOr<List<Movie>> build({int page = 1});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<Movie>>, List<Movie>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<Movie>>, List<Movie>>,
+              AsyncValue<List<Movie>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(page: _$args));
+  }
 }
 
 @ProviderFor(movieDetails)

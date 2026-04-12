@@ -5,6 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../domain/entities/movie.dart';
 import '../providers/movies_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../discover/ui/providers/discover_providers.dart';
@@ -71,10 +72,13 @@ class _MovieDetailsContent extends StatelessWidget {
                       ],
                     ),
                   ),
-                  child: Image.network(
-                    movie.fullBackdropUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: movie.fullBackdropUrl,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) => Container(
+                    placeholder: (context, url) => Container(
+                      color: colors.surface.withValues(alpha: 0.1),
+                    ),
+                    errorWidget: (context, url, error) => Container(
                       color: colors.surface.withValues(alpha: 0.1),
                       child: const Center(
                         child: Icon(Icons.broken_image_rounded, color: Colors.grey),
@@ -105,10 +109,14 @@ class _MovieDetailsContent extends StatelessWidget {
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: Image.network(
-                          movie.fullPosterUrl,
+                        child: CachedNetworkImage(
+                          imageUrl: movie.fullPosterUrl,
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) => Container(
+                          memCacheWidth: 300,
+                          placeholder: (context, url) => Container(
+                            color: colors.surface.withValues(alpha: 0.1),
+                          ),
+                          errorWidget: (context, url, error) => Container(
                             color: colors.surface.withValues(alpha: 0.1),
                             child: const Center(
                               child: Icon(Icons.broken_image_rounded, color: Colors.grey),

@@ -7,15 +7,29 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'movies_provider.g.dart';
 
 @riverpod
-Future<List<Movie>> trendingMovies(Ref ref, {int page = 1}) {
-  final repository = ref.watch(moviesRepositoryProvider);
-  return repository.getTrendingMovies(page: page);
+class TrendingMovies extends _$TrendingMovies {
+  @override
+  FutureOr<List<Movie>> build({int page = 1}) async {
+    final repository = ref.watch(moviesRepositoryProvider);
+    return repository.getTrendingMovies(page: page);
+  }
+
+  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
+  // @override
+  // PersistenceConfig get persistence => PersistenceConfig(key: 'trending_movies_p$page');
 }
 
 @riverpod
-Future<List<Movie>> discoverMovies(Ref ref, {int page = 1}) {
-  final repository = ref.watch(moviesRepositoryProvider);
-  return repository.discoverMovies(page: page);
+class DiscoverMovies extends _$DiscoverMovies {
+  @override
+  FutureOr<List<Movie>> build({int page = 1}) async {
+    final repository = ref.watch(moviesRepositoryProvider);
+    return repository.discoverMovies(page: page);
+  }
+
+  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
+  // @override
+  // PersistenceConfig get persistence => PersistenceConfig(key: 'discover_movies_p$page');
 }
 
 @riverpod

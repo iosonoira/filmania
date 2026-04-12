@@ -4,6 +4,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import '../../domain/entities/watchlist_item.dart';
 import '../../../discover/ui/providers/discover_providers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class WatchlistMediaCard extends StatelessWidget {
   final WatchlistItem item;
@@ -40,10 +41,17 @@ class WatchlistMediaCard extends StatelessWidget {
           fit: StackFit.expand,
           children: [
             // Media Poster
-            Image.network(
-              item.fullPosterUrl,
+            CachedNetworkImage(
+              imageUrl: item.fullPosterUrl,
               fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
+              memCacheWidth: 300,
+              placeholder: (context, url) => Container(
+                color: colors.surface.withValues(alpha: 0.1),
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
                 color: colors.surface,
                 child: Center(
                   child: Icon(

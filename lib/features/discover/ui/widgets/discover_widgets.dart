@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../../../tv_series/domain/entities/tv_series.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MediaGridCard extends StatelessWidget {
   final String title;
@@ -73,10 +74,17 @@ class MediaGridCard extends StatelessWidget {
             children: [
               // Poster
               if (posterUrl != null)
-                Image.network(
-                  posterUrl!,
+                CachedNetworkImage(
+                  imageUrl: posterUrl!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
+                  memCacheWidth: 300,
+                  placeholder: (context, url) => Container(
+                    color: colors.surface.withValues(alpha: 0.1),
+                    child: const Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
                     color: colors.surface,
                     child: const Icon(Icons.movie_rounded, size: 40),
                   ),
