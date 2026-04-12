@@ -1,171 +1,97 @@
 # Rule: State Management — Violet Tracker
 
-> **Agent Mandate**: You are a Senior Flutter Architect. State is the most brittle part of any
-> application. You enforce Riverpod's generator-based API with zero tolerance for manual
-> `StateNotifier` boilerplate, raw `ChangeNotifier`, or `setState` outside localised widget state.
+> **Mandate**: Senior Flutter Architect role. Use Riverpod 3.0 generator-based API. Zero tolerance for manual boilerplate or `setState` abusals.
 
 ---
 
 ## Context
 
-Violet Tracker uses **Riverpod 3.0** exclusively, with code generation (`@riverpod` /
-`@Riverpod()` annotations) provided by `riverpod_generator`. This eliminates hand-written
-provider declarations and enforces consistency. Every async operation surfaces its lifecycle
-(loading / error / data) to the UI via `AsyncValue` — no silent failures.
+**Riverpod 3.0** with code generation (`riverpod_generator`). Lifecycle (loading/error/data) via `AsyncValue`. No silent failures.
 
 ---
 
 ## Mandatory Guidelines
 
-### 1. Always Use the Code Generator
+### 1. Code Generator (Mandatory)
 
-- **Never** declare providers manually (`Provider(...)`, `StateNotifierProvider(...)`, etc.).
-- Every provider **must** use the `@riverpod` annotation and `riverpod_generator`.
-- Run `dart run build_runner watch` continuously during development.
+- **Never** manually declare providers (`Provider`, `StateNotifierProvider`).
+- Use `@riverpod` + `part 'file.g.dart';`.
+- Run `build_runner watch`.
 
-```dart
-// ✅ DO — generated, type-safe, terse
-part 'trending_tracks_provider.g.dart';
+### 2. Naming
 
-@riverpod
-Future<List<Track>> trendingTracks(Ref ref, {int page = 1}) async {
-  final repo = ref.watch(trackRepositoryProvider);
-  return repo.fetchTrending(page: page);
-}
+- Async data/computed: `Provider`.
+- Mutable: `Notifier` / `AsyncNotifier`.
+- Stream: `Provider`.
 
-// ❌ DON'T — manual declaration is verbose and error-prone
-final trendingTracksProvider = FutureProvider.family<List<Track>, int>((ref, page) async {
-  ...
-});
-```
+### 3. Granularity
 
-### 2. Provider Naming Conventions
+- One provider = one unit. No "God providers".
+- Ref use `ref.watch` for reactivity, never `ref.read` for derived state.
 
-| Provider type | Suffix convention | Example |
-|---|---|---|
-| Simple computed value | `Provider` (implicit via generator) | `currentUserProvider` |
-| Async data fetch | `Provider` returning `Future<T>` | `trendingTracksProvider` |
-| Mutable state | `Notifier` / `AsyncNotifier` | `FavouritesNotifier` |
-| Stream | `Provider` returning `Stream<T>` | `realtimeUpdatesProvider` |
+### 4. `AsyncValue` Handling
 
-### 3. Provider Granularity
-
-- One provider = one logical unit of state or data.
-- **Never** create a "God provider" that holds multiple unrelated pieces of state.
-- Providers that derive from other providers use `ref.watch`, not `ref.read`, to ensure
-  reactivity.
+Exhaustive handling of **data**, **loading**, **error**.
 
 ```dart
-// ✅ Fine-grained — only rebuilds consumers of this specific provider
-@riverpod
-bool isTrackFavourite(Ref ref, String trackId) {
-  final favs = ref.watch(favouritesProvider);
-  return favs.valueOrNull?.contains(trackId) ?? false;
-}
+tracks.when(
+  data: (data) => Grid(data),
+  loading: () => LoadingIndicator(),
+  error: (e, st) => ErrorView(e, retry),
+);
 ```
 
-### 4. Mandatory `AsyncValue` Handling
+### 5. `AsyncNotifier` (Mutation)
 
-Every widget that consumes an `AsyncValue` (from a `FutureProvider` or `StreamProvider`) **must**
-handle all three states. Unhandled states are a UX bug and a build-failure in strict mode.
-
-```dart
-// ✅ DO — exhaustive handling
-@override
-Widget build(BuildContext context, WidgetRef ref) {
-  final tracks = ref.watch(trendingTracksProvider);
-
-  return tracks.when(
-    data:    (data)  => TrackGrid(tracks: data),
-    loading: ()      => const VioletLoadingIndicator(),   // from DESIGN.md
-    error:   (e, st) => VioletErrorView(error: e, onRetry: () => ref.invalidate(trendingTracksProvider)),
-  );
-}
-
-// ❌ DON'T — crashes on error or loading
-final data = ref.watch(trendingTracksProvider).value!;
-```
-
-### 5. `AsyncNotifier` for Mutating State
-
-Use `AsyncNotifier` (generated as `@riverpod class FooNotifier extends _$FooNotifier`) for any
-state that is both asynchronously loaded **and** mutated by user actions.
+Use for asynchronously loaded + user-mutated state.
 
 ```dart
 @riverpod
 class FavouritesNotifier extends _$FavouritesNotifier {
   @override
-  Future<Set<String>> build() async {
-    return ref.watch(trackRepositoryProvider).watchFavourites().first;
-  }
-
-  Future<void> toggle(String trackId) async {
-    final current = await future;
-    final updated = current.contains(trackId)
-        ? current.difference({trackId})
-        : {...current, trackId};
-
-    state = AsyncData(updated);
-    await ref.read(trackRepositoryProvider).setFavourite(trackId, !current.contains(trackId));
-  }
+  Future<Set<String>> build() async => ...;
+  
+  Future<void> toggle(String id) async { ... }
 }
 ```
 
-### 6. `ref.watch` vs `ref.read` vs `ref.listen`
+### 6. `ref` Methods
 
 | Method | When to use |
 |---|---|
-| `ref.watch` | Inside `build()` — reactive, triggers rebuild on change |
-| `ref.read` | Inside callbacks / one-shot imperative calls (e.g., `onPressed`) |
-| `ref.listen` | Side-effects (navigation, snackbars) in response to state change |
+| `ref.watch` | `build()` (reactive) |
+| `ref.read` | Callbacks (`onPressed`) |
+| `ref.listen` | Side-effects (navigation, snackbars) |
 
-> **Never** call `ref.watch` inside a callback, loop, or conditional — this violates Riverpod's
-> contract and will throw in debug mode.
+> **Never** call `ref.watch` in callbacks/loops/conditionals.
 
-### 7. Provider Scoping & Overrides
+### 7. Scoping
 
-- Use `ProviderScope` overrides exclusively for **testing** and **per-route scoping**.
-- Do not use `ProviderScope` nested inside widgets as a form of local state — use
-  `StateProvider` or a local `Notifier` instead.
+`ProviderScope` overrides only for **testing** or **per-route scoping**.
 
-### 8. Avoiding Common Rebuild Pitfalls
+### 8. Rebuild Optimization
 
-- `select()` must be used when a widget only needs a sub-field of a larger state object:
+- Use `.select()` for sub-fields.
+- `ConsumerWidget` preferred.
+- For lists: Small `ConsumerWidget` per item.
 
-```dart
-// ✅ Only rebuilds when the username changes, not the entire User
-final username = ref.watch(currentUserProvider.select((u) => u?.displayName));
-```
+### 9. Error Handling
 
-- Prefer `ConsumerWidget` over `Consumer` inline wrappers to keep `build()` clean.
-- For lists: wrap each list item in its own `ConsumerWidget` to avoid full-list rebuilds.
-
-### 9. Error Handling & Logging
-
-- All `AsyncNotifier` methods must catch exceptions and set `state = AsyncError(e, st)`.
-- Never swallow errors silently. Use the project's logger (`core/utils/logger.dart`) for all
-  caught exceptions before re-surfacing them.
-
-```dart
-Future<void> refresh() async {
-  state = const AsyncLoading();
-  state = await AsyncValue.guard(() => ref.read(trackRepositoryProvider).fetchTrending());
-}
-```
-
-> `AsyncValue.guard` is the preferred pattern — it catches and wraps errors automatically.
+- Catch exceptions; set `state = AsyncError(e, st)`.
+- Use `AsyncValue.guard()` for safe wrapping.
+- Use project logger (`core/utils/logger.dart`).
 
 ---
 
-## Do / Don't Reference Table
+## Do / Don't
 
 | ✅ Do | ❌ Don't |
 |---|---|
-| Use `@riverpod` generator annotations for all providers | Declare providers manually with `StateNotifierProvider` etc. |
-| Handle all three `AsyncValue` states (`data`, `loading`, `error`) | Access `.value!` without checking state |
-| Use `AsyncValue.guard()` for safe async operations | Wrap provider bodies in bare try/catch without setting `AsyncError` |
-| Use `ref.watch` in `build()`, `ref.read` in callbacks | Call `ref.watch` inside a callback or conditional |
-| Use `.select()` to narrow subscriptions | Watch an entire large state object from a fine-grained widget |
-| Use `AsyncNotifier` for load + mutate flows | Mix `FutureProvider` with separate `StateProvider` for mutations |
-| One provider = one logical concern | Create God providers that manage multiple unrelated states |
-| Override providers in `ProviderScope` for tests | Instantiate concrete service classes inside widgets for testing |
+| `@riverpod` generator | Manual provider declarations |
+| Handle data/loading/error | Access `.value!` directly |
+| `AsyncValue.guard()` | Bare try/catch without `AsyncError` |
+| `ref.watch` in build | `ref.watch` in callbacks |
+| `.select()` for narrowing | Watch large objects unnecessarily |
+| `AsyncNotifier` for mutation | Mix providers for mutation flow |
+| One unit per provider | "God providers" |
+| `ProviderScope` for tests | Instantiate concrete classes in widgets |

@@ -73,6 +73,12 @@ class _MovieDetailsContent extends StatelessWidget {
                   child: Image.network(
                     movie.fullBackdropUrl,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: colors.surface.withValues(alpha: 0.1),
+                      child: const Center(
+                        child: Icon(Icons.broken_image_rounded, color: Colors.grey),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -98,7 +104,16 @@ class _MovieDetailsContent extends StatelessWidget {
                           ],
                         ),
                         clipBehavior: Clip.antiAlias,
-                        child: Image.network(movie.fullPosterUrl, fit: BoxFit.cover),
+                        child: Image.network(
+                          movie.fullPosterUrl,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Container(
+                            color: colors.surface.withValues(alpha: 0.1),
+                            child: const Center(
+                              child: Icon(Icons.broken_image_rounded, color: Colors.grey),
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.lg),
@@ -109,7 +124,7 @@ class _MovieDetailsContent extends StatelessWidget {
                           Text(
                             movie.title,
                             style: textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w900,
+                              fontWeight: FontWeight.bold,
                               color: colors.onSurfacePrimary,
                             ),
                           ),
@@ -145,7 +160,7 @@ class _MovieDetailsContent extends StatelessWidget {
           ),
         ),
         
-        const SliverToBoxAdapter(child: SizedBox(height: 80)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxxl + AppSpacing.md)),
 
         // Watchlist CTA
         SliverPadding(
@@ -179,7 +194,7 @@ class _MovieDetailsContent extends StatelessWidget {
           ),
         ),
         
-        const SliverToBoxAdapter(child: SizedBox(height: 100)),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs)),
       ],
     );
   }
@@ -246,7 +261,15 @@ class _WatchlistButton extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => const SizedBox(),
+      error: (error, stack) {
+        debugPrint('Error loading watchlist status: $error');
+        return Center(
+          child: Text(
+            'Error loading watchlist status',
+            style: TextStyle(color: colors.error, fontSize: 12),
+          ),
+        );
+      },
     );
   }
 }

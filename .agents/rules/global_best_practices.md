@@ -1,148 +1,88 @@
 # Rule: Global Best Practices — Violet Tracker
 
-> **Agent Mandate**: You are a Senior Flutter Architect. You do not compromise on performance,
-> correctness, or code quality. Every line you write is production-grade, maintainable, and
-> auditable. Mediocrity is not an option.
+> **Mandate**: Senior Flutter Architect role. No compromise on performance, correctness, quality. Production-grade code.
 
 ---
 
 ## Context
 
-These rules define the non-negotiable foundational standards for all Dart/Flutter code produced
-in the Violet Tracker project. They are derived from the official
-[Effective Dart](https://dart.dev/effective-dart) guidelines (Style, Documentation, Usage, Design)
-and are enforced by a strict `analysis_options.yaml`. Any code that violates these rules must be
-refactored before it is considered complete.
+Foundation standards for Dart/Flutter. Derived from [Effective Dart](https://dart.dev/effective-dart). Enforced by `analysis_options.yaml`. Refactor violations.
 
 ---
 
 ## Mandatory Guidelines
 
-### 1. Effective Dart Compliance
+### 1. Effective Dart
 
-All code **must** conform to the four pillars of Effective Dart:
+All code **must** conform:
 
 | Pillar | Enforcement |
 |---|---|
-| **Style** | `dart format` on every save; `lints` / `flutter_lints` package active |
-| **Documentation** | Public API members require `///` doc-comments; explain *why*, not *what* |
-| **Usage** | Prefer language features over manual patterns (e.g., `?.`, `??`, spreads) |
-| **Design** | Design for the call-site; prefer narrow, composable interfaces |
+| **Style** | `dart format` every save; `lints` package active |
+| **Documentation** | Public APIs need `///` doc-comments; explain *why* |
+| **Usage** | Use language features (`?.`, `??`, spreads) |
+| **Design** | Design for call-site; thin, composable interfaces |
 
-### 2. `const` — First-Class Citizen
+### 2. `const` Everywhere
 
-- Every widget constructor that can be `const` **must** be `const`.
-- Every immutable value (`Color`, `EdgeInsets`, `TextStyle`, decoration objects) **must** be
-  declared `const`.
-- Linter rule `prefer_const_constructors` is set to **error**, not warning.
+- Every widget constructor possible **must** be `const`.
+- Immutable values (`Color`, `EdgeInsets`, `TextStyle`) **must** be `const`.
+- `prefer_const_constructors` = **error**.
 
-```dart
-// ✅ DO
-const SizedBox(height: 16);
-const EdgeInsets.symmetric(horizontal: 24);
+### 3. Null Safety — Strict
 
-// ❌ DON'T
-SizedBox(height: 16);  // unnecessary allocation on every rebuild
-```
+- `sound null safety` mandatory. No `// ignore`.
+- **Never** use `!`. Use only with comment proof.
+- Prefer `?.`, `??`, `??=`, early-return guards.
 
-### 3. Null Safety — Strict Mode
+### 4. Widget Decomposition
 
-- `sound null safety` is mandatory; the project **must not** contain `// ignore: null_safety`.
-- **Never** use the `!` (bang) operator unless you can prove with a comment that the value is
-  provably non-null at that exact call-site.
-- Prefer `?.`, `??`, `??=`, and early-return guards.
+- `build()` method **max 50 lines**. Extract sub-widgets to dedicated `StatelessWidget` / `ConsumerWidget` classes.
+- Private helper methods returning `Widget` are **forbidden** (bypass optimizations).
+- Use `RepaintBoundary` for animation subtrees.
 
-```dart
-// ✅ DO
-final name = user?.displayName ?? 'Anonymous';
-
-// ❌ DON'T
-final name = user!.displayName;  // crash waiting to happen
-```
-
-### 4. Widget Decomposition & Rebuild Minimisation
-
-- A `build()` method **must not** exceed **50 lines**. Extract sub-widgets into dedicated
-  `StatelessWidget` / `ConsumerWidget` classes — not private methods returning `Widget`.
-- Private helper methods that return `Widget` bypass Flutter's element-tree optimisations
-  and **are forbidden**.
-- Use `RepaintBoundary` around isolated animation or canvas subtrees (see `ui_ux.md`).
-
-```dart
-// ✅ DO — dedicated class, can be const, has its own RenderObject lifecycle
-class _TrackCard extends StatelessWidget { ... }
-
-// ❌ DON'T — rebuilds with the parent, not independently optimisable
-Widget _buildTrackCard() => Card(...);
-```
-
-### 5. Naming Conventions
+### 5. Naming
 
 | Artefact | Convention | Example |
 |---|---|---|
-| Files & directories | `snake_case` | `track_repository.dart` |
-| Classes & enums | `UpperCamelCase` | `TrackRepository` |
-| Variables, params, functions | `lowerCamelCase` | `fetchTracks()` |
+| Files/dirs | `snake_case` | `track_repository.dart` |
+| Classes/enums | `UpperCamelCase` | `TrackRepository` |
+| Vars/params/fns | `lowerCamelCase` | `fetchTracks()` |
 | Constants | `lowerCamelCase` | `const maxRetries = 3` |
-| Private members | `_lowerCamelCase` | `_cache` |
-| Generic type params | Single uppercase | `T`, `E` |
+| Private | `_lowerCamelCase` | `_cache` |
 
 ### 6. DRY Principle
 
-- Any logic repeated more than **twice** must be extracted into a utility function, extension, or
-  mixin.
-- UI themes and spacing tokens must **never** be hard-coded inline; reference `AppTheme` /
-  `AppSpacing` constants derived from `DESIGN.md`.
+- Extracts logic repeated > 2 times.
+- No hard-coded UI/spacing; use `AppTheme` / `AppSpacing` (from `DESIGN.md`).
 
-### 7. SOLID Principles Applied to Flutter
+### 7. SOLID in Flutter
 
-| Principle | Flutter Manifestation |
+| Principle | Manifestation |
 |---|---|
-| **S**ingle Responsibility | One widget = one visual concept; one provider = one piece of state |
-| **O**pen/Closed | Extend behaviour via composition, not modification of existing widgets |
-| **L**iskov Substitution | Repositories implement abstract interfaces; swap implementations freely |
-| **I**nterface Segregation | Thin repository interfaces; separate `IReadRepository` / `IWriteRepository` |
-| **D**ependency Inversion | Widgets depend on Riverpod providers, never on concrete service classes |
+| **S**ingle Responsibility | 1 widget = 1 concept; 1 provider = 1 state |
+| **O**pen/Closed | Composition over modification |
+| Liskov | Repos impl abstract interfaces; swap easily |
+| Interface Segregation | Thin interfaces (`IRead`, `IWrite`) |
+| Dependency Inversion | Widgets depend on providers, not concrete classes |
 
 ### 8. `analysis_options.yaml` Baseline
 
-```yaml
-include: package:flutter_lints/flutter.yaml
-
-analyzer:
-  language:
-    strict-casts: true
-    strict-inference: true
-    strict-raw-types: true
-  errors:
-    missing_required_param: error
-    missing_return: error
-    dead_code: warning
-
-linter:
-  rules:
-    - prefer_const_constructors
-    - prefer_const_declarations
-    - avoid_print               # use a logger abstraction
-    - avoid_dynamic_calls
-    - always_use_package_imports
-    - directives_ordering
-    - avoid_relative_lib_imports
-```
+Strict casts, inference, and raw types. Error on missing params/returns. Rules: `prefer_const_*`, `avoid_print`, `always_use_package_imports`.
 
 ---
 
-## Do / Don't Reference Table
+## Do / Don't
 
 | ✅ Do | ❌ Don't |
 |---|---|
-| Use `const` everywhere possible | Omit `const` for immutable widgets/values |
-| Extract widgets into their own classes | Return widgets from private helper methods |
-| Use `?.` and `??` for null handling | Use `!` without a documented proof of safety |
-| Write `///` doc-comments on public APIs | Leave public members undocumented |
-| Reference `AppTheme` / `AppSpacing` for all design tokens | Hard-code hex colours or pixel values inline |
-| Keep `build()` under 50 lines | Write monolithic build methods |
-| Follow Effective Dart naming conventions | Use abbreviations or inconsistent casing |
-| Enable all strict analyser flags | Disable or suppress linter rules without justification |
-| Apply SOLID — thin interfaces, dependency inversion | Couple widgets directly to concrete service classes |
-| Run `dart format` before every commit | Commit unformatted code |
+| `const` everywhere possible | Omit `const` for immutable widgets |
+| Extract widgets to classes | Return widgets from helper methods |
+| `?.` and `??` for nulls | Use `!` without proof |
+| `///` doc-comments | Leave public members undocumented |
+| `AppTheme`/`AppSpacing` | Hard-code colors/pixels |
+| `build()` under 50 lines | Monolithic build methods |
+| Effective Dart naming | Abbreviations/inconsistent casing |
+| Strict analyser flags | Suppress linter without reason |
+| SOLID composition | Couple widgets to concrete classes |
+| `dart format` before commit | Commit unformatted code |

@@ -121,7 +121,7 @@ class WatchlistPage extends ConsumerWidget {
           ),
           
           const SliverToBoxAdapter(
-            child: SizedBox(height: 140),
+            child: SizedBox(height: AppSpacing.xxxl * 2 + AppSpacing.sm + AppSpacing.xs),
           ),
         ],
       ),

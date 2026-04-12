@@ -1,13 +1,13 @@
 # 🎬 Filmania
 
-Filmania is a modern Flutter application designed for movie enthusiasts. Discover new films, manage your watchlist, and keep track of your cinematic journey. Built with a focus on clean code and robust architecture, it leverages modern Flutter ecosystem tools to provide a seamless and performant user experience.
+Modern Flutter app for movie fans. Discover films, manage watchlist, track cinematic journey. Focus on clean code, robust architecture. Seamless, performant UX.
 
 ## ✨ Features
 
-- **Discover**: Browse trending, popular, and upcoming movies.
-- **Watchlist**: Save movies you want to watch later.
-- **Profile**: Manage your personal preferences.
-- **Aura Cinema Design System**: A custom, cohesive design system ensuring a premium, consistent visual experience across the app.
+- **Discover**: Browse trending, popular, upcoming movies.
+- **Watchlist**: Save movies to watch later.
+- **Profile**: Manage personal preferences.
+- **Aura Cinema Design System**: Custom design system. Premium, consistent visual experience.
 
 ## 🛠️ Technology Stack
 
@@ -23,13 +23,13 @@ Filmania is a modern Flutter application designed for movie enthusiasts. Discove
 
 ### Prerequisites
 
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (v3.11.4 or higher)
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (v3.11.4+)
 - Dart SDK
-- [Supabase Project](https://supabase.com/) (for backend services)
+- [Supabase Project](https://supabase.com/)
 
 ### Installation
 
-1. **Clone the repository**
+1. **Clone repository**
    ```bash
    git clone https://github.com/yourusername/filmania.git
    cd filmania
@@ -40,19 +40,19 @@ Filmania is a modern Flutter application designed for movie enthusiasts. Discove
    flutter pub get
    ```
 
-3. **Generate files** (Riverpod, Freezed, JSON Serializable)
+3. **Generate files**
    ```bash
    dart run build_runner build --delete-conflicting-outputs
    ```
 
-4. **Run the app**
+4. **Run app**
    ```bash
    flutter run
    ```
 
 ## 🏗️ Project Structure
 
-The project follows **Clean Architecture** principles, separating code into feature-based modules:
+Clean Architecture. Feature-based modules:
 
 ```text
 lib/
@@ -68,8 +68,8 @@ lib/
 
 ## 🎨 Aura Cinema Design System
 
-Filmania utilizes the **Aura Cinema Design System**, an internal set of styling rules and components carefully crafted to deliver a polished and immersive UI, focusing on modern, cinematic themes.
+Styles + components for polished, immersive UI. Modern, cinematic themes.
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+MIT License.
