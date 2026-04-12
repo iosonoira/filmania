@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
+import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../widgets/home_widgets.dart';
 
 class HomePage extends ConsumerWidget {

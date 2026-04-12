@@ -303,3 +303,155 @@ final class SearchMoviesFamily extends $Family
   @override
   String toString() => r'searchMoviesProvider';
 }
+
+@ProviderFor(movieCredits)
+final movieCreditsProvider = MovieCreditsFamily._();
+
+final class MovieCreditsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<CastMember>>,
+          List<CastMember>,
+          FutureOr<List<CastMember>>
+        >
+    with $FutureModifier<List<CastMember>>, $FutureProvider<List<CastMember>> {
+  MovieCreditsProvider._({
+    required MovieCreditsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'movieCreditsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$movieCreditsHash();
+
+  @override
+  String toString() {
+    return r'movieCreditsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<CastMember>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<CastMember>> create(Ref ref) {
+    final argument = this.argument as int;
+    return movieCredits(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MovieCreditsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$movieCreditsHash() => r'e480a3631048a9e7d9530dff0e691cfc6b256248';
+
+final class MovieCreditsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<CastMember>>, int> {
+  MovieCreditsFamily._()
+    : super(
+        retry: null,
+        name: r'movieCreditsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  MovieCreditsProvider call(int movieId) =>
+      MovieCreditsProvider._(argument: movieId, from: this);
+
+  @override
+  String toString() => r'movieCreditsProvider';
+}
+
+@ProviderFor(movieTrailers)
+final movieTrailersProvider = MovieTrailersFamily._();
+
+final class MovieTrailersProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<MovieTrailer>>,
+          List<MovieTrailer>,
+          FutureOr<List<MovieTrailer>>
+        >
+    with
+        $FutureModifier<List<MovieTrailer>>,
+        $FutureProvider<List<MovieTrailer>> {
+  MovieTrailersProvider._({
+    required MovieTrailersFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'movieTrailersProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$movieTrailersHash();
+
+  @override
+  String toString() {
+    return r'movieTrailersProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<MovieTrailer>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<MovieTrailer>> create(Ref ref) {
+    final argument = this.argument as int;
+    return movieTrailers(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MovieTrailersProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$movieTrailersHash() => r'dbe753856f046c4252125487c4549579b4f3645d';
+
+final class MovieTrailersFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<MovieTrailer>>, int> {
+  MovieTrailersFamily._()
+    : super(
+        retry: null,
+        name: r'movieTrailersProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  MovieTrailersProvider call(int movieId) =>
+      MovieTrailersProvider._(argument: movieId, from: this);
+
+  @override
+  String toString() => r'movieTrailersProvider';
+}

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../movies/domain/entities/movie.dart';
-import '../../../../features/home/ui/widgets/home_widgets.dart';
+import 'package:filmania/core/widgets/glass_overlay.dart';
 
 class MovieGridCard extends StatelessWidget {
   final Movie movie;

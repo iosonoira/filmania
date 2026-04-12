@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../home/ui/widgets/home_widgets.dart';
+import 'package:filmania/core/widgets/glass_overlay.dart';
+import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 
 class WatchlistPage extends StatelessWidget {
   const WatchlistPage({super.key});

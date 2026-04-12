@@ -1,0 +1,105 @@
+import 'package:flutter/foundation.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../../core/supabase/supabase_client.dart';
+import '../models/watchlist_item_dto.dart';
+import '../../domain/failures/watchlist_failure.dart';
+import 'i_watchlist_remote_datasource.dart';
+
+part 'watchlist_remote_datasource_impl.g.dart';
+
+/*
+SQL SCHEMA:
+Table: watchlist
+  - id: uuid, primary key, default gen_random_uuid()
+  - user_id: uuid, not null, references auth.users(id) on delete cascade
+  - movie_id: integer, not null
+  - movie_title: text, not null
+  - poster_path: text, nullable
+  - added_at: timestamptz, default now()
+  - UNIQUE(user_id, movie_id)
+
+RLS Policies:
+  - watchlist_authenticated_select: auth.uid() = user_id (SELECT)
+  - watchlist_authenticated_insert: auth.uid() = user_id (INSERT)
+  - watchlist_authenticated_delete: auth.uid() = user_id (DELETE)
+*/
+
+class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
+  final SupabaseClient _supabase;
+
+  WatchlistRemoteDataSourceImpl(this._supabase);
+
+  @override
+  Future<void> addToWatchlist(WatchlistItemDto item) async {
+    try {
+      await _supabase.from('watchlist').insert(item.toJson());
+    } on PostgrestException catch (e) {
+      debugPrint('Supabase Error (addToWatchlist): ${e.message}');
+      throw SupabaseFailure(e.message);
+    } catch (e) {
+      debugPrint('Unexpected Error (addToWatchlist): $e');
+      throw const WatchlistGenericFailure();
+    }
+  }
+
+  @override
+  Future<void> removeFromWatchlist({
+    required String userId,
+    required int movieId,
+  }) async {
+    try {
+      await _supabase
+          .from('watchlist')
+          .delete()
+          .eq('user_id', userId)
+          .eq('movie_id', movieId);
+    } on PostgrestException catch (e) {
+      debugPrint('Supabase Error (removeFromWatchlist): ${e.message}');
+      throw SupabaseFailure(e.message);
+    } catch (e) {
+      debugPrint('Unexpected Error (removeFromWatchlist): $e');
+      throw const WatchlistGenericFailure();
+    }
+  }
+
+  @override
+  Stream<List<WatchlistItemDto>> watchWatchlist(String userId) {
+    // Supabase .stream handles the Realtime subscribe/unsubscribe internally.
+    // The channel is closed when the stream is no longer listened to.
+    return _supabase
+        .from('watchlist')
+        .stream(primaryKey: ['id'])
+        .eq('user_id', userId)
+        .order('added_at', ascending: false)
+        .map((data) => data.map((json) => WatchlistItemDto.fromJson(json)).toList());
+  }
+
+  @override
+  Future<bool> isInWatchlist({
+    required String userId,
+    required int movieId,
+  }) async {
+    try {
+      final response = await _supabase
+          .from('watchlist')
+          .select()
+          .eq('user_id', userId)
+          .eq('movie_id', movieId)
+          .maybeSingle();
+      
+      return response != null;
+    } on PostgrestException catch (e) {
+      debugPrint('Supabase Error (isInWatchlist): ${e.message}');
+      throw SupabaseFailure(e.message);
+    } catch (e) {
+      debugPrint('Unexpected Error (isInWatchlist): $e');
+      throw const WatchlistGenericFailure();
+    }
+  }
+}
+
+@riverpod
+IWatchlistRemoteDataSource watchlistRemoteDataSource(Ref ref) {
+  return WatchlistRemoteDataSourceImpl(ref.watch(supabaseClientProvider));
+}

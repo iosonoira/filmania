@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../home/ui/widgets/home_widgets.dart';
+import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 
 class ProfilePage extends ConsumerWidget {
