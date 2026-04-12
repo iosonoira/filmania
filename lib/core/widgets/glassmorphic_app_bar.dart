@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/core/theme/app_colors.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
+import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 
-class GlassmorphicAppBar extends StatelessWidget implements PreferredSizeWidget {
+class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showBackButton;
 
   const GlassmorphicAppBar({
@@ -13,7 +15,7 @@ class GlassmorphicAppBar extends StatelessWidget implements PreferredSizeWidget 
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
@@ -47,12 +49,21 @@ class GlassmorphicAppBar extends StatelessWidget implements PreferredSizeWidget 
                         color: colors.primary.withValues(alpha: 0.2),
                         width: 2,
                       ),
-                      image: const DecorationImage(
-                        image: NetworkImage(
-                          'https://lh3.googleusercontent.com/aida-public/AB6AXuAg65sVztpdXhKS87ibQl8tebp1L1qq99AOyhFPOOgNHO9SUE7c8M9N-Pmt6Pk-MuQQyR97gRJsdVz01XAT0Ulr-ctCeuUdQxfTfM7cLee2zYtbF1SQ7CqTKKPkWQFaiKFh-c1qorZu8fGn-ZRCIMX4eX20WpAU15JTUk8OlvGsCcqSVSdpHH3ALWmFDtA31AcVWJjFG4d4nzibyffFkN_c_HofrLvbigWpH5YqBJL4uTUvCSfqGGMeMZfMy210EcVL6ZtoDuuc28mx',
-                        ),
-                        fit: BoxFit.cover,
-                      ),
+                      color: colors.primary.withValues(alpha: 0.1),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Builder(
+                      builder: (context) {
+                        final authState = ref.watch(authStateProvider);
+                        final photoUrl = authState.value?.photoUrl;
+                        return photoUrl != null && photoUrl.isNotEmpty
+                            ? Image.network(
+                                photoUrl,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, _, _) => Icon(Icons.person, color: colors.primary),
+                              )
+                            : Icon(Icons.person, color: colors.primary);
+                      },
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),

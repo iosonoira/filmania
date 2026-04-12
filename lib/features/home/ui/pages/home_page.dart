@@ -28,13 +28,13 @@ class HomePage extends ConsumerWidget {
             child: SizedBox(height: MediaQuery.of(context).padding.top + AppSpacing.xl),
           ),
           const SliverToBoxAdapter(
-            child: CurrentlyWatchingSection(),
+            child: TrendingMoviesSection(),
           ),
           const SliverToBoxAdapter(
             child: SizedBox(height: AppSpacing.xxl),
           ),
           const SliverToBoxAdapter(
-            child: UpcomingEpisodesSection(),
+            child: TrendingTVSeriesSection(),
           ),
           const SliverToBoxAdapter(
             child: SizedBox(height: AppSpacing.xxl),

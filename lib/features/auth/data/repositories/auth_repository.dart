@@ -33,8 +33,8 @@ class AuthRepository implements IAuthRepository {
       return AuthUser(
         id: user.id,
         email: user.email ?? '',
-        username: user.userMetadata?['username'] as String?,
-        photoUrl: user.userMetadata?['avatar_url'] as String?,
+        username: user.userMetadata?['username'] as String? ?? user.userMetadata?['full_name'] as String? ?? user.userMetadata?['name'] as String?,
+        photoUrl: user.userMetadata?['avatar_url'] as String? ?? user.userMetadata?['picture'] as String?,
       );
     } on AuthException catch (e) {
       debugPrint('AuthRepository.signIn Error: ${e.message} (Code: ${e.code})');
@@ -73,8 +73,8 @@ class AuthRepository implements IAuthRepository {
       return AuthUser(
         id: user.id,
         email: user.email ?? '',
-        username: user.userMetadata?['username'] as String?,
-        photoUrl: user.userMetadata?['avatar_url'] as String?,
+        username: user.userMetadata?['username'] as String? ?? user.userMetadata?['full_name'] as String? ?? user.userMetadata?['name'] as String?,
+        photoUrl: user.userMetadata?['avatar_url'] as String? ?? user.userMetadata?['picture'] as String?,
       );
     } on AuthException catch (e) {
       debugPrint('AuthRepository.signUp Error: ${e.message} (Code: ${e.code})');
@@ -101,14 +101,35 @@ class AuthRepository implements IAuthRepository {
 
   @override
   Stream<AuthUser?> watchAuthState() {
-    return _supabase.auth.onAuthStateChange.map((data) {
+    return _supabase.auth.onAuthStateChange.asyncMap((data) async {
       final user = data.session?.user;
       if (user == null) return null;
+
+      try {
+        final profile = await _supabase.from('user').select().eq('id', user.id).maybeSingle();
+        if (profile != null) {
+          return AuthUser(
+            id: user.id,
+            email: user.email ?? profile['email'] as String? ?? '',
+            username: profile['username'] as String? ?? 
+                      user.userMetadata?['username'] as String? ?? 
+                      user.userMetadata?['name'] as String?,
+            photoUrl: profile['photo_url'] as String? ?? 
+                      user.userMetadata?['avatar_url'] as String?,
+          );
+        }
+      } catch (e) {
+        debugPrint('AuthRepository watchAuthState DB Error: $e');
+      }
+
       return AuthUser(
         id: user.id,
         email: user.email ?? '',
-        username: user.userMetadata?['username'] as String?,
-        photoUrl: user.userMetadata?['avatar_url'] as String?,
+        username: user.userMetadata?['username'] as String? ?? 
+                  user.userMetadata?['full_name'] as String? ?? 
+                  user.userMetadata?['name'] as String?,
+        photoUrl: user.userMetadata?['avatar_url'] as String? ?? 
+                  user.userMetadata?['picture'] as String?,
       );
     });
   }

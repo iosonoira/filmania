@@ -90,6 +90,7 @@ class _MovieDetailsContent extends StatelessWidget {
               Positioned(
                 bottom: -60,
                 left: AppSpacing.lg,
+                right: AppSpacing.lg,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import '../providers/image_upload_controller.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
@@ -12,6 +14,8 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final user = ref.watch(authStateProvider).value;
+    final uploadState = ref.watch(imageUploadControllerProvider);
 
     return Scaffold(
       extendBody: true,
@@ -28,26 +32,65 @@ class ProfilePage extends ConsumerWidget {
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
-                  Container(
-                    width: 120,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colors.primary.withValues(alpha: 0.2),
-                        width: 4,
-                      ),
-                      image: const DecorationImage(
-                        image: NetworkImage(
-                          'https://lh3.googleusercontent.com/aida-public/AB6AXuAg65sVztpdXhKS87ibQl8tebp1L1qq99AOyhFPOOgNHO9SUE7c8M9N-Pmt6Pk-MuQQyR97gRJsdVz01XAT0Ulr-ctCeuUdQxfTfM7cLee2zYtbF1SQ7CqTKKPkWQFaiKFh-c1qorZu8fGn-ZRCIMX4eX20WpAU15JTUk8OlvGsCcqSVSdpHH3ALWmFDtA31AcVWJjFG4d4nzibyffFkN_c_HofrLvbigWpH5YqBJL4uTUvCSfqGGMeMZfMy210EcVL6ZtoDuuc28mx',
+                  GestureDetector(
+                    onTap: uploadState.isLoading
+                        ? null
+                        : () async {
+                            final picker = ImagePicker();
+                            final xfile = await picker.pickImage(source: ImageSource.gallery);
+                            if (xfile != null) {
+                              await ref.read(imageUploadControllerProvider.notifier).upload(xfile);
+                            }
+                          },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 120,
+                          height: 120,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: colors.primary.withValues(alpha: 0.2),
+                              width: 4,
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                user?.photoUrl ?? 'https://lh3.googleusercontent.com/aida-public/AB6AXuAg65sVztpdXhKS87ibQl8tebp1L1qq99AOyhFPOOgNHO9SUE7c8M9N-Pmt6Pk-MuQQyR97gRJsdVz01XAT0Ulr-ctCeuUdQxfTfM7cLee2zYtbF1SQ7CqTKKPkWQFaiKFh-c1qorZu8fGn-ZRCIMX4eX20WpAU15JTUk8OlvGsCcqSVSdpHH3ALWmFDtA31AcVWJjFG4d4nzibyffFkN_c_HofrLvbigWpH5YqBJL4uTUvCSfqGGMeMZfMy210EcVL6ZtoDuuc28mx',
+                              ),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                         ),
-                        fit: BoxFit.cover,
-                      ),
+                        if (uploadState.isLoading)
+                          const CircularProgressIndicator(),
+                        if (!uploadState.isLoading)
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: colors.primary,
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(Icons.edit, color: colors.onSurfacePrimary, size: 20),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
+                  if (uploadState.hasError) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    Text(
+                      'Errore upload: ${uploadState.error}',
+                      style: const TextStyle(color: Colors.redAccent),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                   const SizedBox(height: AppSpacing.lg),
                   Text(
-                    'Filmania',
+                    user?.username ?? 'Utente Filmania',
                     style: textTheme.headlineMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       letterSpacing: -0.5,
@@ -56,7 +99,7 @@ class ProfilePage extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'admin@filmania.app',
+                    user?.email ?? 'email@mancante',
                     style: textTheme.bodyLarge?.copyWith(
                       color: colors.onSurfaceSecondary,
                     ),

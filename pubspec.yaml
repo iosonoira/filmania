@@ -17,6 +17,8 @@ dependencies:
   riverpod_annotation: ^4.0.2
   supabase_flutter: ^2.12.2
   url_launcher: ^6.3.0
+  cached_network_image: ^3.4.1
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:

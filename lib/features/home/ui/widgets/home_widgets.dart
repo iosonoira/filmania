@@ -1,52 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
+import '../../../../core/widgets/error_view.dart';
+import '../../../movies/ui/providers/movies_provider.dart';
+import '../../../tv_series/ui/providers/tv_series_provider.dart';
+import 'package:filmania/features/movies/domain/entities/movie.dart';
 
-// --- Currently Watching Section ---
-class CurrentlyWatchingSection extends StatelessWidget {
-  const CurrentlyWatchingSection({super.key});
 
-  static const _mockItems = [
-    {
-      'title': 'Shōgun',
-      'subtitle': 'Season 1 • Ep 8',
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuABHin8DHJXVAakKuHBaa4v5QxiwHkXrcFSOJ3NUyb1R3IXS2U82fwwgTEYSBOKg-bq068veOMUcsBsbv1vcfHZfjYC08ukKXWyo8jwvYVhzbxjFAoTbiJ0wE_HrfG3uqUoQI2wO-8nONajZ0Uz3uAvkiwWgad4k4fnRGj06y4KMOAp0uXe9Iblmcd5pzU3ZCA_JSc97xVr7Ie5OlrR_bGYsueWtYx1olYFuL1tNC0JN_6jom-4_S7U7MYplwEdiVajlYAL1qRl0VJp',
-      'progress': 0.75,
-    },
-    {
-      'title': 'Blade Runner 2049',
-      'subtitle': 'Movie',
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuABpOAU_cn2ng30yT5tNmwcP5iuw2Ubm4HLQEghxc-MD0FNizfE0RJm9zVbIDB_7G2RZWa7P_cuUmHYZw5LQYa5JczW4q8oWMyCAyeTLRWauEbHALcX6YHfP5v2pNAAhtUnN0SgzltaFs6SVqO2nkonFW6sD9g1qVB5VNrOPg9Mo4opPg42_1tkDni4MNHSWvUSjOaazf6N3AQY4XH730tX_f1dKa6E9vpCdpJ61pT1xfK1shqOv7pm1Br3gEeyhHlHMY9C0cq9fzlj',
-      'progress': 0.40,
-    },
-    {
-      'title': 'Succession',
-      'subtitle': 'Season 4 • Ep 10',
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuDiktX9fOLMawZcjgbQbAnJzHk3qTXmuRWtjRZM0nBqeQ71OSjLMARkJrxCRsW7S8W4xhQ6_GKJ8fWLIOG23-Q2vqDMeKDL1AIiUcSic2VFzFCj8AFpn_03VwQYZ8vbrozy3FEtBGUbRQicbD6IgvDmteHYZowPqHPtRBaPyoniS_ZY8DdineMGq5xMHrvyRBiBTErrQjyGRJbTeM2bp1qFybv82bmS0zKtbTqpaYbPWBFPEaWgV78wvoa9Kb_geHED7XcDjN5R6imK',
-      'progress': 0.95,
-    },
-  ];
+// --- Trending Movies Section ---
+class TrendingMoviesSection extends ConsumerWidget {
+  const TrendingMoviesSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const Column(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final moviesAsync = ref.watch(trendingMoviesProvider(page: 1));
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _CurrentlyWatchingHeader(),
-        SizedBox(height: AppSpacing.lg),
-        _CurrentlyWatchingList(items: _mockItems),
+        const _SectionHeader(title: 'Trending Movies'),
+        const SizedBox(height: AppSpacing.lg),
+        moviesAsync.when(
+          data: (movies) => _TrendingMoviesList(movies: movies),
+          loading: () => const SizedBox(
+            height: 280,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (err, stack) => AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () => ref.invalidate(trendingMoviesProvider(page: 1)),
+          ),
+        ),
       ],
     );
   }
 }
 
+class _SectionHeader extends StatelessWidget {
+  final String title;
 
-class _CurrentlyWatchingHeader extends StatelessWidget {
-  const _CurrentlyWatchingHeader();
+  const _SectionHeader({required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +56,7 @@ class _CurrentlyWatchingHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
-            'Currently Watching',
+            title,
             style: textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w800,
               letterSpacing: -0.5,
@@ -88,10 +84,11 @@ class _CurrentlyWatchingHeader extends StatelessWidget {
   }
 }
 
-class _CurrentlyWatchingList extends StatelessWidget {
-  final List<Map<String, dynamic>> items;
 
-  const _CurrentlyWatchingList({required this.items});
+class _TrendingMoviesList extends StatelessWidget {
+  final List<Movie> movies;
+
+  const _TrendingMoviesList({required this.movies});
 
   @override
   Widget build(BuildContext context) {
@@ -101,16 +98,16 @@ class _CurrentlyWatchingList extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        itemCount: items.length,
+        itemCount: movies.length,
         separatorBuilder: (context, index) =>
             const SizedBox(width: AppSpacing.lg),
         itemBuilder: (context, index) {
-          final item = items[index];
+          final movie = movies[index];
           return WatchingCard(
-            title: item['title'] as String,
-            subtitle: item['subtitle'] as String,
-            imageUrl: item['imageUrl'] as String,
-            progress: item['progress'] as double,
+            title: movie.title,
+            subtitle: movie.releaseDate?.year.toString() ?? '',
+            imageUrl: movie.posterPath != null ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}' : '',
+            progress: movie.voteAverage / 10,
           );
         },
       ),
@@ -294,89 +291,72 @@ class _WatchingCardProgressBar extends StatelessWidget {
 }
 
 
-// --- Upcoming Episodes Section ---
-class UpcomingEpisodesSection extends StatelessWidget {
-  const UpcomingEpisodesSection({super.key});
+// --- Trending TV Series Section ---
+class TrendingTVSeriesSection extends ConsumerWidget {
+  const TrendingTVSeriesSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
-    final colors = AppColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    // TODO: add specific container tokens to AppColors for these grey surfaces
     final containerColor = isDark
         ? const Color(0xFF1C1B20)
         : const Color(0xFFF5F5F5);
+
+    final tvSeriesAsync = ref.watch(trendingTVSeriesProvider(page: 1));
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Upcoming Episodes',
-            style: textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.5,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                'Trending TV Series',
+                style: textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: -0.5,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: AppSpacing.md),
-          ListView.separated(
-            padding: EdgeInsets.zero,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: _mockEpisodes.length,
-            separatorBuilder: (context, index) =>
-                const SizedBox(height: AppSpacing.md),
-            itemBuilder: (context, index) {
-              final item = _mockEpisodes[index];
-              return _UpcomingEpisodeItem(
-                title: item['title'] as String,
-                subtitle: item['subtitle'] as String,
-                time: item['time'] as String,
-                timeColor: (item['id'] == 'tonight')
-                    ? colors.primary
-                    : colors.onSurfaceSecondary,
-                imageUrl: item['imageUrl'] as String,
-                containerColor: containerColor,
-              );
-            },
+          tvSeriesAsync.when(
+            data: (tvSeries) => ListView.separated(
+              padding: EdgeInsets.zero,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: tvSeries.length > 5 ? 5 : tvSeries.length,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(height: AppSpacing.md),
+              itemBuilder: (context, index) {
+                final item = tvSeries[index];
+                return _UpcomingEpisodeItem(
+                  title: item.name,
+                  subtitle: item.firstAirDate?.year.toString() ?? '',
+                  time: 'Rating: ${item.voteAverage.toStringAsFixed(1)}',
+                  timeColor: AppColors.of(context).primary,
+                  imageUrl: item.posterPath != null ? 'https://image.tmdb.org/t/p/w500${item.posterPath}' : '',
+                  containerColor: containerColor,
+                );
+              },
+            ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => AppErrorView(
+              error: err,
+              compact: true,
+              onRetry: () => ref.invalidate(trendingTVSeriesProvider(page: 1)),
+            ),
           ),
         ],
       ),
     );
   }
-
-  // Mock Data
-  static const _mockEpisodes = [
-    {
-      'id': 'tonight',
-      'title': 'Fallout',
-      'subtitle': 'Episode 1 • The End',
-      'time': 'TONIGHT • 9:00 PM',
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuAfwd-EUi-ltAtA-Vm4Azpwt4WFOQR4999iERlxF4hId-Egawd1Zp9z8RRH19fVEUBCKC1H_RQpueIMWil-tEl1tfCBS0SuLN_XPnpMjj0fRtEsU7P_SvclIfxILEurZckDKgybRSFbjwFrM_P20izYagld88Q0j9dBzpZrJCAg018xtKqOA7RIEGzxsukDbavxow50_bzSwLiybsiMDqPDRJnNLZ53jTJEv5bvd7HTXrj3aVDaWK0OOTIB2YhWawkrHl4mbGMGvhzX',
-    },
-    {
-      'id': 'tomorrow',
-      'title': 'The Bear',
-      'subtitle': 'Season 3 • Ep 1',
-      'time': 'TOMORROW',
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuBFCHeHpxpQXNBIBRGoQusxsqmRdu5UBOvO9R3CFq5yjhvE8eYJBizFFzeqC_bcVOFPiIz2Ig54tAyDBGxBnE5LnWWemMmN28k5nOCIeE5Mn8X7RIUKzVqQU1jTffeZcTTgQ8VZc_lvBgvzjL_jhuaNE1juYWWzO3Xo7a-Zrldn_9mq-wZFeCX8tC6qxybbKF0mXqwg1JwRG1iQTUD5SQH38NSNHRUDLW8TipgD5g7_fvj-oPxOudXSCW4UK2vmby-Cim9-mAFcvXy5',
-    },
-    {
-      'id': 'future',
-      'title': 'Severance',
-      'subtitle': 'Season 2 • Ep 1',
-      'time': 'OCT 24',
-      'imageUrl':
-          'https://lh3.googleusercontent.com/aida-public/AB6AXuDwimj14jySerJlwAITl0OVFugN0UsPfFfhV8-vKCUrEVlY3jAg9X6ARXtMUBWcAuwSmb750PLbXU6cQRycKckoyf1FgDq12yHSRmpHgBQMbVyBe-NDIKlwMag7jkCRBxZBcgm7ddUR0TnUe_VIiNPU402SO44nIgU3tD2HScykNfBU7QBOc5gZA8g_UqOtqk6WVtggBd7cddlaYTdhjJnv_fQOSc_N05v03CzhlV7qEIBLiwREcMDZhazNfZvhenEJEC8p-Rt2EtZ_',
-    },
-  ];
 }
-
 
 class _UpcomingEpisodeItem extends StatelessWidget {
   final String title;
@@ -410,12 +390,19 @@ class _UpcomingEpisodeItem extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              imageUrl,
-              width: 80,
-              height: 80,
-              fit: BoxFit.cover,
-            ),
+            child: imageUrl.isEmpty
+                ? Container(
+                    width: 80,
+                    height: 80,
+                    color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
+                    child: Icon(Icons.tv, color: colors.onSurfaceSecondary),
+                  )
+                : Image.network(
+                    imageUrl,
+                    width: 80,
+                    height: 80,
+                    fit: BoxFit.cover,
+                  ),
           ),
           const SizedBox(width: AppSpacing.md),
           Expanded(
@@ -464,55 +451,68 @@ class _UpcomingEpisodeItem extends StatelessWidget {
 }
 
 
-// --- Curated for You Section (Simplified Bento) ---
-class CuratedSection extends StatelessWidget {
+class CuratedSection extends ConsumerWidget {
   const CuratedSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textTheme = Theme.of(context).textTheme;
 
-    // TODO: add specific container tokens to AppColors for these grey surfaces
     final containerColorLow = isDark
         ? const Color(0xFF1C1B20)
         : const Color(0xFFF5F5F5);
+
+    final discoverAsync = ref.watch(discoverMoviesProvider(page: 1));
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const _CuratedSectionHeader(),
+          Text(
+            'Curated for You',
+            style: textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              letterSpacing: -0.5,
+            ),
+          ),
           const SizedBox(height: AppSpacing.md),
-          const _FeaturedBentoCard(),
-          const SizedBox(height: AppSpacing.md),
-          _SuccessionBentoCard(containerColor: containerColorLow),
-          const SizedBox(height: AppSpacing.md),
-          _TrendingTopRatedRow(containerColor: containerColorLow),
+          discoverAsync.when(
+            data: (movies) {
+              if (movies.isEmpty) return const SizedBox.shrink();
+              final featuredMovie = movies[0];
+              final secondaryMovie = movies.length > 1 ? movies[1] : null;
+
+              return Column(
+                children: [
+                  _FeaturedBentoCard(movie: featuredMovie),
+                  const SizedBox(height: AppSpacing.md),
+                  if (secondaryMovie != null) ...[
+                    _SecondaryBentoCard(movie: secondaryMovie, containerColor: containerColorLow),
+                    const SizedBox(height: AppSpacing.md),
+                  ],
+                  _TrendingTopRatedRow(containerColor: containerColorLow),
+                ],
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => AppErrorView(
+              error: err,
+              compact: true,
+              onRetry: () => ref.invalidate(discoverMoviesProvider(page: 1)),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-class _CuratedSectionHeader extends StatelessWidget {
-  const _CuratedSectionHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
-    return Text(
-      'Curated for You',
-      style: textTheme.titleLarge?.copyWith(
-        fontWeight: FontWeight.bold,
-        letterSpacing: -0.5,
-      ),
-    );
-  }
-}
-
 class _FeaturedBentoCard extends StatelessWidget {
-  const _FeaturedBentoCard();
+  final Movie movie;
+
+  const _FeaturedBentoCard({required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -522,10 +522,9 @@ class _FeaturedBentoCard extends StatelessWidget {
       height: 300,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSpacing.radius),
-        image: const DecorationImage(
-          // Mock Data
+        image: DecorationImage(
           image: NetworkImage(
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuByaZwHXenriTfWuTYiTAZfQyzu_OaikS8eqo8MFge03eUoeF_BuAnbYV841d6LJyyObw93di6M5hPESYxL16fYR1e03wOQ3kp5cxhA-PIfVX2QYmuQuXGloYtLAS22cHz8wJVIubKcwI7M4zabQK_dQCeTKKfZFq_NyusXLE4Nw-4zJxbGeY19OHcA5Mwc9vcXNgVCOf_Z-sHSq6-ARz_RSsK0fXBdIjQcaccY0itIUmtT6Nz8v38O3qMNMXCRy66wUSQlTP1JrSRY',
+            movie.posterPath != null ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}' : '',
           ),
           fit: BoxFit.cover,
           opacity: 0.6,
@@ -551,15 +550,15 @@ class _FeaturedBentoCard extends StatelessWidget {
           ),
         ),
         padding: const EdgeInsets.all(AppSpacing.lg),
-        child: const Column(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            _FeaturedBentoTags(),
-            SizedBox(height: AppSpacing.md),
-            _FeaturedBentoContent(),
-            SizedBox(height: AppSpacing.lg),
-            _FeaturedBentoButton(),
+            const _FeaturedBentoTags(),
+            const SizedBox(height: AppSpacing.md),
+            _FeaturedBentoContent(movie: movie),
+            const SizedBox(height: AppSpacing.lg),
+            const _FeaturedBentoButton(),
           ],
         ),
       ),
@@ -583,13 +582,13 @@ class _FeaturedBentoTags extends StatelessWidget {
             vertical: 4,
           ),
           decoration: BoxDecoration(
-            color: const Color(0xFFB55800), // TODO: add token
+            color: const Color(0xFFB55800),
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
-            'MUST WATCH',
+            'FEATURED',
             style: textTheme.labelSmall?.copyWith(
-              color: const Color(0xFFFFF7F4), // TODO: add token
+              color: const Color(0xFFFFF7F4),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
               fontSize: 10,
@@ -604,16 +603,16 @@ class _FeaturedBentoTags extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: isDark
-                ? const Color(0xFF36343A) // TODO: add token
-                : const Color(0xFFE0E0E0), // TODO: add token
+                ? const Color(0xFF36343A)
+                : const Color(0xFFE0E0E0),
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
-            'SCI-FI',
+            'MOVIE',
             style: textTheme.labelSmall?.copyWith(
               color: isDark
-                  ? const Color(0xFFCAC3D8) // TODO: add token
-                  : const Color(0xFF4A4264), // TODO: add token
+                  ? const Color(0xFFCAC3D8)
+                  : const Color(0xFF4A4264),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
               fontSize: 10,
@@ -626,7 +625,9 @@ class _FeaturedBentoTags extends StatelessWidget {
 }
 
 class _FeaturedBentoContent extends StatelessWidget {
-  const _FeaturedBentoContent();
+  final Movie movie;
+
+  const _FeaturedBentoContent({required this.movie});
 
   @override
   Widget build(BuildContext context) {
@@ -636,7 +637,7 @@ class _FeaturedBentoContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'The Expanse',
+          movie.title,
           style: textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w800,
             color: Colors.white,
@@ -644,9 +645,9 @@ class _FeaturedBentoContent extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          'Experience the ultimate political thriller set in the cold depths of space.',
+          movie.overview,
           style: textTheme.bodySmall?.copyWith(
-            color: const Color(0xFFCAC3D8), // TODO: add token
+            color: const Color(0xFFCAC3D8),
           ),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
@@ -678,10 +679,14 @@ class _FeaturedBentoButton extends StatelessWidget {
 }
 
 
-class _SuccessionBentoCard extends StatelessWidget {
+class _SecondaryBentoCard extends StatelessWidget {
+  final Movie movie;
   final Color containerColor;
 
-  const _SuccessionBentoCard({required this.containerColor});
+  const _SecondaryBentoCard({
+    required this.movie,
+    required this.containerColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -700,26 +705,33 @@ class _SuccessionBentoCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Succession',
-                style: textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  movie.title,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Family politics at its most brutal.',
-                style: textTheme.bodySmall?.copyWith(
-                  color: colors.onSurfaceSecondary,
+                const SizedBox(height: 4),
+                Text(
+                  movie.overview,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colors.onSurfaceSecondary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+          const SizedBox(width: AppSpacing.sm),
           Text(
-            '8.9',
+            movie.voteAverage.toStringAsFixed(1),
             style: textTheme.titleLarge?.copyWith(
               color: colors.primary,
               fontWeight: FontWeight.bold,
