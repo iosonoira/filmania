@@ -69,4 +69,10 @@ class AppColorScheme {
     required this.accent,
     required this.error,
   });
+
+  LinearGradient get primaryGradient => LinearGradient(
+        colors: [primary, primary.withValues(alpha: 0.7)],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
 }

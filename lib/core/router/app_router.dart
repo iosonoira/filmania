@@ -10,6 +10,7 @@ import '../widgets/main_scaffold.dart';
 import '../../features/discover/ui/pages/discover_page.dart';
 import '../../features/watchlist/ui/pages/watchlist_page.dart';
 import '../../features/profile/ui/pages/profile_page.dart';
+import '../../features/movies/ui/pages/movie_details_page.dart';
 
 part 'app_router.g.dart';
 
@@ -23,6 +24,7 @@ abstract class AppRoutes {
   static const discover = '/discover';
   static const watchlist = '/watchlist';
   static const profile = '/profile';
+  static const movieDetails = '/movie/:id';
 
   static const shellRoutes = [home, discover, watchlist, profile];
 }
@@ -87,6 +89,14 @@ GoRouter appRouter(Ref ref) {
             ],
           ),
         ],
+      ),
+
+      GoRoute(
+        path: AppRoutes.movieDetails,
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return MovieDetailsPage(movieId: id);
+        },
       ),
     ],
     redirect: (context, state) {

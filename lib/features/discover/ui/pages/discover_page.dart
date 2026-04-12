@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
@@ -115,7 +117,7 @@ class DiscoverPage extends ConsumerWidget {
                     return MovieGridCard(
                       movie: movie,
                       onTap: () {
-                        // TODO: Navigate to Movie Details
+                        context.push(AppRoutes.movieDetails.replaceFirst(':id', movie.id.toString()));
                       },
                     );
                   },

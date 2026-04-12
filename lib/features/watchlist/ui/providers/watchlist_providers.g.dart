@@ -144,7 +144,7 @@ final class WatchlistNotifierProvider
   WatchlistNotifier create() => WatchlistNotifier();
 }
 
-String _$watchlistNotifierHash() => r'6707832a943ce7033ce77f3e7d8afc12ad410506';
+String _$watchlistNotifierHash() => r'16c8ef1c397e793bce0d1096cb94585e146097c7';
 
 abstract class _$WatchlistNotifier extends $AsyncNotifier<void> {
   FutureOr<void> build();

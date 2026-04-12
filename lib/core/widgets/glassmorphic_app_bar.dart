@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:filmania/core/theme/app_colors.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 
 class GlassmorphicAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const GlassmorphicAppBar({super.key});
+  final bool showBackButton;
+
+  const GlassmorphicAppBar({
+    super.key,
+    this.showBackButton = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +30,14 @@ class GlassmorphicAppBar extends StatelessWidget implements PreferredSizeWidget 
             children: [
               Row(
                 children: [
+                  if (showBackButton) ...[
+                    IconButton(
+                      onPressed: () => context.pop(),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                      color: colors.primary,
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
                   Container(
                     width: 40,
                     height: 40,

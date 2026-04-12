@@ -33,7 +33,11 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
   @override
   Future<void> addToWatchlist(WatchlistItemDto item) async {
     try {
-      await _supabase.from('watchlist').insert(item.toJson());
+      final json = item.toJson();
+      if (item.id.isEmpty) {
+        json.remove('id');
+      }
+      await _supabase.from('watchlist').insert(json);
     } on PostgrestException catch (e) {
       debugPrint('Supabase Error (addToWatchlist): ${e.message}');
       throw SupabaseFailure(e.message);
@@ -72,7 +76,10 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('added_at', ascending: false)
-        .map((data) => data.map((json) => WatchlistItemDto.fromJson(json)).toList());
+        .map(
+          (data) =>
+              data.map((json) => WatchlistItemDto.fromJson(json)).toList(),
+        );
   }
 
   @override
@@ -87,7 +94,7 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
           .eq('user_id', userId)
           .eq('movie_id', movieId)
           .maybeSingle();
-      
+
       return response != null;
     } on PostgrestException catch (e) {
       debugPrint('Supabase Error (isInWatchlist): ${e.message}');

@@ -55,4 +55,16 @@ class WatchlistNotifier extends _$WatchlistNotifier {
       ref.invalidate(isMovieInWatchlistProvider(movie.id));
     });
   }
+
+  Future<void> remove(int movieId) async {
+    final user = ref.read(authStateProvider).value;
+    if (user == null) return;
+
+    state = const AsyncLoading();
+    state = await AsyncValue.guard(() async {
+      await ref.read(watchlistRepositoryProvider)
+          .removeFromWatchlist(userId: user.id, movieId: movieId);
+      ref.invalidate(isMovieInWatchlistProvider(movieId));
+    });
+  }
 }
