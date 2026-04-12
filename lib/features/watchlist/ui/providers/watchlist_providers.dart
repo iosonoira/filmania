@@ -52,6 +52,7 @@ class WatchlistNotifier extends _$WatchlistNotifier {
         );
       }
       // Manual invalidation to ensure UI updates immediately
+      ref.invalidate(userWatchlistProvider);
       ref.invalidate(isMovieInWatchlistProvider(movie.id));
     });
   }
@@ -64,6 +65,7 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = await AsyncValue.guard(() async {
       await ref.read(watchlistRepositoryProvider)
           .removeFromWatchlist(userId: user.id, movieId: movieId);
+      ref.invalidate(userWatchlistProvider);
       ref.invalidate(isMovieInWatchlistProvider(movieId));
     });
   }
