@@ -67,12 +67,16 @@ class GlassmorphicAppBar extends StatelessWidget implements PreferredSizeWidget 
                   ),
                 ],
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications_none),
-                color: colors.primary,
-                splashColor: colors.primary.withValues(alpha: 0.1),
-                highlightColor: colors.primary.withValues(alpha: 0.1),
+              Semantics(
+                label: 'Notifiche',
+                button: true,
+                child: IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.notifications_none),
+                  color: colors.primary,
+                  splashColor: colors.primary.withValues(alpha: 0.1),
+                  highlightColor: colors.primary.withValues(alpha: 0.1),
+                ),
               ),
             ],
           ),

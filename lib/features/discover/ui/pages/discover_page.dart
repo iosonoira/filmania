@@ -7,6 +7,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
+import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import '../widgets/discover_widgets.dart';
 import '../providers/discover_providers.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -19,10 +20,18 @@ class DiscoverPage extends ConsumerWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
     
-    final query = ref.watch(movieSearchQueryProvider);
+    final typingQuery = ref.watch(movieSearchQueryProvider);
+    final query = ref.watch(debouncedSearchQueryProvider);
+    final selectedMediaType = ref.watch(selectedMediaTypeProvider);
+    final isDebouncing = typingQuery != query && typingQuery.isNotEmpty;
+
     final discoverAsync = query.isEmpty 
-        ? ref.watch(discoverMoviesProvider())
-        : ref.watch(searchMoviesProvider(query));
+        ? (selectedMediaType == DiscoverMediaType.movie 
+            ? ref.watch(discoverMoviesProvider())
+            : ref.watch(discoverTVSeriesProvider()).whenData((list) => list as List<dynamic>))
+        : (selectedMediaType == DiscoverMediaType.movie
+            ? ref.watch(searchMoviesProvider(query))
+            : ref.watch(searchTVSeriesProvider(query)).whenData((list) => list as List<dynamic>));
 
     return Scaffold(
       extendBody: true,
@@ -40,13 +49,40 @@ class DiscoverPage extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Discover',
-                    style: textTheme.displaySmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -1.5,
-                      color: colors.onSurfacePrimary,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Discover',
+                        style: textTheme.displaySmall?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -1.5,
+                          color: colors.onSurfacePrimary,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(AppSpacing.xs),
+                        decoration: BoxDecoration(
+                          color: colors.surface.withValues(alpha: 0.5),
+                          borderRadius: BorderRadius.circular(AppSpacing.radius),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _MediaTypeButton(
+                              label: 'Film',
+                              isSelected: selectedMediaType == DiscoverMediaType.movie,
+                              onTap: () => ref.read(selectedMediaTypeProvider.notifier).set(DiscoverMediaType.movie),
+                            ),
+                            _MediaTypeButton(
+                              label: 'Serie TV',
+                              isSelected: selectedMediaType == DiscoverMediaType.tv,
+                              onTap: () => ref.read(selectedMediaTypeProvider.notifier).set(DiscoverMediaType.tv),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: AppSpacing.md),
                   GlassOverlay(
@@ -67,13 +103,17 @@ class DiscoverPage extends ConsumerWidget {
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: TextField(
-                              onChanged: (value) => 
-                                  ref.read(movieSearchQueryProvider.notifier).update(value),
+                              onChanged: (value) {
+                                ref.read(movieSearchQueryProvider.notifier).update(value);
+                                ref.read(debouncedSearchQueryProvider.notifier).update(value);
+                              },
                               style: textTheme.bodyLarge?.copyWith(
                                 color: colors.onSurfacePrimary,
                               ),
                               decoration: InputDecoration(
-                                hintText: 'Search for movies, actors, directors...',
+                                hintText: selectedMediaType == DiscoverMediaType.movie 
+                                    ? 'Cerca movie, attori, registi...'
+                                    : 'Cerca serie TV...',
                                 hintStyle: textTheme.bodyLarge?.copyWith(
                                   color: colors.onSurfaceSecondary,
                                 ),
@@ -94,6 +134,17 @@ class DiscoverPage extends ConsumerWidget {
                       ),
                     ),
                   ),
+                  if (isDebouncing) ...[
+                    const SizedBox(height: AppSpacing.sm),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: LinearProgressIndicator(
+                        backgroundColor: colors.primary.withValues(alpha: 0.1),
+                        color: colors.primary,
+                        minHeight: 2,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -103,8 +154,8 @@ class DiscoverPage extends ConsumerWidget {
           ),
           
           discoverAsync.when(
-            data: (movies) {
-              if (movies.isEmpty) {
+            data: (items) {
+              if (items.isEmpty) {
                 return SliverFillRemaining(
                   hasScrollBody: false,
                   child: Center(
@@ -147,16 +198,25 @@ class DiscoverPage extends ConsumerWidget {
                   ),
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
-                      final movie = movies[index];
-                      return MovieGridCard(
-                        movie: movie,
-                        onTap: () {
-                          context.push(AppRoutes.movieDetails
-                              .replaceFirst(':id', movie.id.toString()));
-                        },
-                      );
+                      final item = items[index];
+                      if (selectedMediaType == DiscoverMediaType.movie) {
+                        return MediaGridCard.movie(
+                          movie: item,
+                          onTap: () {
+                            context.push(AppRoutes.movieDetails
+                                .replaceFirst(':id', item.id.toString()));
+                          },
+                        );
+                      } else {
+                        return MediaGridCard.tv(
+                          tv: item,
+                          onTap: () {
+                            context.push(AppRoutes.tvDetails.replaceFirst(':id', item.id.toString()));
+                          },
+                        );
+                      }
                     },
-                    childCount: movies.length,
+                    childCount: items.length,
                   ),
                 ),
               );
@@ -169,8 +229,12 @@ class DiscoverPage extends ConsumerWidget {
               child: AppErrorView(
                 error: err,
                 onRetry: () => query.isEmpty 
-                    ? ref.invalidate(discoverMoviesProvider())
-                    : ref.invalidate(searchMoviesProvider(query)),
+                    ? (selectedMediaType == DiscoverMediaType.movie 
+                        ? ref.invalidate(discoverMoviesProvider())
+                        : ref.invalidate(discoverTVSeriesProvider()))
+                    : (selectedMediaType == DiscoverMediaType.movie
+                        ? ref.invalidate(searchMoviesProvider(query))
+                        : ref.invalidate(searchTVSeriesProvider(query))),
               ),
             ),
           ),
@@ -180,6 +244,53 @@ class DiscoverPage extends ConsumerWidget {
             child: SizedBox(height: 120),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MediaTypeButton extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _MediaTypeButton({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected ? colors.primary : Colors.transparent,
+          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          boxShadow: isSelected ? [
+            BoxShadow(
+              color: colors.primary.withValues(alpha: 0.3),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            )
+          ] : [],
+        ),
+        child: Text(
+          label,
+          style: textTheme.labelLarge?.copyWith(
+            color: isSelected ? Colors.white : colors.onSurfaceSecondary,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
       ),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/watchlist_item.dart';
+import '../../../discover/ui/providers/discover_providers.dart';
 
 part 'watchlist_item_dto.freezed.dart';
 part 'watchlist_item_dto.g.dart';
@@ -9,8 +10,9 @@ abstract class WatchlistItemDto with _$WatchlistItemDto {
   const factory WatchlistItemDto({
     required String id,
     @JsonKey(name: 'user_id') required String userId,
-    @JsonKey(name: 'movie_id') required int movieId,
-    @JsonKey(name: 'movie_title') required String movieTitle,
+    @JsonKey(name: 'movie_id') required int mediaId,
+    @JsonKey(name: 'movie_title') required String title,
+    @JsonKey(name: 'media_type') @Default(DiscoverMediaType.movie) DiscoverMediaType mediaType,
     @JsonKey(name: 'poster_path') required String? posterPath,
     @JsonKey(name: 'added_at') required DateTime addedAt,
   }) = _WatchlistItemDto;
@@ -24,8 +26,9 @@ abstract class WatchlistItemDto with _$WatchlistItemDto {
     return WatchlistItem(
       id: id,
       userId: userId,
-      movieId: movieId,
-      movieTitle: movieTitle,
+      mediaId: mediaId,
+      title: title,
+      mediaType: mediaType,
       posterPath: posterPath,
       addedAt: addedAt,
     );
@@ -35,8 +38,9 @@ abstract class WatchlistItemDto with _$WatchlistItemDto {
     return WatchlistItemDto(
       id: entity.id,
       userId: entity.userId,
-      movieId: entity.movieId,
-      movieTitle: entity.movieTitle,
+      mediaId: entity.mediaId,
+      title: entity.title,
+      mediaType: entity.mediaType,
       posterPath: entity.posterPath,
       addedAt: entity.addedAt,
     );

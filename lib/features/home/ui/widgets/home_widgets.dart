@@ -135,27 +135,31 @@ class WatchingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.85,
-      constraints: const BoxConstraints(maxWidth: 450),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSpacing.radius),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
+    return Semantics(
+      label: 'Stai guardando $title, $subtitle, ${(progress * 100).round()}% completato',
+      button: true,
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85,
+        constraints: const BoxConstraints(maxWidth: 450),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
+          image: DecorationImage(
+            image: NetworkImage(imageUrl),
+            fit: BoxFit.cover,
           ),
-        ],
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
         ),
-      ),
-      child: _WatchingCardContent(
-        title: title,
-        subtitle: subtitle,
-        progress: progress,
+        child: _WatchingCardContent(
+          title: title,
+          subtitle: subtitle,
+          progress: progress,
+        ),
       ),
     );
   }
@@ -932,33 +936,39 @@ class _NavBarItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final itemColor = isSelected ? AppColors.of(context).primary : color;
 
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: isSelected
-            ? BoxDecoration(
-                color: itemColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: itemColor.withValues(alpha: 0.1)),
-              )
-            : null,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: isSelected ? itemColor : color.withValues(alpha: 0.8)),
-            const SizedBox(height: 2),
-            Text(
-              label.toUpperCase(),
-              style: textTheme.labelSmall?.copyWith(
-                color: isSelected ? itemColor : color.withValues(alpha: 0.8),
-                fontWeight: FontWeight.w600,
-                fontSize: 10,
-                letterSpacing: 0.5,
+    return Semantics(
+      label: label,
+      selected: isSelected,
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: isSelected
+              ? BoxDecoration(
+                  color: itemColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: itemColor.withValues(alpha: 0.1)),
+                )
+              : null,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: isSelected ? itemColor : color.withValues(alpha: 0.8)),
+              const SizedBox(height: 2),
+              Text(
+                label.toUpperCase(),
+                style: textTheme.labelSmall?.copyWith(
+                  color: isSelected ? itemColor : color.withValues(alpha: 0.8),
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
+                  letterSpacing: 0.5,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

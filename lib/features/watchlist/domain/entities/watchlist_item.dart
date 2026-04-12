@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../discover/ui/providers/discover_providers.dart';
 
 part 'watchlist_item.freezed.dart';
 
@@ -7,8 +8,9 @@ abstract class WatchlistItem with _$WatchlistItem {
   const factory WatchlistItem({
     required String id,
     required String userId,
-    required int movieId,
-    required String movieTitle,
+    required int mediaId,
+    required String title,
+    required DiscoverMediaType mediaType,
     required String? posterPath,
     required DateTime addedAt,
   }) = _WatchlistItem;

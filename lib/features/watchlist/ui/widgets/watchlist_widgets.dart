@@ -3,13 +3,14 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import '../../domain/entities/watchlist_item.dart';
+import '../../../discover/ui/providers/discover_providers.dart';
 
-class WatchlistMovieCard extends StatelessWidget {
+class WatchlistMediaCard extends StatelessWidget {
   final WatchlistItem item;
   final VoidCallback? onTap;
   final VoidCallback? onRemove;
 
-  const WatchlistMovieCard({
+  const WatchlistMediaCard({
     super.key,
     required this.item,
     this.onTap,
@@ -38,13 +39,21 @@ class WatchlistMovieCard extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            // Movie Poster
+            // Media Poster
             Image.network(
               item.fullPosterUrl,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) => Container(
                 color: colors.surface,
-                child: const Icon(Icons.movie_rounded, size: 40),
+                child: Center(
+                  child: Icon(
+                    item.mediaType == DiscoverMediaType.movie 
+                        ? Icons.movie_rounded 
+                        : Icons.tv_rounded, 
+                    size: 40,
+                    color: colors.onSurfaceSecondary.withValues(alpha: 0.5),
+                  ),
+                ),
               ),
             ),
             
@@ -88,7 +97,7 @@ class WatchlistMovieCard extends StatelessWidget {
               ),
             ),
 
-            // Movie Info
+            // Media Info
             Positioned(
               bottom: 12,
               left: 12,
@@ -98,7 +107,7 @@ class WatchlistMovieCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    item.movieTitle,
+                    item.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: textTheme.titleSmall?.copyWith(

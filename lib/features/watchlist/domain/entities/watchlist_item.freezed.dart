@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WatchlistItem {
 
- String get id; String get userId; int get movieId; String get movieTitle; String? get posterPath; DateTime get addedAt;
+ String get id; String get userId; int get mediaId; String get title; DiscoverMediaType get mediaType; String? get posterPath; DateTime get addedAt;
 /// Create a copy of WatchlistItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $WatchlistItemCopyWith<WatchlistItem> get copyWith => _$WatchlistItemCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WatchlistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.movieId, movieId) || other.movieId == movieId)&&(identical(other.movieTitle, movieTitle) || other.movieTitle == movieTitle)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WatchlistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.title, title) || other.title == title)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,movieId,movieTitle,posterPath,addedAt);
+int get hashCode => Object.hash(runtimeType,id,userId,mediaId,title,mediaType,posterPath,addedAt);
 
 @override
 String toString() {
-  return 'WatchlistItem(id: $id, userId: $userId, movieId: $movieId, movieTitle: $movieTitle, posterPath: $posterPath, addedAt: $addedAt)';
+  return 'WatchlistItem(id: $id, userId: $userId, mediaId: $mediaId, title: $title, mediaType: $mediaType, posterPath: $posterPath, addedAt: $addedAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $WatchlistItemCopyWith<$Res>  {
   factory $WatchlistItemCopyWith(WatchlistItem value, $Res Function(WatchlistItem) _then) = _$WatchlistItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, int movieId, String movieTitle, String? posterPath, DateTime addedAt
+ String id, String userId, int mediaId, String title, DiscoverMediaType mediaType, String? posterPath, DateTime addedAt
 });
 
 
@@ -62,13 +62,14 @@ class _$WatchlistItemCopyWithImpl<$Res>
 
 /// Create a copy of WatchlistItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? movieId = null,Object? movieTitle = null,Object? posterPath = freezed,Object? addedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? mediaId = null,Object? title = null,Object? mediaType = null,Object? posterPath = freezed,Object? addedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,movieId: null == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
-as int,movieTitle: null == movieTitle ? _self.movieTitle : movieTitle // ignore: cast_nullable_to_non_nullable
-as String,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
+as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
+as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
+as DiscoverMediaType,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
 as String?,addedAt: null == addedAt ? _self.addedAt : addedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int movieId,  String movieTitle,  String? posterPath,  DateTime addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int mediaId,  String title,  DiscoverMediaType mediaType,  String? posterPath,  DateTime addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WatchlistItem() when $default != null:
-return $default(_that.id,_that.userId,_that.movieId,_that.movieTitle,_that.posterPath,_that.addedAt);case _:
+return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.id,_that.userId,_that.movieId,_that.movieTitle,_that.poste
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int movieId,  String movieTitle,  String? posterPath,  DateTime addedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int mediaId,  String title,  DiscoverMediaType mediaType,  String? posterPath,  DateTime addedAt)  $default,) {final _that = this;
 switch (_that) {
 case _WatchlistItem():
-return $default(_that.id,_that.userId,_that.movieId,_that.movieTitle,_that.posterPath,_that.addedAt);case _:
+return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.id,_that.userId,_that.movieId,_that.movieTitle,_that.poste
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int movieId,  String movieTitle,  String? posterPath,  DateTime addedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int mediaId,  String title,  DiscoverMediaType mediaType,  String? posterPath,  DateTime addedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _WatchlistItem() when $default != null:
-return $default(_that.id,_that.userId,_that.movieId,_that.movieTitle,_that.posterPath,_that.addedAt);case _:
+return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
   return null;
 
 }
@@ -211,13 +212,14 @@ return $default(_that.id,_that.userId,_that.movieId,_that.movieTitle,_that.poste
 
 
 class _WatchlistItem extends WatchlistItem {
-  const _WatchlistItem({required this.id, required this.userId, required this.movieId, required this.movieTitle, required this.posterPath, required this.addedAt}): super._();
+  const _WatchlistItem({required this.id, required this.userId, required this.mediaId, required this.title, required this.mediaType, required this.posterPath, required this.addedAt}): super._();
   
 
 @override final  String id;
 @override final  String userId;
-@override final  int movieId;
-@override final  String movieTitle;
+@override final  int mediaId;
+@override final  String title;
+@override final  DiscoverMediaType mediaType;
 @override final  String? posterPath;
 @override final  DateTime addedAt;
 
@@ -231,16 +233,16 @@ _$WatchlistItemCopyWith<_WatchlistItem> get copyWith => __$WatchlistItemCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WatchlistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.movieId, movieId) || other.movieId == movieId)&&(identical(other.movieTitle, movieTitle) || other.movieTitle == movieTitle)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WatchlistItem&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.title, title) || other.title == title)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,movieId,movieTitle,posterPath,addedAt);
+int get hashCode => Object.hash(runtimeType,id,userId,mediaId,title,mediaType,posterPath,addedAt);
 
 @override
 String toString() {
-  return 'WatchlistItem(id: $id, userId: $userId, movieId: $movieId, movieTitle: $movieTitle, posterPath: $posterPath, addedAt: $addedAt)';
+  return 'WatchlistItem(id: $id, userId: $userId, mediaId: $mediaId, title: $title, mediaType: $mediaType, posterPath: $posterPath, addedAt: $addedAt)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$WatchlistItemCopyWith<$Res> implements $WatchlistItemCopy
   factory _$WatchlistItemCopyWith(_WatchlistItem value, $Res Function(_WatchlistItem) _then) = __$WatchlistItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, int movieId, String movieTitle, String? posterPath, DateTime addedAt
+ String id, String userId, int mediaId, String title, DiscoverMediaType mediaType, String? posterPath, DateTime addedAt
 });
 
 
@@ -268,13 +270,14 @@ class __$WatchlistItemCopyWithImpl<$Res>
 
 /// Create a copy of WatchlistItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? movieId = null,Object? movieTitle = null,Object? posterPath = freezed,Object? addedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? mediaId = null,Object? title = null,Object? mediaType = null,Object? posterPath = freezed,Object? addedAt = null,}) {
   return _then(_WatchlistItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
-as String,movieId: null == movieId ? _self.movieId : movieId // ignore: cast_nullable_to_non_nullable
-as int,movieTitle: null == movieTitle ? _self.movieTitle : movieTitle // ignore: cast_nullable_to_non_nullable
-as String,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
+as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
+as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
+as DiscoverMediaType,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
 as String?,addedAt: null == addedAt ? _self.addedAt : addedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

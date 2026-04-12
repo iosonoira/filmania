@@ -1,6 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/watchlist_item.dart';
 import '../../domain/repositories/i_watchlist_repository.dart';
+import '../../../discover/ui/providers/discover_providers.dart';
 import '../datasources/i_watchlist_remote_datasource.dart';
 import '../datasources/watchlist_remote_datasource_impl.dart';
 import '../models/watchlist_item_dto.dart';
@@ -20,11 +21,13 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
   @override
   Future<void> removeFromWatchlist({
     required String userId,
-    required int movieId,
+    required int mediaId,
+    required DiscoverMediaType mediaType,
   }) async {
     await _remoteDataSource.removeFromWatchlist(
       userId: userId,
-      movieId: movieId,
+      mediaId: mediaId,
+      mediaType: mediaType,
     );
   }
 
@@ -38,11 +41,13 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
   @override
   Future<bool> isInWatchlist({
     required String userId,
-    required int movieId,
+    required int mediaId,
+    required DiscoverMediaType mediaType,
   }) async {
     return _remoteDataSource.isInWatchlist(
       userId: userId,
-      movieId: movieId,
+      mediaId: mediaId,
+      mediaType: mediaType,
     );
   }
 }

@@ -160,29 +160,33 @@ class _ActionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: colors.onSurfacePrimary.withValues(alpha: 0.05),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: colors.onSurfacePrimary.withValues(alpha: 0.08)),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: colors.onSurfacePrimary),
-            const SizedBox(width: AppSpacing.md),
-            Text(
-              label,
-              style: textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
+    return Semantics(
+      label: label,
+      button: true,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          decoration: BoxDecoration(
+            color: colors.onSurfacePrimary.withValues(alpha: 0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: colors.onSurfacePrimary.withValues(alpha: 0.08)),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: colors.onSurfacePrimary),
+              const SizedBox(width: AppSpacing.md),
+              Text(
+                label,
+                style: textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const Spacer(),
-            Icon(Icons.chevron_right_rounded, color: colors.onSurfaceSecondary),
-          ],
+              const Spacer(),
+              Icon(Icons.chevron_right_rounded, color: colors.onSurfaceSecondary),
+            ],
+          ),
         ),
       ),
     );

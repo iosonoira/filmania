@@ -3,45 +3,45 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
-import '../../domain/entities/movie.dart';
-import '../providers/movies_provider.dart';
+import '../../domain/entities/tv_series.dart';
+import '../providers/tv_series_provider.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
-import '../../../../core/widgets/error_view.dart';
 import '../../../discover/ui/providers/discover_providers.dart';
+import '../../../../core/widgets/error_view.dart';
 
-class MovieDetailsPage extends ConsumerWidget {
-  final int movieId;
+class TVSeriesDetailsPage extends ConsumerWidget {
+  final int seriesId;
 
-  const MovieDetailsPage({
+  const TVSeriesDetailsPage({
     super.key,
-    required this.movieId,
+    required this.seriesId,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final movieAsync = ref.watch(movieDetailsProvider(movieId));
+    final seriesAsync = ref.watch(tvSeriesDetailsProvider(seriesId));
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: const GlassmorphicAppBar(
         showBackButton: true,
       ),
-      body: movieAsync.when(
-        data: (movie) => _MovieDetailsContent(movie: movie),
+      body: seriesAsync.when(
+        data: (series) => _TVSeriesDetailsContent(series: series),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => AppErrorView(
           error: err,
-          onRetry: () => ref.invalidate(movieDetailsProvider(movieId)),
+          onRetry: () => ref.invalidate(tvSeriesDetailsProvider(seriesId)),
         ),
       ),
     );
   }
 }
 
-class _MovieDetailsContent extends StatelessWidget {
-  final Movie movie;
+class _TVSeriesDetailsContent extends StatelessWidget {
+  final TVSeries series;
 
-  const _MovieDetailsContent({required this.movie});
+  const _TVSeriesDetailsContent({required this.series});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class _MovieDetailsContent extends StatelessWidget {
             clipBehavior: Clip.none,
             children: [
               Hero(
-                tag: 'backdrop_${movie.id}',
+                tag: 'backdrop_${series.id}',
                 child: Container(
                   height: 300,
                   width: double.infinity,
@@ -72,7 +72,7 @@ class _MovieDetailsContent extends StatelessWidget {
                     ),
                   ),
                   child: Image.network(
-                    movie.fullBackdropUrl,
+                    series.fullBackdropUrl,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       color: colors.surface.withValues(alpha: 0.1),
@@ -90,7 +90,7 @@ class _MovieDetailsContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Hero(
-                      tag: 'poster_${movie.id}',
+                      tag: 'poster_${series.id}',
                       child: Container(
                         height: 180,
                         width: 120,
@@ -106,7 +106,7 @@ class _MovieDetailsContent extends StatelessWidget {
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: Image.network(
-                          movie.fullPosterUrl,
+                          series.fullPosterUrl,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) => Container(
                             color: colors.surface.withValues(alpha: 0.1),
@@ -123,7 +123,7 @@ class _MovieDetailsContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            movie.title,
+                            series.name,
                             style: textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: colors.onSurfacePrimary,
@@ -135,16 +135,16 @@ class _MovieDetailsContent extends StatelessWidget {
                               const Icon(Icons.star_rounded, color: Colors.amber, size: 18),
                               const SizedBox(width: 4),
                               Text(
-                                movie.voteAverage.toStringAsFixed(1),
+                                series.voteAverage.toStringAsFixed(1),
                                 style: textTheme.labelLarge?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: colors.onSurfacePrimary,
                                 ),
                               ),
                               const SizedBox(width: AppSpacing.md),
-                              if (movie.releaseDate != null)
+                              if (series.firstAirDate != null)
                                 Text(
-                                  movie.releaseDate!.year.toString(),
+                                  series.firstAirDate!.year.toString(),
                                   style: textTheme.labelLarge?.copyWith(
                                     color: colors.onSurfaceSecondary,
                                   ),
@@ -167,7 +167,7 @@ class _MovieDetailsContent extends StatelessWidget {
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           sliver: SliverToBoxAdapter(
-            child: _WatchlistButton(movie: movie),
+            child: _WatchlistButton(series: series),
           ),
         ),
 
@@ -184,7 +184,7 @@ class _MovieDetailsContent extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  movie.overview,
+                  series.overview,
                   style: textTheme.bodyLarge?.copyWith(
                     color: colors.onSurfaceSecondary,
                     height: 1.5,
@@ -202,14 +202,14 @@ class _MovieDetailsContent extends StatelessWidget {
 }
 
 class _WatchlistButton extends ConsumerWidget {
-  final Movie movie;
+  final TVSeries series;
 
-  const _WatchlistButton({required this.movie});
+  const _WatchlistButton({required this.series});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
-    final isInWatchlistAsync = ref.watch(isMediaInWatchlistProvider(movie.id, DiscoverMediaType.movie));
+    final isInWatchlistAsync = ref.watch(isMediaInWatchlistProvider(series.id, DiscoverMediaType.tv));
     final notifierState = ref.watch(watchlistProvider);
 
     return isInWatchlistAsync.when(
@@ -218,7 +218,7 @@ class _WatchlistButton extends ConsumerWidget {
         
         if (isIn) {
           return OutlinedButton.icon(
-            onPressed: isLoading ? null : () => ref.read(watchlistProvider.notifier).toggleMovie(movie),
+            onPressed: isLoading ? null : () => ref.read(watchlistProvider.notifier).toggleTVSeries(series),
             icon: isLoading 
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
                 : const Icon(Icons.bookmark_remove_rounded, color: Colors.redAccent),
@@ -246,7 +246,7 @@ class _WatchlistButton extends ConsumerWidget {
             ],
           ),
           child: ElevatedButton.icon(
-            onPressed: isLoading ? null : () => ref.read(watchlistProvider.notifier).toggleMovie(movie),
+            onPressed: isLoading ? null : () => ref.read(watchlistProvider.notifier).toggleTVSeries(series),
             icon: isLoading 
                 ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                 : const Icon(Icons.bookmark_add_rounded, color: Colors.white),

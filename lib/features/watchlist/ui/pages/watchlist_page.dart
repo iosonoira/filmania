@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import '../../../discover/ui/providers/discover_providers.dart';
 import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -80,15 +81,16 @@ class WatchlistPage extends ConsumerWidget {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final item = items[index];
-                      return WatchlistMovieCard(
+                      return WatchlistMediaCard(
                         item: item,
                         onTap: () {
-                          context.push(AppRoutes.movieDetails
-                              .replaceFirst(':id', item.movieId.toString()));
+                          if (item.mediaType == DiscoverMediaType.movie) {
+                            context.push(AppRoutes.movieDetails.replaceFirst(':id', item.mediaId.toString()));
+                          } else {
+                            context.push(AppRoutes.tvDetails.replaceFirst(':id', item.mediaId.toString()));
+                          }
                         },
-                        onRemove: () => ref
-                            .read(watchlistProvider.notifier)
-                            .remove(item.movieId),
+                        onRemove: () => ref.read(watchlistProvider.notifier).remove(item.mediaId, item.mediaType),
                       );
                     },
                     childCount: items.length,

@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../../core/supabase/supabase_client.dart';
 import '../models/watchlist_item_dto.dart';
+import '../../../discover/ui/providers/discover_providers.dart';
 import '../../domain/failures/watchlist_failure.dart';
 import 'i_watchlist_remote_datasource.dart';
 
@@ -50,14 +51,16 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
   @override
   Future<void> removeFromWatchlist({
     required String userId,
-    required int movieId,
+    required int mediaId,
+    required DiscoverMediaType mediaType,
   }) async {
     try {
       await _supabase
           .from('watchlist')
           .delete()
           .eq('user_id', userId)
-          .eq('movie_id', movieId);
+          .eq('movie_id', mediaId)
+          .eq('media_type', mediaType.name);
     } on PostgrestException catch (e) {
       debugPrint('Supabase Error (removeFromWatchlist): ${e.message}');
       throw SupabaseFailure(e.message);
@@ -85,14 +88,16 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
   @override
   Future<bool> isInWatchlist({
     required String userId,
-    required int movieId,
+    required int mediaId,
+    required DiscoverMediaType mediaType,
   }) async {
     try {
       final response = await _supabase
           .from('watchlist')
           .select()
           .eq('user_id', userId)
-          .eq('movie_id', movieId)
+          .eq('movie_id', mediaId)
+          .eq('media_type', mediaType.name)
           .maybeSingle();
 
       return response != null;
