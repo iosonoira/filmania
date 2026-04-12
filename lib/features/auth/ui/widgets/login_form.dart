@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import '../../domain/failures/auth_failure.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({super.key});
@@ -43,13 +44,20 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
     // Rule: Use ref.listen for side-effects like snackbars (Rule 120 State Management)
     ref.listen(authProvider, (previous, next) {
-      if (next is AsyncError) {
+      if (next case AsyncError(:final error)) {
+        final message = switch (error) {
+          InvalidCredentials() => error.message,
+          EmailAlreadyInUse() => error.message,
+          NetworkError() => 'Controlla la tua connessione internet.',
+          RateLimitExceeded() => error.message,
+          _ => 'Si è verificato un errore. Riprova.',
+        };
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(next.error.toString()),
+            content: Text(message),
             backgroundColor: colors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.md)),
           ),
         );
       }

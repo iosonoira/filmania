@@ -6,6 +6,7 @@ import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../domain/entities/movie.dart';
 import '../providers/movies_provider.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
+import '../../../../core/widgets/error_view.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
   final int movieId;
@@ -17,7 +18,6 @@ class MovieDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = AppColors.of(context);
     final movieAsync = ref.watch(movieDetailsProvider(movieId));
 
     return Scaffold(
@@ -28,8 +28,9 @@ class MovieDetailsPage extends ConsumerWidget {
       body: movieAsync.when(
         data: (movie) => _MovieDetailsContent(movie: movie),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(
-          child: Text('Error: $err', style: TextStyle(color: colors.error)),
+        error: (err, stack) => AppErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(movieDetailsProvider(movieId)),
         ),
       ),
     );

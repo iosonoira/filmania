@@ -5,6 +5,13 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../widgets/home_widgets.dart';
 
+// Pattern for future AsyncValue sections:
+// sectionAsync.when(
+//   data: (data) => SectionWidget(data: data),
+//   loading: () => const SectionShimmer(),
+//   error: (err, stack) => AppErrorView(error: err, compact: true, onRetry: () => ref.invalidate(provider)),
+// )
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 

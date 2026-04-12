@@ -8,6 +8,7 @@ import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
+import '../../../../core/widgets/error_view.dart';
 
 class WatchlistPage extends ConsumerWidget {
   const WatchlistPage({super.key});
@@ -110,25 +111,11 @@ class WatchlistPage extends ConsumerWidget {
                 ),
               ),
             ),
-            error: (err, stack) => SliverToBoxAdapter(
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.xxl),
-                  child: Column(
-                    children: [
-                      Icon(Icons.error_outline_rounded, color: colors.error, size: 48),
-                      const SizedBox(height: AppSpacing.md),
-                      Text(
-                        'Unable to load watchlist',
-                        style: textTheme.titleMedium?.copyWith(color: colors.error),
-                      ),
-                      TextButton(
-                        onPressed: () => ref.invalidate(userWatchlistProvider),
-                        child: const Text('Retry'),
-                      ),
-                    ],
-                  ),
-                ),
+            error: (err, stack) => SliverFillRemaining(
+              hasScrollBody: false,
+              child: AppErrorView(
+                error: err,
+                onRetry: () => ref.invalidate(userWatchlistProvider),
               ),
             ),
           ),

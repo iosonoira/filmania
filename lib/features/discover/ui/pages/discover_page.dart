@@ -9,6 +9,7 @@ import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
 import '../widgets/discover_widgets.dart';
 import '../providers/discover_providers.dart';
+import '../../../../core/widgets/error_view.dart';
 
 class DiscoverPage extends ConsumerWidget {
   const DiscoverPage({super.key});
@@ -102,39 +103,74 @@ class DiscoverPage extends ConsumerWidget {
           ),
           
           discoverAsync.when(
-            data: (movies) => SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: AppSpacing.md,
-                  mainAxisSpacing: AppSpacing.md,
+            data: (movies) {
+              if (movies.isEmpty) {
+                return SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.search_off_rounded,
+                          size: 64,
+                          color: colors.onSurfaceSecondary.withValues(alpha: 0.4),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        Text(
+                          'Nessun risultato trovato',
+                          style: textTheme.titleMedium?.copyWith(
+                            color: colors.onSurfacePrimary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.xs),
+                        Text(
+                          'Prova con parole chiave diverse.',
+                          style: textTheme.bodySmall?.copyWith(
+                            color: colors.onSurfaceSecondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              return SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: AppSpacing.md,
+                    mainAxisSpacing: AppSpacing.md,
+                  ),
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final movie = movies[index];
+                      return MovieGridCard(
+                        movie: movie,
+                        onTap: () {
+                          context.push(AppRoutes.movieDetails
+                              .replaceFirst(':id', movie.id.toString()));
+                        },
+                      );
+                    },
+                    childCount: movies.length,
+                  ),
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final movie = movies[index];
-                    return MovieGridCard(
-                      movie: movie,
-                      onTap: () {
-                        context.push(AppRoutes.movieDetails.replaceFirst(':id', movie.id.toString()));
-                      },
-                    );
-                  },
-                  childCount: movies.length,
-                ),
-              ),
-            ),
+              );
+            },
             loading: () => const SliverFillRemaining(
               child: Center(child: CircularProgressIndicator()),
             ),
             error: (err, stack) => SliverFillRemaining(
-              child: Center(
-                child: Text(
-                  'Error loading movies: $err',
-                  textAlign: TextAlign.center,
-                  style: textTheme.bodyLarge?.copyWith(color: colors.error),
-                ),
+              hasScrollBody: false,
+              child: AppErrorView(
+                error: err,
+                onRetry: () => query.isEmpty 
+                    ? ref.invalidate(discoverMoviesProvider())
+                    : ref.invalidate(searchMoviesProvider(query)),
               ),
             ),
           ),
