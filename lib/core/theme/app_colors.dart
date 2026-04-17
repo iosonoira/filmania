@@ -22,8 +22,10 @@ abstract class AppColors {
   // Semantic Utility
   static const error = Color(0xFFCF6679);
 
-  /// Extension-like helper to resolve semantic colors based on theme.
-  /// Rule: NEVER access Theme.of(context) to derive semantic colours — use AppColors.of(context)
+  /// Resolves the semantic color scheme based on the current theme brightness.
+  ///
+  /// Always use this instead of accessing [Theme.of(context).brightness] directly.
+  /// Rule: Never access Theme.of(context) to derive semantic colours.
   static AppColorScheme of(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return isDark ? _darkScheme : _lightScheme;
@@ -71,8 +73,8 @@ class AppColorScheme {
   });
 
   LinearGradient get primaryGradient => LinearGradient(
-        colors: [primary, primary.withValues(alpha: 0.7)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      );
+    colors: [primary, primary.withValues(alpha: 0.7)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
 }
