@@ -17,7 +17,6 @@ abstract class WatchlistItem with _$WatchlistItem {
 
   const WatchlistItem._();
 
-  String get fullPosterUrl => posterPath != null
-      ? 'https://image.tmdb.org/t/p/w500$posterPath'
-      : 'https://via.placeholder.com/500x750?text=No+Image';
+  String? get fullPosterUrl =>
+      posterPath != null ? 'https://image.tmdb.org/t/p/w500$posterPath' : null;
 }

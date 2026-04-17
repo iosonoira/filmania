@@ -4,6 +4,7 @@ import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import 'package:filmania/core/utils/logger.dart';
 import '../../domain/entities/tv_series.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
@@ -68,7 +69,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                     ),
                   ),
                   child: CachedNetworkImage(
-                    imageUrl: series.fullBackdropUrl,
+                    imageUrl: series.fullBackdropUrl ?? '',
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Container(color: colors.surface.withValues(alpha: 0.1)),
@@ -107,7 +108,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: CachedNetworkImage(
-                          imageUrl: series.fullPosterUrl,
+                          imageUrl: series.fullPosterUrl ?? '',
                           fit: BoxFit.cover,
                           memCacheWidth: 300,
                           placeholder: (context, url) => Container(
@@ -309,7 +310,11 @@ class _WatchlistButton extends ConsumerWidget {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) {
-        debugPrint('Error loading watchlist status: $error');
+        AppLogger.error(
+          'Watchlist status load failed',
+          tag: 'WatchlistButton',
+          exception: error,
+        );
         return Center(
           child: Text(
             'Error loading watchlist status',

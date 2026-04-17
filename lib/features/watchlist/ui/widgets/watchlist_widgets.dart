@@ -23,117 +23,126 @@ class WatchlistMediaCard extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Media Poster
-            CachedNetworkImage(
-              imageUrl: item.fullPosterUrl,
-              fit: BoxFit.cover,
-              memCacheWidth: 300,
-              placeholder: (context, url) => Container(
-                color: colors.surface.withValues(alpha: 0.1),
-                child: const Center(
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
+    return Semantics(
+      label:
+          'Media: ${item.title}, aggiunto il ${item.addedAt.day}/${item.addedAt.month}/${item.addedAt.year}',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
               ),
-              errorWidget: (context, url, error) => Container(
-                color: colors.surface,
-                child: Center(
-                  child: Icon(
-                    item.mediaType == MediaType.movie
-                        ? Icons.movie_rounded
-                        : Icons.tv_rounded,
-                    size: 40,
-                    color: colors.onSurfaceSecondary.withValues(alpha: 0.5),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Media Poster
+              CachedNetworkImage(
+                imageUrl: item.fullPosterUrl ?? '',
+                fit: BoxFit.cover,
+                memCacheWidth: 300,
+                placeholder: (context, url) => Container(
+                  color: colors.surface.withValues(alpha: 0.1),
+                  child: const Center(
+                    child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
-              ),
-            ),
-
-            // Gradient Overlay
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0.8),
-                      Colors.transparent,
-                      Colors.transparent,
-                    ],
-                    stops: const [0.0, 0.4, 1.0],
-                  ),
-                ),
-              ),
-            ),
-
-            // Remove/Bookmark Icon
-            Positioned(
-              top: 8,
-              right: 8,
-              child: GestureDetector(
-                onTap: onRemove,
-                child: GlassOverlay(
-                  sigma: 10,
-                  borderRadius: BorderRadius.circular(10),
-                  color: colors.primary.withValues(alpha: 0.8),
-                  child: const Padding(
-                    padding: EdgeInsets.all(AppSpacing.xs),
+                errorWidget: (context, url, error) => Container(
+                  color: colors.surface,
+                  child: Center(
                     child: Icon(
-                      Icons.bookmark_rounded,
-                      color: Colors.white,
-                      size: 20,
+                      item.mediaType == MediaType.movie
+                          ? Icons.movie_rounded
+                          : Icons.tv_rounded,
+                      size: 40,
+                      color: colors.onSurfaceSecondary.withValues(alpha: 0.5),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            // Media Info
-            Positioned(
-              bottom: 12,
-              left: 12,
-              right: 12,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    item.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: textTheme.titleSmall?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.2,
+              // Gradient Overlay
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Colors.black.withValues(alpha: 0.8),
+                        Colors.transparent,
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.4, 1.0],
                     ),
                   ),
-                  Text(
-                    'Added ${item.addedAt.day}/${item.addedAt.month}/${item.addedAt.year}',
-                    style: textTheme.labelSmall?.copyWith(
-                      color: Colors.white70,
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
-          ],
+
+              // Remove/Bookmark Icon
+              Positioned(
+                top: 8,
+                right: 8,
+                child: Semantics(
+                  label: 'Rimuovi ${item.title} dalla watchlist',
+                  button: true,
+                  child: GestureDetector(
+                    onTap: onRemove,
+                    child: GlassOverlay(
+                      sigma: 10,
+                      borderRadius: BorderRadius.circular(10),
+                      color: colors.primary.withValues(alpha: 0.8),
+                      child: const Padding(
+                        padding: EdgeInsets.all(AppSpacing.xs),
+                        child: Icon(
+                          Icons.bookmark_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // Media Info
+              Positioned(
+                bottom: 12,
+                left: 12,
+                right: 12,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      item.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: textTheme.titleSmall?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.2,
+                      ),
+                    ),
+                    Text(
+                      'Added ${item.addedAt.day}/${item.addedAt.month}/${item.addedAt.year}',
+                      style: textTheme.labelSmall?.copyWith(
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

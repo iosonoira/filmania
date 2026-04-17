@@ -1,8 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:filmania/core/supabase/supabase_client.dart';
+import 'package:filmania/core/utils/logger.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
 
@@ -22,7 +22,7 @@ class ImageUploadController extends _$ImageUploadController {
         throw const UnknownAuthFailure('Utente non autenticato');
       }
 
-      debugPrint('Step 1: Leggo bytes...');
+      AppLogger.debug('Leggo bytes file', tag: 'ImageUpload');
       final bytes = await xfile.readAsBytes();
 
       final supabase = ref.read(supabaseClientProvider);
@@ -32,7 +32,7 @@ class ImageUploadController extends _$ImageUploadController {
       final fileName =
           '${user.id}-${DateTime.now().millisecondsSinceEpoch}.$ext';
 
-      debugPrint('Step 2: Upload su bucket avatars...');
+      AppLogger.debug('Upload su bucket avatars', tag: 'ImageUpload');
       await supabase.storage
           .from('avatars')
           .uploadBinary(
@@ -43,12 +43,12 @@ class ImageUploadController extends _$ImageUploadController {
 
       final imageUrl = supabase.storage.from('avatars').getPublicUrl(fileName);
 
-      debugPrint('Step 3: Update user metadata...');
+      AppLogger.debug('Update user metadata', tag: 'ImageUpload');
       await supabase.auth.updateUser(
         UserAttributes(data: {'avatar_url': imageUrl}),
       );
 
-      debugPrint('Step 4: Update tabella user...');
+      AppLogger.debug('Update tabella user', tag: 'ImageUpload');
       await supabase
           .from('user')
           .update({'photo_url': imageUrl})

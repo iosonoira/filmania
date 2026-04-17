@@ -16,11 +16,10 @@ abstract class Movie with _$Movie {
 
   const Movie._();
 
-  String get fullPosterUrl => posterPath != null 
-      ? 'https://image.tmdb.org/t/p/w500$posterPath' 
-      : 'https://via.placeholder.com/500x750?text=No+Image';
+  String? get fullPosterUrl =>
+      posterPath != null ? 'https://image.tmdb.org/t/p/w500$posterPath' : null;
 
-  String get fullBackdropUrl => backdropPath != null 
-      ? 'https://image.tmdb.org/t/p/original$backdropPath' 
-      : 'https://via.placeholder.com/1920x1080?text=No+Background';
+  String? get fullBackdropUrl => backdropPath != null
+      ? 'https://image.tmdb.org/t/p/original$backdropPath'
+      : null;
 }

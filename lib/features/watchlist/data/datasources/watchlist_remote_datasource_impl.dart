@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/core/utils/logger.dart';
 import '../../../../core/supabase/supabase_client.dart';
 import '../models/watchlist_item_dto.dart';
 import '../../domain/failures/watchlist_failure.dart';
@@ -40,10 +40,18 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
       }
       await _supabase.from('watchlist').insert(json);
     } on PostgrestException catch (e) {
-      debugPrint('Supabase Error (addToWatchlist): ${e.message}');
+      AppLogger.error(
+        'addToWatchlist failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      debugPrint('Unexpected Error (addToWatchlist): $e');
+      AppLogger.error(
+        'addToWatchlist unexpected error',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }
@@ -62,10 +70,18 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
           .eq('movie_id', mediaId)
           .eq('media_type', mediaType.name);
     } on PostgrestException catch (e) {
-      debugPrint('Supabase Error (removeFromWatchlist): ${e.message}');
+      AppLogger.error(
+        'removeFromWatchlist failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      debugPrint('Unexpected Error (removeFromWatchlist): $e');
+      AppLogger.error(
+        'removeFromWatchlist unexpected error',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }
@@ -102,10 +118,14 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
 
       return response != null;
     } on PostgrestException catch (e) {
-      debugPrint('Supabase Error (isInWatchlist): ${e.message}');
+      AppLogger.error('isInWatchlist failed', tag: 'WatchlistDS', exception: e);
       throw SupabaseFailure(e.message);
     } catch (e) {
-      debugPrint('Unexpected Error (isInWatchlist): $e');
+      AppLogger.error(
+        'isInWatchlist unexpected error',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }

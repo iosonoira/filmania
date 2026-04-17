@@ -137,7 +137,7 @@ class WatchingCard extends StatelessWidget {
           'Stai guardando $title, $subtitle, ${(progress * 100).round()}% completato',
       button: true,
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.85,
+        width: MediaQuery.sizeOf(context).width * 0.85,
         constraints: const BoxConstraints(maxWidth: 450),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.radius),
@@ -272,7 +272,7 @@ class _WatchingCardProgressBar extends StatelessWidget {
         ),
         Container(
           height: 6,
-          width: MediaQuery.of(context).size.width * 0.85 * progress,
+          width: MediaQuery.sizeOf(context).width * 0.85 * progress,
           constraints: BoxConstraints(maxWidth: 450 * progress),
           decoration: BoxDecoration(
             color: colors.primary,
@@ -479,11 +479,9 @@ class CuratedSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textTheme = Theme.of(context).textTheme;
-
     final containerColorLow = isDark
         ? const Color(0xFF1C1B20)
         : const Color(0xFFF5F5F5);
-
     final discoverAsync = ref.watch(discoverMoviesProvider(page: 1));
 
     return Padding(
@@ -500,26 +498,10 @@ class CuratedSection extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           discoverAsync.when(
-            data: (movies) {
-              if (movies.isEmpty) return const SizedBox.shrink();
-              final featuredMovie = movies[0];
-              final secondaryMovie = movies.length > 1 ? movies[1] : null;
-
-              return Column(
-                children: [
-                  _FeaturedBentoCard(movie: featuredMovie),
-                  const SizedBox(height: AppSpacing.md),
-                  if (secondaryMovie != null) ...[
-                    _SecondaryBentoCard(
-                      movie: secondaryMovie,
-                      containerColor: containerColorLow,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                  ],
-                  _TrendingTopRatedRow(containerColor: containerColorLow),
-                ],
-              );
-            },
+            data: (movies) => _CuratedContent(
+              movies: movies,
+              containerColor: containerColorLow,
+            ),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => AppErrorView(
               error: err,
@@ -529,6 +511,35 @@ class CuratedSection extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _CuratedContent extends StatelessWidget {
+  const _CuratedContent({required this.movies, required this.containerColor});
+
+  final List<Movie> movies;
+  final Color containerColor;
+
+  @override
+  Widget build(BuildContext context) {
+    if (movies.isEmpty) return const SizedBox.shrink();
+    final featuredMovie = movies[0];
+    final secondaryMovie = movies.length > 1 ? movies[1] : null;
+
+    return Column(
+      children: [
+        _FeaturedBentoCard(movie: featuredMovie),
+        const SizedBox(height: AppSpacing.md),
+        if (secondaryMovie != null) ...[
+          _SecondaryBentoCard(
+            movie: secondaryMovie,
+            containerColor: containerColor,
+          ),
+          const SizedBox(height: AppSpacing.md),
+        ],
+        _TrendingTopRatedRow(containerColor: containerColor),
+      ],
     );
   }
 }
