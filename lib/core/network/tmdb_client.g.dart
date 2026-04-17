@@ -8,12 +8,31 @@ part of 'tmdb_client.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Singleton Dio client pre-configured for the TMDB API.
+///
+/// Interceptor order (mandatory per networking rules):
+/// 1. [TmdbAuthInterceptor]  — injects Bearer token on every request
+/// 2. [PrettyDioLogger]      — logs requests/responses in debug mode only
+/// 3. [TmdbRetryInterceptor] — retries idempotent GET requests (max 3, exponential back-off)
 
 @ProviderFor(tmdbClient)
 final tmdbClientProvider = TmdbClientProvider._();
 
+/// Singleton Dio client pre-configured for the TMDB API.
+///
+/// Interceptor order (mandatory per networking rules):
+/// 1. [TmdbAuthInterceptor]  — injects Bearer token on every request
+/// 2. [PrettyDioLogger]      — logs requests/responses in debug mode only
+/// 3. [TmdbRetryInterceptor] — retries idempotent GET requests (max 3, exponential back-off)
+
 final class TmdbClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
+  /// Singleton Dio client pre-configured for the TMDB API.
+  ///
+  /// Interceptor order (mandatory per networking rules):
+  /// 1. [TmdbAuthInterceptor]  — injects Bearer token on every request
+  /// 2. [PrettyDioLogger]      — logs requests/responses in debug mode only
+  /// 3. [TmdbRetryInterceptor] — retries idempotent GET requests (max 3, exponential back-off)
   TmdbClientProvider._()
     : super(
         from: null,
@@ -47,4 +66,4 @@ final class TmdbClientProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$tmdbClientHash() => r'6750dda0720347eddbfde594e3ff8175144d579f';
+String _$tmdbClientHash() => r'24f428bfa3463f5b2c494587fd705e402d6f89bc';

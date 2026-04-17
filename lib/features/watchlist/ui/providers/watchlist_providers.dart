@@ -1,8 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../../../tv_series/domain/entities/tv_series.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 import '../../data/repositories/watchlist_repository_impl.dart';
 import '../../domain/entities/watchlist_item.dart';
 
@@ -16,10 +16,11 @@ Stream<List<WatchlistItem>> userWatchlist(Ref ref) {
 }
 
 @riverpod
-Future<bool> isMediaInWatchlist(Ref ref, int mediaId, DiscoverMediaType type) async {
+Future<bool> isMediaInWatchlist(Ref ref, int mediaId, MediaType type) async {
   final user = ref.watch(authStateProvider).value;
   if (user == null) return false;
-  return ref.watch(watchlistRepositoryProvider)
+  return ref
+      .watch(watchlistRepositoryProvider)
       .isInWatchlist(userId: user.id, mediaId: mediaId, mediaType: type);
 }
 
@@ -33,7 +34,7 @@ class WatchlistNotifier extends _$WatchlistNotifier {
       id: movie.id,
       title: movie.title,
       posterPath: movie.posterPath,
-      type: DiscoverMediaType.movie,
+      type: MediaType.movie,
     );
   }
 
@@ -42,7 +43,7 @@ class WatchlistNotifier extends _$WatchlistNotifier {
       id: series.id,
       title: series.name,
       posterPath: series.posterPath,
-      type: DiscoverMediaType.tv,
+      type: MediaType.tv,
     );
   }
 
@@ -50,46 +51,55 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     required int id,
     required String title,
     required String? posterPath,
-    required DiscoverMediaType type,
+    required MediaType type,
   }) async {
     final user = ref.read(authStateProvider).value;
     if (user == null) return;
 
+    final currentItems = ref.read(userWatchlistProvider).value ?? [];
+    final isCurrentlyInWatchlist = currentItems.any(
+      (item) => item.mediaId == id && item.mediaType == type,
+    );
+
     state = const AsyncLoading();
-    
-    final isIn = await ref.read(watchlistRepositoryProvider)
-        .isInWatchlist(userId: user.id, mediaId: id, mediaType: type);
-        
+
     state = await AsyncValue.guard(() async {
-      if (isIn) {
-        await ref.read(watchlistRepositoryProvider)
+      if (isCurrentlyInWatchlist) {
+        await ref
+            .read(watchlistRepositoryProvider)
             .removeFromWatchlist(userId: user.id, mediaId: id, mediaType: type);
       } else {
-        await ref.read(watchlistRepositoryProvider).addToWatchlist(
-          WatchlistItem(
-            id: '', 
-            userId: user.id,
-            mediaId: id,
-            title: title,
-            mediaType: type,
-            posterPath: posterPath,
-            addedAt: DateTime.now(),
-          ),
-        );
+        await ref
+            .read(watchlistRepositoryProvider)
+            .addToWatchlist(
+              WatchlistItem(
+                id: '',
+                userId: user.id,
+                mediaId: id,
+                title: title,
+                mediaType: type,
+                posterPath: posterPath,
+                addedAt: DateTime.now(),
+              ),
+            );
       }
-      ref.invalidate(userWatchlistProvider);
       ref.invalidate(isMediaInWatchlistProvider(id, type));
     });
   }
 
-  Future<void> remove(int mediaId, DiscoverMediaType type) async {
+  Future<void> remove(int mediaId, MediaType type) async {
     final user = ref.read(authStateProvider).value;
     if (user == null) return;
 
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(watchlistRepositoryProvider)
-          .removeFromWatchlist(userId: user.id, mediaId: mediaId, mediaType: type);
+      await ref
+          .read(watchlistRepositoryProvider)
+          .removeFromWatchlist(
+            userId: user.id,
+            mediaId: mediaId,
+            mediaType: type,
+          );
       ref.invalidate(userWatchlistProvider);
       ref.invalidate(isMediaInWatchlistProvider(mediaId, type));
     });

@@ -25,27 +25,17 @@ class HomePage extends ConsumerWidget {
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(height: MediaQuery.of(context).padding.top + AppSpacing.xl),
+            child: SizedBox(
+              height: MediaQuery.of(context).padding.top + AppSpacing.xl,
+            ),
           ),
-          const SliverToBoxAdapter(
-            child: TrendingMoviesSection(),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppSpacing.xxl),
-          ),
-          const SliverToBoxAdapter(
-            child: TrendingTVSeriesSection(),
-          ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppSpacing.xxl),
-          ),
-          const SliverToBoxAdapter(
-            child: CuratedSection(),
-          ),
+          const SliverToBoxAdapter(child: TrendingMoviesSection()),
+          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+          const TrendingTVSeriesSliver(),
+          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+          const SliverToBoxAdapter(child: CuratedSection()),
           // Extra space for bottom nav bar so it's not overriding the last element
-          const SliverToBoxAdapter(
-            child: SizedBox(height: 140),
-          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 140)),
         ],
       ),
     );

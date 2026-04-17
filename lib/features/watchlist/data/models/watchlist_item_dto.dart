@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../domain/entities/watchlist_item.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 
 part 'watchlist_item_dto.freezed.dart';
 part 'watchlist_item_dto.g.dart';
@@ -12,7 +12,7 @@ abstract class WatchlistItemDto with _$WatchlistItemDto {
     @JsonKey(name: 'user_id') required String userId,
     @JsonKey(name: 'movie_id') required int mediaId,
     @JsonKey(name: 'movie_title') required String title,
-    @JsonKey(name: 'media_type') @Default(DiscoverMediaType.movie) DiscoverMediaType mediaType,
+    @JsonKey(name: 'media_type') @Default(MediaType.movie) MediaType mediaType,
     @JsonKey(name: 'poster_path') required String? posterPath,
     @JsonKey(name: 'added_at') required DateTime addedAt,
   }) = _WatchlistItemDto;

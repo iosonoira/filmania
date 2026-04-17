@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
+import 'package:filmania/core/domain/enums/media_type.dart';
 
 part 'discover_providers.g.dart';
 
-enum DiscoverMediaType { movie, tv }
+/// Alias for backward compatibility within the discover UI layer.
+typedef DiscoverMediaType = MediaType;
 
 @riverpod
 class SelectedMediaType extends _$SelectedMediaType {

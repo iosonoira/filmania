@@ -13,8 +13,8 @@ _WatchlistItemDto _$WatchlistItemDtoFromJson(Map<String, dynamic> json) =>
       mediaId: (json['movie_id'] as num).toInt(),
       title: json['movie_title'] as String,
       mediaType:
-          $enumDecodeNullable(_$DiscoverMediaTypeEnumMap, json['media_type']) ??
-          DiscoverMediaType.movie,
+          $enumDecodeNullable(_$MediaTypeEnumMap, json['media_type']) ??
+          MediaType.movie,
       posterPath: json['poster_path'] as String?,
       addedAt: DateTime.parse(json['added_at'] as String),
     );
@@ -25,12 +25,9 @@ Map<String, dynamic> _$WatchlistItemDtoToJson(_WatchlistItemDto instance) =>
       'user_id': instance.userId,
       'movie_id': instance.mediaId,
       'movie_title': instance.title,
-      'media_type': _$DiscoverMediaTypeEnumMap[instance.mediaType]!,
+      'media_type': _$MediaTypeEnumMap[instance.mediaType]!,
       'poster_path': instance.posterPath,
       'added_at': instance.addedAt.toIso8601String(),
     };
 
-const _$DiscoverMediaTypeEnumMap = {
-  DiscoverMediaType.movie: 'movie',
-  DiscoverMediaType.tv: 'tv',
-};
+const _$MediaTypeEnumMap = {MediaType.movie: 'movie', MediaType.tv: 'tv'};

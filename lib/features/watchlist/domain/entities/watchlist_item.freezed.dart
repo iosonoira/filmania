@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WatchlistItem {
 
- String get id; String get userId; int get mediaId; String get title; DiscoverMediaType get mediaType; String? get posterPath; DateTime get addedAt;
+ String get id; String get userId; int get mediaId; String get title; MediaType get mediaType; String? get posterPath; DateTime get addedAt;
 /// Create a copy of WatchlistItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -45,7 +45,7 @@ abstract mixin class $WatchlistItemCopyWith<$Res>  {
   factory $WatchlistItemCopyWith(WatchlistItem value, $Res Function(WatchlistItem) _then) = _$WatchlistItemCopyWithImpl;
 @useResult
 $Res call({
- String id, String userId, int mediaId, String title, DiscoverMediaType mediaType, String? posterPath, DateTime addedAt
+ String id, String userId, int mediaId, String title, MediaType mediaType, String? posterPath, DateTime addedAt
 });
 
 
@@ -69,7 +69,7 @@ as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullabl
 as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as DiscoverMediaType,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
+as MediaType,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
 as String?,addedAt: null == addedAt ? _self.addedAt : addedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int mediaId,  String title,  DiscoverMediaType mediaType,  String? posterPath,  DateTime addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String userId,  int mediaId,  String title,  MediaType mediaType,  String? posterPath,  DateTime addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WatchlistItem() when $default != null:
 return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
@@ -177,7 +177,7 @@ return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int mediaId,  String title,  DiscoverMediaType mediaType,  String? posterPath,  DateTime addedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String userId,  int mediaId,  String title,  MediaType mediaType,  String? posterPath,  DateTime addedAt)  $default,) {final _that = this;
 switch (_that) {
 case _WatchlistItem():
 return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
@@ -197,7 +197,7 @@ return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int mediaId,  String title,  DiscoverMediaType mediaType,  String? posterPath,  DateTime addedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String userId,  int mediaId,  String title,  MediaType mediaType,  String? posterPath,  DateTime addedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _WatchlistItem() when $default != null:
 return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
@@ -219,7 +219,7 @@ class _WatchlistItem extends WatchlistItem {
 @override final  String userId;
 @override final  int mediaId;
 @override final  String title;
-@override final  DiscoverMediaType mediaType;
+@override final  MediaType mediaType;
 @override final  String? posterPath;
 @override final  DateTime addedAt;
 
@@ -253,7 +253,7 @@ abstract mixin class _$WatchlistItemCopyWith<$Res> implements $WatchlistItemCopy
   factory _$WatchlistItemCopyWith(_WatchlistItem value, $Res Function(_WatchlistItem) _then) = __$WatchlistItemCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String userId, int mediaId, String title, DiscoverMediaType mediaType, String? posterPath, DateTime addedAt
+ String id, String userId, int mediaId, String title, MediaType mediaType, String? posterPath, DateTime addedAt
 });
 
 
@@ -277,7 +277,7 @@ as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullabl
 as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
-as DiscoverMediaType,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
+as MediaType,posterPath: freezed == posterPath ? _self.posterPath : posterPath // ignore: cast_nullable_to_non_nullable
 as String?,addedAt: null == addedAt ? _self.addedAt : addedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

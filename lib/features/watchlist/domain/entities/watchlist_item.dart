@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 
 part 'watchlist_item.freezed.dart';
 
@@ -10,7 +10,7 @@ abstract class WatchlistItem with _$WatchlistItem {
     required String userId,
     required int mediaId,
     required String title,
-    required DiscoverMediaType mediaType,
+    required MediaType mediaType,
     required String? posterPath,
     required DateTime addedAt,
   }) = _WatchlistItem;

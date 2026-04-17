@@ -34,7 +34,7 @@ final class ImageUploadControllerProvider
 }
 
 String _$imageUploadControllerHash() =>
-    r'b5facf93e67842967c70be9554a1d2ab2d2147b7';
+    r'87a0e61da4e5d0a2b26e10d7236cdb042f5a0ee3';
 
 abstract class _$ImageUploadController extends $AsyncNotifier<void> {
   FutureOr<void> build();

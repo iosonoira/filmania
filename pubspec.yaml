@@ -1,5 +1,5 @@
 name: filmania
-description: "A new Flutter project."
+description: "Filmania — a cinematic editorial app for tracking movies and TV series."
 publish_to: 'none'
 version: 0.1.0+1
 
@@ -17,9 +17,9 @@ dependencies:
   json_annotation: ^4.11.0
   riverpod_annotation: ^4.0.2
   supabase_flutter: ^2.12.2
-  url_launcher: ^6.3.0
   cached_network_image: ^3.4.1
   image_picker: ^1.2.1
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:

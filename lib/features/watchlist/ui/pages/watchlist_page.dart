@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -28,7 +28,9 @@ class WatchlistPage extends ConsumerWidget {
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverToBoxAdapter(
-            child: SizedBox(height: MediaQuery.of(context).padding.top + AppSpacing.xl * 2),
+            child: SizedBox(
+              height: MediaQuery.of(context).padding.top + AppSpacing.xl * 2,
+            ),
           ),
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
@@ -55,10 +57,8 @@ class WatchlistPage extends ConsumerWidget {
               ),
             ),
           ),
-          const SliverToBoxAdapter(
-            child: SizedBox(height: AppSpacing.xxl),
-          ),
-          
+          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+
           watchlistAsync.when(
             data: (items) {
               if (items.isEmpty) {
@@ -78,23 +78,32 @@ class WatchlistPage extends ConsumerWidget {
                     crossAxisSpacing: AppSpacing.md,
                     mainAxisSpacing: AppSpacing.md,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = items[index];
-                      return WatchlistMediaCard(
-                        item: item,
-                        onTap: () {
-                          if (item.mediaType == DiscoverMediaType.movie) {
-                            context.push(AppRoutes.movieDetails.replaceFirst(':id', item.mediaId.toString()));
-                          } else {
-                            context.push(AppRoutes.tvDetails.replaceFirst(':id', item.mediaId.toString()));
-                          }
-                        },
-                        onRemove: () => ref.read(watchlistProvider.notifier).remove(item.mediaId, item.mediaType),
-                      );
-                    },
-                    childCount: items.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final item = items[index];
+                    return WatchlistMediaCard(
+                      item: item,
+                      onTap: () {
+                        if (item.mediaType == MediaType.movie) {
+                          context.push(
+                            AppRoutes.movieDetails.replaceFirst(
+                              ':id',
+                              item.mediaId.toString(),
+                            ),
+                          );
+                        } else {
+                          context.push(
+                            AppRoutes.tvDetails.replaceFirst(
+                              ':id',
+                              item.mediaId.toString(),
+                            ),
+                          );
+                        }
+                      },
+                      onRemove: () => ref
+                          .read(watchlistProvider.notifier)
+                          .remove(item.mediaId, item.mediaType),
+                    );
+                  }, childCount: items.length),
                 ),
               );
             },
@@ -121,9 +130,11 @@ class WatchlistPage extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           const SliverToBoxAdapter(
-            child: SizedBox(height: AppSpacing.xxxl * 2 + AppSpacing.sm + AppSpacing.xs),
+            child: SizedBox(
+              height: AppSpacing.xxxl * 2 + AppSpacing.sm + AppSpacing.xs,
+            ),
           ),
         ],
       ),

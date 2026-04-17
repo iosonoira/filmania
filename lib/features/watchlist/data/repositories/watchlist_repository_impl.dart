@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../domain/entities/watchlist_item.dart';
 import '../../domain/repositories/i_watchlist_repository.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 import '../datasources/i_watchlist_remote_datasource.dart';
 import '../datasources/watchlist_remote_datasource_impl.dart';
 import '../models/watchlist_item_dto.dart';
@@ -22,7 +22,7 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
   Future<void> removeFromWatchlist({
     required String userId,
     required int mediaId,
-    required DiscoverMediaType mediaType,
+    required MediaType mediaType,
   }) async {
     await _remoteDataSource.removeFromWatchlist(
       userId: userId,
@@ -42,7 +42,7 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
   Future<bool> isInWatchlist({
     required String userId,
     required int mediaId,
-    required DiscoverMediaType mediaType,
+    required MediaType mediaType,
   }) async {
     return _remoteDataSource.isInWatchlist(
       userId: userId,

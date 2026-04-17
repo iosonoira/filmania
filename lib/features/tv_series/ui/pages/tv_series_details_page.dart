@@ -1,22 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../domain/entities/tv_series.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
 
 class TVSeriesDetailsPage extends ConsumerWidget {
   final int seriesId;
 
-  const TVSeriesDetailsPage({
-    super.key,
-    required this.seriesId,
-  });
+  const TVSeriesDetailsPage({super.key, required this.seriesId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -24,9 +21,7 @@ class TVSeriesDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: const GlassmorphicAppBar(
-        showBackButton: true,
-      ),
+      appBar: const GlassmorphicAppBar(showBackButton: true),
       body: seriesAsync.when(
         data: (series) => _TVSeriesDetailsContent(series: series),
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -75,13 +70,15 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: series.fullBackdropUrl,
                     fit: BoxFit.cover,
-                    placeholder: (context, url) => Container(
-                      color: colors.surface.withValues(alpha: 0.1),
-                    ),
+                    placeholder: (context, url) =>
+                        Container(color: colors.surface.withValues(alpha: 0.1)),
                     errorWidget: (context, url, error) => Container(
                       color: colors.surface.withValues(alpha: 0.1),
                       child: const Center(
-                        child: Icon(Icons.broken_image_rounded, color: Colors.grey),
+                        child: Icon(
+                          Icons.broken_image_rounded,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                   ),
@@ -119,7 +116,10 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                           errorWidget: (context, url, error) => Container(
                             color: colors.surface.withValues(alpha: 0.1),
                             child: const Center(
-                              child: Icon(Icons.broken_image_rounded, color: Colors.grey),
+                              child: Icon(
+                                Icons.broken_image_rounded,
+                                color: Colors.grey,
+                              ),
                             ),
                           ),
                         ),
@@ -140,7 +140,11 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                           const SizedBox(height: AppSpacing.xs),
                           Row(
                             children: [
-                              const Icon(Icons.star_rounded, color: Colors.amber, size: 18),
+                              const Icon(
+                                Icons.star_rounded,
+                                color: Colors.amber,
+                                size: 18,
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 series.voteAverage.toStringAsFixed(1),
@@ -168,15 +172,15 @@ class _TVSeriesDetailsContent extends StatelessWidget {
             ],
           ),
         ),
-        
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxxl + AppSpacing.md)),
+
+        const SliverToBoxAdapter(
+          child: SizedBox(height: AppSpacing.xxxl + AppSpacing.md),
+        ),
 
         // Watchlist CTA
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          sliver: SliverToBoxAdapter(
-            child: _WatchlistButton(series: series),
-          ),
+          sliver: SliverToBoxAdapter(child: _WatchlistButton(series: series)),
         ),
 
         // Overview
@@ -188,7 +192,9 @@ class _TVSeriesDetailsContent extends StatelessWidget {
               children: [
                 Text(
                   'Overview',
-                  style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                  style: textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
@@ -202,8 +208,12 @@ class _TVSeriesDetailsContent extends StatelessWidget {
             ),
           ),
         ),
-        
-        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs)),
+
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
+          ),
+        ),
       ],
     );
   }
@@ -217,25 +227,40 @@ class _WatchlistButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
-    final isInWatchlistAsync = ref.watch(isMediaInWatchlistProvider(series.id, DiscoverMediaType.tv));
+    final isInWatchlistAsync = ref.watch(
+      isMediaInWatchlistProvider(series.id, MediaType.tv),
+    );
     final notifierState = ref.watch(watchlistProvider);
 
     return isInWatchlistAsync.when(
       data: (isIn) {
         final isLoading = notifierState.isLoading;
-        
+
         if (isIn) {
           return OutlinedButton.icon(
-            onPressed: isLoading ? null : () => ref.read(watchlistProvider.notifier).toggleTVSeries(series),
-            icon: isLoading 
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
-                : const Icon(Icons.bookmark_remove_rounded, color: Colors.redAccent),
+            onPressed: isLoading
+                ? null
+                : () => ref
+                      .read(watchlistProvider.notifier)
+                      .toggleTVSeries(series),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(
+                    Icons.bookmark_remove_rounded,
+                    color: Colors.redAccent,
+                  ),
             label: const Text('Rimuovi dalla Watchlist'),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               side: const BorderSide(color: Colors.redAccent),
               foregroundColor: Colors.redAccent,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           );
         }
@@ -254,9 +279,20 @@ class _WatchlistButton extends ConsumerWidget {
             ],
           ),
           child: ElevatedButton.icon(
-            onPressed: isLoading ? null : () => ref.read(watchlistProvider.notifier).toggleTVSeries(series),
-            icon: isLoading 
-                ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+            onPressed: isLoading
+                ? null
+                : () => ref
+                      .read(watchlistProvider.notifier)
+                      .toggleTVSeries(series),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
                 : const Icon(Icons.bookmark_add_rounded, color: Colors.white),
             label: const Text('Aggiungi alla Watchlist'),
             style: ElevatedButton.styleFrom(
@@ -264,7 +300,9 @@ class _WatchlistButton extends ConsumerWidget {
               shadowColor: Colors.transparent,
               padding: const EdgeInsets.symmetric(vertical: 16),
               foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
             ),
           ),
         );

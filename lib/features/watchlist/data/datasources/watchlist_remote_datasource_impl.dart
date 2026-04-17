@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../../core/supabase/supabase_client.dart';
 import '../models/watchlist_item_dto.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 import '../../domain/failures/watchlist_failure.dart';
 import 'i_watchlist_remote_datasource.dart';
 
@@ -52,7 +52,7 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
   Future<void> removeFromWatchlist({
     required String userId,
     required int mediaId,
-    required DiscoverMediaType mediaType,
+    required MediaType mediaType,
   }) async {
     try {
       await _supabase
@@ -89,7 +89,7 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
   Future<bool> isInWatchlist({
     required String userId,
     required int mediaId,
-    required DiscoverMediaType mediaType,
+    required MediaType mediaType,
   }) async {
     try {
       final response = await _supabase

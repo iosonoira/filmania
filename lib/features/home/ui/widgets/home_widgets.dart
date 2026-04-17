@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -7,7 +8,6 @@ import '../../../../core/widgets/error_view.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
 import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
-
 
 // --- Trending Movies Section ---
 class TrendingMoviesSection extends ConsumerWidget {
@@ -84,7 +84,6 @@ class _SectionHeader extends StatelessWidget {
   }
 }
 
-
 class _TrendingMoviesList extends StatelessWidget {
   final List<Movie> movies;
 
@@ -106,7 +105,9 @@ class _TrendingMoviesList extends StatelessWidget {
           return WatchingCard(
             title: movie.title,
             subtitle: movie.releaseDate?.year.toString() ?? '',
-            imageUrl: movie.posterPath != null ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}' : '',
+            imageUrl: movie.posterPath != null
+                ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                : '',
             progress: movie.voteAverage / 10,
           );
         },
@@ -114,7 +115,6 @@ class _TrendingMoviesList extends StatelessWidget {
     );
   }
 }
-
 
 class WatchingCard extends StatelessWidget {
   final String title;
@@ -133,7 +133,8 @@ class WatchingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Semantics(
-      label: 'Stai guardando $title, $subtitle, ${(progress * 100).round()}% completato',
+      label:
+          'Stai guardando $title, $subtitle, ${(progress * 100).round()}% completato',
       button: true,
       child: Container(
         width: MediaQuery.of(context).size.width * 0.85,
@@ -214,7 +215,6 @@ class _WatchingCardContent extends StatelessWidget {
   }
 }
 
-
 class _WatchingCardBadge extends StatelessWidget {
   final String subtitle;
 
@@ -290,70 +290,77 @@ class _WatchingCardProgressBar extends StatelessWidget {
   }
 }
 
-
 // --- Trending TV Series Section ---
-class TrendingTVSeriesSection extends ConsumerWidget {
-  const TrendingTVSeriesSection({super.key});
+class TrendingTVSeriesSliver extends ConsumerWidget {
+  const TrendingTVSeriesSliver({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
+    final tvSeriesAsync = ref.watch(trendingTVSeriesProvider(page: 1));
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
     final containerColor = isDark
         ? const Color(0xFF1C1B20)
         : const Color(0xFFF5F5F5);
 
-    final tvSeriesAsync = ref.watch(trendingTVSeriesProvider(page: 1));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                'Trending TV Series',
-                style: textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.5,
+    return SliverMainAxisGroup(
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          sliver: SliverToBoxAdapter(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Trending TV Series',
+                  style: textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.5,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          tvSeriesAsync.when(
-            data: (tvSeries) => ListView.separated(
-              padding: EdgeInsets.zero,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: tvSeries.length > 5 ? 5 : tvSeries.length,
-              separatorBuilder: (context, index) =>
-                  const SizedBox(height: AppSpacing.md),
-              itemBuilder: (context, index) {
-                final item = tvSeries[index];
-                return _UpcomingEpisodeItem(
-                  title: item.name,
-                  subtitle: item.firstAirDate?.year.toString() ?? '',
-                  time: 'Rating: ${item.voteAverage.toStringAsFixed(1)}',
-                  timeColor: AppColors.of(context).primary,
-                  imageUrl: item.posterPath != null ? 'https://image.tmdb.org/t/p/w500${item.posterPath}' : '',
-                  containerColor: containerColor,
-                );
-              },
+              ],
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => AppErrorView(
+          ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
+        tvSeriesAsync.when(
+          data: (tvSeries) {
+            final itemCount = tvSeries.length > 5 ? 5 : tvSeries.length;
+            return SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              sliver: SliverList.separated(
+                itemCount: itemCount,
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: AppSpacing.md),
+                itemBuilder: (context, index) {
+                  final item = tvSeries[index];
+                  return _UpcomingEpisodeItem(
+                    title: item.name,
+                    subtitle: item.firstAirDate?.year.toString() ?? '',
+                    time: 'Rating: ${item.voteAverage.toStringAsFixed(1)}',
+                    timeColor: AppColors.of(context).primary,
+                    imageUrl: item.posterPath != null
+                        ? 'https://image.tmdb.org/t/p/w500${item.posterPath}'
+                        : '',
+                    containerColor: containerColor,
+                  );
+                },
+              ),
+            );
+          },
+          loading: () => const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          error: (err, stack) => SliverToBoxAdapter(
+            child: AppErrorView(
               error: err,
               compact: true,
               onRetry: () => ref.invalidate(trendingTVSeriesProvider(page: 1)),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -397,11 +404,26 @@ class _UpcomingEpisodeItem extends StatelessWidget {
                     color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
                     child: Icon(Icons.tv, color: colors.onSurfaceSecondary),
                   )
-                : Image.network(
-                    imageUrl,
+                : CachedNetworkImage(
+                    imageUrl: imageUrl,
                     width: 80,
                     height: 80,
                     fit: BoxFit.cover,
+                    memCacheWidth: 160,
+                    placeholder: (context, url) => Container(
+                      width: 80,
+                      height: 80,
+                      color: colors.surface.withValues(alpha: 0.1),
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      width: 80,
+                      height: 80,
+                      color: colors.surface.withValues(alpha: 0.1),
+                      child: Icon(
+                        Icons.tv_rounded,
+                        color: colors.onSurfaceSecondary,
+                      ),
+                    ),
                   ),
           ),
           const SizedBox(width: AppSpacing.md),
@@ -450,7 +472,6 @@ class _UpcomingEpisodeItem extends StatelessWidget {
   }
 }
 
-
 class CuratedSection extends ConsumerWidget {
   const CuratedSection({super.key});
 
@@ -489,7 +510,10 @@ class CuratedSection extends ConsumerWidget {
                   _FeaturedBentoCard(movie: featuredMovie),
                   const SizedBox(height: AppSpacing.md),
                   if (secondaryMovie != null) ...[
-                    _SecondaryBentoCard(movie: secondaryMovie, containerColor: containerColorLow),
+                    _SecondaryBentoCard(
+                      movie: secondaryMovie,
+                      containerColor: containerColorLow,
+                    ),
                     const SizedBox(height: AppSpacing.md),
                   ],
                   _TrendingTopRatedRow(containerColor: containerColorLow),
@@ -524,7 +548,9 @@ class _FeaturedBentoCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSpacing.radius),
         image: DecorationImage(
           image: NetworkImage(
-            movie.posterPath != null ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}' : '',
+            movie.posterPath != null
+                ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                : '',
           ),
           fit: BoxFit.cover,
           opacity: 0.6,
@@ -577,10 +603,7 @@ class _FeaturedBentoTags extends StatelessWidget {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 4,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
             color: const Color(0xFFB55800),
             borderRadius: BorderRadius.circular(100),
@@ -597,22 +620,15 @@ class _FeaturedBentoTags extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.sm),
         Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 4,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: isDark
-                ? const Color(0xFF36343A)
-                : const Color(0xFFE0E0E0),
+            color: isDark ? const Color(0xFF36343A) : const Color(0xFFE0E0E0),
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
             'MOVIE',
             style: textTheme.labelSmall?.copyWith(
-              color: isDark
-                  ? const Color(0xFFCAC3D8)
-                  : const Color(0xFF4A4264),
+              color: isDark ? const Color(0xFFCAC3D8) : const Color(0xFF4A4264),
               fontWeight: FontWeight.bold,
               letterSpacing: 1.0,
               fontSize: 10,
@@ -646,9 +662,7 @@ class _FeaturedBentoContent extends StatelessWidget {
         const SizedBox(height: AppSpacing.xs),
         Text(
           movie.overview,
-          style: textTheme.bodySmall?.copyWith(
-            color: const Color(0xFFCAC3D8),
-          ),
+          style: textTheme.bodySmall?.copyWith(color: const Color(0xFFCAC3D8)),
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
@@ -669,15 +683,12 @@ class _FeaturedBentoButton extends StatelessWidget {
       style: FilledButton.styleFrom(
         backgroundColor: colors.primary,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
       child: const Text('Add to Watchlist'),
     );
   }
 }
-
 
 class _SecondaryBentoCard extends StatelessWidget {
   final Movie movie;
@@ -814,9 +825,7 @@ class _BentoSmallBox extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Text(
             title,
-            style: textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+            style: textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
           ),
           Text(
             subtitle,
@@ -829,8 +838,6 @@ class _BentoSmallBox extends StatelessWidget {
     );
   }
 }
-
-
 
 // --- Floating Bottom Navigation Bar ---
 class FloatingBottomNavBar extends StatelessWidget {
@@ -890,10 +897,10 @@ class _NavBarItemsRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         _NavBarItem(
-          icon: Icons.home_filled,
+          icon: Icons.home_outlined,
           label: 'Home',
           isSelected: currentIndex == 0,
-          color: colors.primary,
+          color: colors.onSurfaceSecondary,
           textTheme: textTheme,
           onTap: () => onDestinationSelected(0),
         ),
@@ -925,7 +932,6 @@ class _NavBarItemsRow extends StatelessWidget {
     );
   }
 }
-
 
 class _NavBarItem extends StatelessWidget {
   final IconData icon;
@@ -968,7 +974,10 @@ class _NavBarItem extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(icon, color: isSelected ? itemColor : color.withValues(alpha: 0.8)),
+              Icon(
+                icon,
+                color: isSelected ? itemColor : color.withValues(alpha: 0.8),
+              ),
               const SizedBox(height: 2),
               Text(
                 label.toUpperCase(),

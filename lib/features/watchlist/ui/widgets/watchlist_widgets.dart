@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import '../../domain/entities/watchlist_item.dart';
-import '../../../discover/ui/providers/discover_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class WatchlistMediaCard extends StatelessWidget {
@@ -55,16 +55,16 @@ class WatchlistMediaCard extends StatelessWidget {
                 color: colors.surface,
                 child: Center(
                   child: Icon(
-                    item.mediaType == DiscoverMediaType.movie 
-                        ? Icons.movie_rounded 
-                        : Icons.tv_rounded, 
+                    item.mediaType == MediaType.movie
+                        ? Icons.movie_rounded
+                        : Icons.tv_rounded,
                     size: 40,
                     color: colors.onSurfaceSecondary.withValues(alpha: 0.5),
                   ),
                 ),
               ),
             ),
-            
+
             // Gradient Overlay
             Positioned.fill(
               child: Container(
@@ -146,7 +146,7 @@ class WatchlistShimmerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: colors.surface.withValues(alpha: 0.1),

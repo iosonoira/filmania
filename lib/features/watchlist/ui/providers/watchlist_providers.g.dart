@@ -58,7 +58,7 @@ final class IsMediaInWatchlistProvider
     with $FutureModifier<bool>, $FutureProvider<bool> {
   IsMediaInWatchlistProvider._({
     required IsMediaInWatchlistFamily super.from,
-    required (int, DiscoverMediaType) super.argument,
+    required (int, MediaType) super.argument,
   }) : super(
          retry: null,
          name: r'isMediaInWatchlistProvider',
@@ -84,7 +84,7 @@ final class IsMediaInWatchlistProvider
 
   @override
   FutureOr<bool> create(Ref ref) {
-    final argument = this.argument as (int, DiscoverMediaType);
+    final argument = this.argument as (int, MediaType);
     return isMediaInWatchlist(ref, argument.$1, argument.$2);
   }
 
@@ -100,10 +100,10 @@ final class IsMediaInWatchlistProvider
 }
 
 String _$isMediaInWatchlistHash() =>
-    r'af3611ef6ac349399a15a3fc0ea5e200fcefbe28';
+    r'00f1b604937c15b093b3be525557fa811c067129';
 
 final class IsMediaInWatchlistFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<bool>, (int, DiscoverMediaType)> {
+    with $FunctionalFamilyOverride<FutureOr<bool>, (int, MediaType)> {
   IsMediaInWatchlistFamily._()
     : super(
         retry: null,
@@ -113,7 +113,7 @@ final class IsMediaInWatchlistFamily extends $Family
         isAutoDispose: true,
       );
 
-  IsMediaInWatchlistProvider call(int mediaId, DiscoverMediaType type) =>
+  IsMediaInWatchlistProvider call(int mediaId, MediaType type) =>
       IsMediaInWatchlistProvider._(argument: (mediaId, type), from: this);
 
   @override
@@ -144,7 +144,7 @@ final class WatchlistNotifierProvider
   WatchlistNotifier create() => WatchlistNotifier();
 }
 
-String _$watchlistNotifierHash() => r'42fd533341a955d19c2a4a76052763cdc270d81a';
+String _$watchlistNotifierHash() => r'e1f383d362660129b40da35645515d7e0f7c159d';
 
 abstract class _$WatchlistNotifier extends $AsyncNotifier<void> {
   FutureOr<void> build();
