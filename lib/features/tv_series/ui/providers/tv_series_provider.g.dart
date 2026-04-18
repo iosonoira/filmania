@@ -335,3 +335,168 @@ final class SearchTVSeriesFamily extends $Family
   @override
   String toString() => r'searchTVSeriesProvider';
 }
+
+@ProviderFor(seasonEpisodes)
+final seasonEpisodesProvider = SeasonEpisodesFamily._();
+
+final class SeasonEpisodesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<TVEpisode>>,
+          List<TVEpisode>,
+          FutureOr<List<TVEpisode>>
+        >
+    with $FutureModifier<List<TVEpisode>>, $FutureProvider<List<TVEpisode>> {
+  SeasonEpisodesProvider._({
+    required SeasonEpisodesFamily super.from,
+    required (int, int) super.argument,
+  }) : super(
+         retry: null,
+         name: r'seasonEpisodesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$seasonEpisodesHash();
+
+  @override
+  String toString() {
+    return r'seasonEpisodesProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<TVEpisode>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<TVEpisode>> create(Ref ref) {
+    final argument = this.argument as (int, int);
+    return seasonEpisodes(ref, argument.$1, argument.$2);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SeasonEpisodesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$seasonEpisodesHash() => r'6cb93d3492859dbc48612a4eb0d3a0e751f749f6';
+
+final class SeasonEpisodesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<TVEpisode>>, (int, int)> {
+  SeasonEpisodesFamily._()
+    : super(
+        retry: null,
+        name: r'seasonEpisodesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  SeasonEpisodesProvider call(int tvId, int seasonNumber) =>
+      SeasonEpisodesProvider._(argument: (tvId, seasonNumber), from: this);
+
+  @override
+  String toString() => r'seasonEpisodesProvider';
+}
+
+@ProviderFor(SelectedSeason)
+final selectedSeasonProvider = SelectedSeasonFamily._();
+
+final class SelectedSeasonProvider
+    extends $NotifierProvider<SelectedSeason, int> {
+  SelectedSeasonProvider._({
+    required SelectedSeasonFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'selectedSeasonProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$selectedSeasonHash();
+
+  @override
+  String toString() {
+    return r'selectedSeasonProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  SelectedSeason create() => SelectedSeason();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(int value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<int>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SelectedSeasonProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$selectedSeasonHash() => r'c3a26691cc07453a83274926d6fa310785be48ea';
+
+final class SelectedSeasonFamily extends $Family
+    with $ClassFamilyOverride<SelectedSeason, int, int, int, int> {
+  SelectedSeasonFamily._()
+    : super(
+        retry: null,
+        name: r'selectedSeasonProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  SelectedSeasonProvider call(int tvId) =>
+      SelectedSeasonProvider._(argument: tvId, from: this);
+
+  @override
+  String toString() => r'selectedSeasonProvider';
+}
+
+abstract class _$SelectedSeason extends $Notifier<int> {
+  late final _$args = ref.$arg as int;
+  int get tvId => _$args;
+
+  int build(int tvId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<int, int>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<int, int>,
+              int,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(_$args));
+  }
+}

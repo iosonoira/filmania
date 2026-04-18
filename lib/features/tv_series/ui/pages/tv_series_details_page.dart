@@ -7,6 +7,7 @@ import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import 'package:filmania/core/utils/logger.dart';
 import '../../domain/entities/tv_series.dart';
 import '../providers/tv_series_provider.dart';
+import '../widgets/tv_series_widgets.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -88,6 +89,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
               Positioned(
                 bottom: -60,
                 left: AppSpacing.lg,
+                right: AppSpacing.lg,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
@@ -208,6 +210,14 @@ class _TVSeriesDetailsContent extends StatelessWidget {
               ],
             ),
           ),
+        ),
+
+        // Separatore
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+
+        // Sezione episodi
+        SliverToBoxAdapter(
+          child: EpisodesSection(tvId: series.id, seasons: series.seasons),
         ),
 
         const SliverToBoxAdapter(

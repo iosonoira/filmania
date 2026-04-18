@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'tv_season.dart';
 
 part 'tv_series.freezed.dart';
 
@@ -12,6 +13,7 @@ abstract class TVSeries with _$TVSeries {
     required String? backdropPath,
     required DateTime? firstAirDate,
     required double voteAverage,
+    @Default([]) List<TVSeason> seasons,
   }) = _TVSeries;
 
   const TVSeries._();
