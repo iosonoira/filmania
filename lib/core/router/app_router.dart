@@ -98,21 +98,26 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: AppRoutes.movieDetails,
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final rawId = state.pathParameters['id'];
+          final id = rawId != null ? int.tryParse(rawId) : null;
+          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
           return MovieDetailsPage(movieId: id);
         },
       ),
       GoRoute(
         path: AppRoutes.tvDetails,
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final rawId = state.pathParameters['id'];
+          final id = rawId != null ? int.tryParse(rawId) : null;
+          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
           return TVSeriesDetailsPage(seriesId: id);
         },
       ),
       GoRoute(
         path: AppRoutes.watchlistDetail,
         builder: (context, state) {
-          final id = state.pathParameters['id']!;
+          final id = state.pathParameters['id'];
+          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
           return WatchlistDetailPage(watchlistId: id);
         },
       ),

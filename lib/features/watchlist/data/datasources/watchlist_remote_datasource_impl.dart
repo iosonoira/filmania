@@ -145,26 +145,34 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
   }
 
   @override
-  Future<List<WatchlistDto>> getWatchlistsContainingMedia({
+  Future<List<String>> getWatchlistIdsContainingMedia({
     required String userId,
     required int mediaId,
     required MediaType mediaType,
   }) async {
     try {
-      // Get watchlist IDs that already contain this media
-      final itemsResp = await _supabase
+      final response = await _supabase
           .from('watchlist_items')
           .select('watchlist_id')
           .eq('media_id', mediaId)
           .eq('media_type', mediaType.name);
 
-      final ids = (itemsResp as List).map((e) => e['watchlist_id'] as String).toList();
-      return ids.isEmpty ? [] : ids.map((id) => WatchlistDto(id: id, userId: userId, name: '', createdAt: DateTime.now())).toList();
+      return (response as List)
+          .map((e) => e['watchlist_id'] as String)
+          .toList();
     } on PostgrestException catch (e) {
-      AppLogger.error('getWatchlistsContainingMedia failed', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'getWatchlistIdsContainingMedia failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      AppLogger.error('getWatchlistsContainingMedia unexpected', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'getWatchlistIdsContainingMedia unexpected',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }

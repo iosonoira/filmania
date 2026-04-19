@@ -25,7 +25,7 @@ abstract interface class IWatchlistRemoteDataSource {
 
   Stream<List<WatchlistItemDto>> watchWatchlistItems(String watchlistId);
 
-  Future<List<WatchlistDto>> getWatchlistsContainingMedia({
+  Future<List<String>> getWatchlistIdsContainingMedia({
     required String userId,
     required int mediaId,
     required MediaType mediaType,

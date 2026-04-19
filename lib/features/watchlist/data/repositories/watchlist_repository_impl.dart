@@ -99,12 +99,12 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
     required int mediaId,
     required MediaType mediaType,
   }) async {
-    final dtos = await _remote.getWatchlistsContainingMedia(
+    final ids = await _remote.getWatchlistIdsContainingMedia(
       userId: _userId,
       mediaId: mediaId,
       mediaType: mediaType,
     );
-    return dtos.map((d) => d.id).toSet();
+    return ids.toSet();
   }
 
   @override
