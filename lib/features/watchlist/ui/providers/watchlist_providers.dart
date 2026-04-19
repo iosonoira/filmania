@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import '../../../auth/ui/providers/auth_notifier.dart';
+import '../../domain/failures/watchlist_failure.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../../../tv_series/domain/entities/tv_series.dart';
 import '../../data/repositories/watchlist_repository_impl.dart';
@@ -13,27 +13,27 @@ part 'watchlist_providers.g.dart';
 
 @riverpod
 Stream<List<Watchlist>> userWatchlists(Ref ref) {
-  final user = ref.watch(authStateProvider).value;
-  if (user == null) return Stream.value([]);
-  return ref.watch(watchlistRepositoryProvider).watchUserWatchlists();
+  final repo = ref.watch(watchlistRepositoryProvider);
+  if (repo == null) return Stream.value([]);
+  return repo.watchUserWatchlists();
 }
 
 // ── Items in a specific watchlist ──────────────────────────────────────────
 
 @riverpod
 Stream<List<WatchlistItem>> watchlistItems(Ref ref, String watchlistId) {
-  return ref.watch(watchlistRepositoryProvider).watchWatchlistItems(watchlistId);
+  final repo = ref.watch(watchlistRepositoryProvider);
+  if (repo == null) return Stream.value([]);
+  return repo.watchWatchlistItems(watchlistId);
 }
 
 // ── Is media in ANY watchlist? (button state) ──────────────────────────────
 
 @riverpod
 Future<bool> isMediaInWatchlist(Ref ref, int mediaId, MediaType type) async {
-  final user = ref.watch(authStateProvider).value;
-  if (user == null) return false;
-  return ref
-      .watch(watchlistRepositoryProvider)
-      .isInAnyWatchlist(mediaId: mediaId, mediaType: type);
+  final repo = ref.watch(watchlistRepositoryProvider);
+  if (repo == null) return false;
+  return repo.isInAnyWatchlist(mediaId: mediaId, mediaType: type);
 }
 
 // ── Watchlist IDs containing a media (for sheet state) ────────────────────
@@ -41,11 +41,9 @@ Future<bool> isMediaInWatchlist(Ref ref, int mediaId, MediaType type) async {
 @riverpod
 Future<Set<String>> watchlistIdsContainingMedia(
     Ref ref, int mediaId, MediaType type) async {
-  final user = ref.watch(authStateProvider).value;
-  if (user == null) return {};
-  return ref
-      .watch(watchlistRepositoryProvider)
-      .getWatchlistIdsContaining(mediaId: mediaId, mediaType: type);
+  final repo = ref.watch(watchlistRepositoryProvider);
+  if (repo == null) return {};
+  return repo.getWatchlistIdsContaining(mediaId: mediaId, mediaType: type);
 }
 
 // ── Watchlist Notifier ────────────────────────────────────────────────────
@@ -60,9 +58,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     Watchlist? created;
     state = await AsyncValue.guard(() async {
-      created = await ref
-          .read(watchlistRepositoryProvider)
-          .createWatchlist(name: name);
+      final repo = ref.read(watchlistRepositoryProvider);
+      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      created = await repo.createWatchlist(name: name);
       ref.invalidate(userWatchlistsProvider);
     });
     return created;
@@ -71,7 +69,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
   Future<void> deleteWatchlist(String watchlistId) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(watchlistRepositoryProvider).deleteWatchlist(watchlistId);
+      final repo = ref.read(watchlistRepositoryProvider);
+      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      await repo.deleteWatchlist(watchlistId);
       ref.invalidate(userWatchlistsProvider);
     });
   }
@@ -104,7 +104,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(watchlistRepositoryProvider).removeItemFromWatchlist(
+      final repo = ref.read(watchlistRepositoryProvider);
+      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      await repo.removeItemFromWatchlist(
             watchlistId: watchlistId,
             mediaId: mediaId,
             mediaType: mediaType,
@@ -124,7 +126,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
   }) async {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
-      await ref.read(watchlistRepositoryProvider).addItemToWatchlist(
+      final repo = ref.read(watchlistRepositoryProvider);
+      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      await repo.addItemToWatchlist(
             watchlistId: watchlistId,
             mediaId: id,
             title: title,
@@ -142,9 +146,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
 
 @riverpod
 Stream<List<WatchlistItem>> userWatchlist(Ref ref) {
-  final user = ref.watch(authStateProvider).value;
-  if (user == null) return Stream.value([]);
-  return ref.watch(watchlistRepositoryProvider).watchAllItems();
+  final repo = ref.watch(watchlistRepositoryProvider);
+  if (repo == null) return Stream.value([]);
+  return repo.watchAllItems();
 }
 
 // ── Legacy watchlistProvider alias ────────────────────────────────────────

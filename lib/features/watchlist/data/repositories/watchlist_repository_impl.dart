@@ -128,9 +128,9 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
 }
 
 @riverpod
-IWatchlistRepository watchlistRepository(Ref ref) {
+IWatchlistRepository? watchlistRepository(Ref ref) {
   final user = ref.watch(authStateProvider).value;
-  if (user == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+  if (user == null) return null;
   return WatchlistRepositoryImpl(
     ref.watch(watchlistRemoteDataSourceProvider),
     user.id,
