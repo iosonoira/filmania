@@ -117,14 +117,17 @@ class _ProfileAvatar extends StatelessWidget {
                 color: colors.primary.withValues(alpha: 0.2),
                 width: 4,
               ),
-              image: DecorationImage(
-                image: NetworkImage(
-                  photoUrl ??
-                      'https://lh3.googleusercontent.com/aida-public/AB6AXuAg65sVztpdXhKS87ibQl8tebp1L1qq99AOyhFPOOgNHO9SUE7c8M9N-Pmt6Pk-MuQQyR97gRJsdVz01XAT0Ulr-ctCeuUdQxfTfM7cLee2zYtbF1SQ7CqTKKPkWQFaiKFh-c1qorZu8fGn-ZRCIMX4eX20WpAU15JTUk8OlvGsCcqSVSdpHH3ALWmFDtA31AcVWJjFG4d4nzibyffFkN_c_HofrLvbigWpH5YqBJL4uTUvCSfqGGMeMZfMy210EcVL6ZtoDuuc28mx',
-                ),
-                fit: BoxFit.cover,
-              ),
+              color: colors.primary.withValues(alpha: 0.1),
+              image: photoUrl != null
+                  ? DecorationImage(
+                      image: NetworkImage(photoUrl),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
+            child: photoUrl == null
+                ? Icon(Icons.person, color: colors.primary, size: 48)
+                : null,
           ),
           if (isLoading) const CircularProgressIndicator(),
           if (!isLoading)
@@ -158,11 +161,11 @@ class _ProfileStats extends StatelessWidget {
     return const Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _CompactStat(label: 'Watched', value: '184'),
+        _CompactStat(label: 'Visti', value: '184'),
         SizedBox(width: AppSpacing.lg),
-        _CompactStat(label: 'Reviews', value: '42'),
+        _CompactStat(label: 'Recensioni', value: '42'),
         SizedBox(width: AppSpacing.lg),
-        _CompactStat(label: 'Followers', value: '1.2k'),
+        _CompactStat(label: 'Follower', value: '1.2k'),
       ],
     );
   }
@@ -179,19 +182,19 @@ class _ProfileActions extends StatelessWidget {
       children: [
         _ActionTile(
           icon: Icons.settings_outlined,
-          label: 'Settings',
+          label: 'Impostazioni',
           onTap: () {},
         ),
         const SizedBox(height: AppSpacing.md),
         _ActionTile(
           icon: Icons.history_rounded,
-          label: 'History',
+          label: 'Cronologia',
           onTap: () {},
         ),
         const SizedBox(height: AppSpacing.md),
         _ActionTile(
           icon: Icons.help_outline_rounded,
-          label: 'Help & Support',
+          label: 'Aiuto e Supporto',
           onTap: () {},
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -205,7 +208,7 @@ class _ProfileActions extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
           ),
-          child: const Text('Log Out'),
+          child: const Text('Esci'),
         ),
       ],
     );

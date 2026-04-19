@@ -22,7 +22,7 @@ class TrendingMoviesSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionHeader(title: 'Trending Movies'),
+        const _SectionHeader(title: 'Film del Momento'),
         const SizedBox(height: AppSpacing.lg),
         moviesAsync.when(
           data: (movies) => _TrendingMoviesList(movies: movies),
@@ -67,7 +67,7 @@ class _SectionHeader extends StatelessWidget {
           Row(
             children: [
               Text(
-                'View all',
+                'Vedi tutti',
                 style: textTheme.labelLarge?.copyWith(
                   color: colors.primary,
                   fontWeight: FontWeight.w600,
@@ -108,9 +108,7 @@ class _TrendingMoviesList extends StatelessWidget {
             mediaId: movie.id,
             title: movie.title,
             subtitle: movie.releaseDate?.year.toString() ?? '',
-            imageUrl: movie.posterPath != null
-                ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
-                : '',
+            imageUrl: movie.fullPosterUrl ?? '',
             posterPath: movie.posterPath,
           );
         },
@@ -300,7 +298,7 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'Trending TV Series',
+                  'Serie TV del Momento',
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     letterSpacing: -0.5,
@@ -326,7 +324,7 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
                     mediaId: item.id,
                     title: item.name,
                     subtitle: item.firstAirDate?.year.toString() ?? '',
-                    time: 'Rating: ${item.voteAverage.toStringAsFixed(1)}',
+                    time: 'Voto: ${item.voteAverage.toStringAsFixed(1)}',
                     timeColor: AppColors.of(context).primary,
                     imageUrl: item.posterPath != null
                         ? 'https://image.tmdb.org/t/p/w500${item.posterPath}'
@@ -490,7 +488,7 @@ class CuratedSection extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Curated for You',
+            'Selezionati per Te',
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               letterSpacing: -0.5,
@@ -620,7 +618,7 @@ class _FeaturedBentoTags extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
-            'FEATURED',
+            'IN EVIDENZA',
             style: textTheme.labelSmall?.copyWith(
               color: const Color(0xFFFFF7F4),
               fontWeight: FontWeight.bold,
@@ -637,7 +635,7 @@ class _FeaturedBentoTags extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
-            'MOVIE',
+            'FILM',
             style: textTheme.labelSmall?.copyWith(
               color: isDark ? const Color(0xFFCAC3D8) : const Color(0xFF4A4264),
               fontWeight: FontWeight.bold,
@@ -704,7 +702,7 @@ class _FeaturedBentoButton extends ConsumerWidget {
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
-      child: const Text('Add to Watchlist'),
+      child: const Text('Aggiungi alla Watchlist'),
     );
   }
 }
@@ -788,8 +786,8 @@ class _TrendingTopRatedRow extends StatelessWidget {
           child: _BentoSmallBox(
             icon: Icons.trending_up_rounded,
             iconColor: colors.primary,
-            title: 'Trending',
-            subtitle: 'New this week',
+            title: 'Tendenze',
+            subtitle: 'Novità questa settimana',
             containerColor: containerColor,
           ),
         ),
@@ -798,8 +796,8 @@ class _TrendingTopRatedRow extends StatelessWidget {
           child: _BentoSmallBox(
             icon: Icons.star_rounded,
             iconColor: AppColors.tertiary,
-            title: 'Top Rated',
-            subtitle: 'All-time classics',
+            title: 'I Più Votati',
+            subtitle: 'Classici intramontabili',
             containerColor: containerColor,
           ),
         ),
@@ -925,7 +923,7 @@ class _NavBarItemsRow extends StatelessWidget {
         ),
         _NavBarItem(
           icon: Icons.explore_outlined,
-          label: 'Discover',
+          label: 'Scopri',
           isSelected: currentIndex == 1,
           color: colors.onSurfaceSecondary,
           textTheme: textTheme,

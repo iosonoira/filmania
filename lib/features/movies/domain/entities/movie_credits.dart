@@ -13,7 +13,6 @@ abstract class CastMember with _$CastMember {
 
   const CastMember._();
 
-  String get fullProfileUrl => profilePath != null 
-      ? 'https://image.tmdb.org/t/p/w185$profilePath' 
-      : 'https://via.placeholder.com/185x277?text=No+Image';
+  String? get fullProfileUrl =>
+      profilePath != null ? 'https://image.tmdb.org/t/p/w185$profilePath' : null;
 }

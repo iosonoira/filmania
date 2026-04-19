@@ -187,7 +187,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
           sliver: SliverToBoxAdapter(child: _WatchlistButton(series: series)),
         ),
 
-        // Overview
+        // Trama
         SliverPadding(
           padding: const EdgeInsets.all(AppSpacing.lg),
           sliver: SliverToBoxAdapter(
@@ -195,7 +195,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Overview',
+                  'Trama',
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

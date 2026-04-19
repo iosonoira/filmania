@@ -217,7 +217,7 @@ class _MovieOverviewSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Overview',
+              'Trama',
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
