@@ -7,6 +7,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
+import '../../../watched/ui/widgets/watched_button.dart';
 
 class MediaGridCard extends ConsumerWidget {
   final int mediaId;
@@ -128,55 +129,61 @@ class MediaGridCard extends ConsumerWidget {
                 ),
               ),
 
-              // Bookmark Button
-              Positioned(
-                top: 8,
-                left: 8,
-                child: GlassOverlay(
-                  sigma: 10,
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withValues(alpha: 0.5),
-                  child: IconButton(
-                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.bookmark_add_outlined, color: Colors.white, size: 18),
-                    onPressed: () => showWatchlistPicker(
-                      context,
-                      ref,
-                      mediaId: mediaId,
-                      mediaTitle: title,
-                      mediaType: mediaType,
-                      posterPath: posterPath,
-                    ),
-                  ),
-                ),
-              ),
-
-              // Vote Average Badge
+              // Buttons (Watched & Watchlist)
               Positioned(
                 top: 8,
                 right: 8,
-                child: GlassOverlay(
-                  sigma: 10,
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.black.withValues(alpha: 0.5),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.star_rounded, color: Colors.amber, size: 14),
-                        const SizedBox(width: 4),
-                        Text(
-                          voteAverage.toStringAsFixed(1),
-                          style: textTheme.labelSmall?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    GlassOverlay(
+                      sigma: 10,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black.withValues(alpha: 0.5),
+                      child: SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: WatchedButton(
+                          mediaId: mediaId,
+                          mediaTitle: title,
+                          mediaType: mediaType,
+                          posterPath: posterPath,
+                          isIconOnly: true,
+                          hasBackground: false,
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 4),
+                    GlassOverlay(
+                      sigma: 10,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black.withValues(alpha: 0.5),
+                      child: IconButton(
+                        style: IconButton.styleFrom(
+                          minimumSize: const Size(32, 32),
+                          fixedSize: const Size(32, 32),
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 32,
+                          minHeight: 32,
+                          maxWidth: 32,
+                          maxHeight: 32,
+                        ),
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(Icons.bookmark_add_outlined, color: Colors.white, size: 18),
+                        onPressed: () => showWatchlistPicker(
+                          context,
+                          ref,
+                          mediaId: mediaId,
+                          mediaTitle: title,
+                          mediaType: mediaType,
+                          posterPath: posterPath,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 

@@ -12,6 +12,7 @@ import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../watched/ui/widgets/watched_button.dart';
 
 class TVSeriesDetailsPage extends ConsumerWidget {
   final int seriesId;
@@ -184,7 +185,22 @@ class _TVSeriesDetailsContent extends StatelessWidget {
         // Watchlist CTA
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          sliver: SliverToBoxAdapter(child: _WatchlistButton(series: series)),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _WatchlistButton(series: series),
+                const SizedBox(height: AppSpacing.md),
+                WatchedButton(
+                  mediaId: series.id,
+                  mediaTitle: series.name,
+                  mediaType: MediaType.tv,
+                  posterPath: series.posterPath,
+                  isIconOnly: false,
+                ),
+              ],
+            ),
+          ),
         ),
 
         // Trama

@@ -6,6 +6,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
+import '../../../../core/domain/enums/media_type.dart';
+import '../../../watched/ui/pages/watched_list_page.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -120,7 +122,7 @@ class _ProfileAvatar extends StatelessWidget {
               color: colors.primary.withValues(alpha: 0.1),
               image: photoUrl != null
                   ? DecorationImage(
-                      image: NetworkImage(photoUrl),
+                      image: NetworkImage(photoUrl!),
                       fit: BoxFit.cover,
                     )
                   : null,
@@ -187,9 +189,23 @@ class _ProfileActions extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         _ActionTile(
-          icon: Icons.history_rounded,
-          label: 'Cronologia',
-          onTap: () {},
+          icon: Icons.movie_outlined,
+          label: 'Film Visti',
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => const WatchedListPage(mediaType: MediaType.movie),
+            ));
+          },
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _ActionTile(
+          icon: Icons.tv_outlined,
+          label: 'Serie TV Viste',
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => const WatchedListPage(mediaType: MediaType.tv),
+            ));
+          },
         ),
         const SizedBox(height: AppSpacing.md),
         _ActionTile(

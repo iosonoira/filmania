@@ -11,6 +11,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../watched/ui/widgets/watched_button.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
   final int movieId;
@@ -52,7 +53,22 @@ class _MovieDetailsContent extends StatelessWidget {
         ),
         SliverPadding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          sliver: SliverToBoxAdapter(child: _WatchlistButton(movie: movie)),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _WatchlistButton(movie: movie),
+                const SizedBox(height: AppSpacing.md),
+                WatchedButton(
+                  mediaId: movie.id,
+                  mediaTitle: movie.title,
+                  mediaType: MediaType.movie,
+                  posterPath: movie.posterPath,
+                  isIconOnly: false,
+                ),
+              ],
+            ),
+          ),
         ),
         _MovieOverviewSection(overview: movie.overview),
         const SliverToBoxAdapter(

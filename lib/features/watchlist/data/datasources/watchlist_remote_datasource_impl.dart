@@ -195,11 +195,11 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
     try {
       final response = await _supabase
           .from('watchlist_items')
-          .select()
+          .select('id')
           .eq('media_id', mediaId)
           .eq('media_type', mediaType.name)
-          .maybeSingle();
-      return response != null;
+          .limit(1);
+      return (response as List).isNotEmpty;
     } on PostgrestException catch (e) {
       AppLogger.error('isInWatchlist failed', tag: 'WatchlistDS', exception: e);
       throw SupabaseFailure(e.message);

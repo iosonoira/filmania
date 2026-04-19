@@ -3,7 +3,6 @@ import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../domain/entities/watchlist.dart';
 import '../../domain/entities/watchlist_item.dart';
 import '../../domain/repositories/i_watchlist_repository.dart';
-import '../../domain/failures/watchlist_failure.dart';
 import '../datasources/i_watchlist_remote_datasource.dart';
 import '../datasources/watchlist_remote_datasource_impl.dart';
 import '../models/watchlist_item_dto.dart';

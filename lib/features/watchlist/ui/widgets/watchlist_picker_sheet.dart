@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../domain/entities/watchlist.dart';
 import '../providers/watchlist_providers.dart';
+import '../../../../core/widgets/app_toast.dart';
 
 /// Opens the WatchlistPickerSheet and handles result.
 /// Call from movie/tv detail pages instead of toggling directly.
@@ -21,6 +22,7 @@ Future<void> showWatchlistPicker(
     context: context,
     isScrollControlled: true,
     backgroundColor: Colors.transparent,
+    useRootNavigator: true,
     builder: (_) => WatchlistPickerSheet(
       mediaId: mediaId,
       mediaTitle: mediaTitle,
@@ -100,13 +102,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
   }
 
   void _showSuccessSnack() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Aggiunto a watchlist!'),
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(seconds: 2),
-      ),
-    );
+    AppToast.show(context, 'Aggiunto alla watchlist!');
   }
 
   @override

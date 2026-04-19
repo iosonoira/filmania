@@ -10,6 +10,7 @@ import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../watched/ui/widgets/watched_button.dart';
 
 // --- Trending Movies Section ---
 class TrendingMoviesSection extends ConsumerWidget {
@@ -166,20 +167,43 @@ class WatchingCard extends ConsumerWidget {
             Positioned(
               top: AppSpacing.md,
               right: AppSpacing.md,
-              child: IconButton.filled(
-                onPressed: () => showWatchlistPicker(
-                  context,
-                  ref,
-                  mediaId: mediaId,
-                  mediaTitle: title,
-                  mediaType: MediaType.movie,
-                  posterPath: posterPath,
-                ),
-                style: IconButton.styleFrom(
-                  backgroundColor: Colors.black.withValues(alpha: 0.3),
-                  foregroundColor: Colors.white,
-                ),
-                icon: const Icon(Icons.bookmark_add_outlined),
+              child: Row(
+                children: [
+                  WatchedButton(
+                    mediaId: mediaId,
+                    mediaTitle: title,
+                    mediaType: MediaType.movie,
+                    posterPath: posterPath,
+                    isIconOnly: true,
+                    hasBackground: true,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  IconButton.filled(
+                    onPressed: () => showWatchlistPicker(
+                      context,
+                      ref,
+                      mediaId: mediaId,
+                      mediaTitle: title,
+                      mediaType: MediaType.movie,
+                      posterPath: posterPath,
+                    ),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.black.withValues(alpha: 0.3),
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(32, 32),
+                      fixedSize: const Size(32, 32),
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    constraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                      maxWidth: 32,
+                      maxHeight: 32,
+                    ),
+                    icon: const Icon(Icons.bookmark_add_outlined, size: 18),
+                  ),
+                ],
               ),
             ),
           ],
@@ -450,19 +474,45 @@ class _UpcomingEpisodeItem extends ConsumerWidget {
               ],
             ),
           ),
-          IconButton(
-            icon: Icon(
-              Icons.bookmark_add_outlined,
-              color: colors.onSurfaceSecondary,
-            ),
-            onPressed: () => showWatchlistPicker(
-              context,
-              ref,
-              mediaId: mediaId,
-              mediaTitle: title,
-              mediaType: MediaType.tv,
-              posterPath: posterPath,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              WatchedButton(
+                mediaId: mediaId,
+                mediaTitle: title,
+                mediaType: MediaType.tv,
+                posterPath: posterPath,
+                isIconOnly: true,
+                hasBackground: false,
+              ),
+              IconButton(
+                style: IconButton.styleFrom(
+                  minimumSize: const Size(32, 32),
+                  fixedSize: const Size(32, 32),
+                  padding: EdgeInsets.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 32,
+                  minHeight: 32,
+                  maxWidth: 32,
+                  maxHeight: 32,
+                ),
+                icon: Icon(
+                  Icons.bookmark_add_outlined,
+                  color: colors.onSurfaceSecondary,
+                  size: 18,
+                ),
+                onPressed: () => showWatchlistPicker(
+                  context,
+                  ref,
+                  mediaId: mediaId,
+                  mediaTitle: title,
+                  mediaType: MediaType.tv,
+                  posterPath: posterPath,
+                ),
+              ),
+            ],
           ),
         ],
       ),
