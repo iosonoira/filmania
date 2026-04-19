@@ -9,9 +9,9 @@ part of 'watchlist_item_dto.dart';
 _WatchlistItemDto _$WatchlistItemDtoFromJson(Map<String, dynamic> json) =>
     _WatchlistItemDto(
       id: json['id'] as String,
-      userId: json['user_id'] as String,
-      mediaId: (json['movie_id'] as num).toInt(),
-      title: json['movie_title'] as String,
+      watchlistId: json['watchlist_id'] as String,
+      mediaId: (json['media_id'] as num).toInt(),
+      title: json['media_title'] as String,
       mediaType:
           $enumDecodeNullable(_$MediaTypeEnumMap, json['media_type']) ??
           MediaType.movie,
@@ -22,9 +22,9 @@ _WatchlistItemDto _$WatchlistItemDtoFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$WatchlistItemDtoToJson(_WatchlistItemDto instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'user_id': instance.userId,
-      'movie_id': instance.mediaId,
-      'movie_title': instance.title,
+      'watchlist_id': instance.watchlistId,
+      'media_id': instance.mediaId,
+      'media_title': instance.title,
       'media_type': _$MediaTypeEnumMap[instance.mediaType]!,
       'poster_path': instance.posterPath,
       'added_at': instance.addedAt.toIso8601String(),

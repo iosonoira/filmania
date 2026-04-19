@@ -8,6 +8,8 @@ import '../../../../core/widgets/error_view.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
 import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
+import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
+import '../../../../core/domain/enums/media_type.dart';
 
 // --- Trending Movies Section ---
 class TrendingMoviesSection extends ConsumerWidget {
@@ -103,12 +105,13 @@ class _TrendingMoviesList extends StatelessWidget {
         itemBuilder: (context, index) {
           final movie = movies[index];
           return WatchingCard(
+            mediaId: movie.id,
             title: movie.title,
             subtitle: movie.releaseDate?.year.toString() ?? '',
             imageUrl: movie.posterPath != null
                 ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
                 : '',
-            progress: movie.voteAverage / 10,
+            posterPath: movie.posterPath,
           );
         },
       ),
@@ -116,25 +119,26 @@ class _TrendingMoviesList extends StatelessWidget {
   }
 }
 
-class WatchingCard extends StatelessWidget {
+class WatchingCard extends ConsumerWidget {
+  final int mediaId;
   final String title;
   final String subtitle;
   final String imageUrl;
-  final double progress;
+  final String? posterPath;
 
   const WatchingCard({
     super.key,
+    required this.mediaId,
     required this.title,
     required this.subtitle,
     required this.imageUrl,
-    required this.progress,
+    this.posterPath,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Semantics(
-      label:
-          'Stai guardando $title, $subtitle, ${(progress * 100).round()}% completato',
+      label: 'Guarda $title, $subtitle',
       button: true,
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.85,
@@ -153,10 +157,34 @@ class WatchingCard extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: _WatchingCardContent(
-          title: title,
-          subtitle: subtitle,
-          progress: progress,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: _WatchingCardContent(
+                title: title,
+                subtitle: subtitle,
+              ),
+            ),
+            Positioned(
+              top: AppSpacing.md,
+              right: AppSpacing.md,
+              child: IconButton.filled(
+                onPressed: () => showWatchlistPicker(
+                  context,
+                  ref,
+                  mediaId: mediaId,
+                  mediaTitle: title,
+                  mediaType: MediaType.movie,
+                  posterPath: posterPath,
+                ),
+                style: IconButton.styleFrom(
+                  backgroundColor: Colors.black.withValues(alpha: 0.3),
+                  foregroundColor: Colors.white,
+                ),
+                icon: const Icon(Icons.bookmark_add_outlined),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -166,12 +194,10 @@ class WatchingCard extends StatelessWidget {
 class _WatchingCardContent extends StatelessWidget {
   final String title;
   final String subtitle;
-  final double progress;
 
   const _WatchingCardContent({
     required this.title,
     required this.subtitle,
-    required this.progress,
   });
 
   @override
@@ -206,8 +232,6 @@ class _WatchingCardContent extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            const SizedBox(height: AppSpacing.md),
-            _WatchingCardProgressBar(progress: progress),
           ],
         ),
       ),
@@ -251,44 +275,7 @@ class _WatchingCardBadge extends StatelessWidget {
   }
 }
 
-class _WatchingCardProgressBar extends StatelessWidget {
-  final double progress;
-
-  const _WatchingCardProgressBar({required this.progress});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-
-    return Stack(
-      children: [
-        Container(
-          height: 6,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(100),
-          ),
-        ),
-        Container(
-          height: 6,
-          width: MediaQuery.sizeOf(context).width * 0.85 * progress,
-          constraints: BoxConstraints(maxWidth: 450 * progress),
-          decoration: BoxDecoration(
-            color: colors.primary,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: [
-              BoxShadow(
-                color: colors.primary.withValues(alpha: 0.6),
-                blurRadius: 12,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
+// _WatchingCardProgressBar removed because progress bar under trending films is not needed.
 
 // --- Trending TV Series Section ---
 class TrendingTVSeriesSliver extends ConsumerWidget {
@@ -336,6 +323,7 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final item = tvSeries[index];
                   return _UpcomingEpisodeItem(
+                    mediaId: item.id,
                     title: item.name,
                     subtitle: item.firstAirDate?.year.toString() ?? '',
                     time: 'Rating: ${item.voteAverage.toStringAsFixed(1)}',
@@ -343,6 +331,7 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
                     imageUrl: item.posterPath != null
                         ? 'https://image.tmdb.org/t/p/w500${item.posterPath}'
                         : '',
+                    posterPath: item.posterPath,
                     containerColor: containerColor,
                   );
                 },
@@ -365,25 +354,29 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
   }
 }
 
-class _UpcomingEpisodeItem extends StatelessWidget {
+class _UpcomingEpisodeItem extends ConsumerWidget {
+  final int mediaId;
   final String title;
   final String subtitle;
   final String time;
   final Color timeColor;
   final String imageUrl;
+  final String? posterPath;
   final Color containerColor;
 
   const _UpcomingEpisodeItem({
+    required this.mediaId,
     required this.title,
     required this.subtitle,
     required this.time,
     required this.timeColor,
     required this.imageUrl,
+    this.posterPath,
     required this.containerColor,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final colors = AppColors.of(context);
 
@@ -464,7 +457,14 @@ class _UpcomingEpisodeItem extends StatelessWidget {
               Icons.bookmark_add_outlined,
               color: colors.onSurfaceSecondary,
             ),
-            onPressed: () {},
+            onPressed: () => showWatchlistPicker(
+              context,
+              ref,
+              mediaId: mediaId,
+              mediaTitle: title,
+              mediaType: MediaType.tv,
+              posterPath: posterPath,
+            ),
           ),
         ],
       ),
@@ -595,7 +595,7 @@ class _FeaturedBentoCard extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             _FeaturedBentoContent(movie: movie),
             const SizedBox(height: AppSpacing.lg),
-            const _FeaturedBentoButton(),
+            _FeaturedBentoButton(movie: movie),
           ],
         ),
       ),
@@ -682,15 +682,23 @@ class _FeaturedBentoContent extends StatelessWidget {
   }
 }
 
-class _FeaturedBentoButton extends StatelessWidget {
-  const _FeaturedBentoButton();
+class _FeaturedBentoButton extends ConsumerWidget {
+  final Movie movie;
+  const _FeaturedBentoButton({required this.movie});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
 
     return FilledButton(
-      onPressed: () {},
+      onPressed: () => showWatchlistPicker(
+        context,
+        ref,
+        mediaId: movie.id,
+        mediaTitle: movie.title,
+        mediaType: MediaType.movie,
+        posterPath: movie.posterPath,
+      ),
       style: FilledButton.styleFrom(
         backgroundColor: colors.primary,
         foregroundColor: Colors.white,

@@ -9,9 +9,9 @@ part 'watchlist_item_dto.g.dart';
 abstract class WatchlistItemDto with _$WatchlistItemDto {
   const factory WatchlistItemDto({
     required String id,
-    @JsonKey(name: 'user_id') required String userId,
-    @JsonKey(name: 'movie_id') required int mediaId,
-    @JsonKey(name: 'movie_title') required String title,
+    @JsonKey(name: 'watchlist_id') required String watchlistId,
+    @JsonKey(name: 'media_id') required int mediaId,
+    @JsonKey(name: 'media_title') required String title,
     @JsonKey(name: 'media_type') @Default(MediaType.movie) MediaType mediaType,
     @JsonKey(name: 'poster_path') required String? posterPath,
     @JsonKey(name: 'added_at') required DateTime addedAt,
@@ -25,7 +25,7 @@ abstract class WatchlistItemDto with _$WatchlistItemDto {
   WatchlistItem toEntity() {
     return WatchlistItem(
       id: id,
-      userId: userId,
+      watchlistId: watchlistId,
       mediaId: mediaId,
       title: title,
       mediaType: mediaType,
@@ -37,7 +37,7 @@ abstract class WatchlistItemDto with _$WatchlistItemDto {
   factory WatchlistItemDto.fromEntity(WatchlistItem entity) {
     return WatchlistItemDto(
       id: entity.id,
-      userId: entity.userId,
+      watchlistId: entity.watchlistId,
       mediaId: entity.mediaId,
       title: entity.title,
       mediaType: entity.mediaType,

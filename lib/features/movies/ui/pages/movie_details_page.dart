@@ -9,6 +9,7 @@ import '../../domain/entities/movie.dart';
 import '../providers/movies_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
+import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/widgets/error_view.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
@@ -250,31 +251,34 @@ class _WatchlistButton extends ConsumerWidget {
       isMediaInWatchlistProvider(movie.id, MediaType.movie),
     );
     final notifierState = ref.watch(watchlistProvider);
+    final isLoading = notifierState.isLoading;
 
     return isInWatchlistAsync.when(
       data: (isIn) {
-        final isLoading = notifierState.isLoading;
-
         if (isIn) {
           return OutlinedButton.icon(
             onPressed: isLoading
                 ? null
-                : () => ref.read(watchlistProvider.notifier).toggleMovie(movie),
+                : () => showWatchlistPicker(
+                      context,
+                      ref,
+                      mediaId: movie.id,
+                      mediaTitle: movie.title,
+                      mediaType: MediaType.movie,
+                      posterPath: movie.posterPath,
+                    ),
             icon: isLoading
                 ? const SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : const Icon(
-                    Icons.bookmark_remove_rounded,
-                    color: Colors.redAccent,
-                  ),
-            label: const Text('Rimuovi dalla Watchlist'),
+                : const Icon(Icons.bookmark_rounded),
+            label: const Text('Nelle tue Watchlist'),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: const BorderSide(color: Colors.redAccent),
-              foregroundColor: Colors.redAccent,
+              side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
+              foregroundColor: colors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
@@ -298,7 +302,14 @@ class _WatchlistButton extends ConsumerWidget {
           child: ElevatedButton.icon(
             onPressed: isLoading
                 ? null
-                : () => ref.read(watchlistProvider.notifier).toggleMovie(movie),
+                : () => showWatchlistPicker(
+                      context,
+                      ref,
+                      mediaId: movie.id,
+                      mediaTitle: movie.title,
+                      mediaType: MediaType.movie,
+                      posterPath: movie.posterPath,
+                    ),
             icon: isLoading
                 ? const SizedBox(
                     width: 20,

@@ -12,6 +12,7 @@ import '../../features/watchlist/ui/pages/watchlist_page.dart';
 import '../../features/profile/ui/pages/profile_page.dart';
 import '../../features/movies/ui/pages/movie_details_page.dart';
 import '../../features/tv_series/ui/pages/tv_series_details_page.dart';
+import '../../features/watchlist/ui/pages/watchlist_detail_page.dart';
 
 part 'app_router.g.dart';
 
@@ -27,6 +28,7 @@ abstract class AppRoutes {
   static const profile = '/profile';
   static const movieDetails = '/movie/:id';
   static const tvDetails = '/tv/:id';
+  static const watchlistDetail = '/watchlist/:id';
 
   static const shellRoutes = [home, discover, watchlist, profile];
 }
@@ -105,6 +107,13 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final id = int.parse(state.pathParameters['id']!);
           return TVSeriesDetailsPage(seriesId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.watchlistDetail,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return WatchlistDetailPage(watchlistId: id);
         },
       ),
     ],

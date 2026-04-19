@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$WatchlistItemDto {
 
- String get id;@JsonKey(name: 'user_id') String get userId;@JsonKey(name: 'movie_id') int get mediaId;@JsonKey(name: 'movie_title') String get title;@JsonKey(name: 'media_type') MediaType get mediaType;@JsonKey(name: 'poster_path') String? get posterPath;@JsonKey(name: 'added_at') DateTime get addedAt;
+ String get id;@JsonKey(name: 'watchlist_id') String get watchlistId;@JsonKey(name: 'media_id') int get mediaId;@JsonKey(name: 'media_title') String get title;@JsonKey(name: 'media_type') MediaType get mediaType;@JsonKey(name: 'poster_path') String? get posterPath;@JsonKey(name: 'added_at') DateTime get addedAt;
 /// Create a copy of WatchlistItemDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $WatchlistItemDtoCopyWith<WatchlistItemDto> get copyWith => _$WatchlistItemDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WatchlistItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.title, title) || other.title == title)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WatchlistItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.watchlistId, watchlistId) || other.watchlistId == watchlistId)&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.title, title) || other.title == title)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,mediaId,title,mediaType,posterPath,addedAt);
+int get hashCode => Object.hash(runtimeType,id,watchlistId,mediaId,title,mediaType,posterPath,addedAt);
 
 @override
 String toString() {
-  return 'WatchlistItemDto(id: $id, userId: $userId, mediaId: $mediaId, title: $title, mediaType: $mediaType, posterPath: $posterPath, addedAt: $addedAt)';
+  return 'WatchlistItemDto(id: $id, watchlistId: $watchlistId, mediaId: $mediaId, title: $title, mediaType: $mediaType, posterPath: $posterPath, addedAt: $addedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $WatchlistItemDtoCopyWith<$Res>  {
   factory $WatchlistItemDtoCopyWith(WatchlistItemDto value, $Res Function(WatchlistItemDto) _then) = _$WatchlistItemDtoCopyWithImpl;
 @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'movie_id') int mediaId,@JsonKey(name: 'movie_title') String title,@JsonKey(name: 'media_type') MediaType mediaType,@JsonKey(name: 'poster_path') String? posterPath,@JsonKey(name: 'added_at') DateTime addedAt
+ String id,@JsonKey(name: 'watchlist_id') String watchlistId,@JsonKey(name: 'media_id') int mediaId,@JsonKey(name: 'media_title') String title,@JsonKey(name: 'media_type') MediaType mediaType,@JsonKey(name: 'poster_path') String? posterPath,@JsonKey(name: 'added_at') DateTime addedAt
 });
 
 
@@ -65,10 +65,10 @@ class _$WatchlistItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of WatchlistItemDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? mediaId = null,Object? title = null,Object? mediaType = null,Object? posterPath = freezed,Object? addedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? watchlistId = null,Object? mediaId = null,Object? title = null,Object? mediaType = null,Object? posterPath = freezed,Object? addedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,watchlistId: null == watchlistId ? _self.watchlistId : watchlistId // ignore: cast_nullable_to_non_nullable
 as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable
@@ -159,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'movie_id')  int mediaId, @JsonKey(name: 'movie_title')  String title, @JsonKey(name: 'media_type')  MediaType mediaType, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'added_at')  DateTime addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'watchlist_id')  String watchlistId, @JsonKey(name: 'media_id')  int mediaId, @JsonKey(name: 'media_title')  String title, @JsonKey(name: 'media_type')  MediaType mediaType, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'added_at')  DateTime addedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WatchlistItemDto() when $default != null:
-return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
+return $default(_that.id,_that.watchlistId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
   return orElse();
 
 }
@@ -180,10 +180,10 @@ return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'movie_id')  int mediaId, @JsonKey(name: 'movie_title')  String title, @JsonKey(name: 'media_type')  MediaType mediaType, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'added_at')  DateTime addedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id, @JsonKey(name: 'watchlist_id')  String watchlistId, @JsonKey(name: 'media_id')  int mediaId, @JsonKey(name: 'media_title')  String title, @JsonKey(name: 'media_type')  MediaType mediaType, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'added_at')  DateTime addedAt)  $default,) {final _that = this;
 switch (_that) {
 case _WatchlistItemDto():
-return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
+return $default(_that.id,_that.watchlistId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +200,10 @@ return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'user_id')  String userId, @JsonKey(name: 'movie_id')  int mediaId, @JsonKey(name: 'movie_title')  String title, @JsonKey(name: 'media_type')  MediaType mediaType, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'added_at')  DateTime addedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id, @JsonKey(name: 'watchlist_id')  String watchlistId, @JsonKey(name: 'media_id')  int mediaId, @JsonKey(name: 'media_title')  String title, @JsonKey(name: 'media_type')  MediaType mediaType, @JsonKey(name: 'poster_path')  String? posterPath, @JsonKey(name: 'added_at')  DateTime addedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _WatchlistItemDto() when $default != null:
-return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
+return $default(_that.id,_that.watchlistId,_that.mediaId,_that.title,_that.mediaType,_that.posterPath,_that.addedAt);case _:
   return null;
 
 }
@@ -215,13 +215,13 @@ return $default(_that.id,_that.userId,_that.mediaId,_that.title,_that.mediaType,
 @JsonSerializable()
 
 class _WatchlistItemDto extends WatchlistItemDto {
-  const _WatchlistItemDto({required this.id, @JsonKey(name: 'user_id') required this.userId, @JsonKey(name: 'movie_id') required this.mediaId, @JsonKey(name: 'movie_title') required this.title, @JsonKey(name: 'media_type') this.mediaType = MediaType.movie, @JsonKey(name: 'poster_path') required this.posterPath, @JsonKey(name: 'added_at') required this.addedAt}): super._();
+  const _WatchlistItemDto({required this.id, @JsonKey(name: 'watchlist_id') required this.watchlistId, @JsonKey(name: 'media_id') required this.mediaId, @JsonKey(name: 'media_title') required this.title, @JsonKey(name: 'media_type') this.mediaType = MediaType.movie, @JsonKey(name: 'poster_path') required this.posterPath, @JsonKey(name: 'added_at') required this.addedAt}): super._();
   factory _WatchlistItemDto.fromJson(Map<String, dynamic> json) => _$WatchlistItemDtoFromJson(json);
 
 @override final  String id;
-@override@JsonKey(name: 'user_id') final  String userId;
-@override@JsonKey(name: 'movie_id') final  int mediaId;
-@override@JsonKey(name: 'movie_title') final  String title;
+@override@JsonKey(name: 'watchlist_id') final  String watchlistId;
+@override@JsonKey(name: 'media_id') final  int mediaId;
+@override@JsonKey(name: 'media_title') final  String title;
 @override@JsonKey(name: 'media_type') final  MediaType mediaType;
 @override@JsonKey(name: 'poster_path') final  String? posterPath;
 @override@JsonKey(name: 'added_at') final  DateTime addedAt;
@@ -239,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WatchlistItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.title, title) || other.title == title)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WatchlistItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.watchlistId, watchlistId) || other.watchlistId == watchlistId)&&(identical(other.mediaId, mediaId) || other.mediaId == mediaId)&&(identical(other.title, title) || other.title == title)&&(identical(other.mediaType, mediaType) || other.mediaType == mediaType)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.addedAt, addedAt) || other.addedAt == addedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,mediaId,title,mediaType,posterPath,addedAt);
+int get hashCode => Object.hash(runtimeType,id,watchlistId,mediaId,title,mediaType,posterPath,addedAt);
 
 @override
 String toString() {
-  return 'WatchlistItemDto(id: $id, userId: $userId, mediaId: $mediaId, title: $title, mediaType: $mediaType, posterPath: $posterPath, addedAt: $addedAt)';
+  return 'WatchlistItemDto(id: $id, watchlistId: $watchlistId, mediaId: $mediaId, title: $title, mediaType: $mediaType, posterPath: $posterPath, addedAt: $addedAt)';
 }
 
 
@@ -259,7 +259,7 @@ abstract mixin class _$WatchlistItemDtoCopyWith<$Res> implements $WatchlistItemD
   factory _$WatchlistItemDtoCopyWith(_WatchlistItemDto value, $Res Function(_WatchlistItemDto) _then) = __$WatchlistItemDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id,@JsonKey(name: 'user_id') String userId,@JsonKey(name: 'movie_id') int mediaId,@JsonKey(name: 'movie_title') String title,@JsonKey(name: 'media_type') MediaType mediaType,@JsonKey(name: 'poster_path') String? posterPath,@JsonKey(name: 'added_at') DateTime addedAt
+ String id,@JsonKey(name: 'watchlist_id') String watchlistId,@JsonKey(name: 'media_id') int mediaId,@JsonKey(name: 'media_title') String title,@JsonKey(name: 'media_type') MediaType mediaType,@JsonKey(name: 'poster_path') String? posterPath,@JsonKey(name: 'added_at') DateTime addedAt
 });
 
 
@@ -276,10 +276,10 @@ class __$WatchlistItemDtoCopyWithImpl<$Res>
 
 /// Create a copy of WatchlistItemDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? userId = null,Object? mediaId = null,Object? title = null,Object? mediaType = null,Object? posterPath = freezed,Object? addedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? watchlistId = null,Object? mediaId = null,Object? title = null,Object? mediaType = null,Object? posterPath = freezed,Object? addedAt = null,}) {
   return _then(_WatchlistItemDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
+as String,watchlistId: null == watchlistId ? _self.watchlistId : watchlistId // ignore: cast_nullable_to_non_nullable
 as String,mediaId: null == mediaId ? _self.mediaId : mediaId // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,mediaType: null == mediaType ? _self.mediaType : mediaType // ignore: cast_nullable_to_non_nullable

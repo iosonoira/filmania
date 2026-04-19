@@ -4,20 +4,29 @@ import '../../../movies/domain/entities/movie.dart';
 import '../../../tv_series/domain/entities/tv_series.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/domain/enums/media_type.dart';
+import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 
-class MediaGridCard extends StatelessWidget {
+class MediaGridCard extends ConsumerWidget {
+  final int mediaId;
   final String title;
   final String? posterUrl;
+  final String? posterPath;
   final String? releaseYear;
   final double voteAverage;
+  final MediaType mediaType;
   final VoidCallback? onTap;
 
   const MediaGridCard({
     super.key,
+    required this.mediaId,
     required this.title,
     required this.posterUrl,
+    required this.posterPath,
     required this.releaseYear,
     required this.voteAverage,
+    required this.mediaType,
     this.onTap,
   });
 
@@ -26,10 +35,13 @@ class MediaGridCard extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return MediaGridCard(
+      mediaId: movie.id,
       title: movie.title,
       posterUrl: movie.fullPosterUrl,
+      posterPath: movie.posterPath,
       releaseYear: movie.releaseDate?.year.toString(),
       voteAverage: movie.voteAverage,
+      mediaType: MediaType.movie,
       onTap: onTap,
     );
   }
@@ -39,16 +51,19 @@ class MediaGridCard extends StatelessWidget {
     VoidCallback? onTap,
   }) {
     return MediaGridCard(
+      mediaId: tv.id,
       title: tv.name,
       posterUrl: tv.fullPosterUrl,
+      posterPath: tv.posterPath,
       releaseYear: tv.firstAirDate?.year.toString(),
       voteAverage: tv.voteAverage,
+      mediaType: MediaType.tv,
       onTap: onTap,
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
@@ -108,6 +123,30 @@ class MediaGridCard extends StatelessWidget {
                         Colors.transparent,
                       ],
                       stops: const [0.0, 0.4, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+
+              // Bookmark Button
+              Positioned(
+                top: 8,
+                left: 8,
+                child: GlassOverlay(
+                  sigma: 10,
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.black.withValues(alpha: 0.5),
+                  child: IconButton(
+                    constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                    padding: EdgeInsets.zero,
+                    icon: const Icon(Icons.bookmark_add_outlined, color: Colors.white, size: 18),
+                    onPressed: () => showWatchlistPicker(
+                      context,
+                      ref,
+                      mediaId: mediaId,
+                      mediaTitle: title,
+                      mediaType: mediaType,
+                      posterPath: posterPath,
                     ),
                   ),
                 ),

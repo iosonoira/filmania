@@ -7,7 +7,7 @@ part 'watchlist_item.freezed.dart';
 abstract class WatchlistItem with _$WatchlistItem {
   const factory WatchlistItem({
     required String id,
-    required String userId,
+    required String watchlistId,
     required int mediaId,
     required String title,
     required MediaType mediaType,
