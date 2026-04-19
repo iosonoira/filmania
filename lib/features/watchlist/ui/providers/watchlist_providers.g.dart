@@ -46,7 +46,7 @@ final class UserWatchlistsProvider
   }
 }
 
-String _$userWatchlistsHash() => r'792a8d89abc442e4c4da96d55362a89e78c5a8f0';
+String _$userWatchlistsHash() => r'822b63dc01577aea8a9a14c4f6bb2a3d7ca58431';
 
 @ProviderFor(watchlistItems)
 final watchlistItemsProvider = WatchlistItemsFamily._();
@@ -105,7 +105,7 @@ final class WatchlistItemsProvider
   }
 }
 
-String _$watchlistItemsHash() => r'5d21fc7c5b39f904598a06de5001c9dade0abdae';
+String _$watchlistItemsHash() => r'8786c459149d9f27cee2920b6a67091522eeb889';
 
 final class WatchlistItemsFamily extends $Family
     with $FunctionalFamilyOverride<Stream<List<WatchlistItem>>, String> {
@@ -175,7 +175,7 @@ final class IsMediaInWatchlistProvider
 }
 
 String _$isMediaInWatchlistHash() =>
-    r'110bccfdd4775607b62029e13ab31d95ce33933f';
+    r'fc142754400ab03e826e1eeac620ccdb95648043';
 
 final class IsMediaInWatchlistFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool>, (int, MediaType)> {
@@ -253,7 +253,7 @@ final class WatchlistIdsContainingMediaProvider
 }
 
 String _$watchlistIdsContainingMediaHash() =>
-    r'e83af9c7dc4039bcf07237202707962f9deddb1f';
+    r'a6be1fc7d0dad226ccfd490a84cb16222ece6fa1';
 
 final class WatchlistIdsContainingMediaFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Set<String>>, (int, MediaType)> {
@@ -300,7 +300,7 @@ final class WatchlistNotifierProvider
   WatchlistNotifier create() => WatchlistNotifier();
 }
 
-String _$watchlistNotifierHash() => r'0baa2f3d6e0d1e7e973954600f5734a861a5d318';
+String _$watchlistNotifierHash() => r'4994df1dcc1a8b8e00ec7f7f705456b092638469';
 
 abstract class _$WatchlistNotifier extends $AsyncNotifier<void> {
   FutureOr<void> build();
@@ -359,4 +359,4 @@ final class UserWatchlistProvider
   }
 }
 
-String _$userWatchlistHash() => r'f6bdbbaf29fc758113dcc44926edf2137be8edf8';
+String _$userWatchlistHash() => r'fbafcacce0ff14c0c4bb74b2366dc83cb9de09bc';

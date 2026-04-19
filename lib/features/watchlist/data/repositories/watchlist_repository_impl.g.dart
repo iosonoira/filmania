@@ -15,11 +15,11 @@ final watchlistRepositoryProvider = WatchlistRepositoryProvider._();
 final class WatchlistRepositoryProvider
     extends
         $FunctionalProvider<
-          IWatchlistRepository,
-          IWatchlistRepository,
-          IWatchlistRepository
+          IWatchlistRepository?,
+          IWatchlistRepository?,
+          IWatchlistRepository?
         >
-    with $Provider<IWatchlistRepository> {
+    with $Provider<IWatchlistRepository?> {
   WatchlistRepositoryProvider._()
     : super(
         from: null,
@@ -36,23 +36,23 @@ final class WatchlistRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<IWatchlistRepository> $createElement(
+  $ProviderElement<IWatchlistRepository?> $createElement(
     $ProviderPointer pointer,
   ) => $ProviderElement(pointer);
 
   @override
-  IWatchlistRepository create(Ref ref) {
+  IWatchlistRepository? create(Ref ref) {
     return watchlistRepository(ref);
   }
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(IWatchlistRepository value) {
+  Override overrideWithValue(IWatchlistRepository? value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<IWatchlistRepository>(value),
+      providerOverride: $SyncValueProvider<IWatchlistRepository?>(value),
     );
   }
 }
 
 String _$watchlistRepositoryHash() =>
-    r'd54d4b1f72dd0afab4f9ac2497674a2b581532fc';
+    r'b5f784ac684c3226448fcb19522d1c6a9616edf9';
