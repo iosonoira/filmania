@@ -18,6 +18,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   final _passwordController = TextEditingController();
   final _passwordFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -88,10 +89,18 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           TextFormField(
             controller: _passwordController,
             focusNode: _passwordFocusNode,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Password',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  size: 20,
+                  color: colors.onSurfaceSecondary,
+                ),
+                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              ),
             ),
-            obscureText: true,
+            obscureText: _obscurePassword,
             validator: (value) =>
                 (value?.length ?? 0) >= 6 ? null : 'Minimo 6 caratteri',
           ),
