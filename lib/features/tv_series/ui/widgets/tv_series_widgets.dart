@@ -9,6 +9,7 @@ import '../../domain/entities/tv_episode.dart';
 import '../../domain/entities/tv_season.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../watched/ui/providers/watched_providers.dart';
 
 class EpisodesSection extends ConsumerWidget {
   final int tvId;
@@ -210,15 +211,17 @@ class _EpisodesListContent extends StatelessWidget {
   }
 }
 
-class EpisodeCard extends StatelessWidget {
+class EpisodeCard extends ConsumerWidget {
   final TVEpisode episode;
   final int tvId;
 
   const EpisodeCard({super.key, required this.episode, required this.tvId});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
+    final watchedEpisodes = ref.watch(watchedEpisodesProvider(tvId)).value ?? [];
+    final isWatched = watchedEpisodes.contains('s${episode.seasonNumber}e${episode.episodeNumber}');
 
     return Semantics(
       label: 'Episodio ${episode.episodeNumber}: ${episode.name}',
@@ -238,15 +241,17 @@ class EpisodeCard extends StatelessWidget {
             color: colors.surface,
             borderRadius: BorderRadius.circular(AppSpacing.md),
             border: Border.all(
-              color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
+              color: isWatched 
+                  ? colors.primary.withValues(alpha: 0.3)
+                  : colors.onSurfaceSecondary.withValues(alpha: 0.1),
             ),
           ),
           clipBehavior: Clip.antiAlias,
           child: Row(
             children: [
-              _EpisodeCardThumbnail(episode: episode),
+              _EpisodeCardThumbnail(episode: episode, isWatched: isWatched),
               const SizedBox(width: AppSpacing.md),
-              _EpisodeCardInfo(episode: episode),
+              _EpisodeCardInfo(episode: episode, isWatched: isWatched),
               const SizedBox(width: AppSpacing.sm),
             ],
           ),
@@ -258,8 +263,9 @@ class EpisodeCard extends StatelessWidget {
 
 class _EpisodeCardThumbnail extends StatelessWidget {
   final TVEpisode episode;
+  final bool isWatched;
 
-  const _EpisodeCardThumbnail({required this.episode});
+  const _EpisodeCardThumbnail({required this.episode, this.isWatched = false});
 
   @override
   Widget build(BuildContext context) {
@@ -268,22 +274,41 @@ class _EpisodeCardThumbnail extends StatelessWidget {
     return SizedBox(
       width: 160,
       height: 90,
-      child: ClipRRect(
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(AppSpacing.md),
-          bottomLeft: Radius.circular(AppSpacing.md),
-        ),
-        child: episode.fullStillUrl != null
-            ? CachedNetworkImage(
-                imageUrl: episode.fullStillUrl!,
-                fit: BoxFit.cover,
-                memCacheWidth: 320,
-                placeholder: (context, url) =>
-                    Container(color: colors.surface.withValues(alpha: 0.1)),
-                errorWidget: (context, url, error) =>
-                    _EpisodeCardThumbnailFallback(colors: colors),
-              )
-            : _EpisodeCardThumbnailFallback(colors: colors),
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(AppSpacing.md),
+                bottomLeft: Radius.circular(AppSpacing.md),
+              ),
+              child: episode.fullStillUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: episode.fullStillUrl!,
+                      fit: BoxFit.cover,
+                      memCacheWidth: 320,
+                      placeholder: (context, url) =>
+                          Container(color: colors.surface.withValues(alpha: 0.1)),
+                      errorWidget: (context, url, error) =>
+                          _EpisodeCardThumbnailFallback(colors: colors),
+                    )
+                  : _EpisodeCardThumbnailFallback(colors: colors),
+            ),
+          ),
+          if (isWatched)
+            Positioned(
+              top: 4,
+              left: 4,
+              child: Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  color: colors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.check_rounded, color: Colors.white, size: 12),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -309,8 +334,9 @@ class _EpisodeCardThumbnailFallback extends StatelessWidget {
 
 class _EpisodeCardInfo extends StatelessWidget {
   final TVEpisode episode;
+  final bool isWatched;
 
-  const _EpisodeCardInfo({required this.episode});
+  const _EpisodeCardInfo({required this.episode, this.isWatched = false});
 
   @override
   Widget build(BuildContext context) {
@@ -326,6 +352,7 @@ class _EpisodeCardInfo extends StatelessWidget {
             episode: episode,
             colors: colors,
             textTheme: textTheme,
+            isWatched: isWatched,
           ),
           const SizedBox(height: 2),
           Text(
@@ -358,21 +385,27 @@ class _EpisodeCardNumberRow extends StatelessWidget {
   final TVEpisode episode;
   final AppColorScheme colors;
   final TextTheme textTheme;
+  final bool isWatched;
 
   const _EpisodeCardNumberRow({
     required this.episode,
     required this.colors,
     required this.textTheme,
+    required this.isWatched,
   });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
+        if (isWatched) ...[
+          Icon(Icons.check_circle_rounded, color: colors.primary, size: 14),
+          const SizedBox(width: 4),
+        ],
         Text(
           'E${episode.episodeNumber}',
           style: textTheme.labelSmall?.copyWith(
-            color: colors.primary,
+            color: isWatched ? colors.primary : colors.onSurfaceSecondary,
             fontWeight: FontWeight.bold,
             letterSpacing: 0.5,
           ),

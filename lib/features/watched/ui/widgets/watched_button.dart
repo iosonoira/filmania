@@ -68,6 +68,13 @@ class WatchedButton extends ConsumerWidget {
           mediaId: mediaId,
           mediaType: mediaType,
         ));
+        
+        // Ensure the "Watched" page list refreshes
+        ref.invalidate(watchedItemsProvider(mediaType));
+        
+        if (mediaType == MediaType.tv) {
+          ref.invalidate(watchedEpisodesProvider(mediaId));
+        }
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

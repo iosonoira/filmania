@@ -19,6 +19,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  
   final _usernameFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
@@ -113,10 +116,18 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             focusNode: _passwordFocusNode,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _confirmPasswordFocusNode.requestFocus(),
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Password',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  size: 20,
+                  color: colors.onSurfaceSecondary,
+                ),
+                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+              ),
             ),
-            obscureText: true,
+            obscureText: _obscurePassword,
             validator: (value) =>
                 (value?.length ?? 0) >= 6 ? null : 'Minimo 6 caratteri',
           ),
@@ -124,10 +135,18 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           TextFormField(
             controller: _confirmPasswordController,
             focusNode: _confirmPasswordFocusNode,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Conferma Password',
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                  size: 20,
+                  color: colors.onSurfaceSecondary,
+                ),
+                onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+              ),
             ),
-            obscureText: true,
+            obscureText: _obscureConfirmPassword,
             validator: (value) {
               if ((value?.length ?? 0) < 6) {
                 return 'Minimo 6 caratteri';

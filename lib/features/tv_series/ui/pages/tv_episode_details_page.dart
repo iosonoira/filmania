@@ -5,6 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../watched/ui/widgets/watched_episode_button.dart';
 import '../../domain/entities/tv_episode.dart';
 import '../providers/tv_series_provider.dart';
 
@@ -27,12 +28,26 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
       seasonNumber: seasonNumber,
       episodeNumber: episodeNumber,
     ));
+    final seriesAsync = ref.watch(tvSeriesDetailsProvider(tvId));
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: const GlassmorphicAppBar(showBackButton: true),
       body: episodeAsync.when(
-        data: (episode) => _TVEpisodeDetailsContent(episode: episode),
+        data: (episode) => seriesAsync.when(
+          data: (series) => _TVEpisodeDetailsContent(
+            episode: episode,
+            seriesId: tvId,
+            seriesTitle: series.name,
+            seriesPosterPath: series.posterPath,
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (err, stack) => _TVEpisodeDetailsContent(
+            episode: episode,
+            seriesId: tvId,
+            seriesTitle: 'Serie TV', // Fallback
+          ),
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => AppErrorView(
           error: err,
@@ -49,8 +64,16 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
 
 class _TVEpisodeDetailsContent extends StatelessWidget {
   final TVEpisode episode;
+  final int seriesId;
+  final String seriesTitle;
+  final String? seriesPosterPath;
 
-  const _TVEpisodeDetailsContent({required this.episode});
+  const _TVEpisodeDetailsContent({
+    required this.episode,
+    required this.seriesId,
+    required this.seriesTitle,
+    this.seriesPosterPath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -158,6 +181,26 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                     ),
                   ),
                 ],
+              ],
+            ),
+          ),
+        ),
+
+        // Actions
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
+          sliver: SliverToBoxAdapter(
+            child: Row(
+              children: [
+                Expanded(
+                  child: WatchedEpisodeButton(
+                    seriesId: seriesId,
+                    seasonNumber: episode.seasonNumber,
+                    episodeNumber: episode.episodeNumber,
+                    seriesTitle: seriesTitle,
+                    seriesPosterPath: seriesPosterPath,
+                  ),
+                ),
               ],
             ),
           ),
