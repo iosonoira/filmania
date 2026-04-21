@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../providers/image_upload_controller.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -9,7 +10,8 @@ import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
 import '../../../watched/domain/entities/watched_item.dart';
-import '../../../watched/ui/pages/watched_list_page.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -105,33 +107,36 @@ class _ProfileHero extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       children: [
         Stack(
           children: [
             GestureDetector(
               onTap: isLoading ? null : onAvatarTap,
               child: Container(
-                width: 100,
-                height: 100,
+                width: 120,
+                height: 120,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppSpacing.md),
+                  shape: BoxShape.circle,
                   border: Border.all(
                     color: colors.primary.withValues(alpha: 0.2),
                     width: 2,
                   ),
                   color: colors.surface,
-                  image: photoUrl != null
-                      ? DecorationImage(
-                          image: NetworkImage(photoUrl!),
-                          fit: BoxFit.cover,
-                        )
-                      : null,
                 ),
-                child: photoUrl == null
-                    ? Icon(Icons.person, color: colors.primary, size: 40)
-                    : null,
+                child: photoUrl != null
+                    ? ClipOval(
+                        child: CachedNetworkImage(
+                          imageUrl: photoUrl!,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => const Center(
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.person, color: colors.primary, size: 50),
+                        ),
+                      )
+                    : Icon(Icons.person, color: colors.primary, size: 50),
               ),
             ),
             if (isLoading)
@@ -139,67 +144,38 @@ class _ProfileHero extends StatelessWidget {
                 child: Center(child: CircularProgressIndicator()),
               ),
             Positioned(
-              bottom: -4,
-              right: -4,
+              bottom: 0,
+              right: 0,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: colors.primary,
-                  borderRadius: BorderRadius.circular(100),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
-                child: const Text(
-                  'LV 42',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1,
-                  ),
+                child: const Icon(
+                  Icons.edit_rounded,
+                  color: Colors.white,
+                  size: 20,
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(width: AppSpacing.lg),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                username,
-                style: textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: -1.5,
-                  height: 1.1,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              Text(
-                'CINEPHILE ELITE • JOINED SEPT 2023',
-                style: textTheme.labelSmall?.copyWith(
-                  color: colors.primary.withValues(alpha: 0.7),
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.md),
-              Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
-                children: [
-                  _HeroBadge(
-                    icon: Icons.military_tech,
-                    label: 'Grand Master',
-                    color: colors.accent,
-                  ),
-                  _HeroBadge(
-                    icon: Icons.verified,
-                    label: 'Top 1% Reviewer',
-                    color: colors.primary,
-                  ),
-                ],
-              ),
-            ],
+        const SizedBox(height: AppSpacing.lg),
+        Text(
+          username,
+          textAlign: TextAlign.center,
+          style: textTheme.displaySmall?.copyWith(
+            fontWeight: FontWeight.w900,
+            letterSpacing: -1.5,
+            height: 1.1,
           ),
         ),
       ],
@@ -207,43 +183,6 @@ class _ProfileHero extends StatelessWidget {
   }
 }
 
-class _HeroBadge extends StatelessWidget {
-  const _HeroBadge({
-    required this.icon,
-    required this.label,
-    required this.color,
-  });
-
-  final IconData icon;
-  final String label;
-  final Color color;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: BorderRadius.circular(100),
-        border: Border.all(
-          color: colors.onSurfacePrimary.withValues(alpha: 0.1),
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _StatsBentoGrid extends StatelessWidget {
   const _StatsBentoGrid();
@@ -388,36 +327,39 @@ class _RecentActivitySection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Attività Recente',
-              style: textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Manrope',
+            Expanded(
+              child: asyncMovies.when(
+                data: (movies) => _CategoryCard(
+                  title: 'Film',
+                  items: movies,
+                  onTap: () => context.push(AppRoutes.watchedMovies),
+                ),
+                loading: () => const _CategoryCardPlaceholder(),
+                error: (e, st) => const _CategoryCardPlaceholder(),
               ),
             ),
-            Row(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const WatchedListPage(mediaType: MediaType.movie),
-                    ));
-                  },
-                  child: const Text('Film'),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: asyncTv.when(
+                data: (tv) => _CategoryCard(
+                  title: 'Serie',
+                  items: tv,
+                  onTap: () => context.push(AppRoutes.watchedTv),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => const WatchedListPage(mediaType: MediaType.tv),
-                    ));
-                  },
-                  child: const Text('Serie'),
-                ),
-              ],
+                loading: () => const _CategoryCardPlaceholder(),
+                error: (e, st) => const _CategoryCardPlaceholder(),
+              ),
             ),
           ],
+        ),
+        const SizedBox(height: AppSpacing.xl),
+        Text(
+          'Attività Recente',
+          style: textTheme.titleLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Manrope',
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
         asyncMovies.when(
@@ -436,6 +378,7 @@ class _RecentActivitySection extends ConsumerWidget {
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
+
             error: (e, _) => Text('Errore: $e'),
           ),
           loading: () => const Center(child: CircularProgressIndicator()),
@@ -446,6 +389,96 @@ class _RecentActivitySection extends ConsumerWidget {
   }
 }
 
+class _CategoryCard extends StatelessWidget {
+  const _CategoryCard({
+    required this.title,
+    required this.items,
+    required this.onTap,
+  });
+
+  final String title;
+  final List<WatchedItem> items;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          border: Border.all(
+            color: colors.onSurfacePrimary.withValues(alpha: 0.1),
+          ),
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            if (items.isNotEmpty)
+              Positioned.fill(
+                child: Row(
+                  children: items.take(3).map((item) => Expanded(
+                    child: Container(
+                      clipBehavior: Clip.antiAlias,
+                      decoration: const BoxDecoration(),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          if (item.posterPath != null)
+                            CachedNetworkImage(
+                              imageUrl: 'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                              fit: BoxFit.cover,
+                              memCacheWidth: 150,
+                            ),
+                          Container(
+                            color: Colors.black.withValues(alpha: 0.6),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )).toList(),
+                ),
+              ),
+            Center(
+              child: Text(
+                title.toUpperCase(),
+                style: textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CategoryCardPlaceholder extends StatelessWidget {
+  const _CategoryCardPlaceholder();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return Container(
+      height: 100,
+      decoration: BoxDecoration(
+        color: colors.surface.withValues(alpha: 0.3),
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+      ),
+      child: const Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+
 class _ActivityItem extends StatelessWidget {
   const _ActivityItem({required this.item});
   final WatchedItem item;
@@ -455,61 +488,72 @@ class _ActivityItem extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.md),
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.5),
-        borderRadius: BorderRadius.circular(AppSpacing.md),
-      ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.sm),
-            child: SizedBox(
-              width: 50,
-              height: 75,
-              child: item.posterPath != null
-                  ? Image.network(
-                      'https://image.tmdb.org/t/p/w200${item.posterPath}',
-                      fit: BoxFit.cover,
-                    )
-                  : Container(color: colors.surface),
+    return GestureDetector(
+      onTap: () {
+        final path = item.mediaType == MediaType.movie
+            ? AppRoutes.movieDetails.replaceAll(':id', item.mediaId.toString())
+            : AppRoutes.tvDetails.replaceAll(':id', item.mediaId.toString());
+        context.push(path);
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: AppSpacing.md),
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: colors.surface.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(AppSpacing.md),
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(AppSpacing.sm),
+              child: SizedBox(
+                width: 50,
+                height: 75,
+                child: item.posterPath != null
+                    ? CachedNetworkImage(
+                        imageUrl: 'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                        fit: BoxFit.cover,
+                        memCacheWidth: 100,
+                      )
+                    : Container(color: colors.surface),
+              ),
             ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.mediaTitle,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Text(
-                  item.mediaType == MediaType.movie ? 'Film' : 'Serie TV',
-                  style: textTheme.labelSmall?.copyWith(
-                    color: colors.onSurfaceSecondary,
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.mediaTitle,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Row(
-                  children: List.generate(
-                    5,
-                    (i) => Icon(
-                      Icons.star,
-                      size: 14,
-                      color: i < 4 ? colors.primary : colors.onSurfaceSecondary.withValues(alpha: 0.3),
+                  Text(
+                    item.mediaType == MediaType.movie ? 'Film' : 'Serie TV',
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colors.onSurfaceSecondary,
                     ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: AppSpacing.xs),
+                  Row(
+                    children: List.generate(
+                      5,
+                      (i) => Icon(
+                        Icons.star,
+                        size: 14,
+                        color: i < 4
+                            ? colors.primary
+                            : colors.onSurfaceSecondary.withValues(alpha: 0.3),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Icon(Icons.chevron_right, color: colors.onSurfaceSecondary),
-        ],
+            Icon(Icons.chevron_right, color: colors.onSurfaceSecondary),
+          ],
+        ),
       ),
     );
   }

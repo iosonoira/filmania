@@ -22,6 +22,6 @@ abstract class TVSeries with _$TVSeries {
       posterPath != null ? 'https://image.tmdb.org/t/p/w500$posterPath' : null;
 
   String? get fullBackdropUrl => backdropPath != null
-      ? 'https://image.tmdb.org/t/p/original$backdropPath'
+      ? 'https://image.tmdb.org/t/p/w1280$backdropPath'
       : null;
 }

@@ -42,6 +42,17 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
     final dtos = await _remoteDataSource.getSeasonEpisodes(tvId, seasonNumber);
     return dtos.map((dto) => dto.toEntity()).toList();
   }
+
+  @override
+  Future<TVEpisode> getTVEpisodeDetails(
+    int tvId,
+    int seasonNumber,
+    int episodeNumber,
+  ) async {
+    final dto =
+        await _remoteDataSource.getTVEpisodeDetails(tvId, seasonNumber, episodeNumber);
+    return dto.toEntity();
+  }
 }
 
 @riverpod

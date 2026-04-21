@@ -31,7 +31,7 @@ class DiscoverTVSeries extends _$DiscoverTVSeries {
   // PersistenceConfig get persistence => PersistenceConfig(key: 'discover_tv_p$page');
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<TVSeries> tvSeriesDetails(Ref ref, int tvId) {
   final repository = ref.watch(tvSeriesRepositoryProvider);
   return repository.getTVSeriesDetails(tvId);
@@ -44,22 +44,27 @@ Future<List<TVSeries>> searchTVSeries(Ref ref, String query, {int page = 1}) {
   return repository.searchTVSeries(query, page: page);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<TVEpisode>> seasonEpisodes(Ref ref, int tvId, int seasonNumber) {
   final repository = ref.watch(tvSeriesRepositoryProvider);
   return repository.getSeasonEpisodes(tvId, seasonNumber);
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
+Future<TVEpisode> tvEpisodeDetails(
+  Ref ref, {
+  required int tvId,
+  required int seasonNumber,
+  required int episodeNumber,
+}) {
+  final repository = ref.watch(tvSeriesRepositoryProvider);
+  return repository.getTVEpisodeDetails(tvId, seasonNumber, episodeNumber);
+}
+
+@Riverpod(keepAlive: true)
 class SelectedSeason extends _$SelectedSeason {
   @override
-  int build(int tvId) {
-    final series = ref.watch(tvSeriesDetailsProvider(tvId)).value;
-    final seasons =
-        series?.seasons.where((s) => s.seasonNumber > 0).toList() ?? [];
-    if (seasons.isEmpty) return 1;
-    return seasons.first.seasonNumber;
-  }
+  int build(int tvId) => 1;
 
   void select(int seasonNumber) => state = seasonNumber;
 }

@@ -4,6 +4,8 @@ import '../../../../core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../providers/watched_providers.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 
 class WatchedListPage extends ConsumerWidget {
   final MediaType mediaType;
@@ -53,19 +55,27 @@ class WatchedListPage extends ConsumerWidget {
             itemCount: items.length,
             itemBuilder: (context, index) {
               final item = items[index];
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(AppSpacing.md),
-                child: item.posterPath != null
-                    ? Image.network(
-                        'https://image.tmdb.org/t/p/w200${item.posterPath}',
-                        fit: BoxFit.cover,
-                      )
-                    : Container(
-                        color: colors.surface,
-                        child: Center(
-                          child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
+              return GestureDetector(
+                onTap: () {
+                  final path = item.mediaType == MediaType.movie
+                      ? AppRoutes.movieDetails.replaceAll(':id', item.mediaId.toString())
+                      : AppRoutes.tvDetails.replaceAll(':id', item.mediaId.toString());
+                  context.push(path);
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppSpacing.md),
+                  child: item.posterPath != null
+                      ? Image.network(
+                          'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                          fit: BoxFit.cover,
+                        )
+                      : Container(
+                          color: colors.surface,
+                          child: Center(
+                            child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
+                          ),
                         ),
-                      ),
+                ),
               );
             },
           );

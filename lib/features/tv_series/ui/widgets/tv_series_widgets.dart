@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../domain/entities/tv_episode.dart';
@@ -151,16 +153,26 @@ class _EpisodesList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final episodesAsync = ref.watch(seasonEpisodesProvider(tvId, seasonNumber));
 
-    return episodesAsync.when(
-      data: (episodes) => _EpisodesListContent(episodes: episodes),
-      loading: () => const _EpisodesLoadingSkeleton(),
-      error: (err, _) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        child: AppErrorView(
-          error: err,
-          compact: true,
-          onRetry: () =>
-              ref.invalidate(seasonEpisodesProvider(tvId, seasonNumber)),
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: episodesAsync.when(
+        data: (episodes) => _EpisodesListContent(
+          key: ValueKey('season_$seasonNumber'),
+          episodes: episodes,
+          tvId: tvId,
+        ),
+        loading: () => _EpisodesLoadingSkeleton(
+          key: ValueKey('loading_$seasonNumber'),
+        ),
+        error: (err, _) => Padding(
+          key: ValueKey('error_$seasonNumber'),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () =>
+                ref.invalidate(seasonEpisodesProvider(tvId, seasonNumber)),
+          ),
         ),
       ),
     );
@@ -169,8 +181,13 @@ class _EpisodesList extends ConsumerWidget {
 
 class _EpisodesListContent extends StatelessWidget {
   final List<TVEpisode> episodes;
+  final int tvId;
 
-  const _EpisodesListContent({required this.episodes});
+  const _EpisodesListContent({
+    super.key,
+    required this.episodes,
+    required this.tvId,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -184,15 +201,20 @@ class _EpisodesListContent extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
       itemCount: episodes.length,
       separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
-      itemBuilder: (context, index) => EpisodeCard(episode: episodes[index]),
+      itemBuilder: (context, index) => EpisodeCard(
+        key: ValueKey('episode_${episodes[index].id}'),
+        episode: episodes[index],
+        tvId: tvId,
+      ),
     );
   }
 }
 
 class EpisodeCard extends StatelessWidget {
   final TVEpisode episode;
+  final int tvId;
 
-  const EpisodeCard({super.key, required this.episode});
+  const EpisodeCard({super.key, required this.episode, required this.tvId});
 
   @override
   Widget build(BuildContext context) {
@@ -200,23 +222,34 @@ class EpisodeCard extends StatelessWidget {
 
     return Semantics(
       label: 'Episodio ${episode.episodeNumber}: ${episode.name}',
-      child: Container(
-        height: 90,
-        decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: BorderRadius.circular(AppSpacing.md),
-          border: Border.all(
-            color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
+      button: true,
+      child: GestureDetector(
+        onTap: () {
+          context.push(
+            AppRoutes.tvEpisodeDetails
+                .replaceFirst(':id', tvId.toString())
+                .replaceFirst(':seasonNumber', episode.seasonNumber.toString())
+                .replaceFirst(':episodeNumber', episode.episodeNumber.toString()),
+          );
+        },
+        child: Container(
+          height: 90,
+          decoration: BoxDecoration(
+            color: colors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.md),
+            border: Border.all(
+              color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
+            ),
           ),
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Row(
-          children: [
-            _EpisodeCardThumbnail(episode: episode),
-            const SizedBox(width: AppSpacing.md),
-            _EpisodeCardInfo(episode: episode),
-            const SizedBox(width: AppSpacing.sm),
-          ],
+          clipBehavior: Clip.antiAlias,
+          child: Row(
+            children: [
+              _EpisodeCardThumbnail(episode: episode),
+              const SizedBox(width: AppSpacing.md),
+              _EpisodeCardInfo(episode: episode),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+          ),
         ),
       ),
     );
@@ -233,19 +266,25 @@ class _EpisodeCardThumbnail extends StatelessWidget {
     final colors = AppColors.of(context);
 
     return SizedBox(
-      width: 120,
+      width: 160,
       height: 90,
-      child: episode.fullStillUrl != null
-          ? CachedNetworkImage(
-              imageUrl: episode.fullStillUrl!,
-              fit: BoxFit.cover,
-              memCacheWidth: 240,
-              placeholder: (context, url) =>
-                  Container(color: colors.surface.withValues(alpha: 0.1)),
-              errorWidget: (context, url, error) =>
-                  _EpisodeCardThumbnailFallback(colors: colors),
-            )
-          : _EpisodeCardThumbnailFallback(colors: colors),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(AppSpacing.md),
+          bottomLeft: Radius.circular(AppSpacing.md),
+        ),
+        child: episode.fullStillUrl != null
+            ? CachedNetworkImage(
+                imageUrl: episode.fullStillUrl!,
+                fit: BoxFit.cover,
+                memCacheWidth: 320,
+                placeholder: (context, url) =>
+                    Container(color: colors.surface.withValues(alpha: 0.1)),
+                errorWidget: (context, url, error) =>
+                    _EpisodeCardThumbnailFallback(colors: colors),
+              )
+            : _EpisodeCardThumbnailFallback(colors: colors),
+      ),
     );
   }
 }
@@ -364,7 +403,7 @@ class _EpisodeCardNumberRow extends StatelessWidget {
 }
 
 class _EpisodesLoadingSkeleton extends StatelessWidget {
-  const _EpisodesLoadingSkeleton();
+  const _EpisodesLoadingSkeleton({super.key});
 
   @override
   Widget build(BuildContext context) {

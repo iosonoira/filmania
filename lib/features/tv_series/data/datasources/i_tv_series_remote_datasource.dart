@@ -7,4 +7,5 @@ abstract class ITVSeriesRemoteDataSource {
   Future<TVSeriesDto> getTVSeriesDetails(int tvId);
   Future<List<TVSeriesDto>> searchTVSeries(String query, {int page = 1});
   Future<List<TVEpisodeDto>> getSeasonEpisodes(int tvId, int seasonNumber);
+  Future<TVEpisodeDto> getTVEpisodeDetails(int tvId, int seasonNumber, int episodeNumber);
 }

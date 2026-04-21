@@ -11,6 +11,8 @@ import 'package:filmania/features/movies/domain/entities/movie.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/app_router.dart';
 
 // --- Trending Movies Section ---
 class TrendingMoviesSection extends ConsumerWidget {
@@ -109,7 +111,7 @@ class _TrendingMoviesList extends StatelessWidget {
             mediaId: movie.id,
             title: movie.title,
             subtitle: movie.releaseDate?.year.toString() ?? '',
-            imageUrl: movie.fullPosterUrl ?? '',
+            imageUrl: movie.fullBackdropUrl ?? movie.fullPosterUrl ?? '',
             posterPath: movie.posterPath,
           );
         },
@@ -139,74 +141,92 @@ class WatchingCard extends ConsumerWidget {
     return Semantics(
       label: 'Guarda $title, $subtitle',
       button: true,
-      child: Container(
-        width: MediaQuery.sizeOf(context).width * 0.85,
-        constraints: const BoxConstraints(maxWidth: 450),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.3),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-          image: DecorationImage(
-            image: NetworkImage(imageUrl),
-            fit: BoxFit.cover,
-          ),
+      child: GestureDetector(
+        onTap: () => context.push(
+          AppRoutes.movieDetails.replaceAll(':id', mediaId.toString()),
         ),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: _WatchingCardContent(
-                title: title,
-                subtitle: subtitle,
+        child: Container(
+          width: MediaQuery.sizeOf(context).width * 0.85,
+          constraints: const BoxConstraints(maxWidth: 450),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
               ),
-            ),
-            Positioned(
-              top: AppSpacing.md,
-              right: AppSpacing.md,
-              child: Row(
-                children: [
-                  WatchedButton(
-                    mediaId: mediaId,
-                    mediaTitle: title,
-                    mediaType: MediaType.movie,
-                    posterPath: posterPath,
-                    isIconOnly: true,
-                    hasBackground: true,
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  IconButton.filled(
-                    onPressed: () => showWatchlistPicker(
-                      context,
-                      ref,
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: imageUrl.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: imageUrl,
+                        fit: BoxFit.cover,
+                        memCacheWidth: (MediaQuery.sizeOf(context).width * 0.85 * 2).toInt(),
+                        placeholder: (context, url) => Container(
+                          color: Colors.black.withValues(alpha: 0.1),
+                        ),
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          child: const Icon(Icons.broken_image, color: Colors.grey),
+                        ),
+                      )
+                    : Container(color: Colors.black.withValues(alpha: 0.1)),
+              ),
+              Positioned.fill(
+                child: _WatchingCardContent(
+                  title: title,
+                  subtitle: subtitle,
+                ),
+              ),
+              Positioned(
+                top: AppSpacing.md,
+                right: AppSpacing.md,
+                child: Row(
+                  children: [
+                    WatchedButton(
                       mediaId: mediaId,
                       mediaTitle: title,
                       mediaType: MediaType.movie,
                       posterPath: posterPath,
+                      isIconOnly: true,
+                      hasBackground: true,
                     ),
-                    style: IconButton.styleFrom(
-                      backgroundColor: Colors.black.withValues(alpha: 0.3),
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(32, 32),
-                      fixedSize: const Size(32, 32),
-                      padding: EdgeInsets.zero,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    const SizedBox(width: AppSpacing.xs),
+                    IconButton.filled(
+                      onPressed: () => showWatchlistPicker(
+                        context,
+                        ref,
+                        mediaId: mediaId,
+                        mediaTitle: title,
+                        mediaType: MediaType.movie,
+                        posterPath: posterPath,
+                      ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.black.withValues(alpha: 0.3),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(32, 32),
+                        fixedSize: const Size(32, 32),
+                        padding: EdgeInsets.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      constraints: const BoxConstraints(
+                        minWidth: 32,
+                        minHeight: 32,
+                        maxWidth: 32,
+                        maxHeight: 32,
+                      ),
+                      icon: const Icon(Icons.bookmark_add_outlined, size: 18),
                     ),
-                    constraints: const BoxConstraints(
-                      minWidth: 32,
-                      minHeight: 32,
-                      maxWidth: 32,
-                      maxHeight: 32,
-                    ),
-                    icon: const Icon(Icons.bookmark_add_outlined, size: 18),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -402,119 +422,124 @@ class _UpcomingEpisodeItem extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final colors = AppColors.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: containerColor,
-        borderRadius: BorderRadius.circular(AppSpacing.md),
+    return GestureDetector(
+      onTap: () => context.push(
+        AppRoutes.tvDetails.replaceAll(':id', mediaId.toString()),
       ),
-      child: Row(
-        children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: imageUrl.isEmpty
-                ? Container(
-                    width: 80,
-                    height: 80,
-                    color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
-                    child: Icon(Icons.tv, color: colors.onSurfaceSecondary),
-                  )
-                : CachedNetworkImage(
-                    imageUrl: imageUrl,
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover,
-                    memCacheWidth: 160,
-                    placeholder: (context, url) => Container(
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.md),
+        decoration: BoxDecoration(
+          color: containerColor,
+          borderRadius: BorderRadius.circular(AppSpacing.md),
+        ),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: imageUrl.isEmpty
+                  ? Container(
                       width: 80,
                       height: 80,
-                      color: colors.surface.withValues(alpha: 0.1),
-                    ),
-                    errorWidget: (context, url, error) => Container(
+                      color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
+                      child: Icon(Icons.tv, color: colors.onSurfaceSecondary),
+                    )
+                  : CachedNetworkImage(
+                      imageUrl: imageUrl,
                       width: 80,
                       height: 80,
-                      color: colors.surface.withValues(alpha: 0.1),
-                      child: Icon(
-                        Icons.tv_rounded,
-                        color: colors.onSurfaceSecondary,
+                      fit: BoxFit.cover,
+                      memCacheWidth: 160,
+                      placeholder: (context, url) => Container(
+                        width: 80,
+                        height: 80,
+                        color: colors.surface.withValues(alpha: 0.1),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        width: 80,
+                        height: 80,
+                        color: colors.surface.withValues(alpha: 0.1),
+                        child: Icon(
+                          Icons.tv_rounded,
+                          color: colors.onSurfaceSecondary,
+                        ),
                       ),
                     ),
-                  ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  time,
-                  style: textTheme.labelSmall?.copyWith(
-                    color: timeColor,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                    fontSize: 10,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  title,
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Manrope',
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colors.onSurfaceSecondary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
             ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              WatchedButton(
-                mediaId: mediaId,
-                mediaTitle: title,
-                mediaType: MediaType.tv,
-                posterPath: posterPath,
-                isIconOnly: true,
-                hasBackground: false,
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    time,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: timeColor,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.5,
+                      fontSize: 10,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    title,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Manrope',
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colors.onSurfaceSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-              IconButton(
-                style: IconButton.styleFrom(
-                  minimumSize: const Size(32, 32),
-                  fixedSize: const Size(32, 32),
-                  padding: EdgeInsets.zero,
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                constraints: const BoxConstraints(
-                  minWidth: 32,
-                  minHeight: 32,
-                  maxWidth: 32,
-                  maxHeight: 32,
-                ),
-                icon: Icon(
-                  Icons.bookmark_add_outlined,
-                  color: colors.onSurfaceSecondary,
-                  size: 18,
-                ),
-                onPressed: () => showWatchlistPicker(
-                  context,
-                  ref,
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                WatchedButton(
                   mediaId: mediaId,
                   mediaTitle: title,
                   mediaType: MediaType.tv,
                   posterPath: posterPath,
+                  isIconOnly: true,
+                  hasBackground: false,
                 ),
-              ),
-            ],
-          ),
-        ],
+                IconButton(
+                  style: IconButton.styleFrom(
+                    minimumSize: const Size(32, 32),
+                    fixedSize: const Size(32, 32),
+                    padding: EdgeInsets.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 32,
+                    minHeight: 32,
+                    maxWidth: 32,
+                    maxHeight: 32,
+                  ),
+                  icon: Icon(
+                    Icons.bookmark_add_outlined,
+                    color: colors.onSurfaceSecondary,
+                    size: 18,
+                  ),
+                  onPressed: () => showWatchlistPicker(
+                    context,
+                    ref,
+                    mediaId: mediaId,
+                    mediaTitle: title,
+                    mediaType: MediaType.tv,
+                    posterPath: posterPath,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -601,49 +626,69 @@ class _FeaturedBentoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
 
-    return Container(
-      height: 300,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppSpacing.radius),
-        image: DecorationImage(
-          image: NetworkImage(
-            movie.posterPath != null
-                ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
-                : '',
-          ),
-          fit: BoxFit.cover,
-          opacity: 0.6,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          ),
-        ],
+    return GestureDetector(
+      onTap: () => context.push(
+        AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
       ),
       child: Container(
+        height: 300,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(AppSpacing.radius),
-          gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              colors.background.withValues(alpha: 1.0),
-              Colors.transparent,
-            ],
-          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.2),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.end,
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
           children: [
-            const _FeaturedBentoTags(),
-            const SizedBox(height: AppSpacing.md),
-            _FeaturedBentoContent(movie: movie),
-            const SizedBox(height: AppSpacing.lg),
-            _FeaturedBentoButton(movie: movie),
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.6,
+                child: CachedNetworkImage(
+                  imageUrl: movie.fullBackdropUrl ?? movie.fullPosterUrl ?? '',
+                  fit: BoxFit.cover,
+                  memCacheHeight: 600,
+                  placeholder: (context, url) => Container(
+                    color: Colors.black.withValues(alpha: 0.1),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    child: const Icon(Icons.broken_image, color: Colors.grey),
+                  ),
+                ),
+              ),
+            ),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppSpacing.radius),
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      colors.background,
+                      colors.background.withValues(alpha: 0.0),
+                    ],
+                  ),
+                ),
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const _FeaturedBentoTags(),
+                    const SizedBox(height: AppSpacing.md),
+                    _FeaturedBentoContent(movie: movie),
+                    const SizedBox(height: AppSpacing.lg),
+                    _FeaturedBentoButton(movie: movie),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -771,51 +816,59 @@ class _SecondaryBentoCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final colors = AppColors.of(context);
 
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: containerColor,
-        borderRadius: BorderRadius.circular(AppSpacing.radius),
-        border: Border.all(
-          color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
-        ),
+    return GestureDetector(
+      onTap: () => context.push(
+        AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  movie.title,
-                  style: textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  movie.overview,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colors.onSurfaceSecondary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
+      child: Container(
+        padding: const EdgeInsets.all(AppSpacing.lg),
+        decoration: BoxDecoration(
+          color: containerColor,
+          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          border: Border.all(
+            color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Text(
-            movie.voteAverage.toStringAsFixed(1),
-            style: textTheme.titleLarge?.copyWith(
-              color: colors.primary,
-              fontWeight: FontWeight.bold,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    movie.title,
+                    style: textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    movie.overview,
+                    style: textTheme.bodySmall?.copyWith(
+                      color: colors.onSurfaceSecondary,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: AppSpacing.md),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: CachedNetworkImage(
+                imageUrl: movie.fullPosterUrl ?? '',
+                width: 60,
+                height: 90,
+                fit: BoxFit.cover,
+                memCacheWidth: 120,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

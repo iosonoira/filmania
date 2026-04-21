@@ -13,6 +13,9 @@ import '../../features/profile/ui/pages/profile_page.dart';
 import '../../features/movies/ui/pages/movie_details_page.dart';
 import '../../features/tv_series/ui/pages/tv_series_details_page.dart';
 import '../../features/watchlist/ui/pages/watchlist_detail_page.dart';
+import '../../features/watched/ui/pages/watched_list_page.dart';
+import '../../features/tv_series/ui/pages/tv_episode_details_page.dart';
+import '../domain/enums/media_type.dart';
 
 part 'app_router.g.dart';
 
@@ -29,6 +32,9 @@ abstract class AppRoutes {
   static const movieDetails = '/movie/:id';
   static const tvDetails = '/tv/:id';
   static const watchlistDetail = '/watchlist/:id';
+  static const watchedMovies = '/watched/movies';
+  static const watchedTv = '/watched/tv';
+  static const tvEpisodeDetails = '/tv/:id/season/:seasonNumber/episode/:episodeNumber';
 
   static const shellRoutes = [home, discover, watchlist, profile];
 }
@@ -114,12 +120,38 @@ GoRouter appRouter(Ref ref) {
         },
       ),
       GoRoute(
+        path: AppRoutes.tvEpisodeDetails,
+        builder: (context, state) {
+          final tvId = int.tryParse(state.pathParameters['id'] ?? '');
+          final seasonNumber = int.tryParse(state.pathParameters['seasonNumber'] ?? '');
+          final episodeNumber = int.tryParse(state.pathParameters['episodeNumber'] ?? '');
+
+          if (tvId == null || seasonNumber == null || episodeNumber == null) {
+            return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+          }
+
+          return TVEpisodeDetailsPage(
+            tvId: tvId,
+            seasonNumber: seasonNumber,
+            episodeNumber: episodeNumber,
+          );
+        },
+      ),
+      GoRoute(
         path: AppRoutes.watchlistDetail,
         builder: (context, state) {
           final id = state.pathParameters['id'];
           if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
           return WatchlistDetailPage(watchlistId: id);
         },
+      ),
+      GoRoute(
+        path: AppRoutes.watchedMovies,
+        builder: (context, state) => const WatchedListPage(mediaType: MediaType.movie),
+      ),
+      GoRoute(
+        path: AppRoutes.watchedTv,
+        builder: (context, state) => const WatchedListPage(mediaType: MediaType.tv),
       ),
     ],
     redirect: (context, state) {

@@ -200,7 +200,7 @@ final class TvSeriesDetailsProvider
   }) : super(
          retry: null,
          name: r'tvSeriesDetailsProvider',
-         isAutoDispose: true,
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
@@ -237,7 +237,7 @@ final class TvSeriesDetailsProvider
   }
 }
 
-String _$tvSeriesDetailsHash() => r'3437f346d7448e761bc483e343542e2f6ab23ae7';
+String _$tvSeriesDetailsHash() => r'c76fb8cd9af407e6e6fcb557770988e1ae15ff92';
 
 final class TvSeriesDetailsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<TVSeries>, int> {
@@ -247,7 +247,7 @@ final class TvSeriesDetailsFamily extends $Family
         name: r'tvSeriesDetailsProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: true,
+        isAutoDispose: false,
       );
 
   TvSeriesDetailsProvider call(int tvId) =>
@@ -353,7 +353,7 @@ final class SeasonEpisodesProvider
   }) : super(
          retry: null,
          name: r'seasonEpisodesProvider',
-         isAutoDispose: true,
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
@@ -391,7 +391,7 @@ final class SeasonEpisodesProvider
   }
 }
 
-String _$seasonEpisodesHash() => r'6cb93d3492859dbc48612a4eb0d3a0e751f749f6';
+String _$seasonEpisodesHash() => r'9e75f30279dff8126a6e4a404db09362c1c3c842';
 
 final class SeasonEpisodesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<TVEpisode>>, (int, int)> {
@@ -401,7 +401,7 @@ final class SeasonEpisodesFamily extends $Family
         name: r'seasonEpisodesProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: true,
+        isAutoDispose: false,
       );
 
   SeasonEpisodesProvider call(int tvId, int seasonNumber) =>
@@ -409,6 +409,100 @@ final class SeasonEpisodesFamily extends $Family
 
   @override
   String toString() => r'seasonEpisodesProvider';
+}
+
+@ProviderFor(tvEpisodeDetails)
+final tvEpisodeDetailsProvider = TvEpisodeDetailsFamily._();
+
+final class TvEpisodeDetailsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<TVEpisode>,
+          TVEpisode,
+          FutureOr<TVEpisode>
+        >
+    with $FutureModifier<TVEpisode>, $FutureProvider<TVEpisode> {
+  TvEpisodeDetailsProvider._({
+    required TvEpisodeDetailsFamily super.from,
+    required ({int tvId, int seasonNumber, int episodeNumber}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvEpisodeDetailsProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvEpisodeDetailsHash();
+
+  @override
+  String toString() {
+    return r'tvEpisodeDetailsProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<TVEpisode> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TVEpisode> create(Ref ref) {
+    final argument =
+        this.argument as ({int tvId, int seasonNumber, int episodeNumber});
+    return tvEpisodeDetails(
+      ref,
+      tvId: argument.tvId,
+      seasonNumber: argument.seasonNumber,
+      episodeNumber: argument.episodeNumber,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvEpisodeDetailsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvEpisodeDetailsHash() => r'9dbb08d009932312207138f7849091280bd4a84d';
+
+final class TvEpisodeDetailsFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<TVEpisode>,
+          ({int tvId, int seasonNumber, int episodeNumber})
+        > {
+  TvEpisodeDetailsFamily._()
+    : super(
+        retry: null,
+        name: r'tvEpisodeDetailsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  TvEpisodeDetailsProvider call({
+    required int tvId,
+    required int seasonNumber,
+    required int episodeNumber,
+  }) => TvEpisodeDetailsProvider._(
+    argument: (
+      tvId: tvId,
+      seasonNumber: seasonNumber,
+      episodeNumber: episodeNumber,
+    ),
+    from: this,
+  );
+
+  @override
+  String toString() => r'tvEpisodeDetailsProvider';
 }
 
 @ProviderFor(SelectedSeason)
@@ -422,7 +516,7 @@ final class SelectedSeasonProvider
   }) : super(
          retry: null,
          name: r'selectedSeasonProvider',
-         isAutoDispose: true,
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
@@ -460,7 +554,7 @@ final class SelectedSeasonProvider
   }
 }
 
-String _$selectedSeasonHash() => r'c3a26691cc07453a83274926d6fa310785be48ea';
+String _$selectedSeasonHash() => r'8e44cf5f878c0a786ffaee7dc6c4f24d8f10d8fc';
 
 final class SelectedSeasonFamily extends $Family
     with $ClassFamilyOverride<SelectedSeason, int, int, int, int> {
@@ -470,7 +564,7 @@ final class SelectedSeasonFamily extends $Family
         name: r'selectedSeasonProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: true,
+        isAutoDispose: false,
       );
 
   SelectedSeasonProvider call(int tvId) =>
