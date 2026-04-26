@@ -13,5 +13,6 @@ abstract class WatchedItem with _$WatchedItem {
     required MediaType mediaType,
     String? posterPath,
     required DateTime watchedAt,
+    int? runtimeMinutes,
   }) = _WatchedItem;
 }

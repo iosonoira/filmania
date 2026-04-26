@@ -15,6 +15,7 @@ class WatchedButton extends ConsumerWidget {
   final String? posterPath;
   final bool isIconOnly;
   final bool hasBackground;
+  final int? runtimeMinutes;
 
   const WatchedButton({
     super.key,
@@ -24,6 +25,7 @@ class WatchedButton extends ConsumerWidget {
     this.posterPath,
     this.isIconOnly = false,
     this.hasBackground = true,
+    this.runtimeMinutes,
   });
 
   @override
@@ -60,6 +62,7 @@ class WatchedButton extends ConsumerWidget {
               mediaType: mediaType,
               posterPath: posterPath,
               watchedAt: DateTime.now(),
+              runtimeMinutes: runtimeMinutes,
             ),
           );
         }

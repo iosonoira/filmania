@@ -12,6 +12,7 @@ import '../../../watched/ui/providers/watched_providers.dart';
 import '../../../watched/domain/entities/watched_item.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
+import '../providers/user_stats_provider.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -184,76 +185,110 @@ class _ProfileHero extends StatelessWidget {
 }
 
 
-class _StatsBentoGrid extends StatelessWidget {
+class _StatsBentoGrid extends ConsumerWidget {
   const _StatsBentoGrid();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final statsAsync = ref.watch(userStatsProvider);
 
-    return _BentoCard(
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            top: -AppSpacing.sm,
-            right: -AppSpacing.sm,
-            child: Icon(
-              Icons.watch_later,
-              size: 160,
-              color: colors.primary.withValues(alpha: 0.05),
-            ),
+    return statsAsync.when(
+      loading: () => _BentoCard(
+        child: Center(
+          child: SizedBox(
+            height: 120,
+            child: Center(child: CircularProgressIndicator(color: colors.primary)),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        ),
+      ),
+      error: (error, stack) => const _BentoCard(
+        child: Center(child: Icon(Icons.error_outline)),
+      ),
+      data: (stats) {
+        final totalMinutes = stats?.totalWatchTimeMinutes ?? 0;
+        final totalHours = totalMinutes / 60.0;
+        final movieHours = ((stats?.moviesWatchTimeMinutes ?? 0) / 60).floor();
+        final tvHours = ((stats?.tvWatchTimeMinutes ?? 0) / 60).floor();
+
+        return _BentoCard(
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              Text(
-                'Tempo Totale'.toUpperCase(),
-                style: textTheme.labelSmall?.copyWith(
-                  color: colors.onSurfaceSecondary,
-                  letterSpacing: 2,
-                  fontWeight: FontWeight.bold,
+              Positioned(
+                top: -AppSpacing.sm,
+                right: -AppSpacing.sm,
+                child: Icon(
+                  Icons.watch_later,
+                  size: 160,
+                  color: colors.primary.withValues(alpha: 0.05),
                 ),
               ),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.baseline,
-                textBaseline: TextBaseline.alphabetic,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '1.248',
-                    style: textTheme.displayLarge?.copyWith(
-                      color: colors.primary,
-                      height: 1,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -2,
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    'ore',
-                    style: textTheme.headlineSmall?.copyWith(
+                    'Tempo Totale'.toUpperCase(),
+                    style: textTheme.labelSmall?.copyWith(
                       color: colors.onSurfaceSecondary,
-                      fontWeight: FontWeight.w500,
+                      letterSpacing: 2,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.xl),
-              const Row(
-                children: [
-                  _MiniStat(label: 'Film', value: '412'),
-                  SizedBox(width: AppSpacing.xl),
-                  _MiniStat(label: 'Serie', value: '84'),
-                  SizedBox(width: AppSpacing.xl),
-                  _MiniStat(label: 'Episodi', value: '2.8k'),
+                  const SizedBox(height: AppSpacing.sm),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Text(
+                        totalHours < 10 
+                            ? totalHours.toStringAsFixed(1) 
+                            : totalHours.floor().toString(),
+                        style: textTheme.displayLarge?.copyWith(
+                          color: colors.primary,
+                          height: 1,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: -2,
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        'ore',
+                        style: textTheme.headlineSmall?.copyWith(
+                          color: colors.onSurfaceSecondary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.xl),
+                  Row(
+                    children: [
+                      _MiniStat(
+                        label: 'Film',
+                        value: stats?.moviesWatchedCount.toString() ?? '0',
+                        subtitle: '${movieHours}h',
+                      ),
+                      const SizedBox(width: AppSpacing.xl),
+                      _MiniStat(
+                        label: 'Serie',
+                        value: stats?.tvSeriesWatchedCount.toString() ?? '0',
+                        subtitle: '${tvHours}h',
+                      ),
+                      const SizedBox(width: AppSpacing.xl),
+                      _MiniStat(
+                        label: 'Episodi',
+                        value: stats?.episodesWatchedCount.toString() ?? '0',
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -283,9 +318,10 @@ class _BentoCard extends StatelessWidget {
 }
 
 class _MiniStat extends StatelessWidget {
-  const _MiniStat({required this.label, required this.value});
+  const _MiniStat({required this.label, required this.value, this.subtitle});
   final String label;
   final String value;
+  final String? subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -309,6 +345,14 @@ class _MiniStat extends StatelessWidget {
             fontWeight: FontWeight.w800,
           ),
         ),
+        if (subtitle != null)
+          Text(
+            subtitle!,
+            style: TextStyle(
+              fontSize: 9,
+              color: colors.onSurfaceSecondary,
+            ),
+          ),
       ],
     );
   }

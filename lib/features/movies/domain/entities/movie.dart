@@ -12,6 +12,7 @@ abstract class Movie with _$Movie {
     required String? backdropPath,
     required DateTime? releaseDate,
     required double voteAverage,
+    required int? runtime,
   }) = _Movie;
 
   const Movie._();

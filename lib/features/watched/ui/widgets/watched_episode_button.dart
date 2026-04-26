@@ -14,6 +14,7 @@ class WatchedEpisodeButton extends ConsumerWidget {
   final String seriesTitle;
   final String? seriesPosterPath;
   final bool isIconOnly;
+  final int? runtimeMinutes;
 
   const WatchedEpisodeButton({
     super.key,
@@ -23,6 +24,7 @@ class WatchedEpisodeButton extends ConsumerWidget {
     required this.seriesTitle,
     this.seriesPosterPath,
     this.isIconOnly = false,
+    this.runtimeMinutes,
   });
 
   @override
@@ -58,6 +60,7 @@ class WatchedEpisodeButton extends ConsumerWidget {
             episodeNumber: episodeNumber,
             seriesTitle: seriesTitle,
             seriesPosterPath: seriesPosterPath,
+            runtimeMinutes: runtimeMinutes,
           );
         }
         

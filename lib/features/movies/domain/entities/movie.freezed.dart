@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Movie {
 
- int get id; String get title; String get overview; String? get posterPath; String? get backdropPath; DateTime? get releaseDate; double get voteAverage;
+ int get id; String get title; String get overview; String? get posterPath; String? get backdropPath; DateTime? get releaseDate; double get voteAverage; int? get runtime;
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MovieCopyWith<Movie> get copyWith => _$MovieCopyWithImpl<Movie>(this as Movie, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&(identical(other.runtime, runtime) || other.runtime == runtime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,overview,posterPath,backdropPath,releaseDate,voteAverage);
+int get hashCode => Object.hash(runtimeType,id,title,overview,posterPath,backdropPath,releaseDate,voteAverage,runtime);
 
 @override
 String toString() {
-  return 'Movie(id: $id, title: $title, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, releaseDate: $releaseDate, voteAverage: $voteAverage)';
+  return 'Movie(id: $id, title: $title, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, releaseDate: $releaseDate, voteAverage: $voteAverage, runtime: $runtime)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MovieCopyWith<$Res>  {
   factory $MovieCopyWith(Movie value, $Res Function(Movie) _then) = _$MovieCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String overview, String? posterPath, String? backdropPath, DateTime? releaseDate, double voteAverage
+ int id, String title, String overview, String? posterPath, String? backdropPath, DateTime? releaseDate, double voteAverage, int? runtime
 });
 
 
@@ -62,7 +62,7 @@ class _$MovieCopyWithImpl<$Res>
 
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? releaseDate = freezed,Object? voteAverage = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? releaseDate = freezed,Object? voteAverage = null,Object? runtime = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as String,posterPath: freezed == posterPath ? _self.posterPath : posterPath // i
 as String?,backdropPath: freezed == backdropPath ? _self.backdropPath : backdropPath // ignore: cast_nullable_to_non_nullable
 as String?,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,voteAverage: null == voteAverage ? _self.voteAverage : voteAverage // ignore: cast_nullable_to_non_nullable
-as double,
+as double,runtime: freezed == runtime ? _self.runtime : runtime // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String overview,  String? posterPath,  String? backdropPath,  DateTime? releaseDate,  double voteAverage)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String overview,  String? posterPath,  String? backdropPath,  DateTime? releaseDate,  double voteAverage,  int? runtime)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Movie() when $default != null:
-return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backdropPath,_that.releaseDate,_that.voteAverage);case _:
+return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backdropPath,_that.releaseDate,_that.voteAverage,_that.runtime);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backd
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String overview,  String? posterPath,  String? backdropPath,  DateTime? releaseDate,  double voteAverage)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String overview,  String? posterPath,  String? backdropPath,  DateTime? releaseDate,  double voteAverage,  int? runtime)  $default,) {final _that = this;
 switch (_that) {
 case _Movie():
-return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backdropPath,_that.releaseDate,_that.voteAverage);case _:
+return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backdropPath,_that.releaseDate,_that.voteAverage,_that.runtime);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backd
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String overview,  String? posterPath,  String? backdropPath,  DateTime? releaseDate,  double voteAverage)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String overview,  String? posterPath,  String? backdropPath,  DateTime? releaseDate,  double voteAverage,  int? runtime)?  $default,) {final _that = this;
 switch (_that) {
 case _Movie() when $default != null:
-return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backdropPath,_that.releaseDate,_that.voteAverage);case _:
+return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backdropPath,_that.releaseDate,_that.voteAverage,_that.runtime);case _:
   return null;
 
 }
@@ -212,7 +213,7 @@ return $default(_that.id,_that.title,_that.overview,_that.posterPath,_that.backd
 
 
 class _Movie extends Movie {
-  const _Movie({required this.id, required this.title, required this.overview, required this.posterPath, required this.backdropPath, required this.releaseDate, required this.voteAverage}): super._();
+  const _Movie({required this.id, required this.title, required this.overview, required this.posterPath, required this.backdropPath, required this.releaseDate, required this.voteAverage, required this.runtime}): super._();
   
 
 @override final  int id;
@@ -222,6 +223,7 @@ class _Movie extends Movie {
 @override final  String? backdropPath;
 @override final  DateTime? releaseDate;
 @override final  double voteAverage;
+@override final  int? runtime;
 
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ _$MovieCopyWith<_Movie> get copyWith => __$MovieCopyWithImpl<_Movie>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Movie&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&(identical(other.runtime, runtime) || other.runtime == runtime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,overview,posterPath,backdropPath,releaseDate,voteAverage);
+int get hashCode => Object.hash(runtimeType,id,title,overview,posterPath,backdropPath,releaseDate,voteAverage,runtime);
 
 @override
 String toString() {
-  return 'Movie(id: $id, title: $title, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, releaseDate: $releaseDate, voteAverage: $voteAverage)';
+  return 'Movie(id: $id, title: $title, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, releaseDate: $releaseDate, voteAverage: $voteAverage, runtime: $runtime)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$MovieCopyWith<$Res> implements $MovieCopyWith<$Res> {
   factory _$MovieCopyWith(_Movie value, $Res Function(_Movie) _then) = __$MovieCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String overview, String? posterPath, String? backdropPath, DateTime? releaseDate, double voteAverage
+ int id, String title, String overview, String? posterPath, String? backdropPath, DateTime? releaseDate, double voteAverage, int? runtime
 });
 
 
@@ -270,7 +272,7 @@ class __$MovieCopyWithImpl<$Res>
 
 /// Create a copy of Movie
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? releaseDate = freezed,Object? voteAverage = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? releaseDate = freezed,Object? voteAverage = null,Object? runtime = freezed,}) {
   return _then(_Movie(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -279,7 +281,8 @@ as String,posterPath: freezed == posterPath ? _self.posterPath : posterPath // i
 as String?,backdropPath: freezed == backdropPath ? _self.backdropPath : backdropPath // ignore: cast_nullable_to_non_nullable
 as String?,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,voteAverage: null == voteAverage ? _self.voteAverage : voteAverage // ignore: cast_nullable_to_non_nullable
-as double,
+as double,runtime: freezed == runtime ? _self.runtime : runtime // ignore: cast_nullable_to_non_nullable
+as int?,
   ));
 }
 

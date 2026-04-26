@@ -17,6 +17,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
     @JsonKey(name: 'media_type') required String mediaType,
     @JsonKey(name: 'poster_path') String? posterPath,
     @JsonKey(name: 'watched_at') DateTime? watchedAt,
+    @JsonKey(name: 'runtime_minutes') int? runtimeMinutes,
   }) = _WatchedItemDto;
 
   factory WatchedItemDto.fromJson(Map<String, dynamic> json) =>
@@ -34,6 +35,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
       ),
       posterPath: posterPath,
       watchedAt: watchedAt ?? DateTime.now(),
+      runtimeMinutes: runtimeMinutes,
     );
   }
 
@@ -46,6 +48,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
       mediaType: entity.mediaType.name,
       posterPath: entity.posterPath,
       watchedAt: entity.watchedAt,
+      runtimeMinutes: entity.runtimeMinutes,
     );
   }
 }

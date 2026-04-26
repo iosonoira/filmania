@@ -14,6 +14,7 @@ abstract class MovieDto with _$MovieDto {
     @JsonKey(name: 'backdrop_path') String? backdropPath,
     @JsonKey(name: 'release_date') String? releaseDate,
     @JsonKey(name: 'vote_average') double? voteAverage,
+    int? runtime,
   }) = _MovieDto;
 
   factory MovieDto.fromJson(Map<String, dynamic> json) => _$MovieDtoFromJson(json);
@@ -29,6 +30,7 @@ abstract class MovieDto with _$MovieDto {
       backdropPath: backdropPath,
       releaseDate: releaseDate != null ? DateTime.tryParse(releaseDate!) : null,
       voteAverage: voteAverage ?? 0.0,
+      runtime: runtime,
     );
   }
 }

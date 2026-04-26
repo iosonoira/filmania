@@ -8,42 +8,69 @@ import '../datasources/i_watched_remote_datasource.dart';
 import '../datasources/watched_remote_datasource_impl.dart';
 import '../models/watched_episode_dto.dart';
 import '../models/watched_item_dto.dart';
+import '../../../movies/domain/repositories/i_movies_repository.dart';
+import '../../../movies/data/repositories/movies_repository_impl.dart';
 
 part 'watched_repository_impl.g.dart';
 
 class WatchedRepositoryImpl implements IWatchedRepository {
   final IWatchedRemoteDataSource _remoteDS;
   final ITVSeriesRepository _tvRepo;
+  final IMoviesRepository _movieRepo;
 
-  WatchedRepositoryImpl(this._remoteDS, this._tvRepo);
+  WatchedRepositoryImpl(this._remoteDS, this._tvRepo, this._movieRepo);
 
   @override
   Future<void> markAsWatched(WatchedItem item) async {
     if (item.mediaType == MediaType.tv) {
-      // 1. Get series details to know all episodes
+      // 1. Get series details to know all episodes and runtimes
       final series = await _tvRepo.getTVSeriesDetails(item.mediaId);
+      final avgRuntime = series.episodeRunTime.isNotEmpty 
+          ? series.episodeRunTime.first 
+          : 0;
 
-      // 2. Collect episodes for the RPC
-      final episodes = <Map<String, int>>[];
+      // 2. Prepare episodes for batch upsert with runtime
+      final episodes = <WatchedEpisodeDto>[];
       for (final season in series.seasons) {
         if (season.seasonNumber == 0) continue; // Skip specials
         for (int i = 1; i <= season.episodeCount; i++) {
-          episodes.add({'s': season.seasonNumber, 'e': i});
+          episodes.add(WatchedEpisodeDto(
+            userId: item.userId,
+            seriesId: item.mediaId,
+            seasonNumber: season.seasonNumber,
+            episodeNumber: i,
+            runtimeMinutes: avgRuntime,
+            watchedAt: DateTime.now(),
+          ));
         }
       }
 
-      // 3. Call the RPC (Handles both items and episodes in one go)
-      await _remoteDS.markTVSeriesAsWatchedBatchRPC(
-        seriesId: item.mediaId,
-        seriesTitle: item.mediaTitle,
-        posterPath: item.posterPath,
-        episodes: episodes,
-      );
-      return; // RPC handles everything, no need for Step 4
+      // 3. Mark episodes as watched (batch)
+      if (episodes.isNotEmpty) {
+        await _remoteDS.markEpisodesAsWatched(episodes);
+      }
+
+      // 4. Mark the series itself in watched_items with total calculated runtime
+      final totalRuntime = episodes.length * avgRuntime;
+      final seriesDto = WatchedItemDto.fromEntity(item.copyWith(
+        runtimeMinutes: totalRuntime > 0 ? totalRuntime : null,
+      ));
+      await _remoteDS.markAsWatched(seriesDto);
+      return;
     }
 
-    // 4. For Movies (or fallback), mark the series itself
-    final dto = WatchedItemDto.fromEntity(item);
+    // 4. For Movies, ensure we have the runtime before marking
+    var runtime = item.runtimeMinutes;
+    if (runtime == null && item.mediaType == MediaType.movie) {
+      try {
+        final details = await _movieRepo.getMovieDetails(item.mediaId);
+        runtime = details.runtime;
+      } catch (_) {
+        // Fallback to null if fetch fails
+      }
+    }
+
+    final dto = WatchedItemDto.fromEntity(item.copyWith(runtimeMinutes: runtime));
     await _remoteDS.markAsWatched(dto);
   }
 
@@ -92,6 +119,7 @@ class WatchedRepositoryImpl implements IWatchedRepository {
     required int episodeNumber,
     required String seriesTitle,
     String? seriesPosterPath,
+    int? runtimeMinutes,
   }) async {
     // 1. Mark this episode as watched
     final episodeDto = WatchedEpisodeDto(
@@ -100,6 +128,7 @@ class WatchedRepositoryImpl implements IWatchedRepository {
       seasonNumber: seasonNumber,
       episodeNumber: episodeNumber,
       watchedAt: DateTime.now(),
+      runtimeMinutes: runtimeMinutes,
     );
     await _remoteDS.markEpisodeAsWatched(episodeDto);
 
@@ -115,7 +144,10 @@ class WatchedRepositoryImpl implements IWatchedRepository {
     );
 
     if (watchedCount >= totalEpisodes) {
-      // Mark as complete in watched_items (already there or new)
+      final avgRuntime = series.episodeRunTime.isNotEmpty ? series.episodeRunTime.first : 0;
+      final totalRuntime = (watchedCount > 0 ? watchedCount : totalEpisodes) * avgRuntime;
+
+      // Mark as complete in watched_items
       final seriesDto = WatchedItemDto(
         userId: userId,
         mediaId: seriesId,
@@ -123,11 +155,12 @@ class WatchedRepositoryImpl implements IWatchedRepository {
         mediaType: MediaType.tv.name,
         posterPath: seriesPosterPath,
         watchedAt: DateTime.now(),
+        runtimeMinutes: totalRuntime > 0 ? totalRuntime : null,
       );
       await _remoteDS.markAsWatched(seriesDto);
     } else {
-      // Ensure series IS in watched_items so it appears in the list
-      // even if not all episodes are seen
+      // Update the series item but don't mark as full runtime yet 
+      // (or we could sum the episodes seen so far)
       final seriesDto = WatchedItemDto(
         userId: userId,
         mediaId: seriesId,
@@ -202,5 +235,6 @@ IWatchedRepository watchedRepository(Ref ref) {
   return WatchedRepositoryImpl(
     ref.watch(watchedRemoteDataSourceProvider),
     ref.watch(tvSeriesRepositoryProvider),
+    ref.watch(moviesRepositoryProvider),
   );
 }

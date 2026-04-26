@@ -14,6 +14,7 @@ abstract class WatchedEpisodeDto with _$WatchedEpisodeDto {
     @JsonKey(name: 'season_number') required int seasonNumber,
     @JsonKey(name: 'episode_number') required int episodeNumber,
     @JsonKey(name: 'watched_at') DateTime? watchedAt,
+    @JsonKey(name: 'runtime_minutes') int? runtimeMinutes,
   }) = _WatchedEpisodeDto;
 
   factory WatchedEpisodeDto.fromJson(Map<String, dynamic> json) =>

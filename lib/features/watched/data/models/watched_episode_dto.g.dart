@@ -16,6 +16,7 @@ _WatchedEpisodeDto _$WatchedEpisodeDtoFromJson(Map<String, dynamic> json) =>
       watchedAt: json['watched_at'] == null
           ? null
           : DateTime.parse(json['watched_at'] as String),
+      runtimeMinutes: (json['runtime_minutes'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$WatchedEpisodeDtoToJson(_WatchedEpisodeDto instance) =>
@@ -26,4 +27,5 @@ Map<String, dynamic> _$WatchedEpisodeDtoToJson(_WatchedEpisodeDto instance) =>
       'season_number': instance.seasonNumber,
       'episode_number': instance.episodeNumber,
       'watched_at': instance.watchedAt?.toIso8601String(),
+      'runtime_minutes': instance.runtimeMinutes,
     };

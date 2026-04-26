@@ -54,4 +54,4 @@ final class WatchedRepositoryProvider
   }
 }
 
-String _$watchedRepositoryHash() => r'0e24cff3119a945488ba841a47cf5f74c8302812';
+String _$watchedRepositoryHash() => r'2f753342109354651c7e30d476990a5a4b674329';

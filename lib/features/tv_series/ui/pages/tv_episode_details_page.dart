@@ -199,6 +199,7 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                     episodeNumber: episode.episodeNumber,
                     seriesTitle: seriesTitle,
                     seriesPosterPath: seriesPosterPath,
+                    runtimeMinutes: episode.runtime,
                   ),
                 ),
               ],

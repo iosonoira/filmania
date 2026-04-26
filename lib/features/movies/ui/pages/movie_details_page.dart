@@ -64,6 +64,7 @@ class _MovieDetailsContent extends StatelessWidget {
                   mediaTitle: movie.title,
                   mediaType: MediaType.movie,
                   posterPath: movie.posterPath,
+                  runtimeMinutes: movie.runtime,
                   isIconOnly: false,
                 ),
               ],

@@ -14,6 +14,7 @@ _MovieDto _$MovieDtoFromJson(Map<String, dynamic> json) => _MovieDto(
   backdropPath: json['backdrop_path'] as String?,
   releaseDate: json['release_date'] as String?,
   voteAverage: (json['vote_average'] as num?)?.toDouble(),
+  runtime: (json['runtime'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$MovieDtoToJson(_MovieDto instance) => <String, dynamic>{
@@ -24,4 +25,5 @@ Map<String, dynamic> _$MovieDtoToJson(_MovieDto instance) => <String, dynamic>{
   'backdrop_path': instance.backdropPath,
   'release_date': instance.releaseDate,
   'vote_average': instance.voteAverage,
+  'runtime': instance.runtime,
 };

@@ -23,6 +23,7 @@ abstract class IWatchedRepository {
     required int episodeNumber,
     required String seriesTitle,
     String? seriesPosterPath,
+    int? runtimeMinutes,
   });
   Future<void> markEpisodeAsUnwatched({
     required String userId,

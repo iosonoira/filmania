@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TVSeries {
 
- int get id; String get name; String get overview; String? get posterPath; String? get backdropPath; DateTime? get firstAirDate; double get voteAverage; List<TVSeason> get seasons;
+ int get id; String get name; String get overview; String? get posterPath; String? get backdropPath; DateTime? get firstAirDate; double get voteAverage; List<int> get episodeRunTime; List<TVSeason> get seasons;
 /// Create a copy of TVSeries
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $TVSeriesCopyWith<TVSeries> get copyWith => _$TVSeriesCopyWithImpl<TVSeries>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TVSeries&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.firstAirDate, firstAirDate) || other.firstAirDate == firstAirDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&const DeepCollectionEquality().equals(other.seasons, seasons));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TVSeries&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.firstAirDate, firstAirDate) || other.firstAirDate == firstAirDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&const DeepCollectionEquality().equals(other.episodeRunTime, episodeRunTime)&&const DeepCollectionEquality().equals(other.seasons, seasons));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,overview,posterPath,backdropPath,firstAirDate,voteAverage,const DeepCollectionEquality().hash(seasons));
+int get hashCode => Object.hash(runtimeType,id,name,overview,posterPath,backdropPath,firstAirDate,voteAverage,const DeepCollectionEquality().hash(episodeRunTime),const DeepCollectionEquality().hash(seasons));
 
 @override
 String toString() {
-  return 'TVSeries(id: $id, name: $name, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, firstAirDate: $firstAirDate, voteAverage: $voteAverage, seasons: $seasons)';
+  return 'TVSeries(id: $id, name: $name, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, firstAirDate: $firstAirDate, voteAverage: $voteAverage, episodeRunTime: $episodeRunTime, seasons: $seasons)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $TVSeriesCopyWith<$Res>  {
   factory $TVSeriesCopyWith(TVSeries value, $Res Function(TVSeries) _then) = _$TVSeriesCopyWithImpl;
 @useResult
 $Res call({
- int id, String name, String overview, String? posterPath, String? backdropPath, DateTime? firstAirDate, double voteAverage, List<TVSeason> seasons
+ int id, String name, String overview, String? posterPath, String? backdropPath, DateTime? firstAirDate, double voteAverage, List<int> episodeRunTime, List<TVSeason> seasons
 });
 
 
@@ -62,7 +62,7 @@ class _$TVSeriesCopyWithImpl<$Res>
 
 /// Create a copy of TVSeries
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? firstAirDate = freezed,Object? voteAverage = null,Object? seasons = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? firstAirDate = freezed,Object? voteAverage = null,Object? episodeRunTime = null,Object? seasons = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as String,posterPath: freezed == posterPath ? _self.posterPath : posterPath // i
 as String?,backdropPath: freezed == backdropPath ? _self.backdropPath : backdropPath // ignore: cast_nullable_to_non_nullable
 as String?,firstAirDate: freezed == firstAirDate ? _self.firstAirDate : firstAirDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,voteAverage: null == voteAverage ? _self.voteAverage : voteAverage // ignore: cast_nullable_to_non_nullable
-as double,seasons: null == seasons ? _self.seasons : seasons // ignore: cast_nullable_to_non_nullable
+as double,episodeRunTime: null == episodeRunTime ? _self.episodeRunTime : episodeRunTime // ignore: cast_nullable_to_non_nullable
+as List<int>,seasons: null == seasons ? _self.seasons : seasons // ignore: cast_nullable_to_non_nullable
 as List<TVSeason>,
   ));
 }
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String overview,  String? posterPath,  String? backdropPath,  DateTime? firstAirDate,  double voteAverage,  List<TVSeason> seasons)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name,  String overview,  String? posterPath,  String? backdropPath,  DateTime? firstAirDate,  double voteAverage,  List<int> episodeRunTime,  List<TVSeason> seasons)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TVSeries() when $default != null:
-return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdropPath,_that.firstAirDate,_that.voteAverage,_that.seasons);case _:
+return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdropPath,_that.firstAirDate,_that.voteAverage,_that.episodeRunTime,_that.seasons);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdr
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String overview,  String? posterPath,  String? backdropPath,  DateTime? firstAirDate,  double voteAverage,  List<TVSeason> seasons)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name,  String overview,  String? posterPath,  String? backdropPath,  DateTime? firstAirDate,  double voteAverage,  List<int> episodeRunTime,  List<TVSeason> seasons)  $default,) {final _that = this;
 switch (_that) {
 case _TVSeries():
-return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdropPath,_that.firstAirDate,_that.voteAverage,_that.seasons);case _:
+return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdropPath,_that.firstAirDate,_that.voteAverage,_that.episodeRunTime,_that.seasons);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdr
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String overview,  String? posterPath,  String? backdropPath,  DateTime? firstAirDate,  double voteAverage,  List<TVSeason> seasons)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name,  String overview,  String? posterPath,  String? backdropPath,  DateTime? firstAirDate,  double voteAverage,  List<int> episodeRunTime,  List<TVSeason> seasons)?  $default,) {final _that = this;
 switch (_that) {
 case _TVSeries() when $default != null:
-return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdropPath,_that.firstAirDate,_that.voteAverage,_that.seasons);case _:
+return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdropPath,_that.firstAirDate,_that.voteAverage,_that.episodeRunTime,_that.seasons);case _:
   return null;
 
 }
@@ -213,7 +214,7 @@ return $default(_that.id,_that.name,_that.overview,_that.posterPath,_that.backdr
 
 
 class _TVSeries extends TVSeries {
-  const _TVSeries({required this.id, required this.name, required this.overview, required this.posterPath, required this.backdropPath, required this.firstAirDate, required this.voteAverage, final  List<TVSeason> seasons = const []}): _seasons = seasons,super._();
+  const _TVSeries({required this.id, required this.name, required this.overview, required this.posterPath, required this.backdropPath, required this.firstAirDate, required this.voteAverage, final  List<int> episodeRunTime = const [], final  List<TVSeason> seasons = const []}): _episodeRunTime = episodeRunTime,_seasons = seasons,super._();
   
 
 @override final  int id;
@@ -223,6 +224,13 @@ class _TVSeries extends TVSeries {
 @override final  String? backdropPath;
 @override final  DateTime? firstAirDate;
 @override final  double voteAverage;
+ final  List<int> _episodeRunTime;
+@override@JsonKey() List<int> get episodeRunTime {
+  if (_episodeRunTime is EqualUnmodifiableListView) return _episodeRunTime;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_episodeRunTime);
+}
+
  final  List<TVSeason> _seasons;
 @override@JsonKey() List<TVSeason> get seasons {
   if (_seasons is EqualUnmodifiableListView) return _seasons;
@@ -241,16 +249,16 @@ _$TVSeriesCopyWith<_TVSeries> get copyWith => __$TVSeriesCopyWithImpl<_TVSeries>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TVSeries&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.firstAirDate, firstAirDate) || other.firstAirDate == firstAirDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&const DeepCollectionEquality().equals(other._seasons, _seasons));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TVSeries&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.overview, overview) || other.overview == overview)&&(identical(other.posterPath, posterPath) || other.posterPath == posterPath)&&(identical(other.backdropPath, backdropPath) || other.backdropPath == backdropPath)&&(identical(other.firstAirDate, firstAirDate) || other.firstAirDate == firstAirDate)&&(identical(other.voteAverage, voteAverage) || other.voteAverage == voteAverage)&&const DeepCollectionEquality().equals(other._episodeRunTime, _episodeRunTime)&&const DeepCollectionEquality().equals(other._seasons, _seasons));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,overview,posterPath,backdropPath,firstAirDate,voteAverage,const DeepCollectionEquality().hash(_seasons));
+int get hashCode => Object.hash(runtimeType,id,name,overview,posterPath,backdropPath,firstAirDate,voteAverage,const DeepCollectionEquality().hash(_episodeRunTime),const DeepCollectionEquality().hash(_seasons));
 
 @override
 String toString() {
-  return 'TVSeries(id: $id, name: $name, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, firstAirDate: $firstAirDate, voteAverage: $voteAverage, seasons: $seasons)';
+  return 'TVSeries(id: $id, name: $name, overview: $overview, posterPath: $posterPath, backdropPath: $backdropPath, firstAirDate: $firstAirDate, voteAverage: $voteAverage, episodeRunTime: $episodeRunTime, seasons: $seasons)';
 }
 
 
@@ -261,7 +269,7 @@ abstract mixin class _$TVSeriesCopyWith<$Res> implements $TVSeriesCopyWith<$Res>
   factory _$TVSeriesCopyWith(_TVSeries value, $Res Function(_TVSeries) _then) = __$TVSeriesCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String name, String overview, String? posterPath, String? backdropPath, DateTime? firstAirDate, double voteAverage, List<TVSeason> seasons
+ int id, String name, String overview, String? posterPath, String? backdropPath, DateTime? firstAirDate, double voteAverage, List<int> episodeRunTime, List<TVSeason> seasons
 });
 
 
@@ -278,7 +286,7 @@ class __$TVSeriesCopyWithImpl<$Res>
 
 /// Create a copy of TVSeries
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? firstAirDate = freezed,Object? voteAverage = null,Object? seasons = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? overview = null,Object? posterPath = freezed,Object? backdropPath = freezed,Object? firstAirDate = freezed,Object? voteAverage = null,Object? episodeRunTime = null,Object? seasons = null,}) {
   return _then(_TVSeries(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -287,7 +295,8 @@ as String,posterPath: freezed == posterPath ? _self.posterPath : posterPath // i
 as String?,backdropPath: freezed == backdropPath ? _self.backdropPath : backdropPath // ignore: cast_nullable_to_non_nullable
 as String?,firstAirDate: freezed == firstAirDate ? _self.firstAirDate : firstAirDate // ignore: cast_nullable_to_non_nullable
 as DateTime?,voteAverage: null == voteAverage ? _self.voteAverage : voteAverage // ignore: cast_nullable_to_non_nullable
-as double,seasons: null == seasons ? _self._seasons : seasons // ignore: cast_nullable_to_non_nullable
+as double,episodeRunTime: null == episodeRunTime ? _self._episodeRunTime : episodeRunTime // ignore: cast_nullable_to_non_nullable
+as List<int>,seasons: null == seasons ? _self._seasons : seasons // ignore: cast_nullable_to_non_nullable
 as List<TVSeason>,
   ));
 }
