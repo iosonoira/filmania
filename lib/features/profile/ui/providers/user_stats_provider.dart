@@ -4,6 +4,7 @@ import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../data/models/user_stats_dto.dart';
 import '../../domain/entities/user_stats.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
 
 part 'user_stats_provider.g.dart';
@@ -18,13 +19,13 @@ Future<UserStats?> userStats(Ref ref) async {
   ref.watch(watchedItemsProvider(MediaType.tv));
 
   final supabase = ref.watch(supabaseClientProvider);
+  final response = await supabase.rpc(
+    'get_user_stats',
+    params: {'p_user_id': user.id},
+  );
 
-  final response = await supabase
-      .rpc('get_user_stats', params: {'p_user_id': user.id});
-
-  // Stampiamo la risposta grezza per debuggare cosa arriva da Supabase
-  // ignore: avoid_print
-  print('DEBUG STATS: $response');
+  // Utilizzo il logger di sistema del progetto
+  AppLogger.debug('Stats response: $response', tag: 'UserStats');
 
   if (response == null) return null;
 

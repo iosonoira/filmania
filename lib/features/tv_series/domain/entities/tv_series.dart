@@ -13,6 +13,7 @@ abstract class TVSeries with _$TVSeries {
     required String? backdropPath,
     required DateTime? firstAirDate,
     required double voteAverage,
+    @Default('') String status,
     @Default([]) List<int> episodeRunTime,
     @Default([]) List<TVSeason> seasons,
   }) = _TVSeries;

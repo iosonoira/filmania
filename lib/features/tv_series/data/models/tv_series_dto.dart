@@ -15,6 +15,7 @@ abstract class TVSeriesDto with _$TVSeriesDto {
     @JsonKey(name: 'backdrop_path') String? backdropPath,
     @JsonKey(name: 'first_air_date') String? firstAirDate,
     @JsonKey(name: 'vote_average') double? voteAverage,
+    @JsonKey(name: 'status') String? status,
     @JsonKey(name: 'episode_run_time') @Default([]) List<int> episodeRunTime,
     @Default([]) List<TVSeasonDto> seasons,
   }) = _TVSeriesDto;
@@ -34,6 +35,7 @@ abstract class TVSeriesDto with _$TVSeriesDto {
         ? DateTime.tryParse(firstAirDate!)
         : null,
     voteAverage: voteAverage ?? 0.0,
+    status: status ?? '',
     episodeRunTime: episodeRunTime,
     seasons: seasons.map((s) => s.toEntity()).toList(),
   );

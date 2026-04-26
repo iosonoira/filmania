@@ -14,6 +14,7 @@ _TVSeriesDto _$TVSeriesDtoFromJson(Map<String, dynamic> json) => _TVSeriesDto(
   backdropPath: json['backdrop_path'] as String?,
   firstAirDate: json['first_air_date'] as String?,
   voteAverage: (json['vote_average'] as num?)?.toDouble(),
+  status: json['status'] as String?,
   episodeRunTime:
       (json['episode_run_time'] as List<dynamic>?)
           ?.map((e) => (e as num).toInt())
@@ -35,6 +36,7 @@ Map<String, dynamic> _$TVSeriesDtoToJson(_TVSeriesDto instance) =>
       'backdrop_path': instance.backdropPath,
       'first_air_date': instance.firstAirDate,
       'vote_average': instance.voteAverage,
+      'status': instance.status,
       'episode_run_time': instance.episodeRunTime,
       'seasons': instance.seasons,
     };
