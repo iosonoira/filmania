@@ -1,0 +1,65 @@
+{
+  "@@locale": "en",
+  "helloWorld": "Hello World!",
+  "networkError": "A network error occurred. Please try again.",
+  "watchedMovies": "Watched Movies",
+  "watchedTvSeries": "Watched TV Series",
+  "watching": "Watching",
+  "upToDate": "Up to date",
+  "completed": "Completed",
+  "genericError": "Error: {error}",
+  "@genericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "emptySection": "No items in this section.",
+
+  "networkErrorDesc": "Check your internet connection.",
+  "genericErrorDesc": "An error occurred. Please try again.",
+  "emailAddress": "Email Address",
+  "enterValidEmail": "Enter a valid email",
+  "username": "Username",
+  "min3Chars": "Minimum 3 characters",
+  "password": "Password",
+  "min6Chars": "Minimum 6 characters",
+  "confirmPassword": "Confirm Password",
+  "passwordsMismatch": "Passwords do not match",
+  "createYourPass": "Create your pass",
+  "alreadyHavePass": "Already have a pass?",
+  "signIn": "Sign In",
+  "notifications": "Notifications",
+  "enterCinema": "Enter the Cinema",
+  "forgotPassword": "Forgot password?",
+  "dontHavePass": "Don't have a pass?",
+  "requestItHere": "Request it here",
+
+  "cancel": "Cancel",
+  "create": "Create",
+  "deleteWatchlist": "Delete watchlist",
+  "deleteWatchlistConfirm": "Do you want to delete \"{name}\"? This action cannot be undone.",
+  "@deleteWatchlistConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Delete",
+  "inYourWatchlists": "In your Watchlists",
+  "addToWatchlist": "Add to Watchlist",
+  "errorUpdating": "Error during update.",
+  "signOut": "Sign Out",
+  "retryBtn": "Retry",
+  "pageNotFound": "Page not found",
+  
+  "addedToWatchlist": "Added to watchlist!",
+  "createNewWatchlist": "Create new watchlist",
+  "watchlistNameHint": "Watchlist name…",
+  "noWatchlistsYet": "You don't have any watchlist yet. Create one!",
+  "emptyList": "Empty list",
+  "addMoviesFromDetails": "Add movies and series from their details page.",
+  "toggleTheme": "Toggle Theme"
+}

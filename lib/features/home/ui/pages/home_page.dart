@@ -26,7 +26,7 @@ class HomePage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + AppSpacing.xl,
+              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
             ),
           ),
           const SliverToBoxAdapter(child: TrendingMoviesSection()),

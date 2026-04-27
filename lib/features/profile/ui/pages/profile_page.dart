@@ -12,6 +12,7 @@ import '../../../watched/ui/providers/watched_providers.dart';
 import '../../../watched/domain/entities/watched_item.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import '../providers/user_stats_provider.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -22,6 +23,7 @@ class ProfilePage extends ConsumerWidget {
     final user = ref.watch(authStateProvider).value;
     final uploadState = ref.watch(imageUploadControllerProvider);
     final colors = AppColors.of(context);
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       extendBody: true,
@@ -32,7 +34,7 @@ class ProfilePage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + AppSpacing.xl,
+              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -69,7 +71,7 @@ class ProfilePage extends ConsumerWidget {
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
                     ),
-                    child: const Text('Esci'),
+                    child: Text(l10n.signOut),
                   ),
                 ),
                 const SizedBox(height: 120),
@@ -222,7 +224,7 @@ class _StatsBentoGrid extends ConsumerWidget {
                 child: Icon(
                   Icons.watch_later,
                   size: 160,
-                  color: colors.primary.withValues(alpha: 0.05),
+                  color: colors.primary.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.05 : 0.1),
                 ),
               ),
               Column(
@@ -303,14 +305,24 @@ class _BentoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.4),
+        color: isDark 
+            ? colors.surface.withValues(alpha: 0.4) 
+            : colors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radius),
         border: Border.all(
-          color: colors.onSurfacePrimary.withValues(alpha: 0.05),
+          color: colors.onSurfacePrimary.withValues(alpha: isDark ? 0.05 : 0.08),
         ),
+        boxShadow: isDark ? null : [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15), // Much darker shadow
+            blurRadius: 40,
+            offset: const Offset(0, 20),
+          ),
+        ],
       ),
       child: child,
     );
@@ -449,16 +461,24 @@ class _CategoryCard extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-          color: colors.surface,
+          color: isDark ? colors.surface.withValues(alpha: 0.8) : colors.surface,
           borderRadius: BorderRadius.circular(AppSpacing.radius),
           border: Border.all(
-            color: colors.onSurfacePrimary.withValues(alpha: 0.1),
+            color: colors.onSurfacePrimary.withValues(alpha: isDark ? 0.1 : 0.08),
           ),
+          boxShadow: isDark ? null : [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
@@ -514,7 +534,7 @@ class _CategoryCardPlaceholder extends StatelessWidget {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.3),
+        color: colors.surface.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.3 : 0.6),
         borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
       child: const Center(child: CircularProgressIndicator()),
@@ -532,6 +552,7 @@ class _ActivityItem extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: () {
         final path = item.mediaType == MediaType.movie
@@ -543,8 +564,15 @@ class _ActivityItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: AppSpacing.md),
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: colors.surface.withValues(alpha: 0.5),
+          color: isDark ? colors.surface.withValues(alpha: 0.5) : colors.surface,
           borderRadius: BorderRadius.circular(AppSpacing.md),
+          boxShadow: isDark ? null : [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -609,12 +637,20 @@ class _EmptyActivity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.3),
+        color: isDark ? colors.surface.withValues(alpha: 0.3) : colors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radius),
+        boxShadow: isDark ? null : [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
       ),
       child: Column(
         children: [

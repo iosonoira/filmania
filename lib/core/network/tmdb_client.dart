@@ -4,6 +4,7 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:filmania/core/env/env.dart';
+import '../l10n/app_localizations_provider.dart';
 import 'tmdb_auth_interceptor.dart';
 import 'tmdb_retry_interceptor.dart';
 
@@ -17,11 +18,17 @@ part 'tmdb_client.g.dart';
 /// 3. [TmdbRetryInterceptor] — retries idempotent GET requests (max 3, exponential back-off)
 @Riverpod(keepAlive: true)
 Dio tmdbClient(Ref ref) {
+  final locale = ref.watch(localeProvider);
+  final langCode = locale.languageCode == 'it' ? 'it-IT' : 'en-US';
+
   final dio = Dio(
     BaseOptions(
       baseUrl: 'https://api.themoviedb.org/3/',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
+      queryParameters: {
+        'language': langCode,
+      },
     ),
   );
 

@@ -5,6 +5,8 @@ import 'package:filmania/core/theme/app_colors.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/core/theme/theme_provider.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
 
 class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showBackButton;
@@ -18,6 +20,8 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final l10n = ref.watch(appLocalizationsProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return GlassOverlay(
       child: SafeArea(
@@ -78,16 +82,40 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
                   ),
                 ],
               ),
-              Semantics(
-                label: 'Notifiche',
-                button: true,
-                child: IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.notifications_none),
-                  color: colors.primary,
-                  splashColor: colors.primary.withValues(alpha: 0.1),
-                  highlightColor: colors.primary.withValues(alpha: 0.1),
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Semantics(
+                    label: l10n.toggleTheme,
+                    button: true,
+                    child: IconButton(
+                      onPressed: () =>
+                          ref.read(themeModeProvider.notifier).toggle(),
+                      icon: Icon(
+                        themeMode == ThemeMode.dark
+                            ? Icons.light_mode_rounded
+                            : Icons.dark_mode_rounded,
+                      ),
+                      color: colors.primary,
+                      tooltip: l10n.toggleTheme,
+                      splashColor: colors.primary.withValues(alpha: 0.1),
+                      highlightColor: colors.primary.withValues(alpha: 0.1),
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  Semantics(
+                    label: l10n.notifications,
+                    button: true,
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(Icons.notifications_none),
+                      color: colors.primary,
+                      tooltip: l10n.notifications,
+                      splashColor: colors.primary.withValues(alpha: 0.1),
+                      highlightColor: colors.primary.withValues(alpha: 0.1),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

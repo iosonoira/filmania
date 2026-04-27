@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../movies/domain/entities/movie.dart';
 import '../../../tv_series/domain/entities/tv_series.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
@@ -67,6 +68,7 @@ class MediaGridCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Semantics(
       label: 'Media: $title, voto ${voteAverage.toStringAsFixed(1)}',
@@ -75,12 +77,13 @@ class MediaGridCard extends ConsumerWidget {
         onTap: onTap,
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
+            color: colors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
-                blurRadius: 10,
-                offset: const Offset(0, 5),
+                color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.06),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
               ),
             ],
           ),

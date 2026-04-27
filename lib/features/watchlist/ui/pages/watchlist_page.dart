@@ -29,7 +29,7 @@ class WatchlistPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + AppSpacing.xl * 2,
+              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
             ),
           ),
           SliverPadding(

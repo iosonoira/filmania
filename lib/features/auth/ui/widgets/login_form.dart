@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import '../../domain/failures/auth_failure.dart';
 
@@ -42,6 +43,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final loginState = ref.watch(authProvider);
     final isLoading = loginState is AsyncLoading;
     final colors = AppColors.of(context);
+    final l10n = ref.watch(appLocalizationsProvider);
 
     // Rule: Use ref.listen for side-effects like snackbars (Rule 120 State Management)
     ref.listen(authProvider, (previous, next) {
@@ -49,9 +51,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         final message = switch (error) {
           InvalidCredentials() => error.message,
           EmailAlreadyInUse() => error.message,
-          NetworkError() => 'Controlla la tua connessione internet.',
+          NetworkError() => l10n.networkErrorDesc,
           RateLimitExceeded() => error.message,
-          _ => 'Si è verificato un errore. Riprova.',
+          _ => l10n.genericErrorDesc,
         };
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -71,8 +73,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
-              hintText: 'Indirizzo Email',
+            decoration: InputDecoration(
+              hintText: l10n.emailAddress,
             ),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
@@ -80,7 +82,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             validator: (value) {
               final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
               if (value == null || !emailRegex.hasMatch(value)) {
-                return 'Inserisci una email valida';
+                return l10n.enterValidEmail;
               }
               return null;
             },
@@ -90,7 +92,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             controller: _passwordController,
             focusNode: _passwordFocusNode,
             decoration: InputDecoration(
-              hintText: 'Password',
+              hintText: l10n.password,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -102,7 +104,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
             obscureText: _obscurePassword,
             validator: (value) =>
-                (value?.length ?? 0) >= 6 ? null : 'Minimo 6 caratteri',
+                (value?.length ?? 0) >= 6 ? null : l10n.min6Chars,
           ),
           const SizedBox(height: AppSpacing.xl),
           
@@ -142,9 +144,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text(
-                            'Entra nel Cinema',
-                            style: TextStyle(
+                        : Text(
+                            l10n.enterCinema,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -161,7 +163,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           Center(
             child: TextButton(
               onPressed: isLoading ? null : () {},
-              child: const Text('Password dimenticata?'),
+              child: Text(l10n.forgotPassword),
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
@@ -169,12 +171,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Non hai un pass?',
+                l10n.dontHavePass,
                 style: TextStyle(color: colors.onSurfaceSecondary),
               ),
               TextButton(
                 onPressed: isLoading ? null : () => context.go('/register'),
-                child: const Text('Richiedilo qui'),
+                child: Text(l10n.requestItHere),
               ),
             ],
           ),

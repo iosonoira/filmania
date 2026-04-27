@@ -32,7 +32,7 @@ class DiscoverPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + AppSpacing.xl * 2,
+              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -124,8 +124,17 @@ class _DiscoverHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
-            color: colors.surface.withValues(alpha: 0.5),
+            color: Theme.of(context).brightness == Brightness.dark 
+                ? colors.surface.withValues(alpha: 0.5) 
+                : colors.surface,
             borderRadius: BorderRadius.circular(AppSpacing.radius),
+            boxShadow: Theme.of(context).brightness == Brightness.dark ? null : [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,

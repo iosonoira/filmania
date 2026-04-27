@@ -14,10 +14,10 @@ abstract class AppColors {
   static const onSurfaceSecondaryDark = Color(0xFF938F99);
 
   // Light Mode
-  static const backgroundLight = Color(0xFFFAFAFA);
+  static const backgroundLight = Color(0xFFF2F2F7); // Lighter Grey (iOS style)
   static const surfaceLight = Color(0xFFFFFFFF);
-  static const onSurfacePrimaryLight = Color(0xFF1A1A1A);
-  static const onSurfaceSecondaryLight = Color(0xFF666666);
+  static const onSurfacePrimaryLight = Color(0xFF1C1C1E);
+  static const onSurfaceSecondaryLight = Color(0xFF636366);
 
   // Semantic Utility
   static const error = Color(0xFFCF6679);

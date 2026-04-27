@@ -1,0 +1,65 @@
+{
+  "@@locale": "it",
+  "helloWorld": "Ciao Mondo!",
+  "networkError": "Si è verificato un errore di rete. Riprova.",
+  "watchedMovies": "Film Visti",
+  "watchedTvSeries": "Serie TV Viste",
+  "watching": "In visione",
+  "upToDate": "In pari",
+  "completed": "Terminate",
+  "genericError": "Errore: {error}",
+  "@genericError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "emptySection": "Nessun elemento presente in questa sezione.",
+
+  "networkErrorDesc": "Controlla la tua connessione internet.",
+  "genericErrorDesc": "Si è verificato un errore. Riprova.",
+  "emailAddress": "Indirizzo Email",
+  "enterValidEmail": "Inserisci una email valida",
+  "username": "Nome utente",
+  "min3Chars": "Minimo 3 caratteri",
+  "password": "Password",
+  "min6Chars": "Minimo 6 caratteri",
+  "confirmPassword": "Conferma Password",
+  "passwordsMismatch": "Le password non coincidono",
+  "createYourPass": "Crea il tuo pass",
+  "alreadyHavePass": "Hai già un pass?",
+  "signIn": "Entra",
+  "notifications": "Notifiche",
+  "enterCinema": "Entra nel Cinema",
+  "forgotPassword": "Password dimenticata?",
+  "dontHavePass": "Non hai un pass?",
+  "requestItHere": "Richiedilo qui",
+  
+  "cancel": "Annulla",
+  "create": "Crea",
+  "deleteWatchlist": "Elimina watchlist",
+  "deleteWatchlistConfirm": "Vuoi eliminare \"{name}\"? Questa azione è irreversibile.",
+  "@deleteWatchlistConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "delete": "Elimina",
+  "inYourWatchlists": "Nelle tue Watchlist",
+  "addToWatchlist": "Aggiungi alla Watchlist",
+  "errorUpdating": "Errore durante l'aggiornamento.",
+  "signOut": "Esci",
+  "retryBtn": "Riprova",
+  "pageNotFound": "Pagina non trovata",
+  
+  "addedToWatchlist": "Aggiunto alla watchlist!",
+  "createNewWatchlist": "Crea nuova watchlist",
+  "watchlistNameHint": "Nome della watchlist…",
+  "noWatchlistsYet": "Non hai ancora nessuna watchlist. Creane una!",
+  "emptyList": "Lista vuota",
+  "addMoviesFromDetails": "Aggiungi film e serie dalla loro pagina dettaglio.",
+  "toggleTheme": "Cambia Tema"
+}

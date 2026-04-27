@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../../domain/entities/watchlist.dart';
 import '../providers/watchlist_providers.dart';
 import '../../../../core/widgets/app_toast.dart';
@@ -102,7 +104,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
   }
 
   void _showSuccessSnack() {
-    AppToast.show(context, 'Aggiunto alla watchlist!');
+    AppToast.show(context, ref.read(appLocalizationsProvider).addedToWatchlist);
   }
 
   @override
@@ -113,6 +115,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
     final containingIdsAsync = ref.watch(
       watchlistIdsContainingMediaProvider(widget.mediaId, widget.mediaType),
     );
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Container(
       decoration: BoxDecoration(
@@ -151,7 +154,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Aggiungi alla Watchlist',
+                  l10n.addToWatchlist,
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: colors.onSurfacePrimary,
@@ -187,7 +190,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
                         horizontal: AppSpacing.lg,
                         vertical: AppSpacing.md,
                       ),
-                      child: _EmptyWatchlistsHint(colors: colors, textTheme: textTheme),
+                      child: _EmptyWatchlistsHint(colors: colors, textTheme: textTheme, l10n: l10n),
                     )
                   else
                     ConstrainedBox(
@@ -235,10 +238,12 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
                     }),
                     colors: colors,
                     textTheme: textTheme,
+                    l10n: l10n,
                   )
                 : _NewWatchlistButton(
                     colors: colors,
                     textTheme: textTheme,
+                    l10n: l10n,
                     onTap: () => setState(() => _showCreateField = true),
                   ),
           ),
@@ -340,11 +345,13 @@ class _NewWatchlistButton extends StatelessWidget {
   final AppColorScheme colors;
   final TextTheme textTheme;
   final VoidCallback onTap;
+  final AppLocalizations l10n;
 
   const _NewWatchlistButton({
     required this.colors,
     required this.textTheme,
     required this.onTap,
+    required this.l10n,
   });
 
   @override
@@ -371,7 +378,7 @@ class _NewWatchlistButton extends StatelessWidget {
             const Icon(Icons.add_rounded, color: Colors.white, size: 20),
             const SizedBox(width: AppSpacing.sm),
             Text(
-              'Crea nuova watchlist',
+              l10n.createNewWatchlist,
               style: textTheme.labelLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -390,6 +397,7 @@ class _CreateWatchlistField extends StatelessWidget {
   final VoidCallback onCancel;
   final AppColorScheme colors;
   final TextTheme textTheme;
+  final AppLocalizations l10n;
 
   const _CreateWatchlistField({
     required this.controller,
@@ -397,6 +405,7 @@ class _CreateWatchlistField extends StatelessWidget {
     required this.onCancel,
     required this.colors,
     required this.textTheme,
+    required this.l10n,
   });
 
   @override
@@ -409,7 +418,7 @@ class _CreateWatchlistField extends StatelessWidget {
           autofocus: true,
           textCapitalization: TextCapitalization.sentences,
           decoration: InputDecoration(
-            hintText: 'Nome della watchlist…',
+            hintText: l10n.watchlistNameHint,
             hintStyle: TextStyle(color: colors.onSurfaceSecondary),
           ),
           onSubmitted: (_) => onConfirm(),
@@ -430,7 +439,7 @@ class _CreateWatchlistField extends StatelessWidget {
                   ),
                   foregroundColor: colors.onSurfaceSecondary,
                 ),
-                child: const Text('Annulla'),
+                child: Text(l10n.cancel),
               ),
             ),
             const SizedBox(width: AppSpacing.sm),
@@ -451,7 +460,7 @@ class _CreateWatchlistField extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppSpacing.radius),
                     ),
                   ),
-                  child: const Text('Crea'),
+                  child: Text(l10n.create),
                 ),
               ),
             ),
@@ -465,10 +474,12 @@ class _CreateWatchlistField extends StatelessWidget {
 class _EmptyWatchlistsHint extends StatelessWidget {
   final AppColorScheme colors;
   final TextTheme textTheme;
+  final AppLocalizations l10n;
 
   const _EmptyWatchlistsHint({
     required this.colors,
     required this.textTheme,
+    required this.l10n,
   });
 
   @override
@@ -483,7 +494,7 @@ class _EmptyWatchlistsHint extends StatelessWidget {
         const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: Text(
-            'Non hai ancora nessuna watchlist. Creane una!',
+            l10n.noWatchlistsYet,
             style: textTheme.bodySmall?.copyWith(
               color: colors.onSurfaceSecondary,
             ),

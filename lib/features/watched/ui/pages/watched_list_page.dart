@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../providers/watched_providers.dart';
 import '../providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -29,6 +31,7 @@ class WatchedListPage extends ConsumerWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
     final asyncItems = ref.watch(watchedItemsProvider(mediaType));
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -36,7 +39,7 @@ class WatchedListPage extends ConsumerWidget {
         backgroundColor: colors.background,
         elevation: 0,
         title: Text(
-          'Film Visti',
+          l10n.watchedMovies,
           style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
@@ -45,9 +48,9 @@ class WatchedListPage extends ConsumerWidget {
         ),
       ),
       body: asyncItems.when(
-        data: (items) => _buildGrid(context, items, colors, textTheme),
+        data: (items) => _buildGrid(context, items, colors, textTheme, l10n),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Errore: $err')),
+        error: (err, stack) => Center(child: Text(l10n.genericError(err.toString()))),
       ),
     );
   }
@@ -56,6 +59,7 @@ class WatchedListPage extends ConsumerWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
     final asyncItems = ref.watch(categorizedTvSeriesProvider);
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return DefaultTabController(
       length: 3,
@@ -65,7 +69,7 @@ class WatchedListPage extends ConsumerWidget {
           backgroundColor: colors.background,
           elevation: 0,
           title: Text(
-            'Serie TV Viste',
+            l10n.watchedTvSeries,
             style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           leading: IconButton(
@@ -77,10 +81,10 @@ class WatchedListPage extends ConsumerWidget {
             dividerColor: Colors.transparent,
             labelColor: colors.onSurfacePrimary,
             unselectedLabelColor: colors.onSurfaceSecondary,
-            tabs: const [
-              Tab(text: 'In visione'),
-              Tab(text: 'In pari'),
-              Tab(text: 'Terminate'),
+            tabs: [
+              Tab(text: l10n.watching),
+              Tab(text: l10n.upToDate),
+              Tab(text: l10n.completed),
             ],
           ),
         ),
@@ -92,24 +96,24 @@ class WatchedListPage extends ConsumerWidget {
 
             return TabBarView(
               children: [
-                _buildGrid(context, watching, colors, textTheme),
-                _buildGrid(context, upToDate, colors, textTheme),
-                _buildGrid(context, completed, colors, textTheme),
+                _buildGrid(context, watching, colors, textTheme, l10n),
+                _buildGrid(context, upToDate, colors, textTheme, l10n),
+                _buildGrid(context, completed, colors, textTheme, l10n),
               ],
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text('Errore: $err')),
+          error: (err, stack) => Center(child: Text(l10n.genericError(err.toString()))),
         ),
       ),
     );
   }
 
-  Widget _buildGrid(BuildContext context, List<WatchedItem> items, AppColorScheme colors, TextTheme textTheme) {
+  Widget _buildGrid(BuildContext context, List<WatchedItem> items, AppColorScheme colors, TextTheme textTheme, AppLocalizations l10n) {
     if (items.isEmpty) {
       return Center(
         child: Text(
-          'Nessun elemento presente in questa sezione.',
+          l10n.emptySection,
           style: textTheme.bodyLarge?.copyWith(color: colors.onSurfaceSecondary),
         ),
       );
@@ -132,19 +136,31 @@ class WatchedListPage extends ConsumerWidget {
                 : AppRoutes.tvDetails.replaceAll(':id', item.mediaId.toString());
             context.push(path);
           },
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
-            child: item.posterPath != null
-                ? Image.network(
-                    'https://image.tmdb.org/t/p/w200${item.posterPath}',
-                    fit: BoxFit.cover,
-                  )
-                : Container(
-                    color: colors.surface,
-                    child: Center(
-                      child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(AppSpacing.radius),
+              boxShadow: Theme.of(context).brightness == Brightness.dark ? null : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(AppSpacing.radius),
+              child: item.posterPath != null
+                  ? Image.network(
+                      'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                      fit: BoxFit.cover,
+                    )
+                  : Container(
+                      color: colors.surface,
+                      child: Center(
+                        child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
+                      ),
                     ),
-                  ),
+            ),
           ),
         );
       },

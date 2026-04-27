@@ -25,7 +25,10 @@ class TrendingMoviesSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _SectionHeader(title: 'Film del Momento'),
+        _SectionHeader(
+          title: 'Film del momento',
+          onSeeAllTap: () => context.push(AppRoutes.trendingMovies),
+        ),
         const SizedBox(height: AppSpacing.lg),
         moviesAsync.when(
           data: (movies) => _TrendingMoviesList(movies: movies),
@@ -46,8 +49,9 @@ class TrendingMoviesSection extends ConsumerWidget {
 
 class _SectionHeader extends StatelessWidget {
   final String title;
+  final VoidCallback? onSeeAllTap;
 
-  const _SectionHeader({required this.title});
+  const _SectionHeader({required this.title, this.onSeeAllTap});
 
   @override
   Widget build(BuildContext context) {
@@ -67,21 +71,24 @@ class _SectionHeader extends StatelessWidget {
               letterSpacing: -0.5,
             ),
           ),
-          Row(
-            children: [
-              Text(
-                'Vedi tutti',
-                style: textTheme.labelLarge?.copyWith(
-                  color: colors.primary,
-                  fontWeight: FontWeight.w600,
+          GestureDetector(
+            onTap: onSeeAllTap,
+            child: Row(
+              children: [
+                Text(
+                  'Vedi tutti',
+                  style: textTheme.labelLarge?.copyWith(
+                    color: colors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.arrow_forward_rounded,
-                size: 16,
-                color: colors.primary,
-              ),
-            ],
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 16,
+                  color: colors.primary,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -138,6 +145,7 @@ class WatchingCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Semantics(
       label: 'Guarda $title, $subtitle',
       button: true,
@@ -152,9 +160,9 @@ class WatchingCard extends ConsumerWidget {
             borderRadius: BorderRadius.circular(AppSpacing.radius),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
+                color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
+                blurRadius: 30,
+                offset: const Offset(0, 15),
               ),
             ],
           ),
@@ -244,7 +252,6 @@ class _WatchingCardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     return Container(
@@ -254,8 +261,8 @@ class _WatchingCardContent extends StatelessWidget {
           begin: Alignment.bottomCenter,
           end: Alignment.topCenter,
           colors: [
-            colors.background.withValues(alpha: 0.9),
-            Colors.transparent,
+            Colors.black.withValues(alpha: 0.8),
+            Colors.black.withValues(alpha: 0.0),
           ],
         ),
       ),
@@ -325,31 +332,16 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final textTheme = Theme.of(context).textTheme;
     final tvSeriesAsync = ref.watch(trendingTVSeriesProvider(page: 1));
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final containerColor = isDark
-        ? const Color(0xFF1C1B20)
-        : const Color(0xFFF5F5F5);
+    final colors = AppColors.of(context);
+    final containerColor = colors.surface;
 
     return SliverMainAxisGroup(
       slivers: [
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          sliver: SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  'Serie TV del Momento',
-                  style: textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-              ],
-            ),
+        SliverToBoxAdapter(
+          child: _SectionHeader(
+            title: 'Serie TV del momento',
+            onSeeAllTap: () => context.push(AppRoutes.trendingTv),
           ),
         ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.md)),
@@ -431,6 +423,13 @@ class _UpcomingEpisodeItem extends ConsumerWidget {
         decoration: BoxDecoration(
           color: containerColor,
           borderRadius: BorderRadius.circular(AppSpacing.md),
+          boxShadow: Theme.of(context).brightness == Brightness.dark ? null : [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
         child: Row(
           children: [
@@ -550,11 +549,9 @@ class CuratedSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
-    final containerColorLow = isDark
-        ? const Color(0xFF1C1B20)
-        : const Color(0xFFF5F5F5);
+    final containerColorLow = colors.surface;
     final discoverAsync = ref.watch(discoverMoviesProvider(page: 1));
 
     return Padding(
@@ -624,7 +621,7 @@ class _FeaturedBentoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () => context.push(
@@ -636,9 +633,9 @@ class _FeaturedBentoCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(AppSpacing.radius),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+              blurRadius: 40,
+              offset: const Offset(0, 20),
             ),
           ],
         ),
@@ -670,8 +667,8 @@ class _FeaturedBentoCard extends StatelessWidget {
                     begin: Alignment.bottomCenter,
                     end: Alignment.topCenter,
                     colors: [
-                      colors.background,
-                      colors.background.withValues(alpha: 0.0),
+                      Colors.black.withValues(alpha: 0.85),
+                      Colors.black.withValues(alpha: 0.0),
                     ],
                   ),
                 ),
@@ -815,6 +812,7 @@ class _SecondaryBentoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return GestureDetector(
       onTap: () => context.push(
@@ -825,6 +823,13 @@ class _SecondaryBentoCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: containerColor,
           borderRadius: BorderRadius.circular(AppSpacing.radius),
+          boxShadow: isDark ? null : [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
+            ),
+          ],
           border: Border.all(
             color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
           ),

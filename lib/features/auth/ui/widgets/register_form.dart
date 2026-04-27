@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import '../../domain/failures/auth_failure.dart';
 
@@ -55,6 +56,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
     final authState = ref.watch(authProvider);
     final isLoading = authState is AsyncLoading;
     final colors = AppColors.of(context);
+    final l10n = ref.watch(appLocalizationsProvider);
 
     // Rule: Use ref.listen for side-effects like snackbars (Rule 120 State Management)
     ref.listen(authProvider, (previous, next) {
@@ -62,9 +64,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         final message = switch (error) {
           InvalidCredentials() => error.message,
           EmailAlreadyInUse() => error.message,
-          NetworkError() => 'Controlla la tua connessione internet.',
+          NetworkError() => l10n.networkErrorDesc,
           RateLimitExceeded() => error.message,
-          _ => 'Si è verificato un errore. Riprova.',
+          _ => l10n.genericErrorDesc,
         };
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -84,8 +86,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
-              hintText: 'Indirizzo Email',
+            decoration: InputDecoration(
+              hintText: l10n.emailAddress,
             ),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
@@ -93,7 +95,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             validator: (value) {
               final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
               if (value == null || !emailRegex.hasMatch(value)) {
-                return 'Inserisci una email valida';
+                return l10n.enterValidEmail;
               }
               return null;
             },
@@ -102,13 +104,13 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           TextFormField(
             controller: _usernameController,
             focusNode: _usernameFocusNode,
-            decoration: const InputDecoration(
-              hintText: 'Nome utente',
+            decoration: InputDecoration(
+              hintText: l10n.username,
             ),
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
             validator: (value) =>
-                (value?.length ?? 0) >= 3 ? null : 'Minimo 3 caratteri',
+                (value?.length ?? 0) >= 3 ? null : l10n.min3Chars,
           ),
           const SizedBox(height: AppSpacing.md),
           TextFormField(
@@ -117,7 +119,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _confirmPasswordFocusNode.requestFocus(),
             decoration: InputDecoration(
-              hintText: 'Password',
+              hintText: l10n.password,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -129,14 +131,14 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             ),
             obscureText: _obscurePassword,
             validator: (value) =>
-                (value?.length ?? 0) >= 6 ? null : 'Minimo 6 caratteri',
+                (value?.length ?? 0) >= 6 ? null : l10n.min6Chars,
           ),
           const SizedBox(height: AppSpacing.md),
           TextFormField(
             controller: _confirmPasswordController,
             focusNode: _confirmPasswordFocusNode,
             decoration: InputDecoration(
-              hintText: 'Conferma Password',
+              hintText: l10n.confirmPassword,
               suffixIcon: IconButton(
                 icon: Icon(
                   _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
@@ -149,10 +151,10 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             obscureText: _obscureConfirmPassword,
             validator: (value) {
               if ((value?.length ?? 0) < 6) {
-                return 'Minimo 6 caratteri';
+                return l10n.min6Chars;
               }
               if (value != _passwordController.text) {
-                return 'Le password non coincidono';
+                return l10n.passwordsMismatch;
               }
               return null;
             },
@@ -195,9 +197,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text(
-                            'Crea il tuo pass',
-                            style: TextStyle(
+                        : Text(
+                            l10n.createYourPass,
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -215,12 +217,12 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Hai già un pass?',
+                l10n.alreadyHavePass,
                 style: TextStyle(color: colors.onSurfaceSecondary),
               ),
               TextButton(
                 onPressed: isLoading ? null : () => context.go('/login'),
-                child: const Text('Entra'),
+                child: Text(l10n.signIn),
               ),
             ],
           ),

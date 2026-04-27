@@ -6,6 +6,8 @@ import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
 import '../../../../core/widgets/error_view.dart';
@@ -21,6 +23,7 @@ class WatchlistDetailPage extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final watchlistsAsync = ref.watch(userWatchlistsProvider);
     final itemsAsync = ref.watch(watchlistItemsProvider(watchlistId));
+    final l10n = ref.watch(appLocalizationsProvider);
 
     final watchlistName = watchlistsAsync.value
             ?.where((w) => w.id == watchlistId)
@@ -37,7 +40,7 @@ class WatchlistDetailPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + AppSpacing.xl * 2,
+              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
             ),
           ),
 
@@ -81,8 +84,8 @@ class WatchlistDetailPage extends ConsumerWidget {
                       color: colors.onSurfaceSecondary,
                     ),
                     onPressed: () =>
-                        _confirmDelete(context, ref, watchlistName),
-                    tooltip: 'Elimina lista',
+                        _confirmDelete(context, ref, watchlistName, l10n),
+                    tooltip: l10n.deleteWatchlist,
                   ),
                 ],
               ),
@@ -99,7 +102,7 @@ class WatchlistDetailPage extends ConsumerWidget {
                     padding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.lg),
                     child: _WatchlistDetailEmpty(
-                        colors: colors, textTheme: textTheme),
+                        colors: colors, textTheme: textTheme, l10n: l10n),
                   ),
                 );
               }
@@ -183,22 +186,23 @@ class WatchlistDetailPage extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     String name,
+    AppLocalizations l10n,
   ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Elimina watchlist'),
+        title: Text(l10n.deleteWatchlist),
         content:
-            Text('Vuoi eliminare "$name"? Questa azione è irreversibile.'),
+            Text(l10n.deleteWatchlistConfirm(name)),
         actions: [
           TextButton(
             onPressed: () => ctx.pop(false),
-            child: const Text('Annulla'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () => ctx.pop(true),
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Elimina'),
+            child: Text(l10n.delete),
           ),
         ],
       ),
@@ -215,9 +219,10 @@ class WatchlistDetailPage extends ConsumerWidget {
 class _WatchlistDetailEmpty extends StatelessWidget {
   final AppColorScheme colors;
   final TextTheme textTheme;
+  final AppLocalizations l10n;
 
   const _WatchlistDetailEmpty(
-      {required this.colors, required this.textTheme});
+      {required this.colors, required this.textTheme, required this.l10n});
 
   @override
   Widget build(BuildContext context) {
@@ -236,13 +241,13 @@ class _WatchlistDetailEmpty extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Lista vuota',
+            l10n.emptyList,
             style:
                 textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Aggiungi film e serie dalla loro pagina dettaglio.',
+            l10n.addMoviesFromDetails,
             textAlign: TextAlign.center,
             style: textTheme.bodyMedium?.copyWith(
               color: colors.onSurfaceSecondary,
