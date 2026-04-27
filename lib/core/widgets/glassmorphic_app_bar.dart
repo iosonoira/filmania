@@ -10,10 +10,12 @@ import 'package:filmania/core/l10n/app_localizations_provider.dart';
 
 class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showBackButton;
+  final List<Widget>? actions;
 
   const GlassmorphicAppBar({
     super.key,
     this.showBackButton = false,
+    this.actions,
   });
 
   @override
@@ -85,6 +87,7 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  if (actions != null) ...actions!,
                   Semantics(
                     label: l10n.toggleTheme,
                     button: true,
@@ -98,19 +101,6 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       ),
                       color: colors.primary,
                       tooltip: l10n.toggleTheme,
-                      splashColor: colors.primary.withValues(alpha: 0.1),
-                      highlightColor: colors.primary.withValues(alpha: 0.1),
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  Semantics(
-                    label: l10n.notifications,
-                    button: true,
-                    child: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.notifications_none),
-                      color: colors.primary,
-                      tooltip: l10n.notifications,
                       splashColor: colors.primary.withValues(alpha: 0.1),
                       highlightColor: colors.primary.withValues(alpha: 0.1),
                     ),

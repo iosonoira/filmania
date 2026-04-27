@@ -8,6 +8,7 @@ import '../../../../core/widgets/glassmorphic_app_bar.dart';
 import '../../../../core/router/app_router.dart';
 import '../providers/movies_provider.dart';
 import '../../../discover/ui/widgets/discover_widgets.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 
 class TrendingMoviesPage extends ConsumerWidget {
   const TrendingMoviesPage({super.key});
@@ -17,6 +18,7 @@ class TrendingMoviesPage extends ConsumerWidget {
     final moviesAsync = ref.watch(trendingMoviesProvider(page: 1));
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       extendBody: true,
@@ -34,7 +36,7 @@ class TrendingMoviesPage extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             sliver: SliverToBoxAdapter(
               child: Text(
-                'Film del Momento',
+                l10n.trendingMoviesTitle,
                 style: textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   letterSpacing: -1.5,

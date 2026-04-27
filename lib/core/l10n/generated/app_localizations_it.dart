@@ -147,4 +147,40 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get toggleTheme => 'Cambia Tema';
+
+  @override
+  String get trendingMoviesTitle => 'Film del Momento';
+
+  @override
+  String get trendingTvTitle => 'Serie TV del Momento';
+
+  @override
+  String get settingsTitle => 'Impostazioni';
+
+  @override
+  String get appSection => 'Applicazione';
+
+  @override
+  String get language => 'Lingua';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get infoSection => 'Informazioni';
+
+  @override
+  String get version => 'Versione';
+
+  @override
+  String get dataSource => 'Dati forniti da';
+
+  @override
+  String get chooseLanguage => 'Scegli Lingua';
+
+  @override
+  String get themeDark => 'Scuro';
+
+  @override
+  String get themeLight => 'Chiaro';
 }

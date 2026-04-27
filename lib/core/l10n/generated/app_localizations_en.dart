@@ -148,4 +148,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get toggleTheme => 'Toggle Theme';
+
+  @override
+  String get trendingMoviesTitle => 'Trending Movies';
+
+  @override
+  String get trendingTvTitle => 'Trending TV Series';
+
+  @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get appSection => 'Application';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get infoSection => 'Information';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get dataSource => 'Data provided by';
+
+  @override
+  String get chooseLanguage => 'Choose Language';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get themeLight => 'Light';
 }

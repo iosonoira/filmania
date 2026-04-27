@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
@@ -21,12 +22,13 @@ class TrendingMoviesSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final moviesAsync = ref.watch(trendingMoviesProvider(page: 1));
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _SectionHeader(
-          title: 'Film del momento',
+          title: l10n.trendingMoviesTitle,
           onSeeAllTap: () => context.push(AppRoutes.trendingMovies),
         ),
         const SizedBox(height: AppSpacing.lg),
@@ -335,12 +337,13 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
     final tvSeriesAsync = ref.watch(trendingTVSeriesProvider(page: 1));
     final colors = AppColors.of(context);
     final containerColor = colors.surface;
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return SliverMainAxisGroup(
       slivers: [
         SliverToBoxAdapter(
           child: _SectionHeader(
-            title: 'Serie TV del momento',
+            title: l10n.trendingTvTitle,
             onSeeAllTap: () => context.push(AppRoutes.trendingTv),
           ),
         ),

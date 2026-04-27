@@ -61,5 +61,17 @@
   "noWatchlistsYet": "You don't have any watchlist yet. Create one!",
   "emptyList": "Empty list",
   "addMoviesFromDetails": "Add movies and series from their details page.",
-  "toggleTheme": "Toggle Theme"
+  "toggleTheme": "Toggle Theme",
+  "trendingMoviesTitle": "Trending Movies",
+  "trendingTvTitle": "Trending TV Series",
+  "settingsTitle": "Settings",
+  "appSection": "Application",
+  "language": "Language",
+  "theme": "Theme",
+  "infoSection": "Information",
+  "version": "Version",
+  "dataSource": "Data provided by",
+  "chooseLanguage": "Choose Language",
+  "themeDark": "Dark",
+  "themeLight": "Light"
 }

@@ -367,6 +367,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Toggle Theme'**
   String get toggleTheme;
+
+  /// No description provided for @trendingMoviesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending Movies'**
+  String get trendingMoviesTitle;
+
+  /// No description provided for @trendingTvTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending TV Series'**
+  String get trendingTvTitle;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @appSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Application'**
+  String get appSection;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @infoSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Information'**
+  String get infoSection;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @dataSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Data provided by'**
+  String get dataSource;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Language'**
+  String get chooseLanguage;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
 }
 
 class _AppLocalizationsDelegate

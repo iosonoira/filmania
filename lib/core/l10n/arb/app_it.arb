@@ -61,5 +61,17 @@
   "noWatchlistsYet": "Non hai ancora nessuna watchlist. Creane una!",
   "emptyList": "Lista vuota",
   "addMoviesFromDetails": "Aggiungi film e serie dalla loro pagina dettaglio.",
-  "toggleTheme": "Cambia Tema"
+  "toggleTheme": "Cambia Tema",
+  "trendingMoviesTitle": "Film del Momento",
+  "trendingTvTitle": "Serie TV del Momento",
+  "settingsTitle": "Impostazioni",
+  "appSection": "Applicazione",
+  "language": "Lingua",
+  "theme": "Tema",
+  "infoSection": "Informazioni",
+  "version": "Versione",
+  "dataSource": "Dati forniti da",
+  "chooseLanguage": "Scegli Lingua",
+  "themeDark": "Scuro",
+  "themeLight": "Chiaro"
 }

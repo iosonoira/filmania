@@ -8,6 +8,7 @@ import '../../../../core/widgets/glassmorphic_app_bar.dart';
 import '../../../../core/router/app_router.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../discover/ui/widgets/discover_widgets.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 
 class TrendingTVSeriesPage extends ConsumerWidget {
   const TrendingTVSeriesPage({super.key});
@@ -17,6 +18,7 @@ class TrendingTVSeriesPage extends ConsumerWidget {
     final tvAsync = ref.watch(trendingTVSeriesProvider(page: 1));
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       extendBody: true,
@@ -34,7 +36,7 @@ class TrendingTVSeriesPage extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             sliver: SliverToBoxAdapter(
               child: Text(
-                'Serie TV del Momento',
+                l10n.trendingTvTitle,
                 style: textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   letterSpacing: -1.5,

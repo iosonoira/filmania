@@ -28,7 +28,16 @@ class ProfilePage extends ConsumerWidget {
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
-      appBar: const GlassmorphicAppBar(),
+      appBar: GlassmorphicAppBar(
+        actions: [
+          IconButton(
+            onPressed: () => context.push(AppRoutes.settings),
+            icon: const Icon(Icons.settings_rounded),
+            color: colors.onSurfacePrimary,
+            tooltip: l10n.settingsTitle,
+          ),
+        ],
+      ),
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [

@@ -22,7 +22,7 @@ class LocaleNotifier extends _$LocaleNotifier {
     if (savedLanguage != null) {
       return Locale(savedLanguage);
     }
-    return const Locale('en');
+    return const Locale('it');
   }
 
   Future<void> changeLocale(Locale newLocale) async {
