@@ -184,4 +184,54 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeLight => 'Light';
+
+  @override
+  String get themeMichele => 'For Michele';
+
+  @override
+  String get chooseTheme => 'Choose Theme';
+
+  @override
+  String get overviewTitle => 'Overview';
+
+  @override
+  String get castTitle => 'Cast';
+
+  @override
+  String get episodesTitle => 'Episodes';
+
+  @override
+  String get noEpisodesAvailable => 'No episodes available';
+
+  @override
+  String get noDescription => 'No description available.';
+
+  @override
+  String get season => 'Season';
+
+  @override
+  String get episode => 'Episode';
+
+  @override
+  String get totalWatchTime => 'Total Watch Time';
+
+  @override
+  String get hoursUnit => 'hours';
+
+  @override
+  String get moviesTitle => 'Movies';
+
+  @override
+  String get tvSeriesTitle => 'TV Series';
+
+  @override
+  String get recentActivity => 'Recent Activity';
+
+  @override
+  String get noRecentActivity => 'No recent activity';
+
+  @override
+  String uploadError(String error) {
+    return 'Upload error: $error';
+  }
 }

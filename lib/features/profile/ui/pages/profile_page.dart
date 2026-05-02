@@ -13,6 +13,7 @@ import '../../../watched/domain/entities/watched_item.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../providers/user_stats_provider.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -59,7 +60,7 @@ class ProfilePage extends ConsumerWidget {
                 if (uploadState.hasError) ...[
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Errore upload: ${uploadState.error}',
+                    l10n.uploadError(uploadState.error.toString()),
                     style: TextStyle(color: colors.error),
                     textAlign: TextAlign.center,
                   ),
@@ -240,7 +241,7 @@ class _StatsBentoGrid extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Tempo Totale'.toUpperCase(),
+                    AppLocalizations.of(context)!.totalWatchTime.toUpperCase(),
                     style: textTheme.labelSmall?.copyWith(
                       color: colors.onSurfaceSecondary,
                       letterSpacing: 2,
@@ -265,7 +266,7 @@ class _StatsBentoGrid extends ConsumerWidget {
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
-                        'ore',
+                        AppLocalizations.of(context)!.hoursUnit,
                         style: textTheme.headlineSmall?.copyWith(
                           color: colors.onSurfaceSecondary,
                           fontWeight: FontWeight.w500,
@@ -277,19 +278,19 @@ class _StatsBentoGrid extends ConsumerWidget {
                   Row(
                     children: [
                       _MiniStat(
-                        label: 'Film',
+                        label: AppLocalizations.of(context)!.moviesTitle,
                         value: stats?.moviesWatchedCount.toString() ?? '0',
                         subtitle: '${movieHours}h',
                       ),
                       const SizedBox(width: AppSpacing.xl),
                       _MiniStat(
-                        label: 'Serie',
+                        label: AppLocalizations.of(context)!.tvSeriesTitle,
                         value: stats?.tvSeriesWatchedCount.toString() ?? '0',
                         subtitle: '${tvHours}h',
                       ),
                       const SizedBox(width: AppSpacing.xl),
                       _MiniStat(
-                        label: 'Episodi',
+                        label: AppLocalizations.of(context)!.episodesTitle,
                         value: stats?.episodesWatchedCount.toString() ?? '0',
                       ),
                     ],
@@ -396,7 +397,7 @@ class _RecentActivitySection extends ConsumerWidget {
             Expanded(
               child: asyncMovies.when(
                 data: (movies) => _CategoryCard(
-                  title: 'Film',
+                  title: AppLocalizations.of(context)!.moviesTitle,
                   items: movies,
                   onTap: () => context.push(AppRoutes.watchedMovies),
                 ),
@@ -408,7 +409,7 @@ class _RecentActivitySection extends ConsumerWidget {
             Expanded(
               child: asyncTv.when(
                 data: (tv) => _CategoryCard(
-                  title: 'Serie',
+                  title: AppLocalizations.of(context)!.tvSeriesTitle,
                   items: tv,
                   onTap: () => context.push(AppRoutes.watchedTv),
                 ),
@@ -420,7 +421,7 @@ class _RecentActivitySection extends ConsumerWidget {
         ),
         const SizedBox(height: AppSpacing.xl),
         Text(
-          'Attività Recente',
+          AppLocalizations.of(context)!.recentActivity,
           style: textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             fontFamily: 'Manrope',
@@ -611,7 +612,9 @@ class _ActivityItem extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    item.mediaType == MediaType.movie ? 'Film' : 'Serie TV',
+                    item.mediaType == MediaType.movie 
+                        ? AppLocalizations.of(context)!.moviesTitle 
+                        : AppLocalizations.of(context)!.tvSeriesTitle,
                     style: textTheme.labelSmall?.copyWith(
                       color: colors.onSurfaceSecondary,
                     ),
@@ -666,7 +669,7 @@ class _EmptyActivity extends StatelessWidget {
           Icon(Icons.movie_outlined, size: 48, color: colors.onSurfaceSecondary.withValues(alpha: 0.5)),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'Nessuna attività recente',
+            AppLocalizations.of(context)!.noRecentActivity,
             style: TextStyle(color: colors.onSurfaceSecondary),
           ),
         ],

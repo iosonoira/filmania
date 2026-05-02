@@ -14,15 +14,39 @@ abstract class AppSpacing {
   static const double radius = 24.0;
 }
 
+enum AppThemeMode {
+  light,
+  dark,
+  pureBlack,
+}
+
 /// AppTheme class that generates ThemeData based on DESIGN.md rules.
 abstract class AppTheme {
-  static ThemeData light() => _build(Brightness.light);
-  static ThemeData dark() => _build(Brightness.dark);
+  static ThemeData light() => _build(AppThemeMode.light);
+  static ThemeData dark() => _build(AppThemeMode.dark);
+  static ThemeData pureBlack() => _build(AppThemeMode.pureBlack);
 
-  static ThemeData _build(Brightness brightness) {
-    final isDark = brightness == Brightness.dark;
-    final backgroundColor = isDark ? AppColors.backgroundDark : AppColors.backgroundLight;
-    final surfaceColor = isDark ? AppColors.surfaceDark : AppColors.surfaceLight;
+  static ThemeData _build(AppThemeMode mode) {
+    final isDark = mode != AppThemeMode.light;
+    final brightness = isDark ? Brightness.dark : Brightness.light;
+    
+    final Color backgroundColor;
+    final Color surfaceColor;
+
+    switch (mode) {
+      case AppThemeMode.light:
+        backgroundColor = AppColors.backgroundLight;
+        surfaceColor = AppColors.surfaceLight;
+        break;
+      case AppThemeMode.dark:
+        backgroundColor = AppColors.backgroundDark;
+        surfaceColor = AppColors.surfaceDark;
+        break;
+      case AppThemeMode.pureBlack:
+        backgroundColor = AppColors.backgroundPureBlack;
+        surfaceColor = AppColors.surfacePureBlack;
+        break;
+    }
     const primaryColor = AppColors.primary;
 
     return ThemeData(

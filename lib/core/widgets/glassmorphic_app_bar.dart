@@ -95,7 +95,7 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
                       onPressed: () =>
                           ref.read(themeModeProvider.notifier).toggle(),
                       icon: Icon(
-                        themeMode == ThemeMode.dark
+                        themeMode != AppThemeMode.light
                             ? Icons.light_mode_rounded
                             : Icons.dark_mode_rounded,
                       ),

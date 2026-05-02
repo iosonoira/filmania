@@ -15,6 +15,7 @@ class SettingsPage extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
     final l10n = ref.watch(appLocalizationsProvider);
     final currentLocale = ref.watch(localeProvider);
+    final themeMode = ref.watch(themeModeProvider);
 
     return Scaffold(
       extendBody: true,
@@ -54,8 +55,8 @@ class SettingsPage extends ConsumerWidget {
                     _SettingsTile(
                       icon: Icons.palette_rounded,
                       title: l10n.theme,
-                      subtitle: Theme.of(context).brightness == Brightness.dark ? l10n.themeDark : l10n.themeLight,
-                      onTap: () => ref.read(themeModeProvider.notifier).toggle(),
+                      subtitle: _getThemeLabel(context, themeMode, l10n),
+                      onTap: () => _showThemePicker(context, ref, l10n, themeMode),
                     ),
                   ],
                 ),
@@ -82,6 +83,68 @@ class SettingsPage extends ConsumerWidget {
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
+      ),
+    );
+  }
+
+  String _getThemeLabel(BuildContext context, AppThemeMode mode, dynamic l10n) {
+    switch (mode) {
+      case AppThemeMode.light:
+        return l10n.themeLight;
+      case AppThemeMode.dark:
+        return l10n.themeDark;
+      case AppThemeMode.pureBlack:
+        return l10n.themeMichele;
+    }
+  }
+
+  void _showThemePicker(BuildContext context, WidgetRef ref, dynamic l10n, AppThemeMode currentMode) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(AppSpacing.xl),
+        decoration: BoxDecoration(
+          color: AppColors.of(context).background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radius)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.chooseTheme,
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            ListTile(
+              leading: const Icon(Icons.light_mode_rounded),
+              title: Text(l10n.themeLight),
+              trailing: currentMode == AppThemeMode.light ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
+              onTap: () {
+                ref.read(themeModeProvider.notifier).setMode(AppThemeMode.light);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.dark_mode_rounded),
+              title: Text(l10n.themeDark),
+              trailing: currentMode == AppThemeMode.dark ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
+              onTap: () {
+                ref.read(themeModeProvider.notifier).setMode(AppThemeMode.dark);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.nightlight_round),
+              title: Text(l10n.themeMichele),
+              trailing: currentMode == AppThemeMode.pureBlack ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
+              onTap: () {
+                ref.read(themeModeProvider.notifier).setMode(AppThemeMode.pureBlack);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

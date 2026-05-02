@@ -12,6 +12,8 @@ import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
+import '../../../../core/widgets/cast_section.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
   final int movieId;
@@ -47,6 +49,11 @@ class _MovieDetailsContent extends StatelessWidget {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: MediaQuery.of(context).padding.top,
+          ),
+        ),
         _MovieHeroHeader(movie: movie),
         const SliverToBoxAdapter(
           child: SizedBox(height: AppSpacing.xxxl + AppSpacing.md),
@@ -72,6 +79,9 @@ class _MovieDetailsContent extends StatelessWidget {
           ),
         ),
         _MovieOverviewSection(overview: movie.overview),
+        SliverToBoxAdapter(
+          child: _MovieCastSection(movieId: movie.id),
+        ),
         const SliverToBoxAdapter(
           child: SizedBox(
             height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
@@ -226,6 +236,7 @@ class _MovieOverviewSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return SliverPadding(
       padding: const EdgeInsets.all(AppSpacing.lg),
@@ -234,16 +245,14 @@ class _MovieOverviewSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Trama',
+              l10n.overviewTitle,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              overview.isNotEmpty
-                  ? overview
-                  : 'Nessuna descrizione disponibile.',
+              overview.isNotEmpty ? overview : l10n.noDescription,
               style: textTheme.bodyLarge?.copyWith(
                 color: colors.onSurfaceSecondary,
                 height: 1.5,
@@ -291,7 +300,7 @@ class _WatchlistButton extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.bookmark_rounded),
-            label: const Text('Nelle tue Watchlist'),
+            label: Text(AppLocalizations.of(context)!.inYourWatchlists),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
@@ -337,7 +346,7 @@ class _WatchlistButton extends ConsumerWidget {
                     ),
                   )
                 : const Icon(Icons.bookmark_add_rounded, color: Colors.white),
-            label: const Text('Aggiungi alla Watchlist'),
+            label: Text(AppLocalizations.of(context)!.addToWatchlist),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -364,6 +373,25 @@ class _WatchlistButton extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+}
+class _MovieCastSection extends ConsumerWidget {
+  final int movieId;
+
+  const _MovieCastSection({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final creditsAsync = ref.watch(movieCreditsProvider(movieId));
+
+    return creditsAsync.when(
+      data: (cast) => Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+        child: CastSection(cast: cast),
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
     );
   }
 }

@@ -12,7 +12,9 @@ import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/cast_section.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class TVSeriesDetailsPage extends ConsumerWidget {
   final int seriesId;
@@ -51,6 +53,11 @@ class _TVSeriesDetailsContent extends StatelessWidget {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: MediaQuery.of(context).padding.top,
+          ),
+        ),
         // Backdrop & Poster Header
         SliverToBoxAdapter(
           child: Stack(
@@ -211,14 +218,14 @@ class _TVSeriesDetailsContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Trama',
+                  AppLocalizations.of(context)!.overviewTitle,
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  series.overview,
+                  series.overview.isNotEmpty ? series.overview : AppLocalizations.of(context)!.noDescription,
                   style: textTheme.bodyLarge?.copyWith(
                     color: colors.onSurfaceSecondary,
                     height: 1.5,
@@ -230,6 +237,9 @@ class _TVSeriesDetailsContent extends StatelessWidget {
         ),
 
         // Separatore
+        SliverToBoxAdapter(
+          child: _TVSeriesCastSection(seriesId: series.id),
+        ),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
 
         // Sezione episodi
@@ -282,7 +292,7 @@ class _WatchlistButton extends ConsumerWidget {
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
                 : const Icon(Icons.bookmark_rounded),
-            label: const Text('Nelle tue Watchlist'),
+            label: Text(AppLocalizations.of(context)!.inYourWatchlists),
             style: OutlinedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
@@ -328,7 +338,7 @@ class _WatchlistButton extends ConsumerWidget {
                     ),
                   )
                 : const Icon(Icons.bookmark_add_rounded, color: Colors.white),
-            label: const Text('Aggiungi alla Watchlist'),
+            label: Text(AppLocalizations.of(context)!.addToWatchlist),
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
@@ -355,6 +365,25 @@ class _WatchlistButton extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+}
+class _TVSeriesCastSection extends ConsumerWidget {
+  final int seriesId;
+
+  const _TVSeriesCastSection({required this.seriesId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final creditsAsync = ref.watch(tvSeriesCreditsProvider(seriesId));
+
+    return creditsAsync.when(
+      data: (cast) => Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+        child: CastSection(cast: cast),
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
     );
   }
 }

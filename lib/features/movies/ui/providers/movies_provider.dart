@@ -1,6 +1,6 @@
 import 'package:filmania/features/movies/data/repositories/movies_repository_impl.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
-import 'package:filmania/features/movies/domain/entities/movie_credits.dart';
+import 'package:filmania/core/domain/entities/cast_member.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

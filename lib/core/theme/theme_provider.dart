@@ -1,18 +1,35 @@
-import 'package:flutter/material.dart' show ThemeMode;
+import '../l10n/app_localizations_provider.dart';
+import 'app_theme.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'theme_provider.g.dart';
 
-@riverpod
+@Riverpod(keepAlive: true)
 class ThemeModeNotifier extends _$ThemeModeNotifier {
-  @override
-  ThemeMode build() => ThemeMode.dark;
+  static const _themeKey = 'app_theme_mode';
 
-  void toggle() {
-    state = state == ThemeMode.dark ? ThemeMode.light : ThemeMode.dark;
+  @override
+  AppThemeMode build() {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    final savedTheme = prefs.getString(_themeKey);
+    
+    if (savedTheme != null) {
+      return AppThemeMode.values.firstWhere(
+        (e) => e.name == savedTheme,
+        orElse: () => AppThemeMode.dark,
+      );
+    }
+    return AppThemeMode.dark;
   }
 
-  void setMode(ThemeMode mode) {
+  Future<void> setMode(AppThemeMode mode) async {
+    final prefs = ref.watch(sharedPreferencesProvider);
+    await prefs.setString(_themeKey, mode.name);
     state = mode;
+  }
+
+  Future<void> toggle() async {
+    final newMode = state == AppThemeMode.light ? AppThemeMode.dark : AppThemeMode.light;
+    await setMode(newMode);
   }
 }

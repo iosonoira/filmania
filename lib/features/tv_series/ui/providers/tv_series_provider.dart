@@ -1,3 +1,4 @@
+import 'package:filmania/core/domain/entities/cast_member.dart';
 import 'package:filmania/features/tv_series/data/repositories/tv_series_repository_impl.dart';
 import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
 import 'package:filmania/features/tv_series/domain/entities/tv_series.dart';
@@ -67,4 +68,21 @@ class SelectedSeason extends _$SelectedSeason {
   int build(int tvId) => 1;
 
   void select(int seasonNumber) => state = seasonNumber;
+}
+
+@Riverpod(keepAlive: true)
+Future<List<CastMember>> tvSeriesCredits(Ref ref, int tvId) {
+  final repository = ref.watch(tvSeriesRepositoryProvider);
+  return repository.getTVSeriesCredits(tvId);
+}
+
+@Riverpod(keepAlive: true)
+Future<List<CastMember>> tvEpisodeCredits(
+  Ref ref, {
+  required int tvId,
+  required int seasonNumber,
+  required int episodeNumber,
+}) {
+  final repository = ref.watch(tvSeriesRepositoryProvider);
+  return repository.getTVEpisodeCredits(tvId, seasonNumber, episodeNumber);
 }

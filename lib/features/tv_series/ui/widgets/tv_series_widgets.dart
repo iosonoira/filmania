@@ -10,6 +10,7 @@ import '../../domain/entities/tv_season.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class EpisodesSection extends ConsumerWidget {
   final int tvId;
@@ -61,7 +62,7 @@ class _EpisodesSectionHeader extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: Text(
-            'Episodi',
+            AppLocalizations.of(context)!.episodesTitle,
             style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
         ),
@@ -491,7 +492,7 @@ class _EpisodesEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Nessun episodio disponibile',
+              AppLocalizations.of(context)!.noEpisodesAvailable,
               style: textTheme.bodyMedium?.copyWith(
                 color: colors.onSurfaceSecondary,
               ),

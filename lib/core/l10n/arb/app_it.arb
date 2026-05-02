@@ -73,5 +73,28 @@
   "dataSource": "Dati forniti da",
   "chooseLanguage": "Scegli Lingua",
   "themeDark": "Scuro",
-  "themeLight": "Chiaro"
+  "themeLight": "Chiaro",
+  "themeMichele": "Per Michele",
+  "chooseTheme": "Scegli Tema",
+  "overviewTitle": "Trama",
+  "castTitle": "Cast",
+  "episodesTitle": "Episodi",
+  "noEpisodesAvailable": "Nessun episodio disponibile",
+  "noDescription": "Nessuna descrizione disponibile.",
+  "season": "Stagione",
+  "episode": "Episodio",
+  "totalWatchTime": "Tempo Totale",
+  "hoursUnit": "ore",
+  "moviesTitle": "Film",
+  "tvSeriesTitle": "Serie TV",
+  "recentActivity": "Attività Recente",
+  "noRecentActivity": "Nessuna attività recente",
+  "uploadError": "Errore upload: {error}",
+  "@uploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

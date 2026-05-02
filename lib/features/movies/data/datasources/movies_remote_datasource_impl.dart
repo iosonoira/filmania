@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:filmania/core/network/network_failure.dart';
 import 'package:filmania/features/movies/data/datasources/i_movies_remote_datasource.dart';
-import 'package:filmania/features/movies/data/models/cast_member_dto.dart';
+import 'package:filmania/core/data/models/cast_member_dto.dart';
 import 'package:filmania/features/movies/data/models/movie_dto.dart';
 
 class MoviesRemoteDataSourceImpl implements IMoviesRemoteDataSource {

@@ -34,12 +34,25 @@ class MyApp extends ConsumerWidget {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
 
+    final ThemeData theme;
+    switch (themeMode) {
+      case AppThemeMode.light:
+        theme = AppTheme.light();
+        break;
+      case AppThemeMode.dark:
+        theme = AppTheme.dark();
+        break;
+      case AppThemeMode.pureBlack:
+        theme = AppTheme.pureBlack();
+        break;
+    }
+
     return MaterialApp.router(
       title: 'Filmania',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: themeMode,
+      theme: theme,
+      // themeMode is set to the underlying brightness to help system components
+      themeMode: themeMode == AppThemeMode.light ? ThemeMode.light : ThemeMode.dark,
       routerConfig: router,
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

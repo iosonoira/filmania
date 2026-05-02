@@ -1,4 +1,4 @@
-import 'package:filmania/features/movies/data/models/cast_member_dto.dart';
+import 'package:filmania/core/data/models/cast_member_dto.dart';
 import 'package:filmania/features/movies/data/models/movie_dto.dart';
 
 abstract interface class IMoviesRemoteDataSource {

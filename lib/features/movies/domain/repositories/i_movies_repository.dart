@@ -1,5 +1,5 @@
 import 'package:filmania/features/movies/domain/entities/movie.dart';
-import 'package:filmania/features/movies/domain/entities/movie_credits.dart';
+import 'package:filmania/core/domain/entities/cast_member.dart';
 
 abstract class IMoviesRepository {
   Future<List<Movie>> getTrendingMovies({int page = 1});

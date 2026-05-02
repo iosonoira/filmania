@@ -439,6 +439,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Light'**
   String get themeLight;
+
+  /// No description provided for @themeMichele.
+  ///
+  /// In en, this message translates to:
+  /// **'For Michele'**
+  String get themeMichele;
+
+  /// No description provided for @chooseTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Theme'**
+  String get chooseTheme;
+
+  /// No description provided for @overviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overviewTitle;
+
+  /// No description provided for @castTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cast'**
+  String get castTitle;
+
+  /// No description provided for @episodesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Episodes'**
+  String get episodesTitle;
+
+  /// No description provided for @noEpisodesAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No episodes available'**
+  String get noEpisodesAvailable;
+
+  /// No description provided for @noDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'No description available.'**
+  String get noDescription;
+
+  /// No description provided for @season.
+  ///
+  /// In en, this message translates to:
+  /// **'Season'**
+  String get season;
+
+  /// No description provided for @episode.
+  ///
+  /// In en, this message translates to:
+  /// **'Episode'**
+  String get episode;
+
+  /// No description provided for @totalWatchTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Watch Time'**
+  String get totalWatchTime;
+
+  /// No description provided for @hoursUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hoursUnit;
+
+  /// No description provided for @moviesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Movies'**
+  String get moviesTitle;
+
+  /// No description provided for @tvSeriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'TV Series'**
+  String get tvSeriesTitle;
+
+  /// No description provided for @recentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Activity'**
+  String get recentActivity;
+
+  /// No description provided for @noRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'No recent activity'**
+  String get noRecentActivity;
+
+  /// No description provided for @uploadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload error: {error}'**
+  String uploadError(String error);
 }
 
 class _AppLocalizationsDelegate

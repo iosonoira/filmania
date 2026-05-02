@@ -73,5 +73,28 @@
   "dataSource": "Data provided by",
   "chooseLanguage": "Choose Language",
   "themeDark": "Dark",
-  "themeLight": "Light"
+  "themeLight": "Light",
+  "themeMichele": "For Michele",
+  "chooseTheme": "Choose Theme",
+  "overviewTitle": "Overview",
+  "castTitle": "Cast",
+  "episodesTitle": "Episodes",
+  "noEpisodesAvailable": "No episodes available",
+  "noDescription": "No description available.",
+  "season": "Season",
+  "episode": "Episode",
+  "totalWatchTime": "Total Watch Time",
+  "hoursUnit": "hours",
+  "moviesTitle": "Movies",
+  "tvSeriesTitle": "TV Series",
+  "recentActivity": "Recent Activity",
+  "noRecentActivity": "No recent activity",
+  "uploadError": "Upload error: {error}",
+  "@uploadError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

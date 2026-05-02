@@ -5,9 +5,11 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/cast_section.dart';
 import '../../../watched/ui/widgets/watched_episode_button.dart';
 import '../../domain/entities/tv_episode.dart';
 import '../providers/tv_series_provider.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class TVEpisodeDetailsPage extends ConsumerWidget {
   final int tvId;
@@ -83,6 +85,11 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: MediaQuery.of(context).padding.top,
+          ),
+        ),
         // Still Header
         SliverToBoxAdapter(
           child: Stack(
@@ -121,7 +128,7 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'STAGIONE ${episode.seasonNumber} • EPISODIO ${episode.episodeNumber}',
+                      '${AppLocalizations.of(context)!.season.toUpperCase()} ${episode.seasonNumber} • ${AppLocalizations.of(context)!.episode.toUpperCase()} ${episode.episodeNumber}',
                       style: textTheme.labelLarge?.copyWith(
                         color: colors.primary,
                         fontWeight: FontWeight.bold,
@@ -215,16 +222,14 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Trama',
+                  AppLocalizations.of(context)!.overviewTitle,
                   style: textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  episode.overview.isNotEmpty
-                      ? episode.overview
-                      : 'Nessuna descrizione disponibile per questo episodio.',
+                  episode.overview.isNotEmpty ? episode.overview : AppLocalizations.of(context)!.noDescription,
                   style: textTheme.bodyLarge?.copyWith(
                     color: colors.onSurfaceSecondary,
                     height: 1.6,
@@ -235,8 +240,45 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
           ),
         ),
 
+        SliverToBoxAdapter(
+          child: _TVEpisodeCastSection(
+            tvId: seriesId,
+            seasonNumber: episode.seasonNumber,
+            episodeNumber: episode.episodeNumber,
+          ),
+        ),
+
         const SliverToBoxAdapter(child: SizedBox(height: 100)),
       ],
+    );
+  }
+}
+class _TVEpisodeCastSection extends ConsumerWidget {
+  final int tvId;
+  final int seasonNumber;
+  final int episodeNumber;
+
+  const _TVEpisodeCastSection({
+    required this.tvId,
+    required this.seasonNumber,
+    required this.episodeNumber,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final creditsAsync = ref.watch(tvEpisodeCreditsProvider(
+      tvId: tvId,
+      seasonNumber: seasonNumber,
+      episodeNumber: episodeNumber,
+    ));
+
+    return creditsAsync.when(
+      data: (cast) => Padding(
+        padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+        child: CastSection(cast: cast),
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
     );
   }
 }

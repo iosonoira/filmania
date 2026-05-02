@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:filmania/core/network/network_failure.dart';
+import 'package:filmania/core/data/models/cast_member_dto.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
 import 'package:filmania/features/tv_series/data/models/tv_episode_dto.dart';
 import 'package:filmania/features/tv_series/data/models/tv_series_dto.dart';
@@ -88,6 +89,34 @@ class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
       final response =
           await _client.get('tv/$tvId/season/$seasonNumber/episode/$episodeNumber');
       return TVEpisodeDto.fromJson(response.data);
+    } on DioException catch (e) {
+      throw NetworkFailure.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<List<CastMemberDto>> getTVSeriesCredits(int tvId) async {
+    try {
+      final response = await _client.get('tv/$tvId/credits');
+      final List<dynamic> cast = response.data['cast'];
+      return cast.map((json) => CastMemberDto.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw NetworkFailure.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<List<CastMemberDto>> getTVEpisodeCredits(
+    int tvId,
+    int seasonNumber,
+    int episodeNumber,
+  ) async {
+    try {
+      final response = await _client.get(
+        'tv/$tvId/season/$seasonNumber/episode/$episodeNumber/credits',
+      );
+      final List<dynamic> cast = response.data['cast'];
+      return cast.map((json) => CastMemberDto.fromJson(json)).toList();
     } on DioException catch (e) {
       throw NetworkFailure.fromDioException(e);
     }

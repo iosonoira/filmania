@@ -12,6 +12,12 @@ abstract class AppColors {
   static const surfaceDark = Color(0xFF1B1A23);
   static const onSurfacePrimaryDark = Color(0xFFF5F5F5);
   static const onSurfaceSecondaryDark = Color(0xFF938F99);
+  
+  // Pure Black Mode (Michele)
+  static const backgroundPureBlack = Color(0xFF000000);
+  static const surfacePureBlack = Color(0xFF050505);
+  static const onSurfacePrimaryPureBlack = Color(0xFFFFFFFF);
+  static const onSurfaceSecondaryPureBlack = Color(0xFFA0A0A0);
 
   // Light Mode
   static const backgroundLight = Color(0xFFF2F2F7); // Lighter Grey (iOS style)
@@ -27,7 +33,11 @@ abstract class AppColors {
   /// Always use this instead of accessing [Theme.of(context).brightness] directly.
   /// Rule: Never access Theme.of(context) to derive semantic colours.
   static AppColorScheme of(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isPureBlack = theme.scaffoldBackgroundColor == backgroundPureBlack;
+    if (isPureBlack) return _pureBlackScheme;
+    
+    final isDark = theme.brightness == Brightness.dark;
     return isDark ? _darkScheme : _lightScheme;
   }
 
@@ -47,6 +57,16 @@ abstract class AppColors {
     surface: surfaceLight,
     onSurfacePrimary: onSurfacePrimaryLight,
     onSurfaceSecondary: onSurfaceSecondaryLight,
+    accent: primaryLight,
+    error: error,
+  );
+
+  static const _pureBlackScheme = AppColorScheme(
+    primary: primary,
+    background: backgroundPureBlack,
+    surface: surfacePureBlack,
+    onSurfacePrimary: onSurfacePrimaryPureBlack,
+    onSurfaceSecondary: onSurfaceSecondaryPureBlack,
     accent: primaryLight,
     error: error,
   );
