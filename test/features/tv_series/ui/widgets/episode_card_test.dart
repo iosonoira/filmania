@@ -56,6 +56,6 @@ void main() {
   testWidgets('EpisodeCard renders a filled check icon when episode is watched', (tester) async {
     await tester.pumpWidget(_wrap(isWatched: true));
     await tester.pump();
-    expect(find.byIcon(Icons.check_circle_rounded), findsWidgets);
+    expect(find.byIcon(Icons.check_circle_rounded), findsNWidgets(2));
   });
 }

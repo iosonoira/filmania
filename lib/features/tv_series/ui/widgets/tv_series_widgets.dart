@@ -258,8 +258,11 @@ class EpisodeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
-    final watchedEpisodes = ref.watch(watchedEpisodesProvider(tvId)).value ?? [];
-    final isWatched = watchedEpisodes.contains('s${episode.seasonNumber}e${episode.episodeNumber}');
+    final isWatched = ref.watch(isEpisodeWatchedProvider(
+      seriesId: tvId,
+      seasonNumber: episode.seasonNumber,
+      episodeNumber: episode.episodeNumber,
+    )).value ?? false;
 
     return Semantics(
       label: 'Episodio ${episode.episodeNumber}: ${episode.name}',
