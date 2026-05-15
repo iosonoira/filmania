@@ -23,9 +23,6 @@ Widget _wrap({bool isWatched = false}) {
   return ProviderScope(
     overrides: [
       authStateProvider.overrideWith((ref) => Stream.value(null)),
-      watchedEpisodesProvider(1).overrideWith(
-        (ref) => Stream.value(isWatched ? ['s1e1'] : []),
-      ),
       isEpisodeWatchedProvider(
         seriesId: 1,
         seasonNumber: 1,

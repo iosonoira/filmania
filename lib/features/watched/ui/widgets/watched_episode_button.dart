@@ -95,6 +95,9 @@ class WatchedEpisodeButton extends ConsumerWidget {
 
     if (isIconOnly) {
       return IconButton(
+        style: IconButton.styleFrom(
+          backgroundColor: isWatched ? colors.primary.withValues(alpha: 0.14) : Colors.transparent,
+        ),
         icon: Icon(
           isWatched ? Icons.check_circle_rounded : Icons.check_circle_outline_rounded,
           color: isWatched ? colors.primary : colors.onSurfaceSecondary,
