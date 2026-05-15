@@ -244,7 +244,12 @@ class _TVSeriesDetailsContent extends StatelessWidget {
 
         // Sezione episodi
         SliverToBoxAdapter(
-          child: EpisodesSection(tvId: series.id, seasons: series.seasons),
+          child: EpisodesSection(
+            tvId: series.id,
+            seasons: series.seasons,
+            seriesTitle: series.name,
+            seriesPosterPath: series.posterPath,
+          ),
         ),
 
         const SliverToBoxAdapter(

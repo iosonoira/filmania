@@ -11,12 +11,21 @@ import '../providers/tv_series_provider.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import '../../../watched/ui/widgets/watched_episode_button.dart';
 
 class EpisodesSection extends ConsumerWidget {
   final int tvId;
   final List<TVSeason> seasons;
+  final String seriesTitle;
+  final String? seriesPosterPath;
 
-  const EpisodesSection({super.key, required this.tvId, required this.seasons});
+  const EpisodesSection({
+    super.key,
+    required this.tvId,
+    required this.seasons,
+    required this.seriesTitle,
+    this.seriesPosterPath,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +44,12 @@ class EpisodesSection extends ConsumerWidget {
           selectedSeason: selectedSeason,
         ),
         const SizedBox(height: AppSpacing.md),
-        _EpisodesList(tvId: tvId, seasonNumber: selectedSeason),
+        _EpisodesList(
+          tvId: tvId,
+          seasonNumber: selectedSeason,
+          seriesTitle: seriesTitle,
+          seriesPosterPath: seriesPosterPath,
+        ),
       ],
     );
   }
@@ -148,8 +162,15 @@ class _SeasonChip extends StatelessWidget {
 class _EpisodesList extends ConsumerWidget {
   final int tvId;
   final int seasonNumber;
+  final String seriesTitle;
+  final String? seriesPosterPath;
 
-  const _EpisodesList({required this.tvId, required this.seasonNumber});
+  const _EpisodesList({
+    required this.tvId,
+    required this.seasonNumber,
+    required this.seriesTitle,
+    this.seriesPosterPath,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -162,6 +183,8 @@ class _EpisodesList extends ConsumerWidget {
           key: ValueKey('season_$seasonNumber'),
           episodes: episodes,
           tvId: tvId,
+          seriesTitle: seriesTitle,
+          seriesPosterPath: seriesPosterPath,
         ),
         loading: () => _EpisodesLoadingSkeleton(
           key: ValueKey('loading_$seasonNumber'),
@@ -184,11 +207,15 @@ class _EpisodesList extends ConsumerWidget {
 class _EpisodesListContent extends StatelessWidget {
   final List<TVEpisode> episodes;
   final int tvId;
+  final String seriesTitle;
+  final String? seriesPosterPath;
 
   const _EpisodesListContent({
     super.key,
     required this.episodes,
     required this.tvId,
+    required this.seriesTitle,
+    this.seriesPosterPath,
   });
 
   @override
@@ -207,6 +234,8 @@ class _EpisodesListContent extends StatelessWidget {
         key: ValueKey('episode_${episodes[index].id}'),
         episode: episodes[index],
         tvId: tvId,
+        seriesTitle: seriesTitle,
+        seriesPosterPath: seriesPosterPath,
       ),
     );
   }
@@ -215,8 +244,16 @@ class _EpisodesListContent extends StatelessWidget {
 class EpisodeCard extends ConsumerWidget {
   final TVEpisode episode;
   final int tvId;
+  final String seriesTitle;
+  final String? seriesPosterPath;
 
-  const EpisodeCard({super.key, required this.episode, required this.tvId});
+  const EpisodeCard({
+    super.key,
+    required this.episode,
+    required this.tvId,
+    required this.seriesTitle,
+    this.seriesPosterPath,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -242,7 +279,7 @@ class EpisodeCard extends ConsumerWidget {
             color: colors.surface,
             borderRadius: BorderRadius.circular(AppSpacing.md),
             border: Border.all(
-              color: isWatched 
+              color: isWatched
                   ? colors.primary.withValues(alpha: 0.3)
                   : colors.onSurfaceSecondary.withValues(alpha: 0.1),
             ),
@@ -253,7 +290,15 @@ class EpisodeCard extends ConsumerWidget {
               _EpisodeCardThumbnail(episode: episode, isWatched: isWatched),
               const SizedBox(width: AppSpacing.md),
               _EpisodeCardInfo(episode: episode, isWatched: isWatched),
-              const SizedBox(width: AppSpacing.sm),
+              WatchedEpisodeButton(
+                isIconOnly: true,
+                seriesId: tvId,
+                seasonNumber: episode.seasonNumber,
+                episodeNumber: episode.episodeNumber,
+                seriesTitle: seriesTitle,
+                seriesPosterPath: seriesPosterPath,
+                runtimeMinutes: episode.runtime,
+              ),
             ],
           ),
         ),
