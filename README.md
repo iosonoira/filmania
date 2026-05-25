@@ -415,6 +415,11 @@ Tests use `ProviderScope` overrides to inject mock repositories — never Mockit
 
 ---
 
-## License
+## Attribution
 
-MIT License.
+<img src="assets/blue_square_2-d537fb228cf3ded904ef09b136fe3fec72548ebc1fea3fbbd1ad9e36364db38b.svg" alt="TMDB Logo" width="100" />
+
+This application uses TMDB and the TMDB APIs but is not endorsed, certified, or otherwise approved by TMDB.
+
+---
+
