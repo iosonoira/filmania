@@ -26,7 +26,7 @@ class MovieDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: const GlassmorphicAppBar(showBackButton: true),
+      appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
       body: movieAsync.when(
         data: (movie) => _MovieDetailsContent(movie: movie),
         loading: () => const Center(child: CircularProgressIndicator()),

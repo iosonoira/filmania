@@ -34,7 +34,7 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: const GlassmorphicAppBar(showBackButton: true),
+      appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
       body: episodeAsync.when(
         data: (episode) => seriesAsync.when(
           data: (series) => _TVEpisodeDetailsContent(

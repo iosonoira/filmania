@@ -30,6 +30,7 @@ class ProfilePage extends ConsumerWidget {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: GlassmorphicAppBar(
+        showProfileIcon: false,
         actions: [
           IconButton(
             onPressed: () => context.push(AppRoutes.settings),
