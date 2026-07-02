@@ -7,7 +7,12 @@ import 'package:filmania/core/widgets/cast_section.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 const _cast = [
-  CastMember(id: 500, name: 'Uma Thurman', character: 'The Bride', profilePath: null),
+  CastMember(
+    id: 500,
+    name: 'Uma Thurman',
+    character: 'The Bride',
+    profilePath: null,
+  ),
 ];
 
 void main() {
@@ -17,7 +22,8 @@ void main() {
       routes: [
         GoRoute(
           path: '/movie/1',
-          builder: (context, state) => Scaffold(body: const CastSection(cast: _cast)),
+          builder: (context, state) =>
+              const Scaffold(body: CastSection(cast: _cast)),
         ),
         GoRoute(
           path: '/person/:id',
