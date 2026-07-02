@@ -22,8 +22,11 @@ void main() {
     });
 
     test('with year range sets primary_release_date bounds', () {
-      final params =
-          buildMovieDiscoverQueryParams(page: 1, yearFrom: 2000, yearTo: 2010);
+      final params = buildMovieDiscoverQueryParams(
+        page: 1,
+        yearFrom: 2000,
+        yearTo: 2010,
+      );
 
       expect(params['primary_release_date.gte'], '2000-01-01');
       expect(params['primary_release_date.lte'], '2010-12-31');

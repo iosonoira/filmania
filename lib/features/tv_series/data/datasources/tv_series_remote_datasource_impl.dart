@@ -114,8 +114,9 @@ class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
     int episodeNumber,
   ) async {
     try {
-      final response =
-          await _client.get('tv/$tvId/season/$seasonNumber/episode/$episodeNumber');
+      final response = await _client.get(
+        'tv/$tvId/season/$seasonNumber/episode/$episodeNumber',
+      );
       return TVEpisodeDto.fromJson(response.data);
     } on DioException catch (e) {
       throw NetworkFailure.fromDioException(e);

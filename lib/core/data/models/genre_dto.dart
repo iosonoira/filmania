@@ -6,10 +6,7 @@ part 'genre_dto.g.dart';
 
 @freezed
 abstract class GenreDto with _$GenreDto {
-  const factory GenreDto({
-    required int id,
-    required String name,
-  }) = _GenreDto;
+  const factory GenreDto({required int id, required String name}) = _GenreDto;
 
   factory GenreDto.fromJson(Map<String, dynamic> json) =>
       _$GenreDtoFromJson(json);

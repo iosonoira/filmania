@@ -60,7 +60,10 @@ void main() {
 
       notifier.clear();
 
-      expect(container.read(movieDiscoverFiltersProvider), const DiscoverFilters());
+      expect(
+        container.read(movieDiscoverFiltersProvider),
+        const DiscoverFilters(),
+      );
     });
   });
 

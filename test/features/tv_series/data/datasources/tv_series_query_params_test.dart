@@ -23,8 +23,11 @@ void main() {
     });
 
     test('with year range sets first_air_date bounds', () {
-      final params =
-          buildTVDiscoverQueryParams(page: 1, yearFrom: 2015, yearTo: 2020);
+      final params = buildTVDiscoverQueryParams(
+        page: 1,
+        yearFrom: 2015,
+        yearTo: 2020,
+      );
 
       expect(params['first_air_date.gte'], '2015-01-01');
       expect(params['first_air_date.lte'], '2020-12-31');

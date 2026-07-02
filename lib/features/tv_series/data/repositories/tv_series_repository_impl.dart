@@ -61,8 +61,11 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
     int seasonNumber,
     int episodeNumber,
   ) async {
-    final dto =
-        await _remoteDataSource.getTVEpisodeDetails(tvId, seasonNumber, episodeNumber);
+    final dto = await _remoteDataSource.getTVEpisodeDetails(
+      tvId,
+      seasonNumber,
+      episodeNumber,
+    );
     return dto.toEntity();
   }
 
@@ -78,8 +81,11 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
     int seasonNumber,
     int episodeNumber,
   ) async {
-    final dtos =
-        await _remoteDataSource.getTVEpisodeCredits(tvId, seasonNumber, episodeNumber);
+    final dtos = await _remoteDataSource.getTVEpisodeCredits(
+      tvId,
+      seasonNumber,
+      episodeNumber,
+    );
     return dtos.map((dto) => dto.toEntity()).toList();
   }
 
