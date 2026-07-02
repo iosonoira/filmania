@@ -201,7 +201,7 @@ class _DiscoverSearchBar extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       hintText: selectedMediaType == DiscoverMediaType.movie
-                          ? 'Cerca movie, attori, registi...'
+                          ? 'Cerca film, attori, registi...'
                           : 'Cerca serie TV...',
                       hintStyle: textTheme.bodyLarge?.copyWith(
                         color: colors.onSurfaceSecondary,

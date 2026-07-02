@@ -1050,7 +1050,7 @@ class _NavBarItemsRow extends StatelessWidget {
         ),
         _NavBarItem(
           icon: Icons.person_outline_rounded,
-          label: 'Profile',
+          label: 'Profilo',
           isSelected: currentIndex == 3,
           color: colors.onSurfaceSecondary,
           textTheme: textTheme,
