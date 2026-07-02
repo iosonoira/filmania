@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
 
+part 'discover_providers.freezed.dart';
 part 'discover_providers.g.dart';
 
 /// Alias for backward compatibility within the discover UI layer.
@@ -39,4 +41,60 @@ class DebouncedSearchQuery extends _$DebouncedSearchQuery {
       if (ref.mounted) state = query;
     });
   }
+}
+
+@freezed
+abstract class DiscoverFilters with _$DiscoverFilters {
+  const factory DiscoverFilters({
+    @Default(<int>{}) Set<int> genreIds,
+    int? yearFrom,
+    int? yearTo,
+  }) = _DiscoverFilters;
+
+  const DiscoverFilters._();
+
+  bool get isActive =>
+      genreIds.isNotEmpty || yearFrom != null || yearTo != null;
+
+  String get genreIdsKey {
+    if (genreIds.isEmpty) return '';
+    final sorted = genreIds.toList()..sort();
+    return sorted.join(',');
+  }
+}
+
+@riverpod
+class MovieDiscoverFilters extends _$MovieDiscoverFilters {
+  @override
+  DiscoverFilters build() => const DiscoverFilters();
+
+  void toggleGenre(int id) {
+    final updated = Set<int>.from(state.genreIds);
+    if (!updated.remove(id)) updated.add(id);
+    state = state.copyWith(genreIds: updated);
+  }
+
+  void setYearRange(int? from, int? to) {
+    state = state.copyWith(yearFrom: from, yearTo: to);
+  }
+
+  void clear() => state = const DiscoverFilters();
+}
+
+@riverpod
+class TvDiscoverFilters extends _$TvDiscoverFilters {
+  @override
+  DiscoverFilters build() => const DiscoverFilters();
+
+  void toggleGenre(int id) {
+    final updated = Set<int>.from(state.genreIds);
+    if (!updated.remove(id)) updated.add(id);
+    state = state.copyWith(genreIds: updated);
+  }
+
+  void setYearRange(int? from, int? to) {
+    state = state.copyWith(yearFrom: from, yearTo: to);
+  }
+
+  void clear() => state = const DiscoverFilters();
 }

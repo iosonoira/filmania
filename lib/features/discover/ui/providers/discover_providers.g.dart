@@ -165,3 +165,108 @@ abstract class _$DebouncedSearchQuery extends $Notifier<String> {
     element.handleCreate(ref, build);
   }
 }
+
+@ProviderFor(MovieDiscoverFilters)
+final movieDiscoverFiltersProvider = MovieDiscoverFiltersProvider._();
+
+final class MovieDiscoverFiltersProvider
+    extends $NotifierProvider<MovieDiscoverFilters, DiscoverFilters> {
+  MovieDiscoverFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'movieDiscoverFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$movieDiscoverFiltersHash();
+
+  @$internal
+  @override
+  MovieDiscoverFilters create() => MovieDiscoverFilters();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DiscoverFilters value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DiscoverFilters>(value),
+    );
+  }
+}
+
+String _$movieDiscoverFiltersHash() =>
+    r'321c697f2dfa0908797b5377496e626acbd9d1e3';
+
+abstract class _$MovieDiscoverFilters extends $Notifier<DiscoverFilters> {
+  DiscoverFilters build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<DiscoverFilters, DiscoverFilters>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DiscoverFilters, DiscoverFilters>,
+              DiscoverFilters,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
+
+@ProviderFor(TvDiscoverFilters)
+final tvDiscoverFiltersProvider = TvDiscoverFiltersProvider._();
+
+final class TvDiscoverFiltersProvider
+    extends $NotifierProvider<TvDiscoverFilters, DiscoverFilters> {
+  TvDiscoverFiltersProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tvDiscoverFiltersProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvDiscoverFiltersHash();
+
+  @$internal
+  @override
+  TvDiscoverFilters create() => TvDiscoverFilters();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DiscoverFilters value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DiscoverFilters>(value),
+    );
+  }
+}
+
+String _$tvDiscoverFiltersHash() => r'ba748d43a1e3d587c051eb531d3e0879a4d69b2a';
+
+abstract class _$TvDiscoverFilters extends $Notifier<DiscoverFilters> {
+  DiscoverFilters build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<DiscoverFilters, DiscoverFilters>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<DiscoverFilters, DiscoverFilters>,
+              DiscoverFilters,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}
