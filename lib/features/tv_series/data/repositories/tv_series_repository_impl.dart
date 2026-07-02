@@ -1,4 +1,5 @@
 import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/core/domain/entities/genre.dart';
 import 'package:filmania/core/network/tmdb_client.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
 import 'package:filmania/features/tv_series/data/datasources/tv_series_remote_datasource_impl.dart';
@@ -21,8 +22,18 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
   }
 
   @override
-  Future<List<TVSeries>> discoverTVSeries({int page = 1}) async {
-    final dtos = await _remoteDataSource.discoverTVSeries(page: page);
+  Future<List<TVSeries>> discoverTVSeries({
+    int page = 1,
+    List<int> genreIds = const [],
+    int? yearFrom,
+    int? yearTo,
+  }) async {
+    final dtos = await _remoteDataSource.discoverTVSeries(
+      page: page,
+      genreIds: genreIds,
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    );
     return dtos.map((dto) => dto.toEntity()).toList();
   }
 
@@ -69,6 +80,12 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
   ) async {
     final dtos =
         await _remoteDataSource.getTVEpisodeCredits(tvId, seasonNumber, episodeNumber);
+    return dtos.map((dto) => dto.toEntity()).toList();
+  }
+
+  @override
+  Future<List<Genre>> getGenres() async {
+    final dtos = await _remoteDataSource.getGenres();
     return dtos.map((dto) => dto.toEntity()).toList();
   }
 }
