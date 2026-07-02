@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmania/core/domain/entities/crew_member.dart';
+import 'package:filmania/core/router/app_router.dart';
 import 'package:filmania/core/theme/app_colors.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
@@ -64,63 +66,69 @@ class _CrewCard extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return SizedBox(
-      width: 100,
-      child: Column(
-        children: [
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colors.surface,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.1),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: member.fullProfileUrl != null
-                ? CachedNetworkImage(
-                    imageUrl: member.fullProfileUrl!,
-                    fit: BoxFit.cover,
-                    memCacheWidth: 200,
-                    placeholder: (context, url) => Center(
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        color: colors.primary.withValues(alpha: 0.5),
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => context.push(
+        AppRoutes.personDetails.replaceAll(':id', member.id.toString()),
+      ),
+      child: SizedBox(
+        width: 100,
+        child: Column(
+          children: [
+            Container(
+              height: 100,
+              width: 100,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors.surface,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: member.fullProfileUrl != null
+                  ? CachedNetworkImage(
+                      imageUrl: member.fullProfileUrl!,
+                      fit: BoxFit.cover,
+                      memCacheWidth: 200,
+                      placeholder: (context, url) => Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: colors.primary.withValues(alpha: 0.5),
+                        ),
                       ),
-                    ),
-                    errorWidget: (context, url, error) => _CrewFallback(colors: colors),
-                  )
-                : _CrewFallback(colors: colors),
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            member.name,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colors.onSurfacePrimary,
+                      errorWidget: (context, url, error) => _CrewFallback(colors: colors),
+                    )
+                  : _CrewFallback(colors: colors),
             ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            member.job,
-            maxLines: 1,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: textTheme.bodySmall?.copyWith(
-              color: colors.onSurfaceSecondary,
-              fontSize: 10,
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              member.name,
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: colors.onSurfacePrimary,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 2),
+            Text(
+              member.job,
+              maxLines: 1,
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.bodySmall?.copyWith(
+                color: colors.onSurfaceSecondary,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
