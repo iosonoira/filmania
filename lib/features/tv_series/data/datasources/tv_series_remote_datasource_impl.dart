@@ -1,9 +1,27 @@
 import 'package:dio/dio.dart';
+import 'package:meta/meta.dart';
 import 'package:filmania/core/network/network_failure.dart';
 import 'package:filmania/core/data/models/cast_member_dto.dart';
+import 'package:filmania/core/data/models/genre_dto.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
 import 'package:filmania/features/tv_series/data/models/tv_episode_dto.dart';
 import 'package:filmania/features/tv_series/data/models/tv_series_dto.dart';
+
+@visibleForTesting
+Map<String, dynamic> buildTVDiscoverQueryParams({
+  required int page,
+  List<int> genreIds = const [],
+  int? yearFrom,
+  int? yearTo,
+}) {
+  return {
+    'page': page,
+    'sort_by': 'popularity.desc',
+    if (genreIds.isNotEmpty) 'with_genres': genreIds.join('|'),
+    if (yearFrom != null) 'first_air_date.gte': '$yearFrom-01-01',
+    if (yearTo != null) 'first_air_date.lte': '$yearTo-12-31',
+  };
+}
 
 class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
   final Dio _client;
@@ -26,11 +44,21 @@ class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
   }
 
   @override
-  Future<List<TVSeriesDto>> discoverTVSeries({int page = 1}) async {
+  Future<List<TVSeriesDto>> discoverTVSeries({
+    int page = 1,
+    List<int> genreIds = const [],
+    int? yearFrom,
+    int? yearTo,
+  }) async {
     try {
       final response = await _client.get(
         'discover/tv',
-        queryParameters: {'page': page, 'sort_by': 'popularity.desc'},
+        queryParameters: buildTVDiscoverQueryParams(
+          page: page,
+          genreIds: genreIds,
+          yearFrom: yearFrom,
+          yearTo: yearTo,
+        ),
       );
 
       final List<dynamic> results = response.data['results'];
@@ -117,6 +145,17 @@ class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
       );
       final List<dynamic> cast = response.data['cast'];
       return cast.map((json) => CastMemberDto.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw NetworkFailure.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<List<GenreDto>> getGenres() async {
+    try {
+      final response = await _client.get('genre/tv/list');
+      final List<dynamic> genres = response.data['genres'];
+      return genres.map((json) => GenreDto.fromJson(json)).toList();
     } on DioException catch (e) {
       throw NetworkFailure.fromDioException(e);
     }
