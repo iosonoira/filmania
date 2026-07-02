@@ -366,13 +366,8 @@ final class SearchMoviesFamily extends $Family
 final movieCreditsProvider = MovieCreditsFamily._();
 
 final class MovieCreditsProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<CastMember>>,
-          List<CastMember>,
-          FutureOr<List<CastMember>>
-        >
-    with $FutureModifier<List<CastMember>>, $FutureProvider<List<CastMember>> {
+    extends $FunctionalProvider<AsyncValue<Credits>, Credits, FutureOr<Credits>>
+    with $FutureModifier<Credits>, $FutureProvider<Credits> {
   MovieCreditsProvider._({
     required MovieCreditsFamily super.from,
     required int super.argument,
@@ -396,12 +391,11 @@ final class MovieCreditsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<CastMember>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<Credits> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<CastMember>> create(Ref ref) {
+  FutureOr<Credits> create(Ref ref) {
     final argument = this.argument as int;
     return movieCredits(ref, argument);
   }
@@ -417,10 +411,10 @@ final class MovieCreditsProvider
   }
 }
 
-String _$movieCreditsHash() => r'e480a3631048a9e7d9530dff0e691cfc6b256248';
+String _$movieCreditsHash() => r'be53f4639b576bff630ddfc0982b8d0b0a247dab';
 
 final class MovieCreditsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<CastMember>>, int> {
+    with $FunctionalFamilyOverride<FutureOr<Credits>, int> {
   MovieCreditsFamily._()
     : super(
         retry: null,

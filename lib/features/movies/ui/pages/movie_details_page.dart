@@ -13,6 +13,7 @@ import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
 import '../../../../core/widgets/cast_section.dart';
+import 'package:filmania/core/widgets/crew_section.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
@@ -386,9 +387,17 @@ class _MovieCastSection extends ConsumerWidget {
     final creditsAsync = ref.watch(movieCreditsProvider(movieId));
 
     return creditsAsync.when(
-      data: (cast) => Padding(
-        padding: const EdgeInsets.only(bottom: AppSpacing.lg),
-        child: CastSection(cast: cast),
+      data: (credits) => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            child: CastSection(cast: credits.cast),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            child: CrewSection(crew: credits.crew),
+          ),
+        ],
       ),
       loading: () => const SizedBox.shrink(),
       error: (err, stack) => const SizedBox.shrink(),

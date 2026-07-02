@@ -3,7 +3,7 @@ import 'package:filmania/core/network/tmdb_client.dart';
 import 'package:filmania/features/movies/data/datasources/i_movies_remote_datasource.dart';
 import 'package:filmania/features/movies/data/datasources/movies_remote_datasource_impl.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
-import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/core/domain/entities/credits.dart';
 
 import 'package:filmania/features/movies/domain/repositories/i_movies_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -50,9 +50,9 @@ class MoviesRepositoryImpl implements IMoviesRepository {
   }
 
   @override
-  Future<List<CastMember>> getMovieCredits(int movieId) async {
-    final dtos = await _remoteDataSource.getMovieCredits(movieId);
-    return dtos.map((dto) => dto.toEntity()).toList();
+  Future<Credits> getMovieCredits(int movieId) async {
+    final dto = await _remoteDataSource.getMovieCredits(movieId);
+    return dto.toEntity();
   }
 
   @override
