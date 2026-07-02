@@ -1,3 +1,4 @@
+import 'package:filmania/core/domain/entities/genre.dart';
 import 'package:filmania/core/network/tmdb_client.dart';
 import 'package:filmania/features/movies/data/datasources/i_movies_remote_datasource.dart';
 import 'package:filmania/features/movies/data/datasources/movies_remote_datasource_impl.dart';
@@ -21,8 +22,18 @@ class MoviesRepositoryImpl implements IMoviesRepository {
   }
 
   @override
-  Future<List<Movie>> discoverMovies({int page = 1}) async {
-    final dtos = await _remoteDataSource.discoverMovies(page: page);
+  Future<List<Movie>> discoverMovies({
+    int page = 1,
+    List<int> genreIds = const [],
+    int? yearFrom,
+    int? yearTo,
+  }) async {
+    final dtos = await _remoteDataSource.discoverMovies(
+      page: page,
+      genreIds: genreIds,
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    );
     return dtos.map((dto) => dto.toEntity()).toList();
   }
 
@@ -41,6 +52,12 @@ class MoviesRepositoryImpl implements IMoviesRepository {
   @override
   Future<List<CastMember>> getMovieCredits(int movieId) async {
     final dtos = await _remoteDataSource.getMovieCredits(movieId);
+    return dtos.map((dto) => dto.toEntity()).toList();
+  }
+
+  @override
+  Future<List<Genre>> getGenres() async {
+    final dtos = await _remoteDataSource.getGenres();
     return dtos.map((dto) => dto.toEntity()).toList();
   }
 }
