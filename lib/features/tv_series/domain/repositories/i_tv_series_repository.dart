@@ -1,4 +1,5 @@
 import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/core/domain/entities/credits.dart';
 import 'package:filmania/core/domain/entities/genre.dart';
 import '../entities/tv_episode.dart';
 import '../entities/tv_series.dart';
@@ -19,7 +20,7 @@ abstract class ITVSeriesRepository {
     int seasonNumber,
     int episodeNumber,
   );
-  Future<List<CastMember>> getTVSeriesCredits(int tvId);
+  Future<Credits> getTVSeriesCredits(int tvId);
   Future<List<CastMember>> getTVEpisodeCredits(
     int tvId,
     int seasonNumber,

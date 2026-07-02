@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:filmania/core/network/network_failure.dart';
 import 'package:filmania/core/data/models/cast_member_dto.dart';
+import 'package:filmania/core/data/models/credits_dto.dart';
 import 'package:filmania/core/data/models/genre_dto.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
 import 'package:filmania/features/tv_series/data/models/tv_episode_dto.dart';
@@ -124,11 +125,10 @@ class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
   }
 
   @override
-  Future<List<CastMemberDto>> getTVSeriesCredits(int tvId) async {
+  Future<CreditsDto> getTVSeriesCredits(int tvId) async {
     try {
       final response = await _client.get('tv/$tvId/credits');
-      final List<dynamic> cast = response.data['cast'];
-      return cast.map((json) => CastMemberDto.fromJson(json)).toList();
+      return CreditsDto.fromJson(response.data);
     } on DioException catch (e) {
       throw NetworkFailure.fromDioException(e);
     }

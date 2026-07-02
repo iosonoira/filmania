@@ -1,4 +1,5 @@
 import 'package:filmania/core/data/models/cast_member_dto.dart';
+import 'package:filmania/core/data/models/credits_dto.dart';
 import 'package:filmania/core/data/models/genre_dto.dart';
 import '../models/tv_episode_dto.dart';
 import '../models/tv_series_dto.dart';
@@ -19,7 +20,7 @@ abstract class ITVSeriesRemoteDataSource {
     int seasonNumber,
     int episodeNumber,
   );
-  Future<List<CastMemberDto>> getTVSeriesCredits(int tvId);
+  Future<CreditsDto> getTVSeriesCredits(int tvId);
   Future<List<CastMemberDto>> getTVEpisodeCredits(
     int tvId,
     int seasonNumber,

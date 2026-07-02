@@ -1,4 +1,5 @@
 import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/core/domain/entities/credits.dart';
 import 'package:filmania/core/domain/entities/genre.dart';
 import 'package:filmania/core/network/tmdb_client.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
@@ -70,9 +71,9 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
   }
 
   @override
-  Future<List<CastMember>> getTVSeriesCredits(int tvId) async {
-    final dtos = await _remoteDataSource.getTVSeriesCredits(tvId);
-    return dtos.map((dto) => dto.toEntity()).toList();
+  Future<Credits> getTVSeriesCredits(int tvId) async {
+    final dto = await _remoteDataSource.getTVSeriesCredits(tvId);
+    return dto.toEntity();
   }
 
   @override

@@ -629,13 +629,8 @@ abstract class _$SelectedSeason extends $Notifier<int> {
 final tvSeriesCreditsProvider = TvSeriesCreditsFamily._();
 
 final class TvSeriesCreditsProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<CastMember>>,
-          List<CastMember>,
-          FutureOr<List<CastMember>>
-        >
-    with $FutureModifier<List<CastMember>>, $FutureProvider<List<CastMember>> {
+    extends $FunctionalProvider<AsyncValue<Credits>, Credits, FutureOr<Credits>>
+    with $FutureModifier<Credits>, $FutureProvider<Credits> {
   TvSeriesCreditsProvider._({
     required TvSeriesCreditsFamily super.from,
     required int super.argument,
@@ -659,12 +654,11 @@ final class TvSeriesCreditsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<CastMember>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<Credits> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<CastMember>> create(Ref ref) {
+  FutureOr<Credits> create(Ref ref) {
     final argument = this.argument as int;
     return tvSeriesCredits(ref, argument);
   }
@@ -680,10 +674,10 @@ final class TvSeriesCreditsProvider
   }
 }
 
-String _$tvSeriesCreditsHash() => r'b2490d11016c1e1cbef62286e93d39f1d52876d5';
+String _$tvSeriesCreditsHash() => r'5744e55e371663d3965adf014e8f11e6725ccfb6';
 
 final class TvSeriesCreditsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<CastMember>>, int> {
+    with $FunctionalFamilyOverride<FutureOr<Credits>, int> {
   TvSeriesCreditsFamily._()
     : super(
         retry: null,
