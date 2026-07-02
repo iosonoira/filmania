@@ -1,7 +1,7 @@
 # Discover Filters (Genre + Year Range) — Design
 
 Date: 2026-07-02
-Status: Approved
+Status: Implemented (manual UI smoke test outstanding — see plan Task 10)
 
 ## Problem
 
