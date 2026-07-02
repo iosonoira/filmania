@@ -69,6 +69,7 @@
   "language": "Language",
   "theme": "Theme",
   "infoSection": "Information",
+  "accountSection": "Account",
   "version": "Version",
   "dataSource": "Data provided by",
   "chooseLanguage": "Choose Language",

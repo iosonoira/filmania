@@ -71,20 +71,6 @@ class ProfilePage extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.xl),
                 const _RecentActivitySection(),
                 const SizedBox(height: AppSpacing.xl),
-                Center(
-                  child: OutlinedButton(
-                    onPressed: () => ref.read(authProvider.notifier).logout(),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: colors.error,
-                      side: BorderSide(color: colors.error.withValues(alpha: 0.5)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(100),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 12),
-                    ),
-                    child: Text(l10n.signOut),
-                  ),
-                ),
                 const SizedBox(height: 120),
               ]),
             ),

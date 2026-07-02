@@ -171,6 +171,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get infoSection => 'Information';
 
   @override
+  String get accountSection => 'Account';
+
+  @override
   String get version => 'Version';
 
   @override

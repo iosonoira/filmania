@@ -410,6 +410,12 @@ abstract class AppLocalizations {
   /// **'Information'**
   String get infoSection;
 
+  /// No description provided for @accountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get accountSection;
+
   /// No description provided for @version.
   ///
   /// In en, this message translates to:

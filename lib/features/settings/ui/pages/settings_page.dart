@@ -4,6 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/widgets/glassmorphic_app_bar.dart';
+import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
 
 class SettingsPage extends ConsumerWidget {
@@ -75,6 +76,37 @@ class SettingsPage extends ConsumerWidget {
                       icon: Icons.attribution_rounded,
                       title: l10n.dataSource,
                       subtitle: 'TMDB API',
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: AppSpacing.xl),
+
+                _SettingsSection(
+                  title: l10n.accountSection,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
+                      child: Center(
+                        child: OutlinedButton(
+                          onPressed: () =>
+                              ref.read(authProvider.notifier).logout(),
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: colors.error,
+                            side: BorderSide(
+                              color: colors.error.withValues(alpha: 0.5),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 48,
+                              vertical: 12,
+                            ),
+                          ),
+                          child: Text(l10n.signOut),
+                        ),
+                      ),
                     ),
                   ],
                 ),

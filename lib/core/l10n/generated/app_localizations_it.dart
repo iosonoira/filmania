@@ -170,6 +170,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get infoSection => 'Informazioni';
 
   @override
+  String get accountSection => 'Account';
+
+  @override
   String get version => 'Versione';
 
   @override
