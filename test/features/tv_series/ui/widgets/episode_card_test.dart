@@ -44,15 +44,32 @@ Widget _wrap({bool isWatched = false}) {
 }
 
 void main() {
-  testWidgets('EpisodeCard renders a toggle button when episode is not watched', (tester) async {
-    await tester.pumpWidget(_wrap(isWatched: false));
-    await tester.pump();
-    expect(find.byIcon(Icons.check_circle_outline_rounded), findsOneWidget);
-  });
+  testWidgets(
+    'EpisodeCard renders a toggle button when episode is not watched',
+    (tester) async {
+      await tester.pumpWidget(_wrap(isWatched: false));
+      await tester.pump();
+      expect(find.byIcon(Icons.check_circle_outline_rounded), findsOneWidget);
+    },
+  );
 
-  testWidgets('EpisodeCard renders a filled check icon when episode is watched', (tester) async {
-    await tester.pumpWidget(_wrap(isWatched: true));
-    await tester.pump();
-    expect(find.byIcon(Icons.check_circle_rounded), findsNWidgets(2));
-  });
+  testWidgets(
+    'EpisodeCard renders a filled check icon when episode is watched',
+    (tester) async {
+      await tester.pumpWidget(_wrap(isWatched: true));
+      await tester.pump();
+      expect(find.byIcon(Icons.check_circle_rounded), findsNWidgets(2));
+    },
+  );
+
+  testWidgets(
+    'EpisodeCard does not show a vote star even when voteAverage > 0',
+    (tester) async {
+      await tester.pumpWidget(_wrap(isWatched: false));
+      await tester.pump();
+
+      expect(find.byIcon(Icons.star_rounded), findsNothing);
+      expect(find.text('8.9'), findsNothing);
+    },
+  );
 }

@@ -186,9 +186,8 @@ class _EpisodesList extends ConsumerWidget {
           seriesTitle: seriesTitle,
           seriesPosterPath: seriesPosterPath,
         ),
-        loading: () => _EpisodesLoadingSkeleton(
-          key: ValueKey('loading_$seasonNumber'),
-        ),
+        loading: () =>
+            _EpisodesLoadingSkeleton(key: ValueKey('loading_$seasonNumber')),
         error: (err, _) => Padding(
           key: ValueKey('error_$seasonNumber'),
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
@@ -258,11 +257,17 @@ class EpisodeCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
-    final isWatched = ref.watch(isEpisodeWatchedProvider(
-      seriesId: tvId,
-      seasonNumber: episode.seasonNumber,
-      episodeNumber: episode.episodeNumber,
-    )).value ?? false;
+    final isWatched =
+        ref
+            .watch(
+              isEpisodeWatchedProvider(
+                seriesId: tvId,
+                seasonNumber: episode.seasonNumber,
+                episodeNumber: episode.episodeNumber,
+              ),
+            )
+            .value ??
+        false;
 
     return Semantics(
       label: 'Episodio ${episode.episodeNumber}: ${episode.name}',
@@ -273,7 +278,10 @@ class EpisodeCard extends ConsumerWidget {
             AppRoutes.tvEpisodeDetails
                 .replaceFirst(':id', tvId.toString())
                 .replaceFirst(':seasonNumber', episode.seasonNumber.toString())
-                .replaceFirst(':episodeNumber', episode.episodeNumber.toString()),
+                .replaceFirst(
+                  ':episodeNumber',
+                  episode.episodeNumber.toString(),
+                ),
           );
         },
         child: Container(
@@ -336,8 +344,9 @@ class _EpisodeCardThumbnail extends StatelessWidget {
                       imageUrl: episode.fullStillUrl!,
                       fit: BoxFit.cover,
                       memCacheWidth: 320,
-                      placeholder: (context, url) =>
-                          Container(color: colors.surface.withValues(alpha: 0.1)),
+                      placeholder: (context, url) => Container(
+                        color: colors.surface.withValues(alpha: 0.1),
+                      ),
                       errorWidget: (context, url, error) =>
                           _EpisodeCardThumbnailFallback(colors: colors),
                     )
@@ -354,7 +363,11 @@ class _EpisodeCardThumbnail extends StatelessWidget {
                   color: colors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.check_rounded, color: Colors.white, size: 12),
+                child: const Icon(
+                  Icons.check_rounded,
+                  color: Colors.white,
+                  size: 12,
+                ),
               ),
             ),
         ],
@@ -463,17 +476,6 @@ class _EpisodeCardNumberRow extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Text(
             '${episode.runtime} min',
-            style: textTheme.labelSmall?.copyWith(
-              color: colors.onSurfaceSecondary,
-            ),
-          ),
-        ],
-        if (episode.voteAverage > 0) ...[
-          const SizedBox(width: AppSpacing.sm),
-          const Icon(Icons.star_rounded, color: Colors.amber, size: 12),
-          const SizedBox(width: 2),
-          Text(
-            episode.voteAverage.toStringAsFixed(1),
             style: textTheme.labelSmall?.copyWith(
               color: colors.onSurfaceSecondary,
             ),
