@@ -5,25 +5,26 @@ import 'package:filmania/core/theme/app_colors.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/core/theme/theme_provider.dart';
-import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/router/app_router.dart';
 
 class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showBackButton;
   final List<Widget>? actions;
+  final bool showProfileIcon;
+  final bool minimal;
 
   const GlassmorphicAppBar({
     super.key,
     this.showBackButton = false,
     this.actions,
+    this.showProfileIcon = true,
+    this.minimal = false,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
-    final l10n = ref.watch(appLocalizationsProvider);
-    final themeMode = ref.watch(themeModeProvider);
 
     return GlassOverlay(
       child: SafeArea(
@@ -46,67 +47,26 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
                     ),
                     const SizedBox(width: AppSpacing.sm),
                   ],
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: colors.primary.withValues(alpha: 0.2),
-                        width: 2,
+                  if (!minimal)
+                    Text(
+                      'Filmania',
+                      style: textTheme.titleLarge?.copyWith(
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.bold,
+                        color: colors.primary,
+                        letterSpacing: -0.5,
                       ),
-                      color: colors.primary.withValues(alpha: 0.1),
                     ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Builder(
-                      builder: (context) {
-                        final authState = ref.watch(authStateProvider);
-                        final photoUrl = authState.value?.photoUrl;
-                        return photoUrl != null && photoUrl.isNotEmpty
-                            ? Image.network(
-                                photoUrl,
-                                fit: BoxFit.cover,
-                                errorBuilder: (_, _, _) => Icon(Icons.person, color: colors.primary),
-                              )
-                            : Icon(Icons.person, color: colors.primary);
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.md),
-                  Text(
-                    'Filmania',
-                    style: textTheme.titleLarge?.copyWith(
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.bold,
-                      color: colors.primary,
-                      letterSpacing: -0.5,
-                    ),
-                  ),
                 ],
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (actions != null) ...actions!,
-                  Semantics(
-                    label: l10n.toggleTheme,
-                    button: true,
-                    child: IconButton(
-                      onPressed: () =>
-                          ref.read(themeModeProvider.notifier).toggle(),
-                      icon: Icon(
-                        themeMode != AppThemeMode.light
-                            ? Icons.light_mode_rounded
-                            : Icons.dark_mode_rounded,
-                      ),
-                      color: colors.primary,
-                      tooltip: l10n.toggleTheme,
-                      splashColor: colors.primary.withValues(alpha: 0.1),
-                      highlightColor: colors.primary.withValues(alpha: 0.1),
-                    ),
-                  ),
-                ],
-              ),
+              if (!minimal)
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (actions != null) ...actions!,
+                    if (showProfileIcon) const _ProfileAvatarButton(),
+                  ],
+                ),
             ],
           ),
         ),
@@ -117,4 +77,44 @@ class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize =>
       const Size.fromHeight(kToolbarHeight + AppSpacing.md * 2);
+}
+
+class _ProfileAvatarButton extends ConsumerWidget {
+  const _ProfileAvatarButton();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = AppColors.of(context);
+    final authState = ref.watch(authStateProvider);
+    final photoUrl = authState.value?.photoUrl;
+
+    return Semantics(
+      label: 'Profilo',
+      button: true,
+      child: GestureDetector(
+        onTap: () => context.push(AppRoutes.profile),
+        child: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: colors.primary.withValues(alpha: 0.2),
+              width: 2,
+            ),
+            color: colors.primary.withValues(alpha: 0.1),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: photoUrl != null && photoUrl.isNotEmpty
+              ? Image.network(
+                  photoUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) =>
+                      Icon(Icons.person, color: colors.primary),
+                )
+              : Icon(Icons.person, color: colors.primary),
+        ),
+      ),
+    );
+  }
 }
