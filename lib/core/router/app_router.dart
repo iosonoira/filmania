@@ -115,10 +115,11 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
-          if (id == null)
+          if (id == null) {
             return const Scaffold(
               body: Center(child: Text('Pagina non trovata')),
             );
+          }
           return MovieDetailsPage(movieId: id);
         },
       ),
@@ -127,10 +128,11 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
-          if (id == null)
+          if (id == null) {
             return const Scaffold(
               body: Center(child: Text('Pagina non trovata')),
             );
+          }
           return TVSeriesDetailsPage(seriesId: id);
         },
       ),
@@ -139,10 +141,11 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
-          if (id == null)
+          if (id == null) {
             return const Scaffold(
               body: Center(child: Text('Pagina non trovata')),
             );
+          }
           return PersonDetailsPage(personId: id);
         },
       ),
@@ -174,10 +177,11 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.watchlistDetail,
         builder: (context, state) {
           final id = state.pathParameters['id'];
-          if (id == null)
+          if (id == null) {
             return const Scaffold(
               body: Center(child: Text('Pagina non trovata')),
             );
+          }
           return WatchlistDetailPage(watchlistId: id);
         },
       ),
