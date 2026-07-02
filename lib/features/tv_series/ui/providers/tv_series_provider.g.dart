@@ -105,7 +105,8 @@ final class DiscoverTVSeriesProvider
     extends $AsyncNotifierProvider<DiscoverTVSeries, List<TVSeries>> {
   DiscoverTVSeriesProvider._({
     required DiscoverTVSeriesFamily super.from,
-    required int super.argument,
+    required ({int page, String genreIds, int? yearFrom, int? yearTo})
+    super.argument,
   }) : super(
          retry: null,
          name: r'discoverTVSeriesProvider',
@@ -121,7 +122,7 @@ final class DiscoverTVSeriesProvider
   String toString() {
     return r'discoverTVSeriesProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -139,7 +140,7 @@ final class DiscoverTVSeriesProvider
   }
 }
 
-String _$discoverTVSeriesHash() => r'713a8f24f5e927326e3f8eb1b48d033d478cf025';
+String _$discoverTVSeriesHash() => r'd64339558d7fcd1412955d3594efb4212086fabe';
 
 final class DiscoverTVSeriesFamily extends $Family
     with
@@ -148,7 +149,7 @@ final class DiscoverTVSeriesFamily extends $Family
           AsyncValue<List<TVSeries>>,
           List<TVSeries>,
           FutureOr<List<TVSeries>>,
-          int
+          ({int page, String genreIds, int? yearFrom, int? yearTo})
         > {
   DiscoverTVSeriesFamily._()
     : super(
@@ -159,18 +160,39 @@ final class DiscoverTVSeriesFamily extends $Family
         isAutoDispose: true,
       );
 
-  DiscoverTVSeriesProvider call({int page = 1}) =>
-      DiscoverTVSeriesProvider._(argument: page, from: this);
+  DiscoverTVSeriesProvider call({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  }) => DiscoverTVSeriesProvider._(
+    argument: (
+      page: page,
+      genreIds: genreIds,
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    ),
+    from: this,
+  );
 
   @override
   String toString() => r'discoverTVSeriesProvider';
 }
 
 abstract class _$DiscoverTVSeries extends $AsyncNotifier<List<TVSeries>> {
-  late final _$args = ref.$arg as int;
-  int get page => _$args;
+  late final _$args =
+      ref.$arg as ({int page, String genreIds, int? yearFrom, int? yearTo});
+  int get page => _$args.page;
+  String get genreIds => _$args.genreIds;
+  int? get yearFrom => _$args.yearFrom;
+  int? get yearTo => _$args.yearTo;
 
-  FutureOr<List<TVSeries>> build({int page = 1});
+  FutureOr<List<TVSeries>> build({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  });
   @$mustCallSuper
   @override
   void runBuild() {
@@ -183,7 +205,15 @@ abstract class _$DiscoverTVSeries extends $AsyncNotifier<List<TVSeries>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(page: _$args));
+    element.handleCreate(
+      ref,
+      () => build(
+        page: _$args.page,
+        genreIds: _$args.genreIds,
+        yearFrom: _$args.yearFrom,
+        yearTo: _$args.yearTo,
+      ),
+    );
   }
 }
 
@@ -764,3 +794,42 @@ final class TvEpisodeCreditsFamily extends $Family
   @override
   String toString() => r'tvEpisodeCreditsProvider';
 }
+
+@ProviderFor(tvGenres)
+final tvGenresProvider = TvGenresProvider._();
+
+final class TvGenresProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Genre>>,
+          List<Genre>,
+          FutureOr<List<Genre>>
+        >
+    with $FutureModifier<List<Genre>>, $FutureProvider<List<Genre>> {
+  TvGenresProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tvGenresProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvGenresHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Genre>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Genre>> create(Ref ref) {
+    return tvGenres(ref);
+  }
+}
+
+String _$tvGenresHash() => r'd1304ccd2001601d55ba261dc9d0f5d328d160ee';

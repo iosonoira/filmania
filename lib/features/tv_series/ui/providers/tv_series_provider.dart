@@ -1,4 +1,5 @@
 import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/core/domain/entities/genre.dart';
 import 'package:filmania/features/tv_series/data/repositories/tv_series_repository_impl.dart';
 import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
 import 'package:filmania/features/tv_series/domain/entities/tv_series.dart';
@@ -13,23 +14,27 @@ class TrendingTVSeries extends _$TrendingTVSeries {
     final repository = ref.watch(tvSeriesRepositoryProvider);
     return repository.getTrendingTVSeries(page: page);
   }
-
-  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
-  // @override
-  // PersistenceConfig get persistence => PersistenceConfig(key: 'trending_tv_p$page');
 }
 
 @riverpod
 class DiscoverTVSeries extends _$DiscoverTVSeries {
   @override
-  FutureOr<List<TVSeries>> build({int page = 1}) async {
+  FutureOr<List<TVSeries>> build({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  }) async {
     final repository = ref.watch(tvSeriesRepositoryProvider);
-    return repository.discoverTVSeries(page: page);
+    return repository.discoverTVSeries(
+      page: page,
+      genreIds: genreIds.isEmpty
+          ? const []
+          : genreIds.split(',').map(int.parse).toList(),
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    );
   }
-
-  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
-  // @override
-  // PersistenceConfig get persistence => PersistenceConfig(key: 'discover_tv_p$page');
 }
 
 @Riverpod(keepAlive: true)
@@ -85,4 +90,10 @@ Future<List<CastMember>> tvEpisodeCredits(
 }) {
   final repository = ref.watch(tvSeriesRepositoryProvider);
   return repository.getTVEpisodeCredits(tvId, seasonNumber, episodeNumber);
+}
+
+@Riverpod(keepAlive: true)
+Future<List<Genre>> tvGenres(Ref ref) {
+  final repository = ref.watch(tvSeriesRepositoryProvider);
+  return repository.getGenres();
 }
