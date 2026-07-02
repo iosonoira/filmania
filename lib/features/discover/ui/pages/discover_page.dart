@@ -20,8 +20,18 @@ class DiscoverPage extends ConsumerWidget {
     final typingQuery = ref.watch(movieSearchQueryProvider);
     final query = ref.watch(debouncedSearchQueryProvider);
     final selectedMediaType = ref.watch(selectedMediaTypeProvider);
+    final movieFilters = ref.watch(movieDiscoverFiltersProvider);
+    final tvFilters = ref.watch(tvDiscoverFiltersProvider);
+    final activeFilters = selectedMediaType == DiscoverMediaType.movie
+        ? movieFilters
+        : tvFilters;
     final isDebouncing = typingQuery != query && typingQuery.isNotEmpty;
-    final discoverAsync = _buildDiscoverAsync(ref, query, selectedMediaType);
+    final discoverAsync = _buildDiscoverAsync(
+      ref,
+      query,
+      selectedMediaType,
+      activeFilters,
+    );
 
     return Scaffold(
       extendBody: true,
@@ -32,7 +42,10 @@ class DiscoverPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
+              height:
+                  MediaQuery.of(context).padding.top +
+                  kToolbarHeight +
+                  AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -54,6 +67,9 @@ class DiscoverPage extends ConsumerWidget {
                   _DiscoverSearchBar(
                     selectedMediaType: selectedMediaType,
                     isDebouncing: isDebouncing,
+                    isFiltersActive: activeFilters.isActive,
+                    onFiltersTap: () =>
+                        _showFiltersSheet(context, selectedMediaType),
                     onChanged: (value) {
                       ref.read(movieSearchQueryProvider.notifier).update(value);
                       ref
@@ -70,6 +86,7 @@ class DiscoverPage extends ConsumerWidget {
             discoverAsync: discoverAsync,
             selectedMediaType: selectedMediaType,
             query: query,
+            filters: activeFilters,
             ref: ref,
           ),
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
@@ -82,16 +99,44 @@ class DiscoverPage extends ConsumerWidget {
     WidgetRef ref,
     String query,
     DiscoverMediaType selectedMediaType,
+    DiscoverFilters filters,
   ) {
     if (query.isEmpty) {
       return selectedMediaType == DiscoverMediaType.movie
-          ? ref.watch(discoverMoviesProvider())
-          : ref.watch(discoverTVSeriesProvider()).whenData((l) => l);
+          ? ref.watch(
+              discoverMoviesProvider(
+                genreIds: filters.genreIdsKey,
+                yearFrom: filters.yearFrom,
+                yearTo: filters.yearTo,
+              ),
+            )
+          : ref
+                .watch(
+                  discoverTVSeriesProvider(
+                    genreIds: filters.genreIdsKey,
+                    yearFrom: filters.yearFrom,
+                    yearTo: filters.yearTo,
+                  ),
+                )
+                .whenData((l) => l);
     }
     return selectedMediaType == DiscoverMediaType.movie
         ? ref.watch(searchMoviesProvider(query))
         : ref.watch(searchTVSeriesProvider(query)).whenData((l) => l);
   }
+}
+
+void _showFiltersSheet(
+  BuildContext context,
+  DiscoverMediaType selectedMediaType,
+) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (context) =>
+        _FiltersSheetContent(selectedMediaType: selectedMediaType),
+  );
 }
 
 class _DiscoverHeader extends StatelessWidget {
@@ -124,17 +169,19 @@ class _DiscoverHeader extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(AppSpacing.xs),
           decoration: BoxDecoration(
-            color: Theme.of(context).brightness == Brightness.dark 
-                ? colors.surface.withValues(alpha: 0.5) 
+            color: Theme.of(context).brightness == Brightness.dark
+                ? colors.surface.withValues(alpha: 0.5)
                 : colors.surface,
             borderRadius: BorderRadius.circular(AppSpacing.radius),
-            boxShadow: Theme.of(context).brightness == Brightness.dark ? null : [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            boxShadow: Theme.of(context).brightness == Brightness.dark
+                ? null
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.05),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -162,11 +209,15 @@ class _DiscoverSearchBar extends StatelessWidget {
     required this.selectedMediaType,
     required this.onChanged,
     required this.isDebouncing,
+    required this.isFiltersActive,
+    required this.onFiltersTap,
   });
 
   final DiscoverMediaType selectedMediaType;
   final ValueChanged<String> onChanged;
   final bool isDebouncing;
+  final bool isFiltersActive;
+  final VoidCallback onFiltersTap;
 
   @override
   Widget build(BuildContext context) {
@@ -215,7 +266,7 @@ class _DiscoverSearchBar extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
-                Icon(Icons.tune_rounded, color: colors.onSurfaceSecondary),
+                _FiltersButton(isActive: isFiltersActive, onTap: onFiltersTap),
               ],
             ),
           ),
@@ -236,17 +287,317 @@ class _DiscoverSearchBar extends StatelessWidget {
   }
 }
 
+class _FiltersButton extends StatelessWidget {
+  const _FiltersButton({required this.isActive, required this.onTap});
+
+  final bool isActive;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
+    return Semantics(
+      label: 'Filtri',
+      button: true,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Icon(Icons.tune_rounded, color: colors.onSurfaceSecondary),
+            if (isActive)
+              Positioned(
+                top: -2,
+                right: -2,
+                child: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: colors.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FiltersSheetContent extends StatelessWidget {
+  const _FiltersSheetContent({required this.selectedMediaType});
+
+  final DiscoverMediaType selectedMediaType;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      decoration: BoxDecoration(
+        color: AppColors.of(context).background,
+        borderRadius: const BorderRadius.vertical(
+          top: Radius.circular(AppSpacing.radius),
+        ),
+      ),
+      child: SafeArea(
+        top: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _FiltersSheetHeader(selectedMediaType: selectedMediaType),
+            const SizedBox(height: AppSpacing.lg),
+            _GenreFilterSection(selectedMediaType: selectedMediaType),
+            const SizedBox(height: AppSpacing.xl),
+            _YearRangeFilterSection(selectedMediaType: selectedMediaType),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FiltersSheetHeader extends ConsumerWidget {
+  const _FiltersSheetHeader({required this.selectedMediaType});
+
+  final DiscoverMediaType selectedMediaType;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = AppColors.of(context);
+    final isMovie = selectedMediaType == DiscoverMediaType.movie;
+    final filters = isMovie
+        ? ref.watch(movieDiscoverFiltersProvider)
+        : ref.watch(tvDiscoverFiltersProvider);
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Filtri',
+          style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+        ),
+        if (filters.isActive)
+          TextButton(
+            onPressed: () => isMovie
+                ? ref.read(movieDiscoverFiltersProvider.notifier).clear()
+                : ref.read(tvDiscoverFiltersProvider.notifier).clear(),
+            child: Text(
+              'Cancella filtri',
+              style: TextStyle(color: colors.error),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _GenreFilterSection extends ConsumerWidget {
+  const _GenreFilterSection({required this.selectedMediaType});
+
+  final DiscoverMediaType selectedMediaType;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = AppColors.of(context);
+    final isMovie = selectedMediaType == DiscoverMediaType.movie;
+    final genresAsync = isMovie
+        ? ref.watch(movieGenresProvider)
+        : ref.watch(tvGenresProvider);
+    final filters = isMovie
+        ? ref.watch(movieDiscoverFiltersProvider)
+        : ref.watch(tvDiscoverFiltersProvider);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'GENERE',
+          style: textTheme.labelSmall?.copyWith(
+            color: colors.onSurfaceSecondary,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        genresAsync.when(
+          data: (genres) => Wrap(
+            spacing: AppSpacing.sm,
+            runSpacing: AppSpacing.sm,
+            children: genres
+                .map(
+                  (genre) => _GenreChip(
+                    label: genre.name,
+                    isSelected: filters.genreIds.contains(genre.id),
+                    onTap: () => isMovie
+                        ? ref
+                              .read(movieDiscoverFiltersProvider.notifier)
+                              .toggleGenre(genre.id)
+                        : ref
+                              .read(tvDiscoverFiltersProvider.notifier)
+                              .toggleGenre(genre.id),
+                  ),
+                )
+                .toList(),
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, st) => Text(
+            'Impossibile caricare i generi.',
+            style: TextStyle(color: colors.error),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _GenreChip extends StatelessWidget {
+  const _GenreChip({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    return Semantics(
+      label: label,
+      button: true,
+      selected: isSelected,
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colors.primary
+                : colors.surface.withValues(alpha: 0.6),
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
+          ),
+          child: Text(
+            label,
+            style: textTheme.labelLarge?.copyWith(
+              color: isSelected ? Colors.white : colors.onSurfaceSecondary,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _YearRangeFilterSection extends ConsumerStatefulWidget {
+  const _YearRangeFilterSection({required this.selectedMediaType});
+
+  final DiscoverMediaType selectedMediaType;
+
+  @override
+  ConsumerState<_YearRangeFilterSection> createState() =>
+      _YearRangeFilterSectionState();
+}
+
+class _YearRangeFilterSectionState
+    extends ConsumerState<_YearRangeFilterSection> {
+  static const int _minYear = 1950;
+  static final int _maxYear = DateTime.now().year;
+
+  late RangeValues _values;
+
+  @override
+  void initState() {
+    super.initState();
+    final filters = widget.selectedMediaType == DiscoverMediaType.movie
+        ? ref.read(movieDiscoverFiltersProvider)
+        : ref.read(tvDiscoverFiltersProvider);
+    _values = RangeValues(
+      (filters.yearFrom ?? _minYear).toDouble(),
+      (filters.yearTo ?? _maxYear).toDouble(),
+    );
+  }
+
+  void _commit(RangeValues values) {
+    final from = values.start.round();
+    final to = values.end.round();
+    final resolvedFrom = from == _minYear ? null : from;
+    final resolvedTo = to == _maxYear ? null : to;
+    if (widget.selectedMediaType == DiscoverMediaType.movie) {
+      ref
+          .read(movieDiscoverFiltersProvider.notifier)
+          .setYearRange(resolvedFrom, resolvedTo);
+    } else {
+      ref
+          .read(tvDiscoverFiltersProvider.notifier)
+          .setYearRange(resolvedFrom, resolvedTo);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    final colors = AppColors.of(context);
+    final isDefaultRange =
+        _values.start.round() == _minYear && _values.end.round() == _maxYear;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'ANNO DI USCITA',
+          style: textTheme.labelSmall?.copyWith(
+            color: colors.onSurfaceSecondary,
+            letterSpacing: 1.5,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          isDefaultRange
+              ? 'Qualsiasi periodo'
+              : '${_values.start.round()} – ${_values.end.round()}',
+          style: textTheme.bodyMedium?.copyWith(color: colors.onSurfacePrimary),
+        ),
+        RangeSlider(
+          min: _minYear.toDouble(),
+          max: _maxYear.toDouble(),
+          divisions: _maxYear - _minYear,
+          values: _values,
+          activeColor: colors.primary,
+          onChanged: (values) => setState(() => _values = values),
+          onChangeEnd: _commit,
+        ),
+      ],
+    );
+  }
+}
+
 class _DiscoverResultsSliver extends StatelessWidget {
   const _DiscoverResultsSliver({
     required this.discoverAsync,
     required this.selectedMediaType,
     required this.query,
+    required this.filters,
     required this.ref,
   });
 
   final AsyncValue<List<dynamic>> discoverAsync;
   final DiscoverMediaType selectedMediaType;
   final String query;
+  final DiscoverFilters filters;
   final WidgetRef ref;
 
   @override
@@ -337,8 +688,20 @@ class _DiscoverResultsSliver extends StatelessWidget {
           error: err,
           onRetry: () => query.isEmpty
               ? (selectedMediaType == DiscoverMediaType.movie
-                    ? ref.invalidate(discoverMoviesProvider())
-                    : ref.invalidate(discoverTVSeriesProvider()))
+                    ? ref.invalidate(
+                        discoverMoviesProvider(
+                          genreIds: filters.genreIdsKey,
+                          yearFrom: filters.yearFrom,
+                          yearTo: filters.yearTo,
+                        ),
+                      )
+                    : ref.invalidate(
+                        discoverTVSeriesProvider(
+                          genreIds: filters.genreIdsKey,
+                          yearFrom: filters.yearFrom,
+                          yearTo: filters.yearTo,
+                        ),
+                      ))
               : (selectedMediaType == DiscoverMediaType.movie
                     ? ref.invalidate(searchMoviesProvider(query))
                     : ref.invalidate(searchTVSeriesProvider(query))),
