@@ -12,6 +12,7 @@ import '../../features/watchlist/ui/pages/watchlist_page.dart';
 import '../../features/profile/ui/pages/profile_page.dart';
 import '../../features/movies/ui/pages/movie_details_page.dart';
 import '../../features/tv_series/ui/pages/tv_series_details_page.dart';
+import '../../features/person/ui/pages/person_details_page.dart';
 import '../../features/watchlist/ui/pages/watchlist_detail_page.dart';
 import '../../features/watched/ui/pages/watched_list_page.dart';
 import '../../features/tv_series/ui/pages/tv_episode_details_page.dart';
@@ -34,6 +35,7 @@ abstract class AppRoutes {
   static const profile = '/profile';
   static const movieDetails = '/movie/:id';
   static const tvDetails = '/tv/:id';
+  static const personDetails = '/person/:id';
   static const watchlistDetail = '/watchlist/:id';
   static const watchedMovies = '/watched/movies';
   static const watchedTv = '/watched/tv';
@@ -123,6 +125,15 @@ GoRouter appRouter(Ref ref) {
           final id = rawId != null ? int.tryParse(rawId) : null;
           if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
           return TVSeriesDetailsPage(seriesId: id);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.personDetails,
+        builder: (context, state) {
+          final rawId = state.pathParameters['id'];
+          final id = rawId != null ? int.tryParse(rawId) : null;
+          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+          return PersonDetailsPage(personId: id);
         },
       ),
       GoRoute(
