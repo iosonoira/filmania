@@ -547,10 +547,35 @@ class _YearRangeFilterSectionState
     }
   }
 
+  int? get _fromOfValues =>
+      _values.start.round() == _minYear ? null : _values.start.round();
+
+  int? get _toOfValues =>
+      _values.end.round() == _maxYear ? null : _values.end.round();
+
+  /// Resyncs the local slider state whenever the provider's year range
+  /// changes from outside this widget (e.g. the "Cancella filtri" button),
+  /// so the slider doesn't visually desync from the actual active filter.
+  void _onFiltersChanged(DiscoverFilters? previous, DiscoverFilters next) {
+    if (!mounted) return;
+    if (next.yearFrom == _fromOfValues && next.yearTo == _toOfValues) return;
+    setState(() {
+      _values = RangeValues(
+        (next.yearFrom ?? _minYear).toDouble(),
+        (next.yearTo ?? _maxYear).toDouble(),
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colors = AppColors.of(context);
+    if (widget.selectedMediaType == DiscoverMediaType.movie) {
+      ref.listen(movieDiscoverFiltersProvider, _onFiltersChanged);
+    } else {
+      ref.listen(tvDiscoverFiltersProvider, _onFiltersChanged);
+    }
     final isDefaultRange =
         _values.start.round() == _minYear && _values.end.round() == _maxYear;
 
