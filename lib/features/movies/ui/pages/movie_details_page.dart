@@ -51,9 +51,7 @@ class _MovieDetailsContent extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(
-          child: SizedBox(
-            height: MediaQuery.of(context).padding.top,
-          ),
+          child: SizedBox(height: MediaQuery.of(context).padding.top),
         ),
         _MovieHeroHeader(movie: movie),
         const SliverToBoxAdapter(
@@ -80,9 +78,7 @@ class _MovieDetailsContent extends StatelessWidget {
           ),
         ),
         _MovieOverviewSection(overview: movie.overview),
-        SliverToBoxAdapter(
-          child: _MovieCastSection(movieId: movie.id),
-        ),
+        SliverToBoxAdapter(child: _MovieCastSection(movieId: movie.id)),
         const SliverToBoxAdapter(
           child: SizedBox(
             height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
@@ -287,13 +283,13 @@ class _WatchlistButton extends ConsumerWidget {
             onPressed: isLoading
                 ? null
                 : () => showWatchlistPicker(
-                      context,
-                      ref,
-                      mediaId: movie.id,
-                      mediaTitle: movie.title,
-                      mediaType: MediaType.movie,
-                      posterPath: movie.posterPath,
-                    ),
+                    context,
+                    ref,
+                    mediaId: movie.id,
+                    mediaTitle: movie.title,
+                    mediaType: MediaType.movie,
+                    posterPath: movie.posterPath,
+                  ),
             icon: isLoading
                 ? const SizedBox(
                     width: 20,
@@ -330,13 +326,13 @@ class _WatchlistButton extends ConsumerWidget {
             onPressed: isLoading
                 ? null
                 : () => showWatchlistPicker(
-                      context,
-                      ref,
-                      mediaId: movie.id,
-                      mediaTitle: movie.title,
-                      mediaType: MediaType.movie,
-                      posterPath: movie.posterPath,
-                    ),
+                    context,
+                    ref,
+                    mediaId: movie.id,
+                    mediaTitle: movie.title,
+                    mediaType: MediaType.movie,
+                    posterPath: movie.posterPath,
+                  ),
             icon: isLoading
                 ? const SizedBox(
                     width: 20,
@@ -377,6 +373,7 @@ class _WatchlistButton extends ConsumerWidget {
     );
   }
 }
+
 class _MovieCastSection extends ConsumerWidget {
   final int movieId;
 

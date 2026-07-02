@@ -42,7 +42,8 @@ abstract class AppRoutes {
   static const trendingMovies = '/trending/movies';
   static const trendingTv = '/trending/tv';
   static const settings = '/settings';
-  static const tvEpisodeDetails = '/tv/:id/season/:seasonNumber/episode/:episodeNumber';
+  static const tvEpisodeDetails =
+      '/tv/:id/season/:seasonNumber/episode/:episodeNumber';
 
   static const shellRoutes = [home, discover, watchlist, profile];
 }
@@ -67,7 +68,7 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.register,
         builder: (context, state) => const RegisterPage(),
       ),
-      
+
       // Main Application Shell
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -114,7 +115,10 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
-          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+          if (id == null)
+            return const Scaffold(
+              body: Center(child: Text('Pagina non trovata')),
+            );
           return MovieDetailsPage(movieId: id);
         },
       ),
@@ -123,7 +127,10 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
-          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+          if (id == null)
+            return const Scaffold(
+              body: Center(child: Text('Pagina non trovata')),
+            );
           return TVSeriesDetailsPage(seriesId: id);
         },
       ),
@@ -132,7 +139,10 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
-          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+          if (id == null)
+            return const Scaffold(
+              body: Center(child: Text('Pagina non trovata')),
+            );
           return PersonDetailsPage(personId: id);
         },
       ),
@@ -140,11 +150,17 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.tvEpisodeDetails,
         builder: (context, state) {
           final tvId = int.tryParse(state.pathParameters['id'] ?? '');
-          final seasonNumber = int.tryParse(state.pathParameters['seasonNumber'] ?? '');
-          final episodeNumber = int.tryParse(state.pathParameters['episodeNumber'] ?? '');
+          final seasonNumber = int.tryParse(
+            state.pathParameters['seasonNumber'] ?? '',
+          );
+          final episodeNumber = int.tryParse(
+            state.pathParameters['episodeNumber'] ?? '',
+          );
 
           if (tvId == null || seasonNumber == null || episodeNumber == null) {
-            return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+            return const Scaffold(
+              body: Center(child: Text('Pagina non trovata')),
+            );
           }
 
           return TVEpisodeDetailsPage(
@@ -158,17 +174,22 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.watchlistDetail,
         builder: (context, state) {
           final id = state.pathParameters['id'];
-          if (id == null) return const Scaffold(body: Center(child: Text('Pagina non trovata')));
+          if (id == null)
+            return const Scaffold(
+              body: Center(child: Text('Pagina non trovata')),
+            );
           return WatchlistDetailPage(watchlistId: id);
         },
       ),
       GoRoute(
         path: AppRoutes.watchedMovies,
-        builder: (context, state) => const WatchedListPage(mediaType: MediaType.movie),
+        builder: (context, state) =>
+            const WatchedListPage(mediaType: MediaType.movie),
       ),
       GoRoute(
         path: AppRoutes.watchedTv,
-        builder: (context, state) => const WatchedListPage(mediaType: MediaType.tv),
+        builder: (context, state) =>
+            const WatchedListPage(mediaType: MediaType.tv),
       ),
       GoRoute(
         path: AppRoutes.trendingMovies,
@@ -196,7 +217,7 @@ GoRouter appRouter(Ref ref) {
 
       // Unauthenticated users can only be on login or register explicitly
       if (!isAuthenticated && !isAuthRoute) return AppRoutes.login;
-      
+
       // Authenticated users should go to home
       if (isAuthenticated && isAuthRoute) return AppRoutes.home;
 

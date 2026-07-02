@@ -20,7 +20,9 @@ class PersonRemoteDataSourceImpl implements IPersonRemoteDataSource {
   }
 
   @override
-  Future<PersonCombinedCreditsDto> getPersonCombinedCredits(int personId) async {
+  Future<PersonCombinedCreditsDto> getPersonCombinedCredits(
+    int personId,
+  ) async {
     try {
       final response = await _client.get('person/$personId/combined_credits');
       return PersonCombinedCreditsDto.fromJson(response.data);

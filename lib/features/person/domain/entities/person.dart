@@ -15,6 +15,7 @@ abstract class Person with _$Person {
 
   const Person._();
 
-  String? get fullProfileUrl =>
-      profilePath != null ? 'https://image.tmdb.org/t/p/w500$profilePath' : null;
+  String? get fullProfileUrl => profilePath != null
+      ? 'https://image.tmdb.org/t/p/w500$profilePath'
+      : null;
 }

@@ -21,30 +21,39 @@ void main() {
       expect(dto.profilePath, '/abc.jpg');
     });
 
-    test('toEntity parses birthday into a DateTime and builds fullProfileUrl', () {
-      const dto = PersonDto(
-        id: 138,
-        name: 'Quentin Tarantino',
-        biography: 'American filmmaker.',
-        birthday: '1963-03-27',
-        placeOfBirth: 'Knoxville, Tennessee, USA',
-        profilePath: '/abc.jpg',
-      );
+    test(
+      'toEntity parses birthday into a DateTime and builds fullProfileUrl',
+      () {
+        const dto = PersonDto(
+          id: 138,
+          name: 'Quentin Tarantino',
+          biography: 'American filmmaker.',
+          birthday: '1963-03-27',
+          placeOfBirth: 'Knoxville, Tennessee, USA',
+          profilePath: '/abc.jpg',
+        );
 
-      final entity = dto.toEntity();
+        final entity = dto.toEntity();
 
-      expect(entity.birthday, DateTime(1963, 3, 27));
-      expect(entity.fullProfileUrl, 'https://image.tmdb.org/t/p/w500/abc.jpg');
-    });
+        expect(entity.birthday, DateTime(1963, 3, 27));
+        expect(
+          entity.fullProfileUrl,
+          'https://image.tmdb.org/t/p/w500/abc.jpg',
+        );
+      },
+    );
 
-    test('toEntity defaults biography to empty string and birthday to null when absent', () {
-      const dto = PersonDto(id: 1, name: 'Unknown');
+    test(
+      'toEntity defaults biography to empty string and birthday to null when absent',
+      () {
+        const dto = PersonDto(id: 1, name: 'Unknown');
 
-      final entity = dto.toEntity();
+        final entity = dto.toEntity();
 
-      expect(entity.biography, '');
-      expect(entity.birthday, isNull);
-      expect(entity.fullProfileUrl, isNull);
-    });
+        expect(entity.biography, '');
+        expect(entity.birthday, isNull);
+        expect(entity.fullProfileUrl, isNull);
+      },
+    );
   });
 }

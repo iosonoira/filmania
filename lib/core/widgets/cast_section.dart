@@ -12,11 +12,7 @@ class CastSection extends StatelessWidget {
   final List<CastMember> cast;
   final String? title;
 
-  const CastSection({
-    super.key,
-    required this.cast,
-    this.title,
-  });
+  const CastSection({super.key, required this.cast, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +96,8 @@ class _CastCard extends StatelessWidget {
                           color: colors.primary.withValues(alpha: 0.5),
                         ),
                       ),
-                      errorWidget: (context, url, error) => _CastFallback(colors: colors),
+                      errorWidget: (context, url, error) =>
+                          _CastFallback(colors: colors),
                     )
                   : _CastFallback(colors: colors),
             ),

@@ -55,9 +55,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(
-          child: SizedBox(
-            height: MediaQuery.of(context).padding.top,
-          ),
+          child: SizedBox(height: MediaQuery.of(context).padding.top),
         ),
         // Backdrop & Poster Header
         SliverToBoxAdapter(
@@ -226,7 +224,9 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  series.overview.isNotEmpty ? series.overview : AppLocalizations.of(context)!.noDescription,
+                  series.overview.isNotEmpty
+                      ? series.overview
+                      : AppLocalizations.of(context)!.noDescription,
                   style: textTheme.bodyLarge?.copyWith(
                     color: colors.onSurfaceSecondary,
                     height: 1.5,
@@ -238,9 +238,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
         ),
 
         // Separatore
-        SliverToBoxAdapter(
-          child: _TVSeriesCastSection(seriesId: series.id),
-        ),
+        SliverToBoxAdapter(child: _TVSeriesCastSection(seriesId: series.id)),
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
 
         // Sezione episodi
@@ -284,13 +282,13 @@ class _WatchlistButton extends ConsumerWidget {
             onPressed: isLoading
                 ? null
                 : () => showWatchlistPicker(
-                      context,
-                      ref,
-                      mediaId: series.id,
-                      mediaTitle: series.name,
-                      mediaType: MediaType.tv,
-                      posterPath: series.posterPath,
-                    ),
+                    context,
+                    ref,
+                    mediaId: series.id,
+                    mediaTitle: series.name,
+                    mediaType: MediaType.tv,
+                    posterPath: series.posterPath,
+                  ),
             icon: isLoading
                 ? const SizedBox(
                     width: 20,
@@ -327,13 +325,13 @@ class _WatchlistButton extends ConsumerWidget {
             onPressed: isLoading
                 ? null
                 : () => showWatchlistPicker(
-                      context,
-                      ref,
-                      mediaId: series.id,
-                      mediaTitle: series.name,
-                      mediaType: MediaType.tv,
-                      posterPath: series.posterPath,
-                    ),
+                    context,
+                    ref,
+                    mediaId: series.id,
+                    mediaTitle: series.name,
+                    mediaType: MediaType.tv,
+                    posterPath: series.posterPath,
+                  ),
             icon: isLoading
                 ? const SizedBox(
                     width: 20,
@@ -374,6 +372,7 @@ class _WatchlistButton extends ConsumerWidget {
     );
   }
 }
+
 class _TVSeriesCastSection extends ConsumerWidget {
   final int seriesId;
 

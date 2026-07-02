@@ -6,7 +6,12 @@ void main() {
     test('fromJson parses both cast and crew arrays', () {
       final dto = CreditsDto.fromJson({
         'cast': [
-          {'id': 1, 'name': 'Actor One', 'character': 'Hero', 'profile_path': null},
+          {
+            'id': 1,
+            'name': 'Actor One',
+            'character': 'Hero',
+            'profile_path': null,
+          },
         ],
         'crew': [
           {
@@ -35,7 +40,12 @@ void main() {
     test('toEntity maps cast and crew to their entities', () {
       final dto = CreditsDto.fromJson({
         'cast': [
-          {'id': 1, 'name': 'Actor One', 'character': 'Hero', 'profile_path': null},
+          {
+            'id': 1,
+            'name': 'Actor One',
+            'character': 'Hero',
+            'profile_path': null,
+          },
         ],
         'crew': [
           {

@@ -12,11 +12,7 @@ class CrewSection extends StatelessWidget {
   final List<CrewMember> crew;
   final String? title;
 
-  const CrewSection({
-    super.key,
-    required this.crew,
-    this.title,
-  });
+  const CrewSection({super.key, required this.crew, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +97,8 @@ class _CrewCard extends StatelessWidget {
                           color: colors.primary.withValues(alpha: 0.5),
                         ),
                       ),
-                      errorWidget: (context, url, error) => _CrewFallback(colors: colors),
+                      errorWidget: (context, url, error) =>
+                          _CrewFallback(colors: colors),
                     )
                   : _CrewFallback(colors: colors),
             ),

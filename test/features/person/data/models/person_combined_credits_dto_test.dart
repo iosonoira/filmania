@@ -34,30 +34,33 @@ void main() {
       expect(credits.last.title, 'Older Movie');
     });
 
-    test('toEntity deduplicates the same media appearing in both cast and crew', () {
-      final dto = PersonCombinedCreditsDto.fromJson({
-        'cast': [
-          {
-            'id': 1,
-            'title': 'Actor-Director Movie',
-            'release_date': '2010-01-01',
-            'media_type': 'movie',
-          },
-        ],
-        'crew': [
-          {
-            'id': 1,
-            'title': 'Actor-Director Movie',
-            'release_date': '2010-01-01',
-            'media_type': 'movie',
-          },
-        ],
-      });
+    test(
+      'toEntity deduplicates the same media appearing in both cast and crew',
+      () {
+        final dto = PersonCombinedCreditsDto.fromJson({
+          'cast': [
+            {
+              'id': 1,
+              'title': 'Actor-Director Movie',
+              'release_date': '2010-01-01',
+              'media_type': 'movie',
+            },
+          ],
+          'crew': [
+            {
+              'id': 1,
+              'title': 'Actor-Director Movie',
+              'release_date': '2010-01-01',
+              'media_type': 'movie',
+            },
+          ],
+        });
 
-      final credits = dto.toEntity();
+        final credits = dto.toEntity();
 
-      expect(credits, hasLength(1));
-    });
+        expect(credits, hasLength(1));
+      },
+    );
 
     test('fromJson defaults to empty lists when keys are missing', () {
       final dto = PersonCombinedCreditsDto.fromJson(<String, dynamic>{});

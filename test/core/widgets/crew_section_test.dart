@@ -39,7 +39,9 @@ void main() {
     expect(find.text('Crew'), findsNothing);
   });
 
-  testWidgets('renders a card per crew member with name and job', (tester) async {
+  testWidgets('renders a card per crew member with name and job', (
+    tester,
+  ) async {
     await tester.pumpWidget(_wrap(const CrewSection(crew: _crew)));
     await tester.pump();
 

@@ -14,6 +14,7 @@ abstract class CrewMember with _$CrewMember {
 
   const CrewMember._();
 
-  String? get fullProfileUrl =>
-      profilePath != null ? 'https://image.tmdb.org/t/p/w185$profilePath' : null;
+  String? get fullProfileUrl => profilePath != null
+      ? 'https://image.tmdb.org/t/p/w185$profilePath'
+      : null;
 }
