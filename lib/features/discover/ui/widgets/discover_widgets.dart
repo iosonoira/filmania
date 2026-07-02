@@ -8,6 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
+import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
 
 class MediaGridCard extends ConsumerWidget {
@@ -32,10 +33,7 @@ class MediaGridCard extends ConsumerWidget {
     this.onTap,
   });
 
-  factory MediaGridCard.movie({
-    required Movie movie,
-    VoidCallback? onTap,
-  }) {
+  factory MediaGridCard.movie({required Movie movie, VoidCallback? onTap}) {
     return MediaGridCard(
       mediaId: movie.id,
       title: movie.title,
@@ -48,10 +46,7 @@ class MediaGridCard extends ConsumerWidget {
     );
   }
 
-  factory MediaGridCard.tv({
-    required TVSeries tv,
-    VoidCallback? onTap,
-  }) {
+  factory MediaGridCard.tv({required TVSeries tv, VoidCallback? onTap}) {
     return MediaGridCard(
       mediaId: tv.id,
       title: tv.name,
@@ -113,7 +108,7 @@ class MediaGridCard extends ConsumerWidget {
                   color: colors.surface,
                   child: const Icon(Icons.movie_rounded, size: 40),
                 ),
-              
+
               // Gradient Overlay
               Positioned.fill(
                 child: Container(
@@ -157,34 +152,51 @@ class MediaGridCard extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    GlassOverlay(
-                      sigma: 10,
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.black.withValues(alpha: 0.5),
-                      child: IconButton(
-                        style: IconButton.styleFrom(
-                          minimumSize: const Size(32, 32),
-                          fixedSize: const Size(32, 32),
-                          padding: EdgeInsets.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        constraints: const BoxConstraints(
-                          minWidth: 32,
-                          minHeight: 32,
-                          maxWidth: 32,
-                          maxHeight: 32,
-                        ),
-                        padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.bookmark_add_outlined, color: Colors.white, size: 18),
-                        onPressed: () => showWatchlistPicker(
-                          context,
-                          ref,
-                          mediaId: mediaId,
-                          mediaTitle: title,
-                          mediaType: mediaType,
-                          posterPath: posterPath,
-                        ),
-                      ),
+                    Builder(
+                      builder: (context) {
+                        final isInWatchlistAsync = ref.watch(
+                          isMediaInWatchlistProvider(mediaId, mediaType),
+                        );
+                        final isInWatchlist = isInWatchlistAsync.value ?? false;
+
+                        return GlassOverlay(
+                          sigma: 10,
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.black.withValues(alpha: 0.5),
+                          child: IconButton(
+                            style: IconButton.styleFrom(
+                              minimumSize: const Size(32, 32),
+                              fixedSize: const Size(32, 32),
+                              padding: EdgeInsets.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 32,
+                              minHeight: 32,
+                              maxWidth: 32,
+                              maxHeight: 32,
+                            ),
+                            padding: EdgeInsets.zero,
+                            icon: Icon(
+                              isInWatchlist
+                                  ? Icons.bookmark_rounded
+                                  : Icons.bookmark_add_outlined,
+                              color: isInWatchlist
+                                  ? colors.primary
+                                  : Colors.white,
+                              size: 18,
+                            ),
+                            onPressed: () => showWatchlistPicker(
+                              context,
+                              ref,
+                              mediaId: mediaId,
+                              mediaTitle: title,
+                              mediaType: mediaType,
+                              posterPath: posterPath,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
