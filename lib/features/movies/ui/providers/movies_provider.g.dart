@@ -105,7 +105,8 @@ final class DiscoverMoviesProvider
     extends $AsyncNotifierProvider<DiscoverMovies, List<Movie>> {
   DiscoverMoviesProvider._({
     required DiscoverMoviesFamily super.from,
-    required int super.argument,
+    required ({int page, String genreIds, int? yearFrom, int? yearTo})
+    super.argument,
   }) : super(
          retry: null,
          name: r'discoverMoviesProvider',
@@ -121,7 +122,7 @@ final class DiscoverMoviesProvider
   String toString() {
     return r'discoverMoviesProvider'
         ''
-        '($argument)';
+        '$argument';
   }
 
   @$internal
@@ -139,7 +140,7 @@ final class DiscoverMoviesProvider
   }
 }
 
-String _$discoverMoviesHash() => r'436758a7cdc26c31e3101a0b1af3331b898f5c16';
+String _$discoverMoviesHash() => r'72d306dcba67b28002abe73c45b13327cf749511';
 
 final class DiscoverMoviesFamily extends $Family
     with
@@ -148,7 +149,7 @@ final class DiscoverMoviesFamily extends $Family
           AsyncValue<List<Movie>>,
           List<Movie>,
           FutureOr<List<Movie>>,
-          int
+          ({int page, String genreIds, int? yearFrom, int? yearTo})
         > {
   DiscoverMoviesFamily._()
     : super(
@@ -159,18 +160,39 @@ final class DiscoverMoviesFamily extends $Family
         isAutoDispose: true,
       );
 
-  DiscoverMoviesProvider call({int page = 1}) =>
-      DiscoverMoviesProvider._(argument: page, from: this);
+  DiscoverMoviesProvider call({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  }) => DiscoverMoviesProvider._(
+    argument: (
+      page: page,
+      genreIds: genreIds,
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    ),
+    from: this,
+  );
 
   @override
   String toString() => r'discoverMoviesProvider';
 }
 
 abstract class _$DiscoverMovies extends $AsyncNotifier<List<Movie>> {
-  late final _$args = ref.$arg as int;
-  int get page => _$args;
+  late final _$args =
+      ref.$arg as ({int page, String genreIds, int? yearFrom, int? yearTo});
+  int get page => _$args.page;
+  String get genreIds => _$args.genreIds;
+  int? get yearFrom => _$args.yearFrom;
+  int? get yearTo => _$args.yearTo;
 
-  FutureOr<List<Movie>> build({int page = 1});
+  FutureOr<List<Movie>> build({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  });
   @$mustCallSuper
   @override
   void runBuild() {
@@ -183,7 +205,15 @@ abstract class _$DiscoverMovies extends $AsyncNotifier<List<Movie>> {
               Object?,
               Object?
             >;
-    element.handleCreate(ref, () => build(page: _$args));
+    element.handleCreate(
+      ref,
+      () => build(
+        page: _$args.page,
+        genreIds: _$args.genreIds,
+        yearFrom: _$args.yearFrom,
+        yearTo: _$args.yearTo,
+      ),
+    );
   }
 }
 
@@ -406,3 +436,42 @@ final class MovieCreditsFamily extends $Family
   @override
   String toString() => r'movieCreditsProvider';
 }
+
+@ProviderFor(movieGenres)
+final movieGenresProvider = MovieGenresProvider._();
+
+final class MovieGenresProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Genre>>,
+          List<Genre>,
+          FutureOr<List<Genre>>
+        >
+    with $FutureModifier<List<Genre>>, $FutureProvider<List<Genre>> {
+  MovieGenresProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'movieGenresProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$movieGenresHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Genre>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Genre>> create(Ref ref) {
+    return movieGenres(ref);
+  }
+}
+
+String _$movieGenresHash() => r'6f3d13d371b3ec5d9822affbd073e1fdcd5b5cd2';

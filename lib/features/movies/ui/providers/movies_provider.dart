@@ -1,3 +1,4 @@
+import 'package:filmania/core/domain/entities/genre.dart';
 import 'package:filmania/features/movies/data/repositories/movies_repository_impl.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
 import 'package:filmania/core/domain/entities/cast_member.dart';
@@ -13,23 +14,27 @@ class TrendingMovies extends _$TrendingMovies {
     final repository = ref.watch(moviesRepositoryProvider);
     return repository.getTrendingMovies(page: page);
   }
-
-  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
-  // @override
-  // PersistenceConfig get persistence => PersistenceConfig(key: 'trending_movies_p$page');
 }
 
 @riverpod
 class DiscoverMovies extends _$DiscoverMovies {
   @override
-  FutureOr<List<Movie>> build({int page = 1}) async {
+  FutureOr<List<Movie>> build({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  }) async {
     final repository = ref.watch(moviesRepositoryProvider);
-    return repository.discoverMovies(page: page);
+    return repository.discoverMovies(
+      page: page,
+      genreIds: genreIds.isEmpty
+          ? const []
+          : genreIds.split(',').map(int.parse).toList(),
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    );
   }
-
-  // Riverpod 3.0 Persistence (Awaiting correct library implementation)
-  // @override
-  // PersistenceConfig get persistence => PersistenceConfig(key: 'discover_movies_p$page');
 }
 
 @riverpod
@@ -49,4 +54,10 @@ Future<List<Movie>> searchMovies(Ref ref, String query, {int page = 1}) {
 Future<List<CastMember>> movieCredits(Ref ref, int movieId) {
   final repository = ref.watch(moviesRepositoryProvider);
   return repository.getMovieCredits(movieId);
+}
+
+@Riverpod(keepAlive: true)
+Future<List<Genre>> movieGenres(Ref ref) {
+  final repository = ref.watch(moviesRepositoryProvider);
+  return repository.getGenres();
 }
