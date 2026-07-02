@@ -201,6 +201,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get castTitle => 'Cast';
 
   @override
+  String get crewTitle => 'Crew';
+
+  @override
+  String get biographyTitle => 'Biography';
+
+  @override
+  String get filmographyTitle => 'Filmography';
+
+  @override
+  String get noBiography => 'No biography available.';
+
+  @override
   String get episodesTitle => 'Episodes';
 
   @override

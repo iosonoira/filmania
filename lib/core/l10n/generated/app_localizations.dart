@@ -470,6 +470,30 @@ abstract class AppLocalizations {
   /// **'Cast'**
   String get castTitle;
 
+  /// No description provided for @crewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Crew'**
+  String get crewTitle;
+
+  /// No description provided for @biographyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Biography'**
+  String get biographyTitle;
+
+  /// No description provided for @filmographyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filmography'**
+  String get filmographyTitle;
+
+  /// No description provided for @noBiography.
+  ///
+  /// In en, this message translates to:
+  /// **'No biography available.'**
+  String get noBiography;
+
   /// No description provided for @episodesTitle.
   ///
   /// In en, this message translates to:
