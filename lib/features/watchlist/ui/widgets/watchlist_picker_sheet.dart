@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../../core/l10n/generated/app_localizations.dart';
+import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../domain/entities/watchlist.dart';
 import '../providers/watchlist_providers.dart';
 import '../../../../core/widgets/app_toast.dart';
@@ -501,6 +502,82 @@ class _EmptyWatchlistsHint extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Bulk variant of [showWatchlistPicker]: lets the user pick ONE
+/// watchlist, then adds every item in [items] to it. Used by the
+/// multi-select action bar's "Aggiungi a lista" action — unlike the
+/// single-item sheet, it does not show per-item membership state,
+/// since [items] can be a mix of titles already in different lists.
+Future<void> showBulkWatchlistPicker(
+  BuildContext context,
+  WidgetRef ref, {
+  required List<MediaSelectionItem> items,
+}) async {
+  final watchlists = await ref.read(userWatchlistsProvider.future);
+  if (!context.mounted) return;
+
+  final chosenId = await showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: Colors.transparent,
+    useRootNavigator: true,
+    builder: (sheetContext) {
+      final colors = AppColors.of(sheetContext);
+      final textTheme = Theme.of(sheetContext).textTheme;
+      return Container(
+        decoration: BoxDecoration(
+          color: colors.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+        child: SafeArea(
+          top: false,
+          child: watchlists.isEmpty
+              ? Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Text(
+                    'Nessuna lista disponibile. Creane una dal dettaglio '
+                    'di un titolo.',
+                    style: textTheme.bodyMedium?.copyWith(
+                      color: colors.onSurfaceSecondary,
+                    ),
+                  ),
+                )
+              : ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final watchlist in watchlists)
+                      ListTile(
+                        leading: Icon(
+                          Icons.bookmark_outline_rounded,
+                          color: colors.onSurfacePrimary,
+                        ),
+                        title: Text(
+                          watchlist.name,
+                          style: TextStyle(color: colors.onSurfacePrimary),
+                        ),
+                        onTap: () =>
+                            Navigator.of(sheetContext).pop(watchlist.id),
+                      ),
+                  ],
+                ),
+        ),
+      );
+    },
+  );
+
+  if (chosenId == null || !context.mounted) return;
+  final notifier = ref.read(watchlistProvider.notifier);
+  for (final item in items) {
+    await notifier.addItem(
+      watchlistId: chosenId,
+      id: item.mediaId,
+      title: item.title,
+      posterPath: item.posterPath,
+      type: item.mediaType,
     );
   }
 }
