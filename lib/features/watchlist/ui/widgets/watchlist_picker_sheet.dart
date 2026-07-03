@@ -97,7 +97,9 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
   }
 
   Future<void> _removeFromWatchlist(String watchlistId) async {
-    await ref.read(watchlistProvider.notifier).removeItemFromWatchlist(
+    await ref
+        .read(watchlistProvider.notifier)
+        .removeItemFromWatchlist(
           watchlistId: watchlistId,
           mediaId: widget.mediaId,
           mediaType: widget.mediaType,
@@ -179,8 +181,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
           // Watchlist list
           watchlistsAsync.when(
             data: (watchlists) {
-              final containingIds =
-                  containingIdsAsync.value ?? <String>{};
+              final containingIds = containingIdsAsync.value ?? <String>{};
 
               return Column(
                 mainAxisSize: MainAxisSize.min,
@@ -191,7 +192,11 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
                         horizontal: AppSpacing.lg,
                         vertical: AppSpacing.md,
                       ),
-                      child: _EmptyWatchlistsHint(colors: colors, textTheme: textTheme, l10n: l10n),
+                      child: _EmptyWatchlistsHint(
+                        colors: colors,
+                        textTheme: textTheme,
+                        l10n: l10n,
+                      ),
                     )
                   else
                     ConstrainedBox(
@@ -201,7 +206,8 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
                       child: ListView.builder(
                         shrinkWrap: true,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.md),
+                          horizontal: AppSpacing.md,
+                        ),
                         itemCount: watchlists.length,
                         itemBuilder: (_, i) {
                           final wl = watchlists[i];
@@ -318,9 +324,7 @@ class _WatchlistPickerTile extends ConsumerWidget {
                     watchlist.name,
                     style: textTheme.bodyLarge?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: isAdded
-                          ? colors.primary
-                          : colors.onSurfacePrimary,
+                      color: isAdded ? colors.primary : colors.onSurfacePrimary,
                     ),
                   ),
                   Text(
@@ -333,8 +337,7 @@ class _WatchlistPickerTile extends ConsumerWidget {
               ),
             ),
             if (isAdded)
-              Icon(Icons.check_circle_rounded,
-                  color: colors.primary, size: 20),
+              Icon(Icons.check_circle_rounded, color: colors.primary, size: 20),
           ],
         ),
       ),
@@ -455,7 +458,9 @@ class _CreateWatchlistField extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.transparent,
                     shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: AppSpacing.sm,
+                    ),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(AppSpacing.radius),

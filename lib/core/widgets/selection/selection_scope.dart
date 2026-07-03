@@ -20,9 +20,8 @@ class SelectionScope<T> extends StatefulWidget {
   }) {
     final inherited = listen
         ? context
-            .dependOnInheritedWidgetOfExactType<_SelectionScopeInherited<T>>()
-        : context
-            .getInheritedWidgetOfExactType<_SelectionScopeInherited<T>>();
+              .dependOnInheritedWidgetOfExactType<_SelectionScopeInherited<T>>()
+        : context.getInheritedWidgetOfExactType<_SelectionScopeInherited<T>>();
     assert(
       inherited != null,
       'No SelectionScope<$T> found in context. Wrap the grid/list in a '
@@ -54,7 +53,8 @@ class _SelectionScopeState<T> extends State<SelectionScope<T>> {
   }
 }
 
-class _SelectionScopeInherited<T> extends InheritedNotifier<SelectionController<T>> {
+class _SelectionScopeInherited<T>
+    extends InheritedNotifier<SelectionController<T>> {
   const _SelectionScopeInherited({
     required SelectionController<T> controller,
     required super.child,

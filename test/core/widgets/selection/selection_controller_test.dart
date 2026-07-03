@@ -16,20 +16,23 @@ void main() {
       expect(controller.selected, {1});
     });
 
-    test('toggle() adds then removes an item, notifying listeners each time', () {
-      final controller = SelectionController<int>();
-      var notifications = 0;
-      controller.addListener(() => notifications++);
+    test(
+      'toggle() adds then removes an item, notifying listeners each time',
+      () {
+        final controller = SelectionController<int>();
+        var notifications = 0;
+        controller.addListener(() => notifications++);
 
-      controller.toggle(1);
-      expect(controller.isSelected(1), isTrue);
-      expect(notifications, 1);
+        controller.toggle(1);
+        expect(controller.isSelected(1), isTrue);
+        expect(notifications, 1);
 
-      controller.toggle(1);
-      expect(controller.isSelected(1), isFalse);
-      expect(controller.isActive, isFalse);
-      expect(notifications, 2);
-    });
+        controller.toggle(1);
+        expect(controller.isSelected(1), isFalse);
+        expect(controller.isActive, isFalse);
+        expect(notifications, 2);
+      },
+    );
 
     test('clear() empties the selection and exits selection mode', () {
       final controller = SelectionController<int>();
