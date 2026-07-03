@@ -10,45 +10,64 @@ import '../providers/watched_providers.dart';
 /// item is removed from watched; an unwatched item is marked watched.
 /// Used by every multi-select action bar's "mark watched/unwatched" action
 /// so the toggle-and-invalidate logic exists in exactly one place.
-Future<void> toggleWatchedBulk(
+///
+/// The add-vs-remove decision is made from [IWatchedRepository.isWatched]
+/// (raw presence in the watched table) rather than [isMediaWatchedProvider]
+/// — the latter additionally requires ALL episodes of a TV series to be
+/// watched before reporting `true`, so a series sitting in the "watching"
+/// (incomplete) tab would otherwise be seen as "not watched" and get
+/// re-added instead of removed when the user taps "mark unwatched".
+///
+/// Each item is applied independently: a failure on one item is caught so
+/// it doesn't abort the rest of the batch. Returns the number of items
+/// that failed, so the caller can surface an error toast.
+Future<int> toggleWatchedBulk(
   WidgetRef ref, {
   required List<MediaSelectionItem> items,
 }) async {
   final user = ref.read(authStateProvider).value;
-  if (user == null) return;
+  if (user == null) return items.length;
   final repo = ref.read(watchedRepositoryProvider);
 
+  var failureCount = 0;
   for (final item in items) {
-    final isWatched = await ref.read(
-      isMediaWatchedProvider(
-        mediaId: item.mediaId,
-        mediaType: item.mediaType,
-      ).future,
-    );
-
-    if (isWatched) {
-      await repo.removeFromWatched(
+    try {
+      final isWatched = await repo.isWatched(
         userId: user.id,
         mediaId: item.mediaId,
         mediaType: item.mediaType,
       );
-    } else {
-      await repo.markAsWatched(
-        WatchedItem(
-          id: '',
+
+      if (isWatched) {
+        await repo.removeFromWatched(
           userId: user.id,
           mediaId: item.mediaId,
-          mediaTitle: item.title,
           mediaType: item.mediaType,
-          posterPath: item.posterPath,
-          watchedAt: DateTime.now(),
+        );
+      } else {
+        await repo.markAsWatched(
+          WatchedItem(
+            id: '',
+            userId: user.id,
+            mediaId: item.mediaId,
+            mediaTitle: item.title,
+            mediaType: item.mediaType,
+            posterPath: item.posterPath,
+            watchedAt: DateTime.now(),
+          ),
+        );
+      }
+
+      ref.invalidate(
+        isMediaWatchedProvider(
+          mediaId: item.mediaId,
+          mediaType: item.mediaType,
         ),
       );
+      ref.invalidate(watchedItemsProvider(item.mediaType));
+    } catch (_) {
+      failureCount++;
     }
-
-    ref.invalidate(
-      isMediaWatchedProvider(mediaId: item.mediaId, mediaType: item.mediaType),
-    );
-    ref.invalidate(watchedItemsProvider(item.mediaType));
   }
+  return failureCount;
 }
