@@ -13,5 +13,6 @@ abstract class IMoviesRepository {
   Future<Movie> getMovieDetails(int movieId);
   Future<List<Movie>> searchMovies(String query, {int page = 1});
   Future<Credits> getMovieCredits(int movieId);
+  Future<List<Movie>> getMovieRecommendations(int movieId);
   Future<List<Genre>> getGenres();
 }

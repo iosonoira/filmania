@@ -431,6 +431,82 @@ final class MovieCreditsFamily extends $Family
   String toString() => r'movieCreditsProvider';
 }
 
+@ProviderFor(movieRecommendations)
+final movieRecommendationsProvider = MovieRecommendationsFamily._();
+
+final class MovieRecommendationsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Movie>>,
+          List<Movie>,
+          FutureOr<List<Movie>>
+        >
+    with $FutureModifier<List<Movie>>, $FutureProvider<List<Movie>> {
+  MovieRecommendationsProvider._({
+    required MovieRecommendationsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'movieRecommendationsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$movieRecommendationsHash();
+
+  @override
+  String toString() {
+    return r'movieRecommendationsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Movie>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Movie>> create(Ref ref) {
+    final argument = this.argument as int;
+    return movieRecommendations(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MovieRecommendationsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$movieRecommendationsHash() =>
+    r'2ad6bd1c1f5eef376d6e474d6e670cb4aada5ce9';
+
+final class MovieRecommendationsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<Movie>>, int> {
+  MovieRecommendationsFamily._()
+    : super(
+        retry: null,
+        name: r'movieRecommendationsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  MovieRecommendationsProvider call(int movieId) =>
+      MovieRecommendationsProvider._(argument: movieId, from: this);
+
+  @override
+  String toString() => r'movieRecommendationsProvider';
+}
+
 @ProviderFor(movieGenres)
 final movieGenresProvider = MovieGenresProvider._();
 

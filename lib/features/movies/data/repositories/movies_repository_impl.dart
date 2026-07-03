@@ -56,6 +56,12 @@ class MoviesRepositoryImpl implements IMoviesRepository {
   }
 
   @override
+  Future<List<Movie>> getMovieRecommendations(int movieId) async {
+    final dtos = await _remoteDataSource.getMovieRecommendations(movieId);
+    return dtos.map((dto) => dto.toEntity()).toList();
+  }
+
+  @override
   Future<List<Genre>> getGenres() async {
     final dtos = await _remoteDataSource.getGenres();
     return dtos.map((dto) => dto.toEntity()).toList();

@@ -103,6 +103,17 @@ class MoviesRemoteDataSourceImpl implements IMoviesRemoteDataSource {
   }
 
   @override
+  Future<List<MovieDto>> getMovieRecommendations(int movieId) async {
+    try {
+      final response = await _client.get('movie/$movieId/recommendations');
+      final List<dynamic> results = response.data['results'];
+      return results.map((json) => MovieDto.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw NetworkFailure.fromDioException(e);
+    }
+  }
+
+  @override
   Future<List<GenreDto>> getGenres() async {
     try {
       final response = await _client.get('genre/movie/list');

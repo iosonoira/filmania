@@ -56,6 +56,12 @@ Future<Credits> movieCredits(Ref ref, int movieId) {
   return repository.getMovieCredits(movieId);
 }
 
+@riverpod
+Future<List<Movie>> movieRecommendations(Ref ref, int movieId) {
+  final repository = ref.watch(moviesRepositoryProvider);
+  return repository.getMovieRecommendations(movieId);
+}
+
 @Riverpod(keepAlive: true)
 Future<List<Genre>> movieGenres(Ref ref) {
   final repository = ref.watch(moviesRepositoryProvider);

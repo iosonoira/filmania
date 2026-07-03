@@ -13,5 +13,6 @@ abstract interface class IMoviesRemoteDataSource {
   Future<MovieDto> getMovieDetails(int movieId);
   Future<List<MovieDto>> searchMovies(String query, {int page = 1});
   Future<CreditsDto> getMovieCredits(int movieId);
+  Future<List<MovieDto>> getMovieRecommendations(int movieId);
   Future<List<GenreDto>> getGenres();
 }
