@@ -15,6 +15,7 @@ import '../../features/tv_series/ui/pages/tv_series_details_page.dart';
 import '../../features/person/ui/pages/person_details_page.dart';
 import '../../features/watchlist/ui/pages/watchlist_detail_page.dart';
 import '../../features/watched/ui/pages/watched_list_page.dart';
+import '../../features/favorites/ui/pages/favorites_page.dart';
 import '../../features/tv_series/ui/pages/tv_episode_details_page.dart';
 import '../../features/movies/ui/pages/trending_movies_page.dart';
 import '../../features/tv_series/ui/pages/trending_tv_series_page.dart';
@@ -39,6 +40,7 @@ abstract class AppRoutes {
   static const watchlistDetail = '/watchlist/:id';
   static const watchedMovies = '/watched/movies';
   static const watchedTv = '/watched/tv';
+  static const favorites = '/favorites';
   static const trendingMovies = '/trending/movies';
   static const trendingTv = '/trending/tv';
   static const settings = '/settings';
@@ -194,6 +196,10 @@ GoRouter appRouter(Ref ref) {
         path: AppRoutes.watchedTv,
         builder: (context, state) =>
             const WatchedListPage(mediaType: MediaType.tv),
+      ),
+      GoRoute(
+        path: AppRoutes.favorites,
+        builder: (context, state) => const FavoritesPage(),
       ),
       GoRoute(
         path: AppRoutes.trendingMovies,
