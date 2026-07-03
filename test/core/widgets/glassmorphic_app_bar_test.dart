@@ -31,6 +31,49 @@ Widget _wrapWithRouter({required Widget appBarUnderTest}) {
   );
 }
 
+Widget _wrapWithShellAndPushedRoute({required Widget appBarUnderTest}) {
+  final router = GoRouter(
+    initialLocation: AppRoutes.profile,
+    routes: [
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) => navigationShell,
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.profile,
+                builder: (context, state) => Scaffold(
+                  appBar: AppBar(
+                    actions: [
+                      IconButton(
+                        icon: const Icon(Icons.settings),
+                        onPressed: () => context.push(AppRoutes.settings),
+                      ),
+                    ],
+                  ),
+                  body: const Text('Profile Page'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        builder: (context, state) => Scaffold(
+          appBar: appBarUnderTest as PreferredSizeWidget,
+          body: const Text('Settings Page'),
+        ),
+      ),
+    ],
+  );
+
+  return ProviderScope(
+    overrides: [authStateProvider.overrideWith((ref) => Stream.value(null))],
+    child: MaterialApp.router(theme: AppTheme.dark(), routerConfig: router),
+  );
+}
+
 void main() {
   testWidgets('does not render a theme-toggle button', (tester) async {
     await tester.pumpWidget(
@@ -66,6 +109,38 @@ void main() {
 
     expect(find.byIcon(Icons.person), findsNothing);
   });
+
+  testWidgets(
+    'tapping the profile avatar from a route pushed on top of the profile '
+    'shell branch navigates back without a duplicate Page-key assertion',
+    (tester) async {
+      await tester.pumpWidget(
+        _wrapWithShellAndPushedRoute(
+          appBarUnderTest: const GlassmorphicAppBar(showBackButton: true),
+        ),
+      );
+      await tester.pump();
+      expect(find.text('Profile Page'), findsOneWidget);
+
+      // Push Settings on top of the active profile branch, matching the
+      // real ProfilePage -> Settings navigation.
+      await tester.tap(find.byIcon(Icons.settings));
+      await tester.pumpAndSettle();
+      expect(find.text('Settings Page'), findsOneWidget);
+
+      // Tapping the avatar navigates back to the already-active profile
+      // branch. With context.push this throws
+      // "Assertion failed ... !keyReservation.contains(key)" because
+      // AppRoutes.profile is already live as a shell branch; context.go
+      // must not throw here.
+      await tester.tap(find.byIcon(Icons.person));
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('Profile Page'), findsOneWidget);
+      expect(find.text('Settings Page'), findsNothing);
+    },
+  );
 
   testWidgets(
     'minimal: true hides logo and avatar, keeps only the back button',

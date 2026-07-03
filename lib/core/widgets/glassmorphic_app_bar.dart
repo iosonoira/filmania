@@ -92,7 +92,7 @@ class _ProfileAvatarButton extends ConsumerWidget {
       label: 'Profilo',
       button: true,
       child: GestureDetector(
-        onTap: () => context.push(AppRoutes.profile),
+        onTap: () => context.go(AppRoutes.profile),
         child: Container(
           width: 40,
           height: 40,
