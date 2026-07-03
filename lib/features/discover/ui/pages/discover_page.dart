@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
@@ -11,6 +12,12 @@ import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import '../widgets/discover_widgets.dart';
 import '../providers/discover_providers.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/selection/media_selection_item.dart';
+import '../../../../core/widgets/selection/selectable_card.dart';
+import '../../../../core/widgets/selection/selection_action_bar.dart';
+import '../../../../core/widgets/selection/selection_scope.dart';
+import '../../../watched/ui/widgets/watched_bulk_actions.dart';
+import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 
 class DiscoverPage extends ConsumerWidget {
   const DiscoverPage({super.key});
@@ -37,60 +44,91 @@ class DiscoverPage extends ConsumerWidget {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: const GlassmorphicAppBar(),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height:
-                  MediaQuery.of(context).padding.top +
-                  kToolbarHeight +
-                  AppSpacing.xl,
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _DiscoverHeader(
-                    selectedMediaType: selectedMediaType,
-                    onMovieSelected: () => ref
-                        .read(selectedMediaTypeProvider.notifier)
-                        .set(DiscoverMediaType.movie),
-                    onTvSelected: () => ref
-                        .read(selectedMediaTypeProvider.notifier)
-                        .set(DiscoverMediaType.tv),
+      body: SelectionScope<MediaSelectionItem>(
+        child: Stack(
+          children: [
+            CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height:
+                        MediaQuery.of(context).padding.top +
+                        kToolbarHeight +
+                        AppSpacing.xl,
                   ),
-                  const SizedBox(height: AppSpacing.md),
-                  _DiscoverSearchBar(
-                    selectedMediaType: selectedMediaType,
-                    isDebouncing: isDebouncing,
-                    isFiltersActive: activeFilters.isActive,
-                    onFiltersTap: () =>
-                        _showFiltersSheet(context, selectedMediaType),
-                    onChanged: (value) {
-                      ref.read(movieSearchQueryProvider.notifier).update(value);
-                      ref
-                          .read(debouncedSearchQueryProvider.notifier)
-                          .update(value);
-                    },
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
                   ),
-                ],
-              ),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _DiscoverHeader(
+                          selectedMediaType: selectedMediaType,
+                          onMovieSelected: () => ref
+                              .read(selectedMediaTypeProvider.notifier)
+                              .set(DiscoverMediaType.movie),
+                          onTvSelected: () => ref
+                              .read(selectedMediaTypeProvider.notifier)
+                              .set(DiscoverMediaType.tv),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        _DiscoverSearchBar(
+                          selectedMediaType: selectedMediaType,
+                          isDebouncing: isDebouncing,
+                          isFiltersActive: activeFilters.isActive,
+                          onFiltersTap: () =>
+                              _showFiltersSheet(context, selectedMediaType),
+                          onChanged: (value) {
+                            ref
+                                .read(movieSearchQueryProvider.notifier)
+                                .update(value);
+                            ref
+                                .read(debouncedSearchQueryProvider.notifier)
+                                .update(value);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.xxl),
+                ),
+                _DiscoverResultsSliver(
+                  discoverAsync: discoverAsync,
+                  selectedMediaType: selectedMediaType,
+                  query: query,
+                  filters: activeFilters,
+                  ref: ref,
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 120)),
+              ],
             ),
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
-          _DiscoverResultsSliver(
-            discoverAsync: discoverAsync,
-            selectedMediaType: selectedMediaType,
-            query: query,
-            filters: activeFilters,
-            ref: ref,
-          ),
-          const SliverToBoxAdapter(child: SizedBox(height: 120)),
-        ],
+            SelectionActionBar<MediaSelectionItem>(
+              actions: [
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.bookmark_add_rounded,
+                  label: 'Aggiungi a lista',
+                  onPressed: (selected) => showBulkWatchlistPicker(
+                    context,
+                    ref,
+                    items: selected.toList(),
+                  ),
+                ),
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.visibility_rounded,
+                  label: 'Segna come visto/non visto',
+                  onPressed: (selected) =>
+                      toggleWatchedBulk(ref, items: selected.toList()),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -676,28 +714,35 @@ class _DiscoverResultsSliver extends StatelessWidget {
             delegate: SliverChildBuilderDelegate((context, index) {
               final item = items[index];
               if (selectedMediaType == DiscoverMediaType.movie) {
-                return MediaGridCard.movie(
-                  movie: item,
-                  onTap: () {
-                    context.push(
-                      AppRoutes.movieDetails.replaceFirst(
-                        ':id',
-                        item.id.toString(),
-                      ),
-                    );
-                  },
+                final selectionId = MediaSelectionItem(
+                  mediaId: item.id,
+                  mediaType: MediaType.movie,
+                  title: item.title,
+                  posterPath: item.posterPath,
+                );
+                return SelectableCard<MediaSelectionItem>(
+                  id: selectionId,
+                  onTap: () => context.push(
+                    AppRoutes.movieDetails.replaceFirst(
+                      ':id',
+                      item.id.toString(),
+                    ),
+                  ),
+                  child: MediaGridCard.movie(movie: item),
                 );
               } else {
-                return MediaGridCard.tv(
-                  tv: item,
-                  onTap: () {
-                    context.push(
-                      AppRoutes.tvDetails.replaceFirst(
-                        ':id',
-                        item.id.toString(),
-                      ),
-                    );
-                  },
+                final selectionId = MediaSelectionItem(
+                  mediaId: item.id,
+                  mediaType: MediaType.tv,
+                  title: item.name,
+                  posterPath: item.posterPath,
+                );
+                return SelectableCard<MediaSelectionItem>(
+                  id: selectionId,
+                  onTap: () => context.push(
+                    AppRoutes.tvDetails.replaceFirst(':id', item.id.toString()),
+                  ),
+                  child: MediaGridCard.tv(tv: item),
                 );
               }
             }, childCount: items.length),
