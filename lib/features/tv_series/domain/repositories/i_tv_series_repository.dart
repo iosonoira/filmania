@@ -26,5 +26,6 @@ abstract class ITVSeriesRepository {
     int seasonNumber,
     int episodeNumber,
   );
+  Future<List<TVSeries>> getTVSeriesRecommendations(int tvId);
   Future<List<Genre>> getGenres();
 }

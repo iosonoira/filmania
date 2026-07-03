@@ -91,6 +91,12 @@ class TVSeriesRepositoryImpl implements ITVSeriesRepository {
   }
 
   @override
+  Future<List<TVSeries>> getTVSeriesRecommendations(int tvId) async {
+    final dtos = await _remoteDataSource.getTVSeriesRecommendations(tvId);
+    return dtos.map((dto) => dto.toEntity()).toList();
+  }
+
+  @override
   Future<List<Genre>> getGenres() async {
     final dtos = await _remoteDataSource.getGenres();
     return dtos.map((dto) => dto.toEntity()).toList();

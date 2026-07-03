@@ -26,5 +26,6 @@ abstract class ITVSeriesRemoteDataSource {
     int seasonNumber,
     int episodeNumber,
   );
+  Future<List<TVSeriesDto>> getTVSeriesRecommendations(int tvId);
   Future<List<GenreDto>> getGenres();
 }

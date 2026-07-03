@@ -789,6 +789,83 @@ final class TvEpisodeCreditsFamily extends $Family
   String toString() => r'tvEpisodeCreditsProvider';
 }
 
+@ProviderFor(tvSeriesRecommendations)
+final tvSeriesRecommendationsProvider = TvSeriesRecommendationsFamily._();
+
+final class TvSeriesRecommendationsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<TVSeries>>,
+          List<TVSeries>,
+          FutureOr<List<TVSeries>>
+        >
+    with $FutureModifier<List<TVSeries>>, $FutureProvider<List<TVSeries>> {
+  TvSeriesRecommendationsProvider._({
+    required TvSeriesRecommendationsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvSeriesRecommendationsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvSeriesRecommendationsHash();
+
+  @override
+  String toString() {
+    return r'tvSeriesRecommendationsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<TVSeries>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<TVSeries>> create(Ref ref) {
+    final argument = this.argument as int;
+    return tvSeriesRecommendations(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvSeriesRecommendationsProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvSeriesRecommendationsHash() =>
+    r'bb681ea1c274759f342395f0aac40aa75c3d936c';
+
+final class TvSeriesRecommendationsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<TVSeries>>, int> {
+  TvSeriesRecommendationsFamily._()
+    : super(
+        retry: null,
+        name: r'tvSeriesRecommendationsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TvSeriesRecommendationsProvider call(int tvId) =>
+      TvSeriesRecommendationsProvider._(argument: tvId, from: this);
+
+  @override
+  String toString() => r'tvSeriesRecommendationsProvider';
+}
+
 @ProviderFor(tvGenres)
 final tvGenresProvider = TvGenresProvider._();
 

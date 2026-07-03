@@ -152,6 +152,17 @@ class TVSeriesRemoteDataSourceImpl implements ITVSeriesRemoteDataSource {
   }
 
   @override
+  Future<List<TVSeriesDto>> getTVSeriesRecommendations(int tvId) async {
+    try {
+      final response = await _client.get('tv/$tvId/recommendations');
+      final List<dynamic> results = response.data['results'];
+      return results.map((json) => TVSeriesDto.fromJson(json)).toList();
+    } on DioException catch (e) {
+      throw NetworkFailure.fromDioException(e);
+    }
+  }
+
+  @override
   Future<List<GenreDto>> getGenres() async {
     try {
       final response = await _client.get('genre/tv/list');

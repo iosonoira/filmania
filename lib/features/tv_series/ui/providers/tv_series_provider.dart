@@ -93,6 +93,12 @@ Future<List<CastMember>> tvEpisodeCredits(
   return repository.getTVEpisodeCredits(tvId, seasonNumber, episodeNumber);
 }
 
+@riverpod
+Future<List<TVSeries>> tvSeriesRecommendations(Ref ref, int tvId) {
+  final repository = ref.watch(tvSeriesRepositoryProvider);
+  return repository.getTVSeriesRecommendations(tvId);
+}
+
 @Riverpod(keepAlive: true)
 Future<List<Genre>> tvGenres(Ref ref) {
   final repository = ref.watch(tvSeriesRepositoryProvider);
