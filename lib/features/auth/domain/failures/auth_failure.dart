@@ -7,21 +7,32 @@ sealed class AuthFailure implements Exception {
 }
 
 class InvalidCredentials extends AuthFailure {
-  const InvalidCredentials([super.message = 'Credenziali non valide. Riprova.']);
+  const InvalidCredentials([
+    super.message = 'Credenziali non valide. Riprova.',
+  ]);
 }
 
 class NetworkError extends AuthFailure {
-  const NetworkError([super.message = 'Errore di rete. Controlla la tua connessione.']);
+  const NetworkError([
+    super.message = 'Errore di rete. Controlla la tua connessione.',
+  ]);
 }
 
 class UnknownAuthFailure extends AuthFailure {
-  const UnknownAuthFailure([super.message = 'Si è verificato un errore imprevisto durante l\'autenticazione.']);
+  const UnknownAuthFailure([
+    super.message =
+        'Si è verificato un errore imprevisto durante l\'autenticazione.',
+  ]);
 }
 
 class EmailAlreadyInUse extends AuthFailure {
-  const EmailAlreadyInUse([super.message = 'Questo indirizzo email è già in uso da un altro account.']);
+  const EmailAlreadyInUse([
+    super.message = 'Questo indirizzo email è già in uso da un altro account.',
+  ]);
 }
 
 class RateLimitExceeded extends AuthFailure {
-  const RateLimitExceeded([super.message = 'Troppi tentativi. Riprova tra qualche minuto.']);
+  const RateLimitExceeded([
+    super.message = 'Troppi tentativi. Riprova tra qualche minuto.',
+  ]);
 }

@@ -27,7 +27,10 @@ class SettingsPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
+              height:
+                  MediaQuery.of(context).padding.top +
+                  kToolbarHeight +
+                  AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -43,27 +46,30 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                
+
                 _SettingsSection(
                   title: l10n.appSection,
                   children: [
                     _SettingsTile(
                       icon: Icons.language_rounded,
                       title: l10n.language,
-                      subtitle: currentLocale.languageCode == 'it' ? 'Italiano' : 'English',
+                      subtitle: currentLocale.languageCode == 'it'
+                          ? 'Italiano'
+                          : 'English',
                       onTap: () => _showLanguagePicker(context, ref, l10n),
                     ),
                     _SettingsTile(
                       icon: Icons.palette_rounded,
                       title: l10n.theme,
                       subtitle: _getThemeLabel(context, themeMode, l10n),
-                      onTap: () => _showThemePicker(context, ref, l10n, themeMode),
+                      onTap: () =>
+                          _showThemePicker(context, ref, l10n, themeMode),
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: AppSpacing.xl),
-                
+
                 _SettingsSection(
                   title: l10n.infoSection,
                   children: [
@@ -130,7 +136,12 @@ class SettingsPage extends ConsumerWidget {
     }
   }
 
-  void _showThemePicker(BuildContext context, WidgetRef ref, dynamic l10n, AppThemeMode currentMode) {
+  void _showThemePicker(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic l10n,
+    AppThemeMode currentMode,
+  ) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -138,29 +149,45 @@ class SettingsPage extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.xl),
         decoration: BoxDecoration(
           color: AppColors.of(context).background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radius)),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radius),
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               l10n.chooseTheme,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: AppSpacing.lg),
             ListTile(
               leading: const Icon(Icons.light_mode_rounded),
               title: Text(l10n.themeLight),
-              trailing: currentMode == AppThemeMode.light ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
+              trailing: currentMode == AppThemeMode.light
+                  ? const Icon(
+                      Icons.check_circle_rounded,
+                      color: AppColors.primary,
+                    )
+                  : null,
               onTap: () {
-                ref.read(themeModeProvider.notifier).setMode(AppThemeMode.light);
+                ref
+                    .read(themeModeProvider.notifier)
+                    .setMode(AppThemeMode.light);
                 Navigator.pop(context);
               },
             ),
             ListTile(
               leading: const Icon(Icons.dark_mode_rounded),
               title: Text(l10n.themeDark),
-              trailing: currentMode == AppThemeMode.dark ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
+              trailing: currentMode == AppThemeMode.dark
+                  ? const Icon(
+                      Icons.check_circle_rounded,
+                      color: AppColors.primary,
+                    )
+                  : null,
               onTap: () {
                 ref.read(themeModeProvider.notifier).setMode(AppThemeMode.dark);
                 Navigator.pop(context);
@@ -169,9 +196,16 @@ class SettingsPage extends ConsumerWidget {
             ListTile(
               leading: const Icon(Icons.nightlight_round),
               title: Text(l10n.themeMichele),
-              trailing: currentMode == AppThemeMode.pureBlack ? const Icon(Icons.check_circle_rounded, color: AppColors.primary) : null,
+              trailing: currentMode == AppThemeMode.pureBlack
+                  ? const Icon(
+                      Icons.check_circle_rounded,
+                      color: AppColors.primary,
+                    )
+                  : null,
               onTap: () {
-                ref.read(themeModeProvider.notifier).setMode(AppThemeMode.pureBlack);
+                ref
+                    .read(themeModeProvider.notifier)
+                    .setMode(AppThemeMode.pureBlack);
                 Navigator.pop(context);
               },
             ),
@@ -189,27 +223,35 @@ class SettingsPage extends ConsumerWidget {
         padding: const EdgeInsets.all(AppSpacing.xl),
         decoration: BoxDecoration(
           color: AppColors.of(context).background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radius)),
+          borderRadius: const BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radius),
+          ),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               l10n.chooseLanguage,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: AppSpacing.lg),
             ListTile(
               title: const Text('Italiano'),
               onTap: () {
-                ref.read(localeProvider.notifier).changeLocale(const Locale('it'));
+                ref
+                    .read(localeProvider.notifier)
+                    .changeLocale(const Locale('it'));
                 Navigator.pop(context);
               },
             ),
             ListTile(
               title: const Text('English'),
               onTap: () {
-                ref.read(localeProvider.notifier).changeLocale(const Locale('en'));
+                ref
+                    .read(localeProvider.notifier)
+                    .changeLocale(const Locale('en'));
                 Navigator.pop(context);
               },
             ),
@@ -233,7 +275,10 @@ class _SettingsSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm, vertical: AppSpacing.sm),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.sm,
+          ),
           child: Text(
             title.toUpperCase(),
             style: TextStyle(
@@ -249,8 +294,12 @@ class _SettingsSection extends StatelessWidget {
             color: colors.surface.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(AppSpacing.radius),
             boxShadow: [
-               BoxShadow(
-                color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.light ? 0.05 : 0.2),
+              BoxShadow(
+                color: Colors.black.withValues(
+                  alpha: Theme.of(context).brightness == Brightness.light
+                      ? 0.05
+                      : 0.2,
+                ),
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -282,10 +331,15 @@ class _SettingsTile extends StatelessWidget {
     return ListTile(
       leading: Icon(icon, color: colors.onSurfacePrimary),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-      subtitle: Text(subtitle, style: TextStyle(color: colors.onSurfaceSecondary)),
+      subtitle: Text(
+        subtitle,
+        style: TextStyle(color: colors.onSurfaceSecondary),
+      ),
       trailing: onTap != null ? const Icon(Icons.chevron_right_rounded) : null,
       onTap: onTap,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radius)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+      ),
     );
   }
 }

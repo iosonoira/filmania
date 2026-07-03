@@ -35,18 +35,20 @@ class WatchlistRepositoryImpl implements IWatchlistRepository {
 
   @override
   Stream<List<Watchlist>> watchUserWatchlists() {
-    return _remote.watchUserWatchlists(_userId).map(
-      (dtos) => dtos
-          .map(
-            (dto) => Watchlist(
-              id: dto.id,
-              userId: dto.userId,
-              name: dto.name,
-              createdAt: dto.createdAt,
-            ),
-          )
-          .toList(),
-    );
+    return _remote
+        .watchUserWatchlists(_userId)
+        .map(
+          (dtos) => dtos
+              .map(
+                (dto) => Watchlist(
+                  id: dto.id,
+                  userId: dto.userId,
+                  name: dto.name,
+                  createdAt: dto.createdAt,
+                ),
+              )
+              .toList(),
+        );
   }
 
   // ── Item CRUD ───────────────────────────────────────────────────────────────

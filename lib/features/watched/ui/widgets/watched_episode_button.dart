@@ -32,11 +32,13 @@ class WatchedEpisodeButton extends ConsumerWidget {
     final colors = AppColors.of(context);
     final user = ref.watch(authStateProvider).value;
 
-    final isWatchedAsync = ref.watch(isEpisodeWatchedProvider(
-      seriesId: seriesId,
-      seasonNumber: seasonNumber,
-      episodeNumber: episodeNumber,
-    ));
+    final isWatchedAsync = ref.watch(
+      isEpisodeWatchedProvider(
+        seriesId: seriesId,
+        seasonNumber: seasonNumber,
+        episodeNumber: episodeNumber,
+      ),
+    );
 
     final isWatched = isWatchedAsync.value ?? false;
 
@@ -63,27 +65,27 @@ class WatchedEpisodeButton extends ConsumerWidget {
             runtimeMinutes: runtimeMinutes,
           );
         }
-        
+
         // Invalidate both the episode status AND the series watched status
         // since marking an episode might trigger marking the series as watched
-        ref.invalidate(isEpisodeWatchedProvider(
-          seriesId: seriesId,
-          seasonNumber: seasonNumber,
-          episodeNumber: episodeNumber,
-        ));
-        
+        ref.invalidate(
+          isEpisodeWatchedProvider(
+            seriesId: seriesId,
+            seasonNumber: seasonNumber,
+            episodeNumber: episodeNumber,
+          ),
+        );
+
         // Also refresh the series progress stream if anyone is watching it
         ref.invalidate(watchedEpisodesProvider(seriesId));
 
         // Refreshes the eye icon on the series poster
-        ref.invalidate(isMediaWatchedProvider(
-          mediaId: seriesId,
-          mediaType: MediaType.tv,
-        ));
+        ref.invalidate(
+          isMediaWatchedProvider(mediaId: seriesId, mediaType: MediaType.tv),
+        );
 
         // Refreshes the list in the "Watched" page
         ref.invalidate(watchedItemsProvider(MediaType.tv));
-        
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -96,10 +98,14 @@ class WatchedEpisodeButton extends ConsumerWidget {
     if (isIconOnly) {
       return IconButton(
         style: IconButton.styleFrom(
-          backgroundColor: isWatched ? colors.primary.withValues(alpha: 0.14) : Colors.transparent,
+          backgroundColor: isWatched
+              ? colors.primary.withValues(alpha: 0.14)
+              : Colors.transparent,
         ),
         icon: Icon(
-          isWatched ? Icons.check_circle_rounded : Icons.check_circle_outline_rounded,
+          isWatched
+              ? Icons.check_circle_rounded
+              : Icons.check_circle_outline_rounded,
           color: isWatched ? colors.primary : colors.onSurfaceSecondary,
         ),
         onPressed: toggleWatched,
@@ -110,14 +116,19 @@ class WatchedEpisodeButton extends ConsumerWidget {
       onPressed: toggleWatched,
       style: OutlinedButton.styleFrom(
         foregroundColor: isWatched ? colors.primary : colors.onSurfacePrimary,
-        backgroundColor: isWatched ? colors.primary.withValues(alpha: 0.1) : Colors.transparent,
+        backgroundColor: isWatched
+            ? colors.primary.withValues(alpha: 0.1)
+            : Colors.transparent,
         side: BorderSide(
-          color: isWatched ? colors.primary.withValues(alpha: 0.5) : colors.onSurfaceSecondary.withValues(alpha: 0.3),
+          color: isWatched
+              ? colors.primary.withValues(alpha: 0.5)
+              : colors.onSurfaceSecondary.withValues(alpha: 0.3),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
       ),
       icon: Icon(
         isWatched ? Icons.check_circle : Icons.visibility_outlined,

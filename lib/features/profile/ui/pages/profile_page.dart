@@ -45,7 +45,10 @@ class ProfilePage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
+              height:
+                  MediaQuery.of(context).padding.top +
+                  kToolbarHeight +
+                  AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -132,8 +135,11 @@ class _ProfileHero extends StatelessWidget {
                           placeholder: (context, url) => const Center(
                             child: CircularProgressIndicator(strokeWidth: 2),
                           ),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.person, color: colors.primary, size: 50),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.person,
+                            color: colors.primary,
+                            size: 50,
+                          ),
                         ),
                       )
                     : Icon(Icons.person, color: colors.primary, size: 50),
@@ -183,7 +189,6 @@ class _ProfileHero extends StatelessWidget {
   }
 }
 
-
 class _StatsBentoGrid extends ConsumerWidget {
   const _StatsBentoGrid();
 
@@ -198,13 +203,14 @@ class _StatsBentoGrid extends ConsumerWidget {
         child: Center(
           child: SizedBox(
             height: 120,
-            child: Center(child: CircularProgressIndicator(color: colors.primary)),
+            child: Center(
+              child: CircularProgressIndicator(color: colors.primary),
+            ),
           ),
         ),
       ),
-      error: (error, stack) => const _BentoCard(
-        child: Center(child: Icon(Icons.error_outline)),
-      ),
+      error: (error, stack) =>
+          const _BentoCard(child: Center(child: Icon(Icons.error_outline))),
       data: (stats) {
         final totalMinutes = stats?.totalWatchTimeMinutes ?? 0;
         final totalHours = totalMinutes / 60.0;
@@ -221,7 +227,11 @@ class _StatsBentoGrid extends ConsumerWidget {
                 child: Icon(
                   Icons.watch_later,
                   size: 160,
-                  color: colors.primary.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.05 : 0.1),
+                  color: colors.primary.withValues(
+                    alpha: Theme.of(context).brightness == Brightness.dark
+                        ? 0.05
+                        : 0.1,
+                  ),
                 ),
               ),
               Column(
@@ -241,8 +251,8 @@ class _StatsBentoGrid extends ConsumerWidget {
                     textBaseline: TextBaseline.alphabetic,
                     children: [
                       Text(
-                        totalHours < 10 
-                            ? totalHours.toStringAsFixed(1) 
+                        totalHours < 10
+                            ? totalHours.toStringAsFixed(1)
                             : totalHours.floor().toString(),
                         style: textTheme.displayLarge?.copyWith(
                           color: colors.primary,
@@ -293,9 +303,7 @@ class _StatsBentoGrid extends ConsumerWidget {
 }
 
 class _BentoCard extends StatelessWidget {
-  const _BentoCard({
-    required this.child,
-  });
+  const _BentoCard({required this.child});
 
   final Widget child;
 
@@ -306,20 +314,24 @@ class _BentoCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.xl),
       decoration: BoxDecoration(
-        color: isDark 
-            ? colors.surface.withValues(alpha: 0.4) 
-            : colors.surface,
+        color: isDark ? colors.surface.withValues(alpha: 0.4) : colors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radius),
         border: Border.all(
-          color: colors.onSurfacePrimary.withValues(alpha: isDark ? 0.05 : 0.08),
-        ),
-        boxShadow: isDark ? null : [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15), // Much darker shadow
-            blurRadius: 40,
-            offset: const Offset(0, 20),
+          color: colors.onSurfacePrimary.withValues(
+            alpha: isDark ? 0.05 : 0.08,
           ),
-        ],
+        ),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(
+                    alpha: 0.15,
+                  ), // Much darker shadow
+                  blurRadius: 40,
+                  offset: const Offset(0, 20),
+                ),
+              ],
       ),
       child: child,
     );
@@ -349,18 +361,12 @@ class _MiniStat extends StatelessWidget {
         ),
         Text(
           value,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w800,
-          ),
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
         ),
         if (subtitle != null)
           Text(
             subtitle!,
-            style: TextStyle(
-              fontSize: 9,
-              color: colors.onSurfaceSecondary,
-            ),
+            style: TextStyle(fontSize: 9, color: colors.onSurfaceSecondary),
           ),
       ],
     );
@@ -427,7 +433,9 @@ class _RecentActivitySection extends ConsumerWidget {
               }
 
               return Column(
-                children: recentItems.map((item) => _ActivityItem(item: item)).toList(),
+                children: recentItems
+                    .map((item) => _ActivityItem(item: item))
+                    .toList(),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -464,18 +472,24 @@ class _CategoryCard extends StatelessWidget {
       child: Container(
         height: 100,
         decoration: BoxDecoration(
-          color: isDark ? colors.surface.withValues(alpha: 0.8) : colors.surface,
+          color: isDark
+              ? colors.surface.withValues(alpha: 0.8)
+              : colors.surface,
           borderRadius: BorderRadius.circular(AppSpacing.radius),
           border: Border.all(
-            color: colors.onSurfacePrimary.withValues(alpha: isDark ? 0.1 : 0.08),
-          ),
-          boxShadow: isDark ? null : [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.03),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+            color: colors.onSurfacePrimary.withValues(
+              alpha: isDark ? 0.1 : 0.08,
             ),
-          ],
+          ),
+          boxShadow: isDark
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.03),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ],
         ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
@@ -483,26 +497,32 @@ class _CategoryCard extends StatelessWidget {
             if (items.isNotEmpty)
               Positioned.fill(
                 child: Row(
-                  children: items.take(3).map((item) => Expanded(
-                    child: Container(
-                      clipBehavior: Clip.antiAlias,
-                      decoration: const BoxDecoration(),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          if (item.posterPath != null)
-                            CachedNetworkImage(
-                              imageUrl: 'https://image.tmdb.org/t/p/w200${item.posterPath}',
-                              fit: BoxFit.cover,
-                              memCacheWidth: 150,
+                  children: items
+                      .take(3)
+                      .map(
+                        (item) => Expanded(
+                          child: Container(
+                            clipBehavior: Clip.antiAlias,
+                            decoration: const BoxDecoration(),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                if (item.posterPath != null)
+                                  CachedNetworkImage(
+                                    imageUrl:
+                                        'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                                    fit: BoxFit.cover,
+                                    memCacheWidth: 150,
+                                  ),
+                                Container(
+                                  color: Colors.black.withValues(alpha: 0.6),
+                                ),
+                              ],
                             ),
-                          Container(
-                            color: Colors.black.withValues(alpha: 0.6),
                           ),
-                        ],
-                      ),
-                    ),
-                  )).toList(),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             Center(
@@ -531,14 +551,15 @@ class _CategoryCardPlaceholder extends StatelessWidget {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.3 : 0.6),
+        color: colors.surface.withValues(
+          alpha: Theme.of(context).brightness == Brightness.dark ? 0.3 : 0.6,
+        ),
         borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
       child: const Center(child: CircularProgressIndicator()),
     );
   }
 }
-
 
 class _ActivityItem extends StatelessWidget {
   const _ActivityItem({required this.item});
@@ -561,15 +582,19 @@ class _ActivityItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: AppSpacing.md),
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: isDark ? colors.surface.withValues(alpha: 0.5) : colors.surface,
+          color: isDark
+              ? colors.surface.withValues(alpha: 0.5)
+              : colors.surface,
           borderRadius: BorderRadius.circular(AppSpacing.md),
-          boxShadow: isDark ? null : [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
+          boxShadow: isDark
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
         ),
         child: Row(
           children: [
@@ -580,7 +605,8 @@ class _ActivityItem extends StatelessWidget {
                 height: 75,
                 child: item.posterPath != null
                     ? CachedNetworkImage(
-                        imageUrl: 'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                        imageUrl:
+                            'https://image.tmdb.org/t/p/w200${item.posterPath}',
                         fit: BoxFit.cover,
                         memCacheWidth: 100,
                       )
@@ -594,13 +620,16 @@ class _ActivityItem extends StatelessWidget {
                 children: [
                   Text(
                     item.mediaTitle,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    item.mediaType == MediaType.movie 
-                        ? AppLocalizations.of(context)!.moviesTitle 
+                    item.mediaType == MediaType.movie
+                        ? AppLocalizations.of(context)!.moviesTitle
                         : AppLocalizations.of(context)!.tvSeriesTitle,
                     style: textTheme.labelSmall?.copyWith(
                       color: colors.onSurfaceSecondary,
@@ -643,17 +672,23 @@ class _EmptyActivity extends StatelessWidget {
       decoration: BoxDecoration(
         color: isDark ? colors.surface.withValues(alpha: 0.3) : colors.surface,
         borderRadius: BorderRadius.circular(AppSpacing.radius),
-        boxShadow: isDark ? null : [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 10,
+                  offset: const Offset(0, 5),
+                ),
+              ],
       ),
       child: Column(
         children: [
-          Icon(Icons.movie_outlined, size: 48, color: colors.onSurfaceSecondary.withValues(alpha: 0.5)),
+          Icon(
+            Icons.movie_outlined,
+            size: 48,
+            color: colors.onSurfaceSecondary.withValues(alpha: 0.5),
+          ),
           const SizedBox(height: AppSpacing.md),
           Text(
             AppLocalizations.of(context)!.noRecentActivity,

@@ -29,7 +29,10 @@ class WatchlistPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
+              height:
+                  MediaQuery.of(context).padding.top +
+                  kToolbarHeight +
+                  AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -78,18 +81,15 @@ class WatchlistPage extends ConsumerWidget {
                     crossAxisSpacing: AppSpacing.md,
                     mainAxisSpacing: AppSpacing.md,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final wl = lists[index];
-                      return _WatchlistCard(
-                        watchlist: wl,
-                        onTap: () => context.push(
-                          AppRoutes.watchlistDetail.replaceFirst(':id', wl.id),
-                        ),
-                      );
-                    },
-                    childCount: lists.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final wl = lists[index];
+                    return _WatchlistCard(
+                      watchlist: wl,
+                      onTap: () => context.push(
+                        AppRoutes.watchlistDetail.replaceFirst(':id', wl.id),
+                      ),
+                    );
+                  }, childCount: lists.length),
                 ),
               );
             },
@@ -168,8 +168,8 @@ class _WatchlistCard extends ConsumerWidget {
                 imageUrl: cover,
                 fit: BoxFit.cover,
                 memCacheWidth: 300,
-                placeholder: (context, url) => Container(
-                    color: colors.surface.withValues(alpha: 0.2)),
+                placeholder: (context, url) =>
+                    Container(color: colors.surface.withValues(alpha: 0.2)),
                 errorWidget: (context, url, err) =>
                     _WatchlistCoverPlaceholder(colors: colors),
               )
@@ -257,10 +257,7 @@ class _WatchlistCoverPlaceholder extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            colors.primary.withValues(alpha: 0.3),
-            colors.surface,
-          ],
+          colors: [colors.primary.withValues(alpha: 0.3), colors.surface],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

@@ -17,8 +17,5 @@ abstract class WatchlistDto with _$WatchlistDto {
   factory WatchlistDto.fromJson(Map<String, dynamic> json) =>
       _$WatchlistDtoFromJson(json);
 
-  Map<String, dynamic> toInsertJson() => {
-        'user_id': userId,
-        'name': name,
-      };
+  Map<String, dynamic> toInsertJson() => {'user_id': userId, 'name': name};
 }

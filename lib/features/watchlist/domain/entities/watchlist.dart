@@ -18,6 +18,8 @@ abstract class Watchlist with _$Watchlist {
   int get itemCount => items.length;
 
   /// Returns first poster URL of items, used as cover.
-  String? get coverPosterUrl =>
-      items.where((i) => i.fullPosterUrl != null).map((i) => i.fullPosterUrl).firstOrNull;
+  String? get coverPosterUrl => items
+      .where((i) => i.fullPosterUrl != null)
+      .map((i) => i.fullPosterUrl)
+      .firstOrNull;
 }

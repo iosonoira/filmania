@@ -26,7 +26,9 @@ class GlassOverlay extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
           child: Container(
-            color: color ?? AppColors.of(context).background.withValues(alpha: 0.8),
+            color:
+                color ??
+                AppColors.of(context).background.withValues(alpha: 0.8),
             child: child,
           ),
         ),

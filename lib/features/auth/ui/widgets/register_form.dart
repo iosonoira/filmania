@@ -19,14 +19,14 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  
+
   final _usernameFocusNode = FocusNode();
   final _passwordFocusNode = FocusNode();
   final _confirmPasswordFocusNode = FocusNode();
-  
+
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -43,7 +43,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
 
   void _handleSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      ref.read(authProvider.notifier).register(
+      ref
+          .read(authProvider.notifier)
+          .register(
             _emailController.text,
             _passwordController.text,
             _usernameController.text,
@@ -73,7 +75,9 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             content: Text(message),
             backgroundColor: colors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.md)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.md),
+            ),
           ),
         );
       }
@@ -86,9 +90,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(
-              hintText: l10n.emailAddress,
-            ),
+            decoration: InputDecoration(hintText: l10n.emailAddress),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _usernameFocusNode.requestFocus(),
@@ -104,9 +106,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
           TextFormField(
             controller: _usernameController,
             focusNode: _usernameFocusNode,
-            decoration: InputDecoration(
-              hintText: l10n.username,
-            ),
+            decoration: InputDecoration(hintText: l10n.username),
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
             validator: (value) =>
@@ -126,7 +126,8 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                   size: 20,
                   color: colors.onSurfaceSecondary,
                 ),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
             ),
             obscureText: _obscurePassword,
@@ -141,11 +142,15 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
               hintText: l10n.confirmPassword,
               suffixIcon: IconButton(
                 icon: Icon(
-                  _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
                   size: 20,
                   color: colors.onSurfaceSecondary,
                 ),
-                onPressed: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
+                onPressed: () => setState(
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                ),
               ),
             ),
             obscureText: _obscureConfirmPassword,
@@ -160,7 +165,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             },
           ),
           const SizedBox(height: AppSpacing.xl),
-          
+
           // Hero CTA styling from DESIGN.md
           Material(
             color: Colors.transparent,
@@ -179,14 +184,16 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
                     color: colors.primary.withValues(alpha: 0.2),
                     blurRadius: 32,
                     offset: const Offset(0, 8),
-                  )
+                  ),
                 ],
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(AppSpacing.radius),
                 onTap: isLoading ? null : _handleSubmit,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md + 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.md + 4,
+                  ),
                   child: Center(
                     child: isLoading
                         ? const SizedBox(
@@ -212,7 +219,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

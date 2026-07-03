@@ -29,7 +29,10 @@ class TrendingTVSeriesPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
+              height:
+                  MediaQuery.of(context).padding.top +
+                  kToolbarHeight +
+                  AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -56,18 +59,15 @@ class TrendingTVSeriesPage extends ConsumerWidget {
                   crossAxisSpacing: AppSpacing.md,
                   mainAxisSpacing: AppSpacing.md,
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final tv = tvSeries[index];
-                    return MediaGridCard.tv(
-                      tv: tv,
-                      onTap: () => context.push(
-                        AppRoutes.tvDetails.replaceAll(':id', tv.id.toString()),
-                      ),
-                    );
-                  },
-                  childCount: tvSeries.length,
-                ),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final tv = tvSeries[index];
+                  return MediaGridCard.tv(
+                    tv: tv,
+                    onTap: () => context.push(
+                      AppRoutes.tvDetails.replaceAll(':id', tv.id.toString()),
+                    ),
+                  );
+                }, childCount: tvSeries.length),
               ),
             ),
             loading: () => const SliverFillRemaining(
@@ -76,7 +76,8 @@ class TrendingTVSeriesPage extends ConsumerWidget {
             error: (err, stack) => SliverFillRemaining(
               child: AppErrorView(
                 error: err,
-                onRetry: () => ref.invalidate(trendingTVSeriesProvider(page: 1)),
+                onRetry: () =>
+                    ref.invalidate(trendingTVSeriesProvider(page: 1)),
               ),
             ),
           ),

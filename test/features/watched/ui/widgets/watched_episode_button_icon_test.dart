@@ -34,14 +34,19 @@ Widget _buildSubject({bool isWatched = false}) {
 }
 
 void main() {
-  testWidgets('isIconOnly shows check_circle_outline_rounded when not watched', (tester) async {
-    await tester.pumpWidget(_buildSubject(isWatched: false));
-    await tester.pump();
-    expect(find.byIcon(Icons.check_circle_outline_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
-  });
+  testWidgets(
+    'isIconOnly shows check_circle_outline_rounded when not watched',
+    (tester) async {
+      await tester.pumpWidget(_buildSubject(isWatched: false));
+      await tester.pump();
+      expect(find.byIcon(Icons.check_circle_outline_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
+    },
+  );
 
-  testWidgets('isIconOnly shows check_circle_rounded when watched', (tester) async {
+  testWidgets('isIconOnly shows check_circle_rounded when watched', (
+    tester,
+  ) async {
     await tester.pumpWidget(_buildSubject(isWatched: true));
     await tester.pump();
     expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);

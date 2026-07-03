@@ -18,7 +18,7 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> login(String email, String password) async {
     state = const AsyncLoading();
-    
+
     // Rule: Use AsyncValue.guard() for safe async operations (Rule 9/156 State Management)
     final result = await AsyncValue.guard(() async {
       final repository = ref.read(authRepositoryProvider);
@@ -35,7 +35,7 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> register(String email, String password, String username) async {
     state = const AsyncLoading();
-    
+
     final result = await AsyncValue.guard(() async {
       final repository = ref.read(authRepositoryProvider);
       await repository.signUpWithEmailAndPassword(
@@ -52,7 +52,9 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<void> logout() async {
     state = const AsyncLoading();
-    final result = await AsyncValue.guard(() => ref.read(authRepositoryProvider).signOut());
+    final result = await AsyncValue.guard(
+      () => ref.read(authRepositoryProvider).signOut(),
+    );
     if (ref.mounted) {
       state = result;
     }

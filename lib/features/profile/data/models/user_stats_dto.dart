@@ -10,8 +10,10 @@ abstract class UserStatsDto with _$UserStatsDto {
     @JsonKey(name: 'movies_watched_count') required int moviesWatchedCount,
     @JsonKey(name: 'tv_series_watched_count') required int tvSeriesWatchedCount,
     @JsonKey(name: 'episodes_watched_count') required int episodesWatchedCount,
-    @JsonKey(name: 'total_watch_time_minutes') required int totalWatchTimeMinutes,
-    @JsonKey(name: 'movies_watch_time_minutes') required int moviesWatchTimeMinutes,
+    @JsonKey(name: 'total_watch_time_minutes')
+    required int totalWatchTimeMinutes,
+    @JsonKey(name: 'movies_watch_time_minutes')
+    required int moviesWatchTimeMinutes,
     @JsonKey(name: 'tv_watch_time_minutes') required int tvWatchTimeMinutes,
     @JsonKey(name: 'last_updated_at') DateTime? lastUpdatedAt,
   }) = _UserStatsDto;
@@ -22,12 +24,12 @@ abstract class UserStatsDto with _$UserStatsDto {
       _$UserStatsDtoFromJson(json);
 
   UserStats toEntity() => UserStats(
-        moviesWatchedCount: moviesWatchedCount,
-        tvSeriesWatchedCount: tvSeriesWatchedCount,
-        episodesWatchedCount: episodesWatchedCount,
-        totalWatchTimeMinutes: totalWatchTimeMinutes,
-        moviesWatchTimeMinutes: moviesWatchTimeMinutes,
-        tvWatchTimeMinutes: tvWatchTimeMinutes,
-        lastUpdatedAt: lastUpdatedAt,
-      );
+    moviesWatchedCount: moviesWatchedCount,
+    tvSeriesWatchedCount: tvSeriesWatchedCount,
+    episodesWatchedCount: episodesWatchedCount,
+    totalWatchTimeMinutes: totalWatchTimeMinutes,
+    moviesWatchTimeMinutes: moviesWatchTimeMinutes,
+    tvWatchTimeMinutes: tvWatchTimeMinutes,
+    lastUpdatedAt: lastUpdatedAt,
+  );
 }

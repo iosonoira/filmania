@@ -12,7 +12,7 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
   AppThemeMode build() {
     final prefs = ref.watch(sharedPreferencesProvider);
     final savedTheme = prefs.getString(_themeKey);
-    
+
     if (savedTheme != null) {
       return AppThemeMode.values.firstWhere(
         (e) => e.name == savedTheme,
@@ -29,7 +29,9 @@ class ThemeModeNotifier extends _$ThemeModeNotifier {
   }
 
   Future<void> toggle() async {
-    final newMode = state == AppThemeMode.light ? AppThemeMode.dark : AppThemeMode.light;
+    final newMode = state == AppThemeMode.light
+        ? AppThemeMode.dark
+        : AppThemeMode.light;
     await setMode(newMode);
   }
 }

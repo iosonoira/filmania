@@ -26,10 +26,6 @@ class AuthUserDto {
 }
 
 extension AuthUserDtoMapper on AuthUserDto {
-  AuthUser toEntity() => AuthUser(
-        id: id,
-        email: email,
-        username: username,
-        photoUrl: photoUrl,
-      );
+  AuthUser toEntity() =>
+      AuthUser(id: id, email: email, username: username, photoUrl: photoUrl);
 }

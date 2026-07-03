@@ -12,7 +12,7 @@ abstract class AppColors {
   static const surfaceDark = Color(0xFF1B1A23);
   static const onSurfacePrimaryDark = Color(0xFFF5F5F5);
   static const onSurfaceSecondaryDark = Color(0xFF938F99);
-  
+
   // Pure Black Mode (Michele)
   static const backgroundPureBlack = Color(0xFF000000);
   static const surfacePureBlack = Color(0xFF050505);
@@ -36,7 +36,7 @@ abstract class AppColors {
     final theme = Theme.of(context);
     final isPureBlack = theme.scaffoldBackgroundColor == backgroundPureBlack;
     if (isPureBlack) return _pureBlackScheme;
-    
+
     final isDark = theme.brightness == Brightness.dark;
     return isDark ? _darkScheme : _lightScheme;
   }

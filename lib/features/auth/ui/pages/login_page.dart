@@ -10,7 +10,7 @@ class LoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
-    
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -50,12 +50,14 @@ class LoginPage extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.xxxl),
-              
+
               // Container with depth as per DESIGN.md
               Container(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(AppSpacing.radius + 8),
                 ),
                 child: const LoginForm(),

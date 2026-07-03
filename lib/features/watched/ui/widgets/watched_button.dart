@@ -32,19 +32,18 @@ class WatchedButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
     final user = ref.watch(authStateProvider).value;
-    
+
     // FutureProvider for checking watched status
-    final isWatchedAsync = ref.watch(isMediaWatchedProvider(
-      mediaId: mediaId,
-      mediaType: mediaType,
-    ));
+    final isWatchedAsync = ref.watch(
+      isMediaWatchedProvider(mediaId: mediaId, mediaType: mediaType),
+    );
 
     final isWatched = isWatchedAsync.value ?? false;
 
     Future<void> toggleWatched() async {
       if (user == null) return;
       final repo = ref.read(watchedRepositoryProvider);
-      
+
       try {
         if (isWatched) {
           await repo.removeFromWatched(
@@ -67,14 +66,13 @@ class WatchedButton extends ConsumerWidget {
           );
         }
         // Invalidate to refresh immediately
-        ref.invalidate(isMediaWatchedProvider(
-          mediaId: mediaId,
-          mediaType: mediaType,
-        ));
-        
+        ref.invalidate(
+          isMediaWatchedProvider(mediaId: mediaId, mediaType: mediaType),
+        );
+
         // Ensure the "Watched" page list refreshes
         ref.invalidate(watchedItemsProvider(mediaType));
-        
+
         if (mediaType == MediaType.tv) {
           ref.invalidate(watchedEpisodesProvider(mediaId));
         }
@@ -98,10 +96,14 @@ class WatchedButton extends ConsumerWidget {
         ),
         style: IconButton.styleFrom(
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          backgroundColor: hasBackground 
-            ? (isWatched ? colors.primary.withValues(alpha: 0.8) : Colors.black.withValues(alpha: 0.3))
-            : Colors.transparent,
-          foregroundColor: (hasBackground || !isWatched) ? Colors.white : colors.primary,
+          backgroundColor: hasBackground
+              ? (isWatched
+                    ? colors.primary.withValues(alpha: 0.8)
+                    : Colors.black.withValues(alpha: 0.3))
+              : Colors.transparent,
+          foregroundColor: (hasBackground || !isWatched)
+              ? Colors.white
+              : colors.primary,
           minimumSize: const Size(32, 32),
           fixedSize: const Size(32, 32),
           padding: EdgeInsets.zero,
@@ -118,12 +120,15 @@ class WatchedButton extends ConsumerWidget {
       onPressed: toggleWatched,
       style: OutlinedButton.styleFrom(
         foregroundColor: isWatched ? colors.primary : colors.primary,
-        backgroundColor: isWatched ? colors.primary.withValues(alpha: 0.1) : Colors.transparent,
+        backgroundColor: isWatched
+            ? colors.primary.withValues(alpha: 0.1)
+            : Colors.transparent,
         side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(100),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.md,
+          vertical: AppSpacing.sm,
         ),
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
       ),
       icon: Icon(
         isWatched ? Icons.check_circle : Icons.visibility_outlined,

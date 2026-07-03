@@ -5,10 +5,7 @@ import '../../features/home/ui/widgets/home_widgets.dart';
 class MainScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
 
-  const MainScaffold({
-    super.key,
-    required this.navigationShell,
-  });
+  const MainScaffold({super.key, required this.navigationShell});
 
   @override
   Widget build(BuildContext context) {

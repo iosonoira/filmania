@@ -25,11 +25,13 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final episodeAsync = ref.watch(tvEpisodeDetailsProvider(
-      tvId: tvId,
-      seasonNumber: seasonNumber,
-      episodeNumber: episodeNumber,
-    ));
+    final episodeAsync = ref.watch(
+      tvEpisodeDetailsProvider(
+        tvId: tvId,
+        seasonNumber: seasonNumber,
+        episodeNumber: episodeNumber,
+      ),
+    );
     final seriesAsync = ref.watch(tvSeriesDetailsProvider(tvId));
 
     return Scaffold(
@@ -53,11 +55,13 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => AppErrorView(
           error: err,
-          onRetry: () => ref.invalidate(tvEpisodeDetailsProvider(
-            tvId: tvId,
-            seasonNumber: seasonNumber,
-            episodeNumber: episodeNumber,
-          )),
+          onRetry: () => ref.invalidate(
+            tvEpisodeDetailsProvider(
+              tvId: tvId,
+              seasonNumber: seasonNumber,
+              episodeNumber: episodeNumber,
+            ),
+          ),
         ),
       ),
     );
@@ -86,9 +90,7 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverToBoxAdapter(
-          child: SizedBox(
-            height: MediaQuery.of(context).padding.top,
-          ),
+          child: SizedBox(height: MediaQuery.of(context).padding.top),
         ),
         // Still Header
         SliverToBoxAdapter(
@@ -115,7 +117,11 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                   errorWidget: (context, url, error) => Container(
                     color: colors.surface.withValues(alpha: 0.1),
                     child: const Center(
-                      child: Icon(Icons.tv_rounded, color: Colors.grey, size: 64),
+                      child: Icon(
+                        Icons.tv_rounded,
+                        color: Colors.grey,
+                        size: 64,
+                      ),
                     ),
                   ),
                 ),
@@ -168,7 +174,11 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                   const SizedBox(width: AppSpacing.lg),
                 ],
                 if (episode.runtime != null) ...[
-                  Icon(Icons.timer_outlined, color: colors.onSurfaceSecondary, size: 20),
+                  Icon(
+                    Icons.timer_outlined,
+                    color: colors.onSurfaceSecondary,
+                    size: 20,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${episode.runtime} min',
@@ -179,7 +189,11 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                   const SizedBox(width: AppSpacing.lg),
                 ],
                 if (episode.airDate != null) ...[
-                  Icon(Icons.calendar_today_rounded, color: colors.onSurfaceSecondary, size: 20),
+                  Icon(
+                    Icons.calendar_today_rounded,
+                    color: colors.onSurfaceSecondary,
+                    size: 20,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     episode.airDate!,
@@ -195,7 +209,12 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
 
         // Actions
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.lg,
+            AppSpacing.lg,
+            0,
+          ),
           sliver: SliverToBoxAdapter(
             child: Row(
               children: [
@@ -229,7 +248,9 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
-                  episode.overview.isNotEmpty ? episode.overview : AppLocalizations.of(context)!.noDescription,
+                  episode.overview.isNotEmpty
+                      ? episode.overview
+                      : AppLocalizations.of(context)!.noDescription,
                   style: textTheme.bodyLarge?.copyWith(
                     color: colors.onSurfaceSecondary,
                     height: 1.6,
@@ -253,6 +274,7 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
     );
   }
 }
+
 class _TVEpisodeCastSection extends ConsumerWidget {
   final int tvId;
   final int seasonNumber;
@@ -266,11 +288,13 @@ class _TVEpisodeCastSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final creditsAsync = ref.watch(tvEpisodeCreditsProvider(
-      tvId: tvId,
-      seasonNumber: seasonNumber,
-      episodeNumber: episodeNumber,
-    ));
+    final creditsAsync = ref.watch(
+      tvEpisodeCreditsProvider(
+        tvId: tvId,
+        seasonNumber: seasonNumber,
+        episodeNumber: episodeNumber,
+      ),
+    );
 
     return creditsAsync.when(
       data: (cast) => Padding(

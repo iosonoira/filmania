@@ -40,7 +40,10 @@ Future<bool> isMediaInWatchlist(Ref ref, int mediaId, MediaType type) async {
 
 @riverpod
 Future<Set<String>> watchlistIdsContainingMedia(
-    Ref ref, int mediaId, MediaType type) async {
+  Ref ref,
+  int mediaId,
+  MediaType type,
+) async {
   final repo = ref.watch(watchlistRepositoryProvider);
   if (repo == null) return {};
   return repo.getWatchlistIdsContaining(mediaId: mediaId, mediaType: type);
@@ -59,7 +62,8 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     Watchlist? created;
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      if (repo == null)
+        throw const WatchlistGenericFailure('Utente non autenticato.');
       created = await repo.createWatchlist(name: name);
       ref.invalidate(userWatchlistsProvider);
     });
@@ -70,7 +74,8 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      if (repo == null)
+        throw const WatchlistGenericFailure('Utente non autenticato.');
       await repo.deleteWatchlist(watchlistId);
       ref.invalidate(userWatchlistsProvider);
     });
@@ -87,7 +92,10 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     );
   }
 
-  Future<void> addTVSeriesToWatchlist(TVSeries series, String watchlistId) async {
+  Future<void> addTVSeriesToWatchlist(
+    TVSeries series,
+    String watchlistId,
+  ) async {
     await addItem(
       watchlistId: watchlistId,
       id: series.id,
@@ -105,12 +113,13 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      if (repo == null)
+        throw const WatchlistGenericFailure('Utente non autenticato.');
       await repo.removeItemFromWatchlist(
-            watchlistId: watchlistId,
-            mediaId: mediaId,
-            mediaType: mediaType,
-          );
+        watchlistId: watchlistId,
+        mediaId: mediaId,
+        mediaType: mediaType,
+      );
       ref.invalidate(isMediaInWatchlistProvider(mediaId, mediaType));
       ref.invalidate(watchlistIdsContainingMediaProvider(mediaId, mediaType));
       ref.invalidate(watchlistItemsProvider(watchlistId));
@@ -127,14 +136,15 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null) throw const WatchlistGenericFailure('Utente non autenticato.');
+      if (repo == null)
+        throw const WatchlistGenericFailure('Utente non autenticato.');
       await repo.addItemToWatchlist(
-            watchlistId: watchlistId,
-            mediaId: id,
-            title: title,
-            mediaType: type,
-            posterPath: posterPath,
-          );
+        watchlistId: watchlistId,
+        mediaId: id,
+        title: title,
+        mediaType: type,
+        posterPath: posterPath,
+      );
       ref.invalidate(isMediaInWatchlistProvider(id, type));
       ref.invalidate(watchlistIdsContainingMediaProvider(id, type));
       ref.invalidate(watchlistItemsProvider(watchlistId));

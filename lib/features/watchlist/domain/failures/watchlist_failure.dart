@@ -7,9 +7,13 @@ sealed class WatchlistFailure implements Exception {
 }
 
 class SupabaseFailure extends WatchlistFailure {
-  const SupabaseFailure([super.message = 'Si è verificato un errore con il database.']);
+  const SupabaseFailure([
+    super.message = 'Si è verificato un errore con il database.',
+  ]);
 }
 
 class WatchlistGenericFailure extends WatchlistFailure {
-  const WatchlistGenericFailure([super.message = 'Si è verificato un errore imprevisto nella watchlist.']);
+  const WatchlistGenericFailure([
+    super.message = 'Si è verificato un errore imprevisto nella watchlist.',
+  ]);
 }

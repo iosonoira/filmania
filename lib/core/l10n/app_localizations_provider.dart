@@ -7,7 +7,9 @@ part 'app_localizations_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 SharedPreferences sharedPreferences(Ref ref) {
-  throw UnimplementedError('sharedPreferences must be overridden in ProviderScope');
+  throw UnimplementedError(
+    'sharedPreferences must be overridden in ProviderScope',
+  );
 }
 
 @Riverpod(keepAlive: true)

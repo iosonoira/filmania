@@ -24,11 +24,7 @@ class AppErrorView extends ConsumerWidget {
     final (icon, title, subtitle) = _resolveErrorData();
 
     if (compact) {
-      return _CompactErrorView(
-        icon: icon,
-        message: title,
-        onRetry: onRetry,
-      );
+      return _CompactErrorView(icon: icon, message: title, onRetry: onRetry);
     }
 
     return _FullErrorView(
@@ -41,47 +37,60 @@ class AppErrorView extends ConsumerWidget {
 
   (IconData, String, String) _resolveErrorData() {
     // ClientException (from Supabase/http) often means connection issues on Web
-    if (error.toString().contains('ClientException') || 
+    if (error.toString().contains('ClientException') ||
         error.toString().contains('Failed to fetch')) {
       return (
         Icons.signal_wifi_off_rounded,
         'Nessuna connessione.',
-        'Controlla il tuo Wi-Fi o i dati mobili.'
+        'Controlla il tuo Wi-Fi o i dati mobili.',
       );
     }
 
     return switch (error) {
       final NetworkFailure failure => switch (failure) {
-          TimeoutFailure() => (
-              Icons.wifi_off_rounded,
-              'Connessione lenta.',
-              'Riprova tra poco.'
-            ),
-          ConnectionFailure() => (
-              Icons.signal_wifi_off_rounded,
-              'Nessuna connessione.',
-              'Controlla il tuo Wi-Fi o i dati mobili.'
-            ),
-          ServerFailure(:final statusCode) => statusCode == 404
-              ? (Icons.search_off_rounded, 'Non trovato.', 'Il contenuto richiesto non esiste.')
-              : (Icons.cloud_off_rounded, 'Errore server.', 'Qualcosa è andato storto lato server.'),
-          UnauthorizedFailure() => (
-              Icons.lock_outline_rounded,
-              'Sessione scaduta.',
-              'Effettua di nuovo il login.'
-            ),
-          _ => (Icons.error_outline_rounded, 'Errore di rete.', 'Riprova più tardi.'),
-        },
-      final AuthFailure failure => (
-          Icons.person_outline_rounded,
-          'Errore Autenticazione',
-          failure.message
+        TimeoutFailure() => (
+          Icons.wifi_off_rounded,
+          'Connessione lenta.',
+          'Riprova tra poco.',
         ),
-      _ => (
+        ConnectionFailure() => (
+          Icons.signal_wifi_off_rounded,
+          'Nessuna connessione.',
+          'Controlla il tuo Wi-Fi o i dati mobili.',
+        ),
+        ServerFailure(:final statusCode) =>
+          statusCode == 404
+              ? (
+                  Icons.search_off_rounded,
+                  'Non trovato.',
+                  'Il contenuto richiesto non esiste.',
+                )
+              : (
+                  Icons.cloud_off_rounded,
+                  'Errore server.',
+                  'Qualcosa è andato storto lato server.',
+                ),
+        UnauthorizedFailure() => (
+          Icons.lock_outline_rounded,
+          'Sessione scaduta.',
+          'Effettua di nuovo il login.',
+        ),
+        _ => (
           Icons.error_outline_rounded,
-          'Errore imprevisto.',
-          'Si è verificato un errore inaspettato.'
+          'Errore di rete.',
+          'Riprova più tardi.',
         ),
+      },
+      final AuthFailure failure => (
+        Icons.person_outline_rounded,
+        'Errore Autenticazione',
+        failure.message,
+      ),
+      _ => (
+        Icons.error_outline_rounded,
+        'Errore imprevisto.',
+        'Si è verificato un errore inaspettato.',
+      ),
     };
   }
 }
@@ -108,11 +117,7 @@ class _FullErrorView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            icon,
-            size: 64,
-            color: colors.primary.withValues(alpha: 0.6),
-          ),
+          Icon(icon, size: 64, color: colors.primary.withValues(alpha: 0.6)),
           const SizedBox(height: AppSpacing.md),
           Text(
             title,
@@ -131,10 +136,7 @@ class _FullErrorView extends StatelessWidget {
           ),
           if (onRetry != null) ...[
             const SizedBox(height: AppSpacing.lg),
-            OutlinedButton(
-              onPressed: onRetry,
-              child: const Text('Riprova'),
-            ),
+            OutlinedButton(onPressed: onRetry, child: const Text('Riprova')),
           ],
         ],
       ),

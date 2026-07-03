@@ -9,7 +9,7 @@ class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -49,12 +49,14 @@ class RegisterPage extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.xxxl),
-              
+
               // Container with depth as per DESIGN.md
               Container(
                 padding: const EdgeInsets.all(AppSpacing.xl),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
                   borderRadius: BorderRadius.circular(AppSpacing.radius + 8),
                 ),
                 child: const RegisterForm(),

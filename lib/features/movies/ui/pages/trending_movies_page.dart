@@ -29,7 +29,10 @@ class TrendingMoviesPage extends ConsumerWidget {
         slivers: [
           SliverToBoxAdapter(
             child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
+              height:
+                  MediaQuery.of(context).padding.top +
+                  kToolbarHeight +
+                  AppSpacing.xl,
             ),
           ),
           SliverPadding(
@@ -56,18 +59,18 @@ class TrendingMoviesPage extends ConsumerWidget {
                   crossAxisSpacing: AppSpacing.md,
                   mainAxisSpacing: AppSpacing.md,
                 ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final movie = movies[index];
-                    return MediaGridCard.movie(
-                      movie: movie,
-                      onTap: () => context.push(
-                        AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
+                delegate: SliverChildBuilderDelegate((context, index) {
+                  final movie = movies[index];
+                  return MediaGridCard.movie(
+                    movie: movie,
+                    onTap: () => context.push(
+                      AppRoutes.movieDetails.replaceAll(
+                        ':id',
+                        movie.id.toString(),
                       ),
-                    );
-                  },
-                  childCount: movies.length,
-                ),
+                    ),
+                  );
+                }, childCount: movies.length),
               ),
             ),
             loading: () => const SliverFillRemaining(

@@ -34,7 +34,7 @@ Future<bool> isMediaWatched(
 
   // If not even in the watched list, it's definitely not watched/completed
   if (!isWatched) return false;
-  
+
   // For movies, presence in the list is enough
   if (mediaType == MediaType.movie) return true;
 
@@ -44,7 +44,7 @@ Future<bool> isMediaWatched(
       userId: user.id,
       seriesId: mediaId,
     );
-    
+
     // Fetch series details to know the total episode count
     // Note: This relies on the provider cache if already fetched
     final series = await ref.watch(tvSeriesDetailsProvider(mediaId).future);

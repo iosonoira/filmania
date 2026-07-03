@@ -63,10 +63,18 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
           .single();
       return WatchlistDto.fromJson(response);
     } on PostgrestException catch (e) {
-      AppLogger.error('createWatchlist failed', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'createWatchlist failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      AppLogger.error('createWatchlist unexpected', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'createWatchlist unexpected',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }
@@ -76,10 +84,18 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
     try {
       await _supabase.from('watchlists').delete().eq('id', watchlistId);
     } on PostgrestException catch (e) {
-      AppLogger.error('deleteWatchlist failed', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'deleteWatchlist failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      AppLogger.error('deleteWatchlist unexpected', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'deleteWatchlist unexpected',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }
@@ -91,7 +107,9 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('created_at', ascending: false)
-        .map((data) => data.map((json) => WatchlistDto.fromJson(json)).toList());
+        .map(
+          (data) => data.map((json) => WatchlistDto.fromJson(json)).toList(),
+        );
   }
 
   // ── Item CRUD ───────────────────────────────────────────────────────────────
@@ -103,10 +121,18 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
       if (item.id.isEmpty) json.remove('id');
       await _supabase.from('watchlist_items').insert(json);
     } on PostgrestException catch (e) {
-      AppLogger.error('addToWatchlist failed', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'addToWatchlist failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      AppLogger.error('addToWatchlist unexpected', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'addToWatchlist unexpected',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }
@@ -126,10 +152,18 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
           .eq('media_type', mediaType.name)
           .eq('watchlist_id', watchlistId);
     } on PostgrestException catch (e) {
-      AppLogger.error('removeFromWatchlist failed', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'removeFromWatchlist failed',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw SupabaseFailure(e.message);
     } catch (e) {
-      AppLogger.error('removeFromWatchlist unexpected', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'removeFromWatchlist unexpected',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }
@@ -141,7 +175,10 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
         .stream(primaryKey: ['id'])
         .eq('watchlist_id', watchlistId)
         .order('added_at', ascending: false)
-        .map((data) => data.map((json) => WatchlistItemDto.fromJson(json)).toList());
+        .map(
+          (data) =>
+              data.map((json) => WatchlistItemDto.fromJson(json)).toList(),
+        );
   }
 
   @override
@@ -183,7 +220,10 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
         .from('watchlist_items')
         .stream(primaryKey: ['id'])
         .order('added_at', ascending: false)
-        .map((data) => data.map((json) => WatchlistItemDto.fromJson(json)).toList());
+        .map(
+          (data) =>
+              data.map((json) => WatchlistItemDto.fromJson(json)).toList(),
+        );
   }
 
   @override
@@ -204,7 +244,11 @@ class WatchlistRemoteDataSourceImpl implements IWatchlistRemoteDataSource {
       AppLogger.error('isInWatchlist failed', tag: 'WatchlistDS', exception: e);
       throw SupabaseFailure(e.message);
     } catch (e) {
-      AppLogger.error('isInWatchlist unexpected', tag: 'WatchlistDS', exception: e);
+      AppLogger.error(
+        'isInWatchlist unexpected',
+        tag: 'WatchlistDS',
+        exception: e,
+      );
       throw const WatchlistGenericFailure();
     }
   }

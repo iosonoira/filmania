@@ -26,9 +26,7 @@ Dio tmdbClient(Ref ref) {
       baseUrl: 'https://api.themoviedb.org/3/',
       connectTimeout: const Duration(seconds: 10),
       receiveTimeout: const Duration(seconds: 10),
-      queryParameters: {
-        'language': langCode,
-      },
+      queryParameters: {'language': langCode},
     ),
   );
 

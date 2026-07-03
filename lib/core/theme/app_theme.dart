@@ -14,11 +14,7 @@ abstract class AppSpacing {
   static const double radius = 24.0;
 }
 
-enum AppThemeMode {
-  light,
-  dark,
-  pureBlack,
-}
+enum AppThemeMode { light, dark, pureBlack }
 
 /// AppTheme class that generates ThemeData based on DESIGN.md rules.
 abstract class AppTheme {
@@ -29,7 +25,7 @@ abstract class AppTheme {
   static ThemeData _build(AppThemeMode mode) {
     final isDark = mode != AppThemeMode.light;
     final brightness = isDark ? Brightness.dark : Brightness.light;
-    
+
     final Color backgroundColor;
     final Color surfaceColor;
 
@@ -60,19 +56,42 @@ abstract class AppTheme {
         primary: primaryColor,
         brightness: brightness,
         surface: surfaceColor,
-        surfaceContainerHighest: isDark ? const Color(0xFF2A2931) : const Color(0xFFF0F0F0),
+        surfaceContainerHighest: isDark
+            ? const Color(0xFF2A2931)
+            : const Color(0xFFF0F0F0),
       ),
-      
+
       // Typography pairing: Manrope for headlines, Inter for body
       textTheme: const TextTheme(
-        displayLarge: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w800),
-        displayMedium: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w800),
-        displaySmall: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w800),
-        headlineLarge: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w700),
-        headlineMedium: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w700),
-        headlineSmall: TextStyle(fontFamily: 'Manrope', fontWeight: FontWeight.w700),
+        displayLarge: TextStyle(
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w800,
+        ),
+        displayMedium: TextStyle(
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w800,
+        ),
+        displaySmall: TextStyle(
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w800,
+        ),
+        headlineLarge: TextStyle(
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w700,
+        ),
+        headlineMedium: TextStyle(
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w700,
+        ),
+        headlineSmall: TextStyle(
+          fontFamily: 'Manrope',
+          fontWeight: FontWeight.w700,
+        ),
         titleLarge: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w600),
-        titleMedium: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w500),
+        titleMedium: TextStyle(
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
+        ),
         titleSmall: TextStyle(fontFamily: 'Inter', fontWeight: FontWeight.w500),
         bodyLarge: TextStyle(fontFamily: 'Inter'),
         bodyMedium: TextStyle(fontFamily: 'Inter'),
@@ -125,7 +144,7 @@ abstract class AppTheme {
           elevation: 0,
         ),
       ),
-      
+
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: primaryColor,

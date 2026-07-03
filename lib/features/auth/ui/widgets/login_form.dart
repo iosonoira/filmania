@@ -31,10 +31,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
   void _handleSubmit() {
     if (_formKey.currentState?.validate() ?? false) {
-      ref.read(authProvider.notifier).login(
-            _emailController.text,
-            _passwordController.text,
-          );
+      ref
+          .read(authProvider.notifier)
+          .login(_emailController.text, _passwordController.text);
     }
   }
 
@@ -60,7 +59,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             content: Text(message),
             backgroundColor: colors.error,
             behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.md)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.md),
+            ),
           ),
         );
       }
@@ -73,9 +74,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: InputDecoration(
-              hintText: l10n.emailAddress,
-            ),
+            decoration: InputDecoration(hintText: l10n.emailAddress),
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
@@ -99,7 +98,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                   size: 20,
                   color: colors.onSurfaceSecondary,
                 ),
-                onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
               ),
             ),
             obscureText: _obscurePassword,
@@ -107,7 +107,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 (value?.length ?? 0) >= 6 ? null : l10n.min6Chars,
           ),
           const SizedBox(height: AppSpacing.xl),
-          
+
           // Hero CTA styling from DESIGN.md
           Material(
             color: Colors.transparent,
@@ -126,14 +126,16 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                     color: colors.primary.withValues(alpha: 0.2),
                     blurRadius: 32,
                     offset: const Offset(0, 8),
-                  )
+                  ),
                 ],
               ),
               child: InkWell(
                 borderRadius: BorderRadius.circular(AppSpacing.radius),
                 onTap: isLoading ? null : _handleSubmit,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.md + 4),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.md + 4,
+                  ),
                   child: Center(
                     child: isLoading
                         ? const SizedBox(
@@ -159,7 +161,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
           ),
           const SizedBox(height: AppSpacing.lg),
-          
+
           Center(
             child: TextButton(
               onPressed: isLoading ? null : () {},

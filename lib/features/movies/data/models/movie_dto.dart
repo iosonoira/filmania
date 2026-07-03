@@ -17,7 +17,8 @@ abstract class MovieDto with _$MovieDto {
     int? runtime,
   }) = _MovieDto;
 
-  factory MovieDto.fromJson(Map<String, dynamic> json) => _$MovieDtoFromJson(json);
+  factory MovieDto.fromJson(Map<String, dynamic> json) =>
+      _$MovieDtoFromJson(json);
 
   const MovieDto._();
 
