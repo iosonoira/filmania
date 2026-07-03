@@ -577,6 +577,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Upload error: {error}'**
   String uploadError(String error);
+
+  /// No description provided for @closeSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Close selection'**
+  String get closeSelection;
+
+  /// No description provided for @addToListAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to list'**
+  String get addToListAction;
+
+  /// No description provided for @toggleWatchedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as watched/unwatched'**
+  String get toggleWatchedAction;
+
+  /// No description provided for @markAsUnwatchedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as unwatched'**
+  String get markAsUnwatchedAction;
+
+  /// No description provided for @removeFromThisList.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from this list'**
+  String get removeFromThisList;
+
+  /// No description provided for @noWatchlistsAvailableHint.
+  ///
+  /// In en, this message translates to:
+  /// **'No watchlist available. Create one from a title\'s details page.'**
+  String get noWatchlistsAvailableHint;
+
+  /// No description provided for @selectionActionDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get selectionActionDone;
+
+  /// No description provided for @selectionActionPartialFailure.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items not updated'**
+  String selectionActionPartialFailure(int count);
 }
 
 class _AppLocalizationsDelegate

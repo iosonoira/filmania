@@ -254,4 +254,31 @@ class AppLocalizationsIt extends AppLocalizations {
   String uploadError(String error) {
     return 'Errore upload: $error';
   }
+
+  @override
+  String get closeSelection => 'Chiudi selezione';
+
+  @override
+  String get addToListAction => 'Aggiungi a lista';
+
+  @override
+  String get toggleWatchedAction => 'Segna come visto/non visto';
+
+  @override
+  String get markAsUnwatchedAction => 'Segna come non visto';
+
+  @override
+  String get removeFromThisList => 'Rimuovi dalla lista';
+
+  @override
+  String get noWatchlistsAvailableHint =>
+      'Nessuna lista disponibile. Creane una dal dettaglio di un titolo.';
+
+  @override
+  String get selectionActionDone => 'Fatto';
+
+  @override
+  String selectionActionPartialFailure(int count) {
+    return '$count elementi non aggiornati';
+  }
 }

@@ -25,9 +25,20 @@ class SelectionAction<T> {
 /// `Positioned` at the top of a `Stack`) — it renders as `SizedBox.shrink`
 /// while inactive, so it can always be mounted unconditionally.
 class SelectionActionBar<T> extends StatelessWidget {
-  const SelectionActionBar({super.key, required this.actions});
+  const SelectionActionBar({
+    super.key,
+    required this.actions,
+    this.closeTooltip = 'Chiudi selezione',
+  });
 
   final List<SelectionAction<T>> actions;
+
+  /// Tooltip for the close button. `core/widgets/selection/` is a
+  /// framework layer and may not depend on `core/l10n/` (see the
+  /// multi-select plan's Global Constraints), so callers that need a
+  /// localized tooltip pass their own `AppLocalizations` string here; the
+  /// Italian default keeps this widget usable stand-alone/in tests.
+  final String closeTooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +64,7 @@ class SelectionActionBar<T> extends StatelessWidget {
               child: Row(
                 children: [
                   Tooltip(
-                    message: 'Chiudi selezione',
+                    message: closeTooltip,
                     child: IconButton(
                       icon: const Icon(Icons.close_rounded),
                       onPressed: controller.clear,

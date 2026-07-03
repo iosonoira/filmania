@@ -103,5 +103,21 @@
         "type": "String"
       }
     }
+  },
+
+  "closeSelection": "Close selection",
+  "addToListAction": "Add to list",
+  "toggleWatchedAction": "Mark as watched/unwatched",
+  "markAsUnwatchedAction": "Mark as unwatched",
+  "removeFromThisList": "Remove from this list",
+  "noWatchlistsAvailableHint": "No watchlist available. Create one from a title's details page.",
+  "selectionActionDone": "Done",
+  "selectionActionPartialFailure": "{count} items not updated",
+  "@selectionActionPartialFailure": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

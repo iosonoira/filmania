@@ -255,4 +255,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String uploadError(String error) {
     return 'Upload error: $error';
   }
+
+  @override
+  String get closeSelection => 'Close selection';
+
+  @override
+  String get addToListAction => 'Add to list';
+
+  @override
+  String get toggleWatchedAction => 'Mark as watched/unwatched';
+
+  @override
+  String get markAsUnwatchedAction => 'Mark as unwatched';
+
+  @override
+  String get removeFromThisList => 'Remove from this list';
+
+  @override
+  String get noWatchlistsAvailableHint =>
+      'No watchlist available. Create one from a title\'s details page.';
+
+  @override
+  String get selectionActionDone => 'Done';
+
+  @override
+  String selectionActionPartialFailure(int count) {
+    return '$count items not updated';
+  }
 }

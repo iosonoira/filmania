@@ -103,5 +103,21 @@
         "type": "String"
       }
     }
+  },
+
+  "closeSelection": "Chiudi selezione",
+  "addToListAction": "Aggiungi a lista",
+  "toggleWatchedAction": "Segna come visto/non visto",
+  "markAsUnwatchedAction": "Segna come non visto",
+  "removeFromThisList": "Rimuovi dalla lista",
+  "noWatchlistsAvailableHint": "Nessuna lista disponibile. Creane una dal dettaglio di un titolo.",
+  "selectionActionDone": "Fatto",
+  "selectionActionPartialFailure": "{count} elementi non aggiornati",
+  "@selectionActionPartialFailure": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
