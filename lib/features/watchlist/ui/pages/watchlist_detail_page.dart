@@ -11,6 +11,7 @@ import '../../../../core/l10n/generated/app_localizations.dart';
 import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../../core/widgets/selection/selection_action_bar.dart';
@@ -216,35 +217,68 @@ class WatchlistDetailPage extends ConsumerWidget {
               ],
             ),
             SelectionActionBar<MediaSelectionItem>(
+              closeTooltip: l10n.closeSelection,
               actions: [
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.delete_outline_rounded,
-                  label: 'Rimuovi dalla lista',
+                  label: l10n.removeFromThisList,
                   onPressed: (selected) async {
                     final notifier = ref.read(watchlistProvider.notifier);
+                    var failures = 0;
                     for (final item in selected) {
-                      await notifier.removeItemFromWatchlist(
-                        watchlistId: watchlistId,
-                        mediaId: item.mediaId,
-                        mediaType: item.mediaType,
-                      );
+                      try {
+                        await notifier.removeItemFromWatchlist(
+                          watchlistId: watchlistId,
+                          mediaId: item.mediaId,
+                          mediaType: item.mediaType,
+                        );
+                        // `removeItemFromWatchlist` swallows failures via
+                        // `AsyncValue.guard` rather than throwing, so a
+                        // failure must be read back from notifier state.
+                        if (ref.read(watchlistProvider).hasError) {
+                          failures++;
+                        }
+                      } catch (_) {
+                        failures++;
+                      }
                     }
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
                   },
                 ),
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.bookmark_add_rounded,
-                  label: 'Aggiungi a lista',
-                  onPressed: (selected) => showBulkWatchlistPicker(
-                    context,
-                    ref,
-                    items: selected.toList(),
-                  ),
+                  label: l10n.addToListAction,
+                  onPressed: (selected) async {
+                    final failures = await showBulkWatchlistPicker(
+                      context,
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.visibility_rounded,
-                  label: 'Segna come visto/non visto',
-                  onPressed: (selected) =>
-                      toggleWatchedBulk(ref, items: selected.toList()),
+                  label: l10n.toggleWatchedAction,
+                  onPressed: (selected) async {
+                    final failures = await toggleWatchedBulk(
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
               ],
             ),

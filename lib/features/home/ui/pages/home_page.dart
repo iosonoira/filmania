@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selection_action_bar.dart';
 import '../../../../core/widgets/selection/selection_scope.dart';
@@ -22,6 +24,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = ref.watch(appLocalizationsProvider);
     return Scaffold(
       extendBody: true,
       extendBodyBehindAppBar: true,
@@ -54,21 +57,38 @@ class HomePage extends ConsumerWidget {
               ],
             ),
             SelectionActionBar<MediaSelectionItem>(
+              closeTooltip: l10n.closeSelection,
               actions: [
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.bookmark_add_rounded,
-                  label: 'Aggiungi a lista',
-                  onPressed: (selected) => showBulkWatchlistPicker(
-                    context,
-                    ref,
-                    items: selected.toList(),
-                  ),
+                  label: l10n.addToListAction,
+                  onPressed: (selected) async {
+                    final failures = await showBulkWatchlistPicker(
+                      context,
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.visibility_rounded,
-                  label: 'Segna come visto/non visto',
-                  onPressed: (selected) =>
-                      toggleWatchedBulk(ref, items: selected.toList()),
+                  label: l10n.toggleWatchedAction,
+                  onPressed: (selected) async {
+                    final failures = await toggleWatchedBulk(
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
               ],
             ),

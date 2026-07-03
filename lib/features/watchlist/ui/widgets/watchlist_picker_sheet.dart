@@ -516,13 +516,20 @@ class _EmptyWatchlistsHint extends StatelessWidget {
 /// multi-select action bar's "Aggiungi a lista" action — unlike the
 /// single-item sheet, it does not show per-item membership state,
 /// since [items] can be a mix of titles already in different lists.
-Future<void> showBulkWatchlistPicker(
+///
+/// Each item is added independently: a failure on one item doesn't abort
+/// the rest of the batch. Returns the number of items that failed to be
+/// added, or `null` if the user cancelled the sheet (or navigated away)
+/// before a watchlist was chosen — nothing was attempted in that case, so
+/// the caller should skip showing a toast.
+Future<int?> showBulkWatchlistPicker(
   BuildContext context,
   WidgetRef ref, {
   required List<MediaSelectionItem> items,
 }) async {
   final watchlists = await ref.read(userWatchlistsProvider.future);
-  if (!context.mounted) return;
+  if (!context.mounted) return null;
+  final l10n = ref.read(appLocalizationsProvider);
 
   final chosenId = await showModalBottomSheet<String>(
     context: context,
@@ -544,8 +551,7 @@ Future<void> showBulkWatchlistPicker(
               ? Padding(
                   padding: const EdgeInsets.all(AppSpacing.lg),
                   child: Text(
-                    'Nessuna lista disponibile. Creane una dal dettaglio '
-                    'di un titolo.',
+                    l10n.noWatchlistsAvailableHint,
                     style: textTheme.bodyMedium?.copyWith(
                       color: colors.onSurfaceSecondary,
                     ),
@@ -574,15 +580,27 @@ Future<void> showBulkWatchlistPicker(
     },
   );
 
-  if (chosenId == null || !context.mounted) return;
+  if (chosenId == null || !context.mounted) return null;
   final notifier = ref.read(watchlistProvider.notifier);
+  var failureCount = 0;
   for (final item in items) {
-    await notifier.addItem(
-      watchlistId: chosenId,
-      id: item.mediaId,
-      title: item.title,
-      posterPath: item.posterPath,
-      type: item.mediaType,
-    );
+    try {
+      await notifier.addItem(
+        watchlistId: chosenId,
+        id: item.mediaId,
+        title: item.title,
+        posterPath: item.posterPath,
+        type: item.mediaType,
+      );
+      // `addItem` swallows failures internally via `AsyncValue.guard` rather
+      // than throwing, so a failed add must be detected from the resulting
+      // notifier state instead of a caught exception.
+      if (ref.read(watchlistProvider).hasError) {
+        failureCount++;
+      }
+    } catch (_) {
+      failureCount++;
+    }
   }
+  return failureCount;
 }

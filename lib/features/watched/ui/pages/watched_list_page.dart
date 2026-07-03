@@ -10,6 +10,7 @@ import '../providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../domain/entities/watched_item.dart';
+import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../../core/widgets/selection/selection_action_bar.dart';
@@ -64,21 +65,38 @@ class WatchedListPage extends ConsumerWidget {
                   Center(child: Text(l10n.genericError(err.toString()))),
             ),
             SelectionActionBar<MediaSelectionItem>(
+              closeTooltip: l10n.closeSelection,
               actions: [
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.bookmark_add_rounded,
-                  label: 'Aggiungi a lista',
-                  onPressed: (selected) => showBulkWatchlistPicker(
-                    context,
-                    ref,
-                    items: selected.toList(),
-                  ),
+                  label: l10n.addToListAction,
+                  onPressed: (selected) async {
+                    final failures = await showBulkWatchlistPicker(
+                      context,
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.visibility_off_rounded,
-                  label: 'Segna come non visto',
-                  onPressed: (selected) =>
-                      toggleWatchedBulk(ref, items: selected.toList()),
+                  label: l10n.markAsUnwatchedAction,
+                  onPressed: (selected) async {
+                    final failures = await toggleWatchedBulk(
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
               ],
             ),
@@ -152,21 +170,38 @@ class WatchedListPage extends ConsumerWidget {
                     Center(child: Text(l10n.genericError(err.toString()))),
               ),
               SelectionActionBar<MediaSelectionItem>(
+                closeTooltip: l10n.closeSelection,
                 actions: [
                   SelectionAction<MediaSelectionItem>(
                     icon: Icons.bookmark_add_rounded,
-                    label: 'Aggiungi a lista',
-                    onPressed: (selected) => showBulkWatchlistPicker(
-                      context,
-                      ref,
-                      items: selected.toList(),
-                    ),
+                    label: l10n.addToListAction,
+                    onPressed: (selected) async {
+                      final failures = await showBulkWatchlistPicker(
+                        context,
+                        ref,
+                        items: selected.toList(),
+                      );
+                      handleBulkSelectionResult<MediaSelectionItem>(
+                        context,
+                        ref,
+                        failureCount: failures,
+                      );
+                    },
                   ),
                   SelectionAction<MediaSelectionItem>(
                     icon: Icons.visibility_off_rounded,
-                    label: 'Segna come non visto',
-                    onPressed: (selected) =>
-                        toggleWatchedBulk(ref, items: selected.toList()),
+                    label: l10n.markAsUnwatchedAction,
+                    onPressed: (selected) async {
+                      final failures = await toggleWatchedBulk(
+                        ref,
+                        items: selected.toList(),
+                      );
+                      handleBulkSelectionResult<MediaSelectionItem>(
+                        context,
+                        ref,
+                        failureCount: failures,
+                      );
+                    },
                   ),
                 ],
               ),

@@ -12,10 +12,12 @@ import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import '../widgets/discover_widgets.dart';
 import '../providers/discover_providers.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../../core/widgets/selection/selection_action_bar.dart';
 import '../../../../core/widgets/selection/selection_scope.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../watched/ui/widgets/watched_bulk_actions.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 
@@ -39,6 +41,7 @@ class DiscoverPage extends ConsumerWidget {
       selectedMediaType,
       activeFilters,
     );
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       extendBody: true,
@@ -109,21 +112,38 @@ class DiscoverPage extends ConsumerWidget {
               ],
             ),
             SelectionActionBar<MediaSelectionItem>(
+              closeTooltip: l10n.closeSelection,
               actions: [
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.bookmark_add_rounded,
-                  label: 'Aggiungi a lista',
-                  onPressed: (selected) => showBulkWatchlistPicker(
-                    context,
-                    ref,
-                    items: selected.toList(),
-                  ),
+                  label: l10n.addToListAction,
+                  onPressed: (selected) async {
+                    final failures = await showBulkWatchlistPicker(
+                      context,
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
                 SelectionAction<MediaSelectionItem>(
                   icon: Icons.visibility_rounded,
-                  label: 'Segna come visto/non visto',
-                  onPressed: (selected) =>
-                      toggleWatchedBulk(ref, items: selected.toList()),
+                  label: l10n.toggleWatchedAction,
+                  onPressed: (selected) async {
+                    final failures = await toggleWatchedBulk(
+                      ref,
+                      items: selected.toList(),
+                    );
+                    handleBulkSelectionResult<MediaSelectionItem>(
+                      context,
+                      ref,
+                      failureCount: failures,
+                    );
+                  },
                 ),
               ],
             ),
