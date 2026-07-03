@@ -25,8 +25,8 @@ class WatchedRepositoryImpl implements IWatchedRepository {
     if (item.mediaType == MediaType.tv) {
       // 1. Get series details to know all episodes and runtimes
       final series = await _tvRepo.getTVSeriesDetails(item.mediaId);
-      final avgRuntime = series.episodeRunTime.isNotEmpty 
-          ? series.episodeRunTime.first 
+      final avgRuntime = series.episodeRunTime.isNotEmpty
+          ? series.episodeRunTime.first
           : 0;
 
       // 2. Prepare episodes for batch upsert with runtime
@@ -34,14 +34,16 @@ class WatchedRepositoryImpl implements IWatchedRepository {
       for (final season in series.seasons) {
         if (season.seasonNumber == 0) continue; // Skip specials
         for (int i = 1; i <= season.episodeCount; i++) {
-          episodes.add(WatchedEpisodeDto(
-            userId: item.userId,
-            seriesId: item.mediaId,
-            seasonNumber: season.seasonNumber,
-            episodeNumber: i,
-            runtimeMinutes: avgRuntime,
-            watchedAt: DateTime.now(),
-          ));
+          episodes.add(
+            WatchedEpisodeDto(
+              userId: item.userId,
+              seriesId: item.mediaId,
+              seasonNumber: season.seasonNumber,
+              episodeNumber: i,
+              runtimeMinutes: avgRuntime,
+              watchedAt: DateTime.now(),
+            ),
+          );
         }
       }
 
@@ -52,9 +54,9 @@ class WatchedRepositoryImpl implements IWatchedRepository {
 
       // 4. Mark the series itself in watched_items with total calculated runtime
       final totalRuntime = episodes.length * avgRuntime;
-      final seriesDto = WatchedItemDto.fromEntity(item.copyWith(
-        runtimeMinutes: totalRuntime > 0 ? totalRuntime : null,
-      ));
+      final seriesDto = WatchedItemDto.fromEntity(
+        item.copyWith(runtimeMinutes: totalRuntime > 0 ? totalRuntime : null),
+      );
       await _remoteDS.markAsWatched(seriesDto);
       return;
     }
@@ -70,7 +72,9 @@ class WatchedRepositoryImpl implements IWatchedRepository {
       }
     }
 
-    final dto = WatchedItemDto.fromEntity(item.copyWith(runtimeMinutes: runtime));
+    final dto = WatchedItemDto.fromEntity(
+      item.copyWith(runtimeMinutes: runtime),
+    );
     await _remoteDS.markAsWatched(dto);
   }
 
@@ -82,7 +86,10 @@ class WatchedRepositoryImpl implements IWatchedRepository {
   }) async {
     if (mediaType == MediaType.tv) {
       // Delete all episode records for this series
-      await _remoteDS.removeAllEpisodesFromWatched(userId: userId, seriesId: mediaId);
+      await _remoteDS.removeAllEpisodesFromWatched(
+        userId: userId,
+        seriesId: mediaId,
+      );
     }
     await _remoteDS.removeFromWatched(
       userId: userId,
@@ -92,10 +99,13 @@ class WatchedRepositoryImpl implements IWatchedRepository {
   }
 
   @override
-  Stream<List<WatchedItem>> watchUserWatchedItems(String userId, MediaType mediaType) {
-    return _remoteDS.watchUserWatchedItems(userId, mediaType).map(
-          (dtos) => dtos.map((dto) => dto.toEntity()).toList(),
-        );
+  Stream<List<WatchedItem>> watchUserWatchedItems(
+    String userId,
+    MediaType mediaType,
+  ) {
+    return _remoteDS
+        .watchUserWatchedItems(userId, mediaType)
+        .map((dtos) => dtos.map((dto) => dto.toEntity()).toList());
   }
 
   @override
@@ -144,8 +154,11 @@ class WatchedRepositoryImpl implements IWatchedRepository {
     );
 
     if (watchedCount >= totalEpisodes) {
-      final avgRuntime = series.episodeRunTime.isNotEmpty ? series.episodeRunTime.first : 0;
-      final totalRuntime = (watchedCount > 0 ? watchedCount : totalEpisodes) * avgRuntime;
+      final avgRuntime = series.episodeRunTime.isNotEmpty
+          ? series.episodeRunTime.first
+          : 0;
+      final totalRuntime =
+          (watchedCount > 0 ? watchedCount : totalEpisodes) * avgRuntime;
 
       // Mark as complete in watched_items
       final seriesDto = WatchedItemDto(
@@ -159,7 +172,7 @@ class WatchedRepositoryImpl implements IWatchedRepository {
       );
       await _remoteDS.markAsWatched(seriesDto);
     } else {
-      // Update the series item but don't mark as full runtime yet 
+      // Update the series item but don't mark as full runtime yet
       // (or we could sum the episodes seen so far)
       final seriesDto = WatchedItemDto(
         userId: userId,
@@ -224,9 +237,25 @@ class WatchedRepositoryImpl implements IWatchedRepository {
 
   @override
   Stream<List<String>> watchWatchedEpisodes(String userId, int seriesId) {
-    return _remoteDS.watchWatchedEpisodes(userId, seriesId).map(
-          (dtos) => dtos.map((e) => 's${e.seasonNumber}e${e.episodeNumber}').toList(),
+    return _remoteDS
+        .watchWatchedEpisodes(userId, seriesId)
+        .map(
+          (dtos) =>
+              dtos.map((e) => 's${e.seasonNumber}e${e.episodeNumber}').toList(),
         );
+  }
+
+  @override
+  Future<void> markSeriesAsDropped({
+    required String userId,
+    required int seriesId,
+    required bool isDropped,
+  }) {
+    return _remoteDS.markSeriesAsDropped(
+      userId: userId,
+      seriesId: seriesId,
+      isDropped: isDropped,
+    );
   }
 }
 

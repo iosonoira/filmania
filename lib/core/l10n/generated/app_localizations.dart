@@ -140,6 +140,12 @@ abstract class AppLocalizations {
   /// **'Completed'**
   String get completed;
 
+  /// No description provided for @dropped.
+  ///
+  /// In en, this message translates to:
+  /// **'Dropped'**
+  String get dropped;
+
   /// No description provided for @genericError.
   ///
   /// In en, this message translates to:
@@ -601,6 +607,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mark as unwatched'**
   String get markAsUnwatchedAction;
+
+  /// No description provided for @dropSeriesAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop series'**
+  String get dropSeriesAction;
 
   /// No description provided for @removeFromThisList.
   ///

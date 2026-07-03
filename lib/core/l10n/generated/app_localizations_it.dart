@@ -30,6 +30,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get completed => 'Terminate';
 
   @override
+  String get dropped => 'Interrotte';
+
+  @override
   String genericError(String error) {
     return 'Errore: $error';
   }
@@ -266,6 +269,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get markAsUnwatchedAction => 'Segna come non visto';
+
+  @override
+  String get dropSeriesAction => 'Interrompi';
 
   @override
   String get removeFromThisList => 'Rimuovi dalla lista';

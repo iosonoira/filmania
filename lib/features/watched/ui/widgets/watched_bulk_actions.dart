@@ -3,6 +3,7 @@ import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../data/repositories/watched_repository_impl.dart';
 import '../../domain/entities/watched_item.dart';
+import '../providers/categorized_tv_series_provider.dart';
 import '../providers/watched_providers.dart';
 
 /// Toggles watched status for every item in [items], one at a time,
@@ -69,5 +70,38 @@ Future<int> toggleWatchedBulk(
       failureCount++;
     }
   }
+  return failureCount;
+}
+
+/// Marks every TV series in [items] as dropped ("Interrotta"), moving them
+/// out of the "watching"/"up to date"/"completed" tabs regardless of their
+/// episode-count-derived status — see [TvSeriesWatchStatus.dropped] and its
+/// priority handling in `categorizedTvSeries`.
+///
+/// Each item is applied independently: a failure on one item is caught so
+/// it doesn't abort the rest of the batch. Returns the number of items
+/// that failed, so the caller can surface an error toast.
+Future<int> markSeriesDroppedBulk(
+  WidgetRef ref, {
+  required List<MediaSelectionItem> items,
+  required bool isDropped,
+}) async {
+  final user = ref.read(authStateProvider).value;
+  if (user == null) return items.length;
+  final repo = ref.read(watchedRepositoryProvider);
+
+  var failureCount = 0;
+  for (final item in items) {
+    try {
+      await repo.markSeriesAsDropped(
+        userId: user.id,
+        seriesId: item.mediaId,
+        isDropped: isDropped,
+      );
+    } catch (_) {
+      failureCount++;
+    }
+  }
+  ref.invalidate(categorizedTvSeriesProvider);
   return failureCount;
 }

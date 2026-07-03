@@ -8,7 +8,10 @@ abstract class IWatchedRepository {
     required int mediaId,
     required MediaType mediaType,
   });
-  Stream<List<WatchedItem>> watchUserWatchedItems(String userId, MediaType mediaType);
+  Stream<List<WatchedItem>> watchUserWatchedItems(
+    String userId,
+    MediaType mediaType,
+  );
   Future<bool> isWatched({
     required String userId,
     required int mediaId,
@@ -42,5 +45,11 @@ abstract class IWatchedRepository {
   Future<int> getWatchedEpisodesCount({
     required String userId,
     required int seriesId,
+  });
+
+  Future<void> markSeriesAsDropped({
+    required String userId,
+    required int seriesId,
+    required bool isDropped,
   });
 }

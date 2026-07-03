@@ -21,6 +21,7 @@ Table: watched_items
   - media_type:  text, not null   ('movie' | 'tv')
   - poster_path: text, nullable
   - watched_at:  timestamptz, default now()
+  - is_dropped:  boolean, not null, default false
   - UNIQUE(user_id, media_id, media_type)
 
 Table: watched_episodes
@@ -48,16 +49,19 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
       final json = item.toJson();
       if (item.id.isEmpty) json.remove('id');
       if (item.watchedAt == null) json.remove('watched_at');
-      
-      await _supabase.from('watched_items').upsert(
-        json,
-        onConflict: 'user_id, media_id, media_type',
-      );
+
+      await _supabase
+          .from('watched_items')
+          .upsert(json, onConflict: 'user_id, media_id, media_type');
     } on PostgrestException catch (e) {
       AppLogger.error('markAsWatched failed', tag: 'WatchedDS', exception: e);
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('markAsWatched unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markAsWatched unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
@@ -80,10 +84,18 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
         },
       );
     } on PostgrestException catch (e) {
-      AppLogger.error('markTVSeriesAsWatchedBatchRPC failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markTVSeriesAsWatchedBatchRPC failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('markTVSeriesAsWatchedBatchRPC unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markTVSeriesAsWatchedBatchRPC unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
@@ -102,25 +114,38 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
           .eq('media_id', mediaId)
           .eq('media_type', mediaType.name);
     } on PostgrestException catch (e) {
-      AppLogger.error('removeFromWatched failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'removeFromWatched failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('removeFromWatched unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'removeFromWatched unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
 
   @override
-  Stream<List<WatchedItemDto>> watchUserWatchedItems(String userId, MediaType mediaType) {
+  Stream<List<WatchedItemDto>> watchUserWatchedItems(
+    String userId,
+    MediaType mediaType,
+  ) {
     return _supabase
         .from('watched_items')
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('watched_at', ascending: false)
-        .map((data) => data
-            .where((json) => json['media_type'] == mediaType.name)
-            .map((json) => WatchedItemDto.fromJson(json))
-            .toList());
+        .map(
+          (data) => data
+              .where((json) => json['media_type'] == mediaType.name)
+              .map((json) => WatchedItemDto.fromJson(json))
+              .toList(),
+        );
   }
 
   @override
@@ -163,15 +188,25 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
         return json;
       }).toList();
 
-      await _supabase.from('watched_episodes').upsert(
+      await _supabase
+          .from('watched_episodes')
+          .upsert(
             jsonList,
             onConflict: 'user_id, series_id, season_number, episode_number',
           );
     } on PostgrestException catch (e) {
-      AppLogger.error('markEpisodesAsWatched failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markEpisodesAsWatched failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('markEpisodesAsWatched unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markEpisodesAsWatched unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
@@ -192,10 +227,18 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
           .eq('season_number', seasonNumber)
           .eq('episode_number', episodeNumber);
     } on PostgrestException catch (e) {
-      AppLogger.error('markEpisodeAsUnwatched failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markEpisodeAsUnwatched failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('markEpisodeAsUnwatched unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'markEpisodeAsUnwatched unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
@@ -218,24 +261,37 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
           .maybeSingle();
       return response != null;
     } on PostgrestException catch (e) {
-      AppLogger.error('isEpisodeWatched failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'isEpisodeWatched failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('isEpisodeWatched unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'isEpisodeWatched unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
 
   @override
-  Stream<List<WatchedEpisodeDto>> watchWatchedEpisodes(String userId, int seriesId) {
+  Stream<List<WatchedEpisodeDto>> watchWatchedEpisodes(
+    String userId,
+    int seriesId,
+  ) {
     return _supabase
         .from('watched_episodes')
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
-        .map((data) => data
-            .where((json) => json['series_id'] == seriesId)
-            .map((json) => WatchedEpisodeDto.fromJson(json))
-            .toList());
+        .map(
+          (data) => data
+              .where((json) => json['series_id'] == seriesId)
+              .map((json) => WatchedEpisodeDto.fromJson(json))
+              .toList(),
+        );
   }
 
   @override
@@ -250,10 +306,18 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
           .eq('user_id', userId)
           .eq('series_id', seriesId);
     } on PostgrestException catch (e) {
-      AppLogger.error('removeAllEpisodesFromWatched failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'removeAllEpisodesFromWatched failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('removeAllEpisodesFromWatched unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'removeAllEpisodesFromWatched unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }
@@ -271,10 +335,48 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
           .eq('series_id', seriesId);
       return response.length;
     } on PostgrestException catch (e) {
-      AppLogger.error('getWatchedEpisodesCount failed', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'getWatchedEpisodesCount failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw SupabaseWatchedFailure(e.message);
     } catch (e) {
-      AppLogger.error('getWatchedEpisodesCount unexpected', tag: 'WatchedDS', exception: e);
+      AppLogger.error(
+        'getWatchedEpisodesCount unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
+      throw const WatchedGenericFailure();
+    }
+  }
+
+  @override
+  Future<void> markSeriesAsDropped({
+    required String userId,
+    required int seriesId,
+    required bool isDropped,
+  }) async {
+    try {
+      await _supabase
+          .from('watched_items')
+          .update({'is_dropped': isDropped})
+          .eq('user_id', userId)
+          .eq('media_id', seriesId)
+          .eq('media_type', MediaType.tv.name);
+    } on PostgrestException catch (e) {
+      AppLogger.error(
+        'markSeriesAsDropped failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
+      throw SupabaseWatchedFailure(e.message);
+    } catch (e) {
+      AppLogger.error(
+        'markSeriesAsDropped unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
       throw const WatchedGenericFailure();
     }
   }

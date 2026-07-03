@@ -18,6 +18,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
     @JsonKey(name: 'poster_path') String? posterPath,
     @JsonKey(name: 'watched_at') DateTime? watchedAt,
     @JsonKey(name: 'runtime_minutes') int? runtimeMinutes,
+    @JsonKey(name: 'is_dropped') @Default(false) bool isDropped,
   }) = _WatchedItemDto;
 
   factory WatchedItemDto.fromJson(Map<String, dynamic> json) =>
@@ -36,6 +37,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
       posterPath: posterPath,
       watchedAt: watchedAt ?? DateTime.now(),
       runtimeMinutes: runtimeMinutes,
+      isDropped: isDropped,
     );
   }
 
@@ -49,6 +51,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
       posterPath: entity.posterPath,
       watchedAt: entity.watchedAt,
       runtimeMinutes: entity.runtimeMinutes,
+      isDropped: entity.isDropped,
     );
   }
 }

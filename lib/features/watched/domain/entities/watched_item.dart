@@ -14,5 +14,6 @@ abstract class WatchedItem with _$WatchedItem {
     String? posterPath,
     required DateTime watchedAt,
     int? runtimeMinutes,
+    @Default(false) bool isDropped,
   }) = _WatchedItem;
 }

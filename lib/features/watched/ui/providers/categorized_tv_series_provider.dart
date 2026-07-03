@@ -11,7 +11,8 @@ part 'categorized_tv_series_provider.g.dart';
 enum TvSeriesWatchStatus {
   watching, // "In visione"
   upToDate, // "In pari"
-  completed // "Terminate"
+  completed, // "Terminate"
+  dropped, // "Interrotte"
 }
 
 class CategorizedTvSeries {
@@ -27,24 +28,33 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
   if (user == null) return [];
 
   final watchedItemsAsync = ref.watch(watchedItemsProvider(MediaType.tv));
-  
+
   if (watchedItemsAsync.isLoading || !watchedItemsAsync.hasValue) {
-    return []; 
+    return [];
   }
-  
+
   final watchedItems = watchedItemsAsync.value!;
   final repo = ref.watch(watchedRepositoryProvider);
 
   final List<CategorizedTvSeries> result = [];
 
   for (final item in watchedItems) {
+    if (item.isDropped) {
+      result.add(
+        CategorizedTvSeries(series: item, status: TvSeriesWatchStatus.dropped),
+      );
+      continue;
+    }
+
     try {
       final watchedCount = await repo.getWatchedEpisodesCount(
         userId: user.id,
         seriesId: item.mediaId,
       );
 
-      final seriesDetails = await ref.watch(tvSeriesDetailsProvider(item.mediaId).future);
+      final seriesDetails = await ref.watch(
+        tvSeriesDetailsProvider(item.mediaId).future,
+      );
       final totalEpisodes = seriesDetails.seasons
           .where((s) => s.seasonNumber > 0)
           .fold(0, (sum, s) => sum + s.episodeCount);
@@ -54,7 +64,8 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
       if (watchedCount < totalEpisodes) {
         status = TvSeriesWatchStatus.watching;
       } else {
-        if (seriesDetails.status.toLowerCase() == 'ended' || seriesDetails.status.toLowerCase() == 'canceled') {
+        if (seriesDetails.status.toLowerCase() == 'ended' ||
+            seriesDetails.status.toLowerCase() == 'canceled') {
           status = TvSeriesWatchStatus.completed;
         } else {
           status = TvSeriesWatchStatus.upToDate;
@@ -63,7 +74,9 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
 
       result.add(CategorizedTvSeries(series: item, status: status));
     } catch (e) {
-      result.add(CategorizedTvSeries(series: item, status: TvSeriesWatchStatus.watching));
+      result.add(
+        CategorizedTvSeries(series: item, status: TvSeriesWatchStatus.watching),
+      );
     }
   }
 

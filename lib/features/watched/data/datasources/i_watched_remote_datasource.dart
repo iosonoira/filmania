@@ -15,7 +15,10 @@ abstract class IWatchedRemoteDataSource {
     required int mediaId,
     required MediaType mediaType,
   });
-  Stream<List<WatchedItemDto>> watchUserWatchedItems(String userId, MediaType mediaType);
+  Stream<List<WatchedItemDto>> watchUserWatchedItems(
+    String userId,
+    MediaType mediaType,
+  );
   Future<bool> isWatched({
     required String userId,
     required int mediaId,
@@ -37,7 +40,10 @@ abstract class IWatchedRemoteDataSource {
     required int seasonNumber,
     required int episodeNumber,
   });
-  Stream<List<WatchedEpisodeDto>> watchWatchedEpisodes(String userId, int seriesId);
+  Stream<List<WatchedEpisodeDto>> watchWatchedEpisodes(
+    String userId,
+    int seriesId,
+  );
 
   Future<void> removeAllEpisodesFromWatched({
     required String userId,
@@ -47,5 +53,11 @@ abstract class IWatchedRemoteDataSource {
   Future<int> getWatchedEpisodesCount({
     required String userId,
     required int seriesId,
+  });
+
+  Future<void> markSeriesAsDropped({
+    required String userId,
+    required int seriesId,
+    required bool isDropped,
   });
 }

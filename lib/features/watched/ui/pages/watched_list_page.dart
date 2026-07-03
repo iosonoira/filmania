@@ -115,7 +115,7 @@ class WatchedListPage extends ConsumerWidget {
     final l10n = ref.watch(appLocalizationsProvider);
 
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         backgroundColor: colors.background,
         appBar: AppBar(
@@ -138,6 +138,7 @@ class WatchedListPage extends ConsumerWidget {
               Tab(text: l10n.watching),
               Tab(text: l10n.upToDate),
               Tab(text: l10n.completed),
+              Tab(text: l10n.dropped),
             ],
           ),
         ),
@@ -158,12 +159,17 @@ class WatchedListPage extends ConsumerWidget {
                       .where((e) => e.status == TvSeriesWatchStatus.completed)
                       .map((e) => e.series)
                       .toList();
+                  final dropped = items
+                      .where((e) => e.status == TvSeriesWatchStatus.dropped)
+                      .map((e) => e.series)
+                      .toList();
 
                   return TabBarView(
                     children: [
                       _buildGrid(context, watching, colors, textTheme, l10n),
                       _buildGrid(context, upToDate, colors, textTheme, l10n),
                       _buildGrid(context, completed, colors, textTheme, l10n),
+                      _buildGrid(context, dropped, colors, textTheme, l10n),
                     ],
                   );
                 },
@@ -198,6 +204,23 @@ class WatchedListPage extends ConsumerWidget {
                       final failures = await toggleWatchedBulk(
                         ref,
                         items: selected.toList(),
+                      );
+                      if (!context.mounted) return;
+                      handleBulkSelectionResult<MediaSelectionItem>(
+                        context,
+                        ref,
+                        failureCount: failures,
+                      );
+                    },
+                  ),
+                  SelectionAction<MediaSelectionItem>(
+                    icon: Icons.stop_circle_outlined,
+                    label: l10n.dropSeriesAction,
+                    onPressed: (selected) async {
+                      final failures = await markSeriesDroppedBulk(
+                        ref,
+                        items: selected.toList(),
+                        isDropped: true,
                       );
                       if (!context.mounted) return;
                       handleBulkSelectionResult<MediaSelectionItem>(
