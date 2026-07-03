@@ -203,6 +203,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get crewTitle => 'Staff';
 
   @override
+  String get recommendedMoviesTitle => 'Consigliati per te';
+
+  @override
+  String get recommendedSeriesTitle => 'Ti potrebbe piacere anche';
+
+  @override
   String get biographyTitle => 'Biografia';
 
   @override

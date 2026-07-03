@@ -204,6 +204,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get crewTitle => 'Crew';
 
   @override
+  String get recommendedMoviesTitle => 'Recommended for you';
+
+  @override
+  String get recommendedSeriesTitle => 'You might also like';
+
+  @override
   String get biographyTitle => 'Biography';
 
   @override

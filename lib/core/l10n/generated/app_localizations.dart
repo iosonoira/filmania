@@ -476,6 +476,18 @@ abstract class AppLocalizations {
   /// **'Crew'**
   String get crewTitle;
 
+  /// No description provided for @recommendedMoviesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get recommendedMoviesTitle;
+
+  /// No description provided for @recommendedSeriesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You might also like'**
+  String get recommendedSeriesTitle;
+
   /// No description provided for @biographyTitle.
   ///
   /// In en, this message translates to:

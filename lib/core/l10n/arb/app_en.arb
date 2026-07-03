@@ -80,6 +80,8 @@
   "overviewTitle": "Overview",
   "castTitle": "Cast",
   "crewTitle": "Crew",
+  "recommendedMoviesTitle": "Recommended for you",
+  "recommendedSeriesTitle": "You might also like",
   "biographyTitle": "Biography",
   "filmographyTitle": "Filmography",
   "noBiography": "No biography available.",
