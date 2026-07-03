@@ -14,6 +14,10 @@ import '../../../../core/widgets/error_view.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
 import '../../../../core/widgets/cast_section.dart';
 import 'package:filmania/core/widgets/crew_section.dart';
+import 'package:filmania/core/widgets/recommendations_section.dart';
+import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
+import 'package:go_router/go_router.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
@@ -79,6 +83,7 @@ class _MovieDetailsContent extends StatelessWidget {
         ),
         _MovieOverviewSection(overview: movie.overview),
         SliverToBoxAdapter(child: _MovieCastSection(movieId: movie.id)),
+        SliverToBoxAdapter(child: _MovieRecommendationsSection(movieId: movie.id)),
         const SliverToBoxAdapter(
           child: SizedBox(
             height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
@@ -395,6 +400,40 @@ class _MovieCastSection extends ConsumerWidget {
             child: CrewSection(crew: credits.crew),
           ),
         ],
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _MovieRecommendationsSection extends ConsumerWidget {
+  final int movieId;
+
+  const _MovieRecommendationsSection({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recommendationsAsync = ref.watch(
+      movieRecommendationsProvider(movieId),
+    );
+
+    return recommendationsAsync.when(
+      data: (movies) => RecommendationsSection(
+        title: AppLocalizations.of(context)!.recommendedMoviesTitle,
+        itemCount: movies.length,
+        itemBuilder: (context, index) {
+          final movie = movies[index];
+          return SizedBox(
+            width: 140,
+            child: MediaGridCard.movie(
+              movie: movie,
+              onTap: () => context.push(
+                AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
+              ),
+            ),
+          );
+        },
       ),
       loading: () => const SizedBox.shrink(),
       error: (err, stack) => const SizedBox.shrink(),
