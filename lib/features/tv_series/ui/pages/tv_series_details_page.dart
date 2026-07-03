@@ -14,6 +14,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/cast_section.dart';
 import 'package:filmania/core/widgets/crew_section.dart';
+import 'package:filmania/core/widgets/recommendations_section.dart';
+import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
+import 'package:go_router/go_router.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
@@ -251,6 +255,13 @@ class _TVSeriesDetailsContent extends StatelessWidget {
           ),
         ),
 
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
+
+        // Consigliati
+        SliverToBoxAdapter(
+          child: _TVSeriesRecommendationsSection(seriesId: series.id),
+        ),
+
         const SliverToBoxAdapter(
           child: SizedBox(
             height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
@@ -394,6 +405,40 @@ class _TVSeriesCastSection extends ConsumerWidget {
             child: CrewSection(crew: credits.crew),
           ),
         ],
+      ),
+      loading: () => const SizedBox.shrink(),
+      error: (err, stack) => const SizedBox.shrink(),
+    );
+  }
+}
+
+class _TVSeriesRecommendationsSection extends ConsumerWidget {
+  final int seriesId;
+
+  const _TVSeriesRecommendationsSection({required this.seriesId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recommendationsAsync = ref.watch(
+      tvSeriesRecommendationsProvider(seriesId),
+    );
+
+    return recommendationsAsync.when(
+      data: (series) => RecommendationsSection(
+        title: AppLocalizations.of(context)!.recommendedSeriesTitle,
+        itemCount: series.length,
+        itemBuilder: (context, index) {
+          final tv = series[index];
+          return SizedBox(
+            width: 140,
+            child: MediaGridCard.tv(
+              tv: tv,
+              onTap: () => context.push(
+                AppRoutes.tvDetails.replaceAll(':id', tv.id.toString()),
+              ),
+            ),
+          );
+        },
       ),
       loading: () => const SizedBox.shrink(),
       error: (err, stack) => const SizedBox.shrink(),
