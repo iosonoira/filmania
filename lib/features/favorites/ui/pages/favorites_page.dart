@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -41,7 +42,7 @@ class FavoritesPage extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
             sliver: SliverToBoxAdapter(
               child: Text(
-                'Preferiti',
+                AppLocalizations.of(context)!.favoritesTitle,
                 style: textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   letterSpacing: -1.5,
@@ -151,6 +152,7 @@ class _FavoriteCard extends StatelessWidget {
                 imageUrl: posterUrl,
                 fit: BoxFit.cover,
                 memCacheWidth: 300,
+                memCacheHeight: 353,
                 placeholder: (context, url) =>
                     Container(color: colors.surface.withValues(alpha: 0.2)),
                 errorWidget: (context, url, err) =>
@@ -284,14 +286,14 @@ class _FavoritesEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Nessun preferito',
+              AppLocalizations.of(context)!.noFavorites,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Aggiungi un film o una serie dalla pagina dettaglio per vederlo qui.',
+              AppLocalizations.of(context)!.noFavoritesDescription,
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium?.copyWith(
                 color: colors.onSurfaceSecondary,

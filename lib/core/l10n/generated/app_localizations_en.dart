@@ -255,6 +255,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noRecentActivity => 'No recent activity';
 
   @override
+  String get favoritesTitle => 'Favorites';
+
+  @override
+  String get noFavorites => 'No favorites';
+
+  @override
+  String get noFavoritesDescription =>
+      'Add a movie or TV series from its detail page to see it here.';
+
+  @override
+  String get removeFromFavorites => 'Remove from favorites';
+
+  @override
+  String get addToFavorites => 'Add to favorites';
+
+  @override
   String uploadError(String error) {
     return 'Upload error: $error';
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
@@ -67,7 +68,6 @@ class _FavoriteButtonState extends ConsumerState<FavoriteButton> {
           mediaType: widget.mediaType,
         ),
       );
-      ref.invalidate(favoritesProvider);
     } catch (e) {
       AppLogger.error(
         'Favorite toggle failed',
@@ -129,7 +129,9 @@ class _FavoriteButtonState extends ConsumerState<FavoriteButton> {
               size: widget.size * 0.55,
             ),
       onPressed: _isToggling ? null : () => _toggle(isFavorite, user?.id),
-      tooltip: isFavorite ? 'Rimuovi dai preferiti' : 'Aggiungi ai preferiti',
+      tooltip: isFavorite
+          ? AppLocalizations.of(context)!.removeFromFavorites
+          : AppLocalizations.of(context)!.addToFavorites,
     );
   }
 }

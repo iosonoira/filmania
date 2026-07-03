@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 import 'package:filmania/features/favorites/ui/widgets/favorite_button.dart';
 import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
@@ -19,6 +20,8 @@ Widget _buildSubject({bool isFavorite = false}) {
     ],
     child: MaterialApp(
       theme: AppTheme.dark(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: const Scaffold(
         body: Center(
           child: FavoriteButton(

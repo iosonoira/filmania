@@ -97,6 +97,11 @@
   "tvSeriesTitle": "TV Series",
   "recentActivity": "Recent Activity",
   "noRecentActivity": "No recent activity",
+  "favoritesTitle": "Favorites",
+  "noFavorites": "No favorites",
+  "noFavoritesDescription": "Add a movie or TV series from its detail page to see it here.",
+  "removeFromFavorites": "Remove from favorites",
+  "addToFavorites": "Add to favorites",
   "uploadError": "Upload error: {error}",
   "@uploadError": {
     "placeholders": {

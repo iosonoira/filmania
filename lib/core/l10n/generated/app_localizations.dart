@@ -578,6 +578,36 @@ abstract class AppLocalizations {
   /// **'No recent activity'**
   String get noRecentActivity;
 
+  /// No description provided for @favoritesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Favorites'**
+  String get favoritesTitle;
+
+  /// No description provided for @noFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'No favorites'**
+  String get noFavorites;
+
+  /// No description provided for @noFavoritesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a movie or TV series from its detail page to see it here.'**
+  String get noFavoritesDescription;
+
+  /// No description provided for @removeFromFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove from favorites'**
+  String get removeFromFavorites;
+
+  /// No description provided for @addToFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to favorites'**
+  String get addToFavorites;
+
   /// No description provided for @uploadError.
   ///
   /// In en, this message translates to:
