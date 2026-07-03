@@ -10,6 +10,12 @@ import '../providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../domain/entities/watched_item.dart';
+import '../../../../core/widgets/selection/media_selection_item.dart';
+import '../../../../core/widgets/selection/selectable_card.dart';
+import '../../../../core/widgets/selection/selection_action_bar.dart';
+import '../../../../core/widgets/selection/selection_scope.dart';
+import '../widgets/watched_bulk_actions.dart';
+import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 
 class WatchedListPage extends ConsumerWidget {
   final MediaType mediaType;
@@ -47,10 +53,37 @@ class WatchedListPage extends ConsumerWidget {
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
-      body: asyncItems.when(
-        data: (items) => _buildGrid(context, items, colors, textTheme, l10n),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text(l10n.genericError(err.toString()))),
+      body: SelectionScope<MediaSelectionItem>(
+        child: Stack(
+          children: [
+            asyncItems.when(
+              data: (items) =>
+                  _buildGrid(context, items, colors, textTheme, l10n),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) =>
+                  Center(child: Text(l10n.genericError(err.toString()))),
+            ),
+            SelectionActionBar<MediaSelectionItem>(
+              actions: [
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.bookmark_add_rounded,
+                  label: 'Aggiungi a lista',
+                  onPressed: (selected) => showBulkWatchlistPicker(
+                    context,
+                    ref,
+                    items: selected.toList(),
+                  ),
+                ),
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.visibility_off_rounded,
+                  label: 'Segna come non visto',
+                  onPressed: (selected) =>
+                      toggleWatchedBulk(ref, items: selected.toList()),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -88,33 +121,76 @@ class WatchedListPage extends ConsumerWidget {
             ],
           ),
         ),
-        body: asyncItems.when(
-          data: (items) {
-            final watching = items.where((e) => e.status == TvSeriesWatchStatus.watching).map((e) => e.series).toList();
-            final upToDate = items.where((e) => e.status == TvSeriesWatchStatus.upToDate).map((e) => e.series).toList();
-            final completed = items.where((e) => e.status == TvSeriesWatchStatus.completed).map((e) => e.series).toList();
+        body: SelectionScope<MediaSelectionItem>(
+          child: Stack(
+            children: [
+              asyncItems.when(
+                data: (items) {
+                  final watching = items
+                      .where((e) => e.status == TvSeriesWatchStatus.watching)
+                      .map((e) => e.series)
+                      .toList();
+                  final upToDate = items
+                      .where((e) => e.status == TvSeriesWatchStatus.upToDate)
+                      .map((e) => e.series)
+                      .toList();
+                  final completed = items
+                      .where((e) => e.status == TvSeriesWatchStatus.completed)
+                      .map((e) => e.series)
+                      .toList();
 
-            return TabBarView(
-              children: [
-                _buildGrid(context, watching, colors, textTheme, l10n),
-                _buildGrid(context, upToDate, colors, textTheme, l10n),
-                _buildGrid(context, completed, colors, textTheme, l10n),
-              ],
-            );
-          },
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, stack) => Center(child: Text(l10n.genericError(err.toString()))),
+                  return TabBarView(
+                    children: [
+                      _buildGrid(context, watching, colors, textTheme, l10n),
+                      _buildGrid(context, upToDate, colors, textTheme, l10n),
+                      _buildGrid(context, completed, colors, textTheme, l10n),
+                    ],
+                  );
+                },
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) =>
+                    Center(child: Text(l10n.genericError(err.toString()))),
+              ),
+              SelectionActionBar<MediaSelectionItem>(
+                actions: [
+                  SelectionAction<MediaSelectionItem>(
+                    icon: Icons.bookmark_add_rounded,
+                    label: 'Aggiungi a lista',
+                    onPressed: (selected) => showBulkWatchlistPicker(
+                      context,
+                      ref,
+                      items: selected.toList(),
+                    ),
+                  ),
+                  SelectionAction<MediaSelectionItem>(
+                    icon: Icons.visibility_off_rounded,
+                    label: 'Segna come non visto',
+                    onPressed: (selected) =>
+                        toggleWatchedBulk(ref, items: selected.toList()),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildGrid(BuildContext context, List<WatchedItem> items, AppColorScheme colors, TextTheme textTheme, AppLocalizations l10n) {
+  Widget _buildGrid(
+    BuildContext context,
+    List<WatchedItem> items,
+    AppColorScheme colors,
+    TextTheme textTheme,
+    AppLocalizations l10n,
+  ) {
     if (items.isEmpty) {
       return Center(
         child: Text(
           l10n.emptySection,
-          style: textTheme.bodyLarge?.copyWith(color: colors.onSurfaceSecondary),
+          style: textTheme.bodyLarge?.copyWith(
+            color: colors.onSurfaceSecondary,
+          ),
         ),
       );
     }
@@ -129,41 +205,67 @@ class WatchedListPage extends ConsumerWidget {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return GestureDetector(
+        return SelectableCard<MediaSelectionItem>(
+          id: MediaSelectionItem(
+            mediaId: item.mediaId,
+            mediaType: item.mediaType,
+            title: item.mediaTitle,
+            posterPath: item.posterPath,
+          ),
           onTap: () {
             final path = item.mediaType == MediaType.movie
-                ? AppRoutes.movieDetails.replaceAll(':id', item.mediaId.toString())
-                : AppRoutes.tvDetails.replaceAll(':id', item.mediaId.toString());
+                ? AppRoutes.movieDetails.replaceAll(
+                    ':id',
+                    item.mediaId.toString(),
+                  )
+                : AppRoutes.tvDetails.replaceAll(
+                    ':id',
+                    item.mediaId.toString(),
+                  );
             context.push(path);
           },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppSpacing.radius),
-              boxShadow: Theme.of(context).brightness == Brightness.dark ? null : [
+          child: _WatchedGridCard(item: item),
+        );
+      },
+    );
+  }
+}
+
+class _WatchedGridCard extends StatelessWidget {
+  const _WatchedGridCard({required this.item});
+
+  final WatchedItem item;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        boxShadow: Theme.of(context).brightness == Brightness.dark
+            ? null
+            : [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 4),
                 ),
               ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(AppSpacing.radius),
-              child: item.posterPath != null
-                  ? Image.network(
-                      'https://image.tmdb.org/t/p/w200${item.posterPath}',
-                      fit: BoxFit.cover,
-                    )
-                  : Container(
-                      color: colors.surface,
-                      child: Center(
-                        child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
-                      ),
-                    ),
-            ),
-          ),
-        );
-      },
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        child: item.posterPath != null
+            ? Image.network(
+                'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                fit: BoxFit.cover,
+              )
+            : Container(
+                color: colors.surface,
+                child: Center(
+                  child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
+                ),
+              ),
+      ),
     );
   }
 }
