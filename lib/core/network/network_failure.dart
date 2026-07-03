@@ -8,6 +8,7 @@ sealed class NetworkFailure {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
+      case DioExceptionType.transformTimeout:
         return const TimeoutFailure();
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
