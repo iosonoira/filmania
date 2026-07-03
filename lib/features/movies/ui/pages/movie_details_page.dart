@@ -12,6 +12,7 @@ import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
+import '../../../favorites/ui/widgets/favorite_button.dart';
 import '../../../../core/widgets/cast_section.dart';
 import 'package:filmania/core/widgets/crew_section.dart';
 import 'package:filmania/core/widgets/recommendations_section.dart';
@@ -69,13 +70,27 @@ class _MovieDetailsContent extends StatelessWidget {
               children: [
                 _WatchlistButton(movie: movie),
                 const SizedBox(height: AppSpacing.md),
-                WatchedButton(
-                  mediaId: movie.id,
-                  mediaTitle: movie.title,
-                  mediaType: MediaType.movie,
-                  posterPath: movie.posterPath,
-                  runtimeMinutes: movie.runtime,
-                  isIconOnly: false,
+                Row(
+                  children: [
+                    Expanded(
+                      child: WatchedButton(
+                        mediaId: movie.id,
+                        mediaTitle: movie.title,
+                        mediaType: MediaType.movie,
+                        posterPath: movie.posterPath,
+                        runtimeMinutes: movie.runtime,
+                        isIconOnly: false,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    FavoriteButton(
+                      mediaId: movie.id,
+                      mediaTitle: movie.title,
+                      mediaType: MediaType.movie,
+                      posterPath: movie.posterPath,
+                      size: 44,
+                    ),
+                  ],
                 ),
               ],
             ),

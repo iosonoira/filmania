@@ -19,6 +19,7 @@ import 'package:filmania/core/router/app_router.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:go_router/go_router.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
+import '../../../favorites/ui/widgets/favorite_button.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class TVSeriesDetailsPage extends ConsumerWidget {
@@ -201,12 +202,26 @@ class _TVSeriesDetailsContent extends StatelessWidget {
               children: [
                 _WatchlistButton(series: series),
                 const SizedBox(height: AppSpacing.md),
-                WatchedButton(
-                  mediaId: series.id,
-                  mediaTitle: series.name,
-                  mediaType: MediaType.tv,
-                  posterPath: series.posterPath,
-                  isIconOnly: false,
+                Row(
+                  children: [
+                    Expanded(
+                      child: WatchedButton(
+                        mediaId: series.id,
+                        mediaTitle: series.name,
+                        mediaType: MediaType.tv,
+                        posterPath: series.posterPath,
+                        isIconOnly: false,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    FavoriteButton(
+                      mediaId: series.id,
+                      mediaTitle: series.name,
+                      mediaType: MediaType.tv,
+                      posterPath: series.posterPath,
+                      size: 44,
+                    ),
+                  ],
                 ),
               ],
             ),
