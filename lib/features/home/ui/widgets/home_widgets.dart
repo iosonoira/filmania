@@ -6,6 +6,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/selection/media_selection_item.dart';
+import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
 import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
@@ -116,12 +118,23 @@ class _TrendingMoviesList extends StatelessWidget {
             const SizedBox(width: AppSpacing.lg),
         itemBuilder: (context, index) {
           final movie = movies[index];
-          return WatchingCard(
-            mediaId: movie.id,
-            title: movie.title,
-            subtitle: movie.releaseDate?.year.toString() ?? '',
-            imageUrl: movie.fullBackdropUrl ?? movie.fullPosterUrl ?? '',
-            posterPath: movie.posterPath,
+          return SelectableCard<MediaSelectionItem>(
+            id: MediaSelectionItem(
+              mediaId: movie.id,
+              mediaType: MediaType.movie,
+              title: movie.title,
+              posterPath: movie.posterPath,
+            ),
+            onTap: () => context.push(
+              AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
+            ),
+            child: WatchingCard(
+              mediaId: movie.id,
+              title: movie.title,
+              subtitle: movie.releaseDate?.year.toString() ?? '',
+              imageUrl: movie.fullBackdropUrl ?? movie.fullPosterUrl ?? '',
+              posterPath: movie.posterPath,
+            ),
           );
         },
       ),
@@ -151,92 +164,87 @@ class WatchingCard extends ConsumerWidget {
     return Semantics(
       label: 'Guarda $title, $subtitle',
       button: true,
-      child: GestureDetector(
-        onTap: () => context.push(
-          AppRoutes.movieDetails.replaceAll(':id', mediaId.toString()),
+      child: Container(
+        width: MediaQuery.sizeOf(context).width * 0.85,
+        constraints: const BoxConstraints(maxWidth: 450),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(AppSpacing.radius),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
+              blurRadius: 30,
+              offset: const Offset(0, 15),
+            ),
+          ],
         ),
-        child: Container(
-          width: MediaQuery.sizeOf(context).width * 0.85,
-          constraints: const BoxConstraints(maxWidth: 450),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppSpacing.radius),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
-                blurRadius: 30,
-                offset: const Offset(0, 15),
-              ),
-            ],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: imageUrl.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: imageUrl,
-                        fit: BoxFit.cover,
-                        memCacheWidth: (MediaQuery.sizeOf(context).width * 0.85 * 2).toInt(),
-                        placeholder: (context, url) => Container(
-                          color: Colors.black.withValues(alpha: 0.1),
+        clipBehavior: Clip.antiAlias,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: imageUrl.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: imageUrl,
+                      fit: BoxFit.cover,
+                      memCacheWidth:
+                          (MediaQuery.sizeOf(context).width * 0.85 * 2).toInt(),
+                      placeholder: (context, url) =>
+                          Container(color: Colors.black.withValues(alpha: 0.1)),
+                      errorWidget: (context, url, error) => Container(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        child: const Icon(
+                          Icons.broken_image,
+                          color: Colors.grey,
                         ),
-                        errorWidget: (context, url, error) => Container(
-                          color: Colors.black.withValues(alpha: 0.1),
-                          child: const Icon(Icons.broken_image, color: Colors.grey),
-                        ),
-                      )
-                    : Container(color: Colors.black.withValues(alpha: 0.1)),
-              ),
-              Positioned.fill(
-                child: _WatchingCardContent(
-                  title: title,
-                  subtitle: subtitle,
-                ),
-              ),
-              Positioned(
-                top: AppSpacing.md,
-                right: AppSpacing.md,
-                child: Row(
-                  children: [
-                    WatchedButton(
+                      ),
+                    )
+                  : Container(color: Colors.black.withValues(alpha: 0.1)),
+            ),
+            Positioned.fill(
+              child: _WatchingCardContent(title: title, subtitle: subtitle),
+            ),
+            Positioned(
+              top: AppSpacing.md,
+              right: AppSpacing.md,
+              child: Row(
+                children: [
+                  WatchedButton(
+                    mediaId: mediaId,
+                    mediaTitle: title,
+                    mediaType: MediaType.movie,
+                    posterPath: posterPath,
+                    isIconOnly: true,
+                    hasBackground: true,
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
+                  IconButton.filled(
+                    onPressed: () => showWatchlistPicker(
+                      context,
+                      ref,
                       mediaId: mediaId,
                       mediaTitle: title,
                       mediaType: MediaType.movie,
                       posterPath: posterPath,
-                      isIconOnly: true,
-                      hasBackground: true,
                     ),
-                    const SizedBox(width: AppSpacing.xs),
-                    IconButton.filled(
-                      onPressed: () => showWatchlistPicker(
-                        context,
-                        ref,
-                        mediaId: mediaId,
-                        mediaTitle: title,
-                        mediaType: MediaType.movie,
-                        posterPath: posterPath,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.black.withValues(alpha: 0.3),
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(32, 32),
-                        fixedSize: const Size(32, 32),
-                        padding: EdgeInsets.zero,
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      constraints: const BoxConstraints(
-                        minWidth: 32,
-                        minHeight: 32,
-                        maxWidth: 32,
-                        maxHeight: 32,
-                      ),
-                      icon: const Icon(Icons.bookmark_add_outlined, size: 18),
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.black.withValues(alpha: 0.3),
+                      foregroundColor: Colors.white,
+                      minimumSize: const Size(32, 32),
+                      fixedSize: const Size(32, 32),
+                      padding: EdgeInsets.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                  ],
-                ),
+                    constraints: const BoxConstraints(
+                      minWidth: 32,
+                      minHeight: 32,
+                      maxWidth: 32,
+                      maxHeight: 32,
+                    ),
+                    icon: const Icon(Icons.bookmark_add_outlined, size: 18),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -247,10 +255,7 @@ class _WatchingCardContent extends StatelessWidget {
   final String title;
   final String subtitle;
 
-  const _WatchingCardContent({
-    required this.title,
-    required this.subtitle,
-  });
+  const _WatchingCardContent({required this.title, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -426,13 +431,15 @@ class _UpcomingEpisodeItem extends ConsumerWidget {
         decoration: BoxDecoration(
           color: containerColor,
           borderRadius: BorderRadius.circular(AppSpacing.md),
-          boxShadow: Theme.of(context).brightness == Brightness.dark ? null : [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 10,
-              offset: const Offset(0, 5),
-            ),
-          ],
+          boxShadow: Theme.of(context).brightness == Brightness.dark
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.02),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
+                ],
         ),
         child: Row(
           children: [
@@ -602,12 +609,40 @@ class _CuratedContent extends StatelessWidget {
 
     return Column(
       children: [
-        _FeaturedBentoCard(movie: featuredMovie),
+        SelectableCard<MediaSelectionItem>(
+          id: MediaSelectionItem(
+            mediaId: featuredMovie.id,
+            mediaType: MediaType.movie,
+            title: featuredMovie.title,
+            posterPath: featuredMovie.posterPath,
+          ),
+          onTap: () => context.push(
+            AppRoutes.movieDetails.replaceAll(
+              ':id',
+              featuredMovie.id.toString(),
+            ),
+          ),
+          child: _FeaturedBentoCard(movie: featuredMovie),
+        ),
         const SizedBox(height: AppSpacing.md),
         if (secondaryMovie != null) ...[
-          _SecondaryBentoCard(
-            movie: secondaryMovie,
-            containerColor: containerColor,
+          SelectableCard<MediaSelectionItem>(
+            id: MediaSelectionItem(
+              mediaId: secondaryMovie.id,
+              mediaType: MediaType.movie,
+              title: secondaryMovie.title,
+              posterPath: secondaryMovie.posterPath,
+            ),
+            onTap: () => context.push(
+              AppRoutes.movieDetails.replaceAll(
+                ':id',
+                secondaryMovie.id.toString(),
+              ),
+            ),
+            child: _SecondaryBentoCard(
+              movie: secondaryMovie,
+              containerColor: containerColor,
+            ),
           ),
           const SizedBox(height: AppSpacing.md),
         ],
@@ -626,71 +661,65 @@ class _FeaturedBentoCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return GestureDetector(
-      onTap: () => context.push(
-        AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
+    return Container(
+      height: 300,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
+            blurRadius: 40,
+            offset: const Offset(0, 20),
+          ),
+        ],
       ),
-      child: Container(
-        height: 300,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.08),
-              blurRadius: 40,
-              offset: const Offset(0, 20),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Opacity(
-                opacity: 0.6,
-                child: CachedNetworkImage(
-                  imageUrl: movie.fullBackdropUrl ?? movie.fullPosterUrl ?? '',
-                  fit: BoxFit.cover,
-                  memCacheHeight: 600,
-                  placeholder: (context, url) => Container(
-                    color: Colors.black.withValues(alpha: 0.1),
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    color: Colors.black.withValues(alpha: 0.1),
-                    child: const Icon(Icons.broken_image, color: Colors.grey),
-                  ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.6,
+              child: CachedNetworkImage(
+                imageUrl: movie.fullBackdropUrl ?? movie.fullPosterUrl ?? '',
+                fit: BoxFit.cover,
+                memCacheHeight: 600,
+                placeholder: (context, url) =>
+                    Container(color: Colors.black.withValues(alpha: 0.1)),
+                errorWidget: (context, url, error) => Container(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  child: const Icon(Icons.broken_image, color: Colors.grey),
                 ),
               ),
             ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppSpacing.radius),
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [
-                      Colors.black.withValues(alpha: 0.85),
-                      Colors.black.withValues(alpha: 0.0),
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.all(AppSpacing.lg),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const _FeaturedBentoTags(),
-                    const SizedBox(height: AppSpacing.md),
-                    _FeaturedBentoContent(movie: movie),
-                    const SizedBox(height: AppSpacing.lg),
-                    _FeaturedBentoButton(movie: movie),
+          ),
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [
+                    Colors.black.withValues(alpha: 0.85),
+                    Colors.black.withValues(alpha: 0.0),
                   ],
                 ),
               ),
+              padding: const EdgeInsets.all(AppSpacing.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const _FeaturedBentoTags(),
+                  const SizedBox(height: AppSpacing.md),
+                  _FeaturedBentoContent(movie: movie),
+                  const SizedBox(height: AppSpacing.lg),
+                  _FeaturedBentoButton(movie: movie),
+                ],
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -817,66 +846,63 @@ class _SecondaryBentoCard extends StatelessWidget {
     final colors = AppColors.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return GestureDetector(
-      onTap: () => context.push(
-        AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      decoration: BoxDecoration(
+        color: containerColor,
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        boxShadow: isDark
+            ? null
+            : [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.02),
+                  blurRadius: 20,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+        border: Border.all(
+          color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
+        ),
       ),
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        decoration: BoxDecoration(
-          color: containerColor,
-          borderRadius: BorderRadius.circular(AppSpacing.radius),
-          boxShadow: isDark ? null : [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.02),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  movie.title,
+                  style: textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  movie.overview,
+                  style: textTheme.bodySmall?.copyWith(
+                    color: colors.onSurfaceSecondary,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
-          ],
-          border: Border.all(
-            color: colors.onSurfaceSecondary.withValues(alpha: 0.1),
           ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    movie.title,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    movie.overview,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colors.onSurfaceSecondary,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
+          const SizedBox(width: AppSpacing.md),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: CachedNetworkImage(
+              imageUrl: movie.fullPosterUrl ?? '',
+              width: 60,
+              height: 90,
+              fit: BoxFit.cover,
+              memCacheWidth: 120,
             ),
-            const SizedBox(width: AppSpacing.md),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: CachedNetworkImage(
-                imageUrl: movie.fullPosterUrl ?? '',
-                width: 60,
-                height: 90,
-                fit: BoxFit.cover,
-                memCacheWidth: 120,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
