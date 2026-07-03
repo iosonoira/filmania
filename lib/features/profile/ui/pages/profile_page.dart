@@ -10,6 +10,7 @@ import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
 import '../../../watched/domain/entities/watched_item.dart';
+import '../../../favorites/ui/providers/favorites_providers.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
@@ -391,7 +392,7 @@ class _RecentActivitySection extends ConsumerWidget {
               child: asyncMovies.when(
                 data: (movies) => _CategoryCard(
                   title: AppLocalizations.of(context)!.moviesTitle,
-                  items: movies,
+                  posterPaths: movies.map((m) => m.posterPath).toList(),
                   onTap: () => context.push(AppRoutes.watchedMovies),
                 ),
                 loading: () => const _CategoryCardPlaceholder(),
@@ -403,11 +404,30 @@ class _RecentActivitySection extends ConsumerWidget {
               child: asyncTv.when(
                 data: (tv) => _CategoryCard(
                   title: AppLocalizations.of(context)!.tvSeriesTitle,
-                  items: tv,
+                  posterPaths: tv.map((t) => t.posterPath).toList(),
                   onTap: () => context.push(AppRoutes.watchedTv),
                 ),
                 loading: () => const _CategoryCardPlaceholder(),
                 error: (e, st) => const _CategoryCardPlaceholder(),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Consumer(
+                builder: (context, ref, _) {
+                  final asyncFavorites = ref.watch(favoritesProvider);
+                  return asyncFavorites.when(
+                    data: (favorites) => _CategoryCard(
+                      title: 'Preferiti',
+                      posterPaths: favorites
+                          .map((f) => f.posterPath)
+                          .toList(),
+                      onTap: () => context.push(AppRoutes.favorites),
+                    ),
+                    loading: () => const _CategoryCardPlaceholder(),
+                    error: (e, st) => const _CategoryCardPlaceholder(),
+                  );
+                },
               ),
             ),
           ],
@@ -453,12 +473,12 @@ class _RecentActivitySection extends ConsumerWidget {
 class _CategoryCard extends StatelessWidget {
   const _CategoryCard({
     required this.title,
-    required this.items,
+    required this.posterPaths,
     required this.onTap,
   });
 
   final String title;
-  final List<WatchedItem> items;
+  final List<String?> posterPaths;
   final VoidCallback onTap;
 
   @override
@@ -494,23 +514,23 @@ class _CategoryCard extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Stack(
           children: [
-            if (items.isNotEmpty)
+            if (posterPaths.isNotEmpty)
               Positioned.fill(
                 child: Row(
-                  children: items
+                  children: posterPaths
                       .take(3)
                       .map(
-                        (item) => Expanded(
+                        (posterPath) => Expanded(
                           child: Container(
                             clipBehavior: Clip.antiAlias,
                             decoration: const BoxDecoration(),
                             child: Stack(
                               fit: StackFit.expand,
                               children: [
-                                if (item.posterPath != null)
+                                if (posterPath != null)
                                   CachedNetworkImage(
                                     imageUrl:
-                                        'https://image.tmdb.org/t/p/w200${item.posterPath}',
+                                        'https://image.tmdb.org/t/p/w200$posterPath',
                                     fit: BoxFit.cover,
                                     memCacheWidth: 150,
                                   ),
