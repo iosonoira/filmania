@@ -11,6 +11,12 @@ import '../../../../core/l10n/generated/app_localizations.dart';
 import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/selection/media_selection_item.dart';
+import '../../../../core/widgets/selection/selectable_card.dart';
+import '../../../../core/widgets/selection/selection_action_bar.dart';
+import '../../../../core/widgets/selection/selection_scope.dart';
+import '../../../watched/ui/widgets/watched_bulk_actions.dart';
+import '../widgets/watchlist_picker_sheet.dart';
 
 class WatchlistDetailPage extends ConsumerWidget {
   final String watchlistId;
@@ -25,7 +31,8 @@ class WatchlistDetailPage extends ConsumerWidget {
     final itemsAsync = ref.watch(watchlistItemsProvider(watchlistId));
     final l10n = ref.watch(appLocalizationsProvider);
 
-    final watchlistName = watchlistsAsync.value
+    final watchlistName =
+        watchlistsAsync.value
             ?.where((w) => w.id == watchlistId)
             .map((w) => w.name)
             .firstOrNull ??
@@ -35,149 +42,214 @@ class WatchlistDetailPage extends ConsumerWidget {
       extendBody: true,
       extendBodyBehindAppBar: true,
       appBar: const GlassmorphicAppBar(showBackButton: true),
-      body: CustomScrollView(
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.xl,
-            ),
-          ),
+      body: SelectionScope<MediaSelectionItem>(
+        child: Stack(
+          children: [
+            CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height:
+                        MediaQuery.of(context).padding.top +
+                        kToolbarHeight +
+                        AppSpacing.xl,
+                  ),
+                ),
 
-          // Header row with title + delete button
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            sliver: SliverToBoxAdapter(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Column(
+                // Header row with title + delete button
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          watchlistName,
-                          style: textTheme.displaySmall?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -1.5,
-                            color: colors.onSurfacePrimary,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                watchlistName,
+                                style: textTheme.displaySmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: -1.5,
+                                  color: colors.onSurfacePrimary,
+                                ),
+                              ),
+                              const SizedBox(height: AppSpacing.sm),
+                              itemsAsync.when(
+                                data: (items) => Text(
+                                  '${items.length} titoli',
+                                  style: textTheme.labelLarge?.copyWith(
+                                    color: colors.onSurfaceSecondary,
+                                  ),
+                                ),
+                                loading: () => const SizedBox.shrink(),
+                                error: (err, stack) => const SizedBox.shrink(),
+                              ),
+                            ],
                           ),
                         ),
-                        const SizedBox(height: AppSpacing.sm),
-                        itemsAsync.when(
-                          data: (items) => Text(
-                            '${items.length} titoli',
-                            style: textTheme.labelLarge?.copyWith(
-                              color: colors.onSurfaceSecondary,
-                            ),
+                        // Delete button
+                        IconButton(
+                          icon: Icon(
+                            Icons.delete_outline_rounded,
+                            color: colors.onSurfaceSecondary,
                           ),
-                          loading: () => const SizedBox.shrink(),
-                          error: (err, stack) => const SizedBox.shrink(),
+                          onPressed: () =>
+                              _confirmDelete(context, ref, watchlistName, l10n),
+                          tooltip: l10n.deleteWatchlist,
                         ),
                       ],
                     ),
                   ),
-                  // Delete button
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete_outline_rounded,
-                      color: colors.onSurfaceSecondary,
-                    ),
-                    onPressed: () =>
-                        _confirmDelete(context, ref, watchlistName, l10n),
-                    tooltip: l10n.deleteWatchlist,
-                  ),
-                ],
-              ),
-            ),
-          ),
+                ),
 
-          const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxl)),
+                const SliverToBoxAdapter(
+                  child: SizedBox(height: AppSpacing.xxl),
+                ),
 
-          itemsAsync.when(
-            data: (items) {
-              if (items.isEmpty) {
-                return SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSpacing.lg),
-                    child: _WatchlistDetailEmpty(
-                        colors: colors, textTheme: textTheme, l10n: l10n),
-                  ),
-                );
-              }
-              return SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.7,
-                    crossAxisSpacing: AppSpacing.md,
-                    mainAxisSpacing: AppSpacing.md,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final item = items[index];
-                      return WatchlistMediaCard(
-                        item: item,
-                        onTap: () {
-                          if (item.mediaType == MediaType.movie) {
-                            context.push(
-                              AppRoutes.movieDetails.replaceFirst(
-                                  ':id', item.mediaId.toString()),
-                            );
-                          } else {
-                            context.push(
-                              AppRoutes.tvDetails.replaceFirst(
-                                  ':id', item.mediaId.toString()),
-                            );
-                          }
-                        },
-                        onRemove: () => ref
-                            .read(watchlistProvider.notifier)
-                            .removeItemFromWatchlist(
-                              watchlistId: watchlistId,
+                itemsAsync.when(
+                  data: (items) {
+                    if (items.isEmpty) {
+                      return SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.lg,
+                          ),
+                          child: _WatchlistDetailEmpty(
+                            colors: colors,
+                            textTheme: textTheme,
+                            l10n: l10n,
+                          ),
+                        ),
+                      );
+                    }
+                    return SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                      ),
+                      sliver: SliverGrid(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.7,
+                              crossAxisSpacing: AppSpacing.md,
+                              mainAxisSpacing: AppSpacing.md,
+                            ),
+                        delegate: SliverChildBuilderDelegate((context, index) {
+                          final item = items[index];
+                          return SelectableCard<MediaSelectionItem>(
+                            id: MediaSelectionItem(
                               mediaId: item.mediaId,
                               mediaType: item.mediaType,
+                              title: item.title,
+                              posterPath: item.posterPath,
                             ),
-                      );
-                    },
-                    childCount: items.length,
+                            onTap: () {
+                              if (item.mediaType == MediaType.movie) {
+                                context.push(
+                                  AppRoutes.movieDetails.replaceFirst(
+                                    ':id',
+                                    item.mediaId.toString(),
+                                  ),
+                                );
+                              } else {
+                                context.push(
+                                  AppRoutes.tvDetails.replaceFirst(
+                                    ':id',
+                                    item.mediaId.toString(),
+                                  ),
+                                );
+                              }
+                            },
+                            child: WatchlistMediaCard(
+                              item: item,
+                              onRemove: () => ref
+                                  .read(watchlistProvider.notifier)
+                                  .removeItemFromWatchlist(
+                                    watchlistId: watchlistId,
+                                    mediaId: item.mediaId,
+                                    mediaType: item.mediaType,
+                                  ),
+                            ),
+                          );
+                        }, childCount: items.length),
+                      ),
+                    );
+                  },
+                  loading: () => SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                    ),
+                    sliver: SliverGrid(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 0.7,
+                            crossAxisSpacing: AppSpacing.md,
+                            mainAxisSpacing: AppSpacing.md,
+                          ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) => const WatchlistShimmerCard(),
+                        childCount: 6,
+                      ),
+                    ),
+                  ),
+                  error: (err, stack) => SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: AppErrorView(
+                      error: err,
+                      onRetry: () =>
+                          ref.invalidate(watchlistItemsProvider(watchlistId)),
+                    ),
                   ),
                 ),
-              );
-            },
-            loading: () => SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 0.7,
-                  crossAxisSpacing: AppSpacing.md,
-                  mainAxisSpacing: AppSpacing.md,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => const WatchlistShimmerCard(),
-                  childCount: 6,
-                ),
-              ),
-            ),
-            error: (err, stack) => SliverFillRemaining(
-              hasScrollBody: false,
-              child: AppErrorView(
-                error: err,
-                onRetry: () =>
-                    ref.invalidate(watchlistItemsProvider(watchlistId)),
-              ),
-            ),
-          ),
 
-          const SliverToBoxAdapter(
-            child: SizedBox(
-              height: AppSpacing.xxxl * 2 + AppSpacing.sm + AppSpacing.xs,
+                const SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: AppSpacing.xxxl * 2 + AppSpacing.sm + AppSpacing.xs,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            SelectionActionBar<MediaSelectionItem>(
+              actions: [
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.delete_outline_rounded,
+                  label: 'Rimuovi dalla lista',
+                  onPressed: (selected) async {
+                    final notifier = ref.read(watchlistProvider.notifier);
+                    for (final item in selected) {
+                      await notifier.removeItemFromWatchlist(
+                        watchlistId: watchlistId,
+                        mediaId: item.mediaId,
+                        mediaType: item.mediaType,
+                      );
+                    }
+                  },
+                ),
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.bookmark_add_rounded,
+                  label: 'Aggiungi a lista',
+                  onPressed: (selected) => showBulkWatchlistPicker(
+                    context,
+                    ref,
+                    items: selected.toList(),
+                  ),
+                ),
+                SelectionAction<MediaSelectionItem>(
+                  icon: Icons.visibility_rounded,
+                  label: 'Segna come visto/non visto',
+                  onPressed: (selected) =>
+                      toggleWatchedBulk(ref, items: selected.toList()),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -192,13 +264,9 @@ class WatchlistDetailPage extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: Text(l10n.deleteWatchlist),
-        content:
-            Text(l10n.deleteWatchlistConfirm(name)),
+        content: Text(l10n.deleteWatchlistConfirm(name)),
         actions: [
-          TextButton(
-            onPressed: () => ctx.pop(false),
-            child: Text(l10n.cancel),
-          ),
+          TextButton(onPressed: () => ctx.pop(false), child: Text(l10n.cancel)),
           TextButton(
             onPressed: () => ctx.pop(true),
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
@@ -208,9 +276,7 @@ class WatchlistDetailPage extends ConsumerWidget {
       ),
     );
     if (confirmed == true && context.mounted) {
-      await ref
-          .read(watchlistProvider.notifier)
-          .deleteWatchlist(watchlistId);
+      await ref.read(watchlistProvider.notifier).deleteWatchlist(watchlistId);
       if (context.mounted) context.pop();
     }
   }
@@ -221,8 +287,11 @@ class _WatchlistDetailEmpty extends StatelessWidget {
   final TextTheme textTheme;
   final AppLocalizations l10n;
 
-  const _WatchlistDetailEmpty(
-      {required this.colors, required this.textTheme, required this.l10n});
+  const _WatchlistDetailEmpty({
+    required this.colors,
+    required this.textTheme,
+    required this.l10n,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -242,8 +311,7 @@ class _WatchlistDetailEmpty extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           Text(
             l10n.emptyList,
-            style:
-                textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+            style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
