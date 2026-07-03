@@ -83,7 +83,9 @@ class _MovieDetailsContent extends StatelessWidget {
         ),
         _MovieOverviewSection(overview: movie.overview),
         SliverToBoxAdapter(child: _MovieCastSection(movieId: movie.id)),
-        SliverToBoxAdapter(child: _MovieRecommendationsSection(movieId: movie.id)),
+        SliverToBoxAdapter(
+          child: _MovieRecommendationsSection(movieId: movie.id),
+        ),
         const SliverToBoxAdapter(
           child: SizedBox(
             height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
