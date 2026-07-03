@@ -255,6 +255,8 @@ class _TVSeriesDetailsContent extends StatelessWidget {
           ),
         ),
 
+        // Restores the trailing gap CastSection gets for free via its own
+        // bottom padding — EpisodesSection has none.
         const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.lg)),
 
         // Consigliati
