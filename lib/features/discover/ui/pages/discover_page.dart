@@ -123,6 +123,7 @@ class DiscoverPage extends ConsumerWidget {
                       ref,
                       items: selected.toList(),
                     );
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,
@@ -138,6 +139,7 @@ class DiscoverPage extends ConsumerWidget {
                       ref,
                       items: selected.toList(),
                     );
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,

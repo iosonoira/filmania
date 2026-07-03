@@ -242,6 +242,7 @@ class WatchlistDetailPage extends ConsumerWidget {
                         failures++;
                       }
                     }
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,
@@ -258,6 +259,7 @@ class WatchlistDetailPage extends ConsumerWidget {
                       ref,
                       items: selected.toList(),
                     );
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,
@@ -273,6 +275,7 @@ class WatchlistDetailPage extends ConsumerWidget {
                       ref,
                       items: selected.toList(),
                     );
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,

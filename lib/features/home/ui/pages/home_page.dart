@@ -68,6 +68,7 @@ class HomePage extends ConsumerWidget {
                       ref,
                       items: selected.toList(),
                     );
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,
@@ -83,6 +84,7 @@ class HomePage extends ConsumerWidget {
                       ref,
                       items: selected.toList(),
                     );
+                    if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,
