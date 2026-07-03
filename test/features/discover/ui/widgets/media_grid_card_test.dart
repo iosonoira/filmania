@@ -23,7 +23,7 @@ Widget _wrap({required bool isInWatchlist}) {
     ],
     child: MaterialApp(
       theme: AppTheme.dark(),
-      home: Scaffold(
+      home: const Scaffold(
         body: MediaGridCard(
           mediaId: 1,
           title: 'Test Movie',

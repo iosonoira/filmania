@@ -31,7 +31,7 @@ Widget _wrap({bool isWatched = false}) {
     ],
     child: MaterialApp(
       theme: AppTheme.dark(),
-      home: Scaffold(
+      home: const Scaffold(
         body: EpisodeCard(
           episode: _episode,
           tvId: 1,
