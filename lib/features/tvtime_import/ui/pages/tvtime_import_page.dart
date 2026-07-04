@@ -22,18 +22,27 @@ class TvTimeImportPage extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: switch (state) {
-            TvTimeImportIdle() => _IdleView(onPick: () => _pickAndProcess(context, ref)),
-            TvTimeImportProcessing(:final progress) => _ProgressView(progress: progress),
+            TvTimeImportIdle() => _IdleView(
+              onPick: () => _pickAndProcess(context, ref),
+            ),
+            TvTimeImportProcessing(:final progress) => _ProgressView(
+              progress: progress,
+            ),
             TvTimeImportReady(:final matchResult) => _PreviewView(
-                matchResult: matchResult,
-                onConfirm: () => ref.read(tvTimeImportProvider.notifier).confirmImport(),
-              ),
-            TvTimeImportWriting(:final progress) => _ProgressView(progress: progress),
-            TvTimeImportDone(:final matchResult) => _DoneView(matchResult: matchResult),
+              matchResult: matchResult,
+              onConfirm: () =>
+                  ref.read(tvTimeImportProvider.notifier).confirmImport(),
+            ),
+            TvTimeImportWriting(:final progress) => _ProgressView(
+              progress: progress,
+            ),
+            TvTimeImportDone(:final matchResult) => _DoneView(
+              matchResult: matchResult,
+            ),
             TvTimeImportError(:final failure) => _ErrorView(
-                message: failure.message,
-                onRetry: () => ref.read(tvTimeImportProvider.notifier).reset(),
-              ),
+              message: failure.message,
+              onRetry: () => ref.read(tvTimeImportProvider.notifier).reset(),
+            ),
           },
         ),
       ),
@@ -48,7 +57,9 @@ class TvTimeImportPage extends ConsumerWidget {
     );
     if (result == null || result.files.single.bytes == null) return;
     if (!context.mounted) return;
-    await ref.read(tvTimeImportProvider.notifier).processZip(result.files.single.bytes!);
+    await ref
+        .read(tvTimeImportProvider.notifier)
+        .processZip(result.files.single.bytes!);
   }
 }
 
@@ -94,9 +105,12 @@ class _ProgressView extends StatelessWidget {
     final pct = progress.total == 0 ? 0.0 : progress.current / progress.total;
     final phaseLabel = switch (progress.phase) {
       TvTimeImportPhase.parsingArchive => 'Estrazione file...',
-      TvTimeImportPhase.matchingMovies => 'Matching film TMDB... ${progress.current}/${progress.total}',
-      TvTimeImportPhase.matchingSeries => 'Matching serie TMDB... ${progress.current}/${progress.total}',
-      TvTimeImportPhase.writingData => 'Scrittura dati... ${progress.current}/${progress.total}',
+      TvTimeImportPhase.matchingMovies =>
+        'Matching film TMDB... ${progress.current}/${progress.total}',
+      TvTimeImportPhase.matchingSeries =>
+        'Matching serie TMDB... ${progress.current}/${progress.total}',
+      TvTimeImportPhase.writingData =>
+        'Scrittura dati... ${progress.current}/${progress.total}',
       _ => 'Processamento...',
     };
 
@@ -124,7 +138,10 @@ class _PreviewView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final totalListItems = matchResult.lists.fold<int>(0, (sum, list) => sum + list.items.length);
+    final totalListItems = matchResult.lists.fold<int>(
+      0,
+      (sum, list) => sum + list.items.length,
+    );
 
     return SingleChildScrollView(
       child: Column(
@@ -161,7 +178,10 @@ class _DoneView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
     final theme = Theme.of(context);
-    final totalListItems = matchResult.lists.fold<int>(0, (sum, list) => sum + list.items.length);
+    final totalListItems = matchResult.lists.fold<int>(
+      0,
+      (sum, list) => sum + list.items.length,
+    );
 
     return SingleChildScrollView(
       child: Column(
@@ -176,7 +196,10 @@ class _DoneView extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.lg),
           _CountCard(label: 'Film importati', count: matchResult.movies.length),
-          _CountCard(label: 'Episodi importati', count: matchResult.episodes.length),
+          _CountCard(
+            label: 'Episodi importati',
+            count: matchResult.episodes.length,
+          ),
           _CountCard(label: 'Liste importate', count: matchResult.lists.length),
           _CountCard(label: 'Item liste importati', count: totalListItems),
           const SizedBox(height: AppSpacing.lg),
@@ -217,10 +240,7 @@ class _ErrorView extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.lg),
-        ElevatedButton(
-          onPressed: onRetry,
-          child: const Text('Riprova'),
-        ),
+        ElevatedButton(onPressed: onRetry, child: const Text('Riprova')),
       ],
     );
   }
@@ -238,7 +258,10 @@ class _CountCard extends StatelessWidget {
     return Card(
       color: colors.surface,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppSpacing.md, horizontal: AppSpacing.md),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.md,
+          horizontal: AppSpacing.md,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -259,7 +282,10 @@ class _UnmatchedExpansion extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ExpansionTile(
-      title: Text('${unmatched.length} elementi non trovati su TMDB', style: theme.textTheme.bodyMedium),
+      title: Text(
+        '${unmatched.length} elementi non trovati su TMDB',
+        style: theme.textTheme.bodyMedium,
+      ),
       children: [
         for (final item in unmatched)
           Padding(
@@ -267,8 +293,14 @@ class _UnmatchedExpansion extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${item.type}: ${item.title}', style: theme.textTheme.bodySmall),
-                Text('Motivo: ${item.reason}', style: theme.textTheme.labelSmall),
+                Text(
+                  '${item.type}: ${item.title}',
+                  style: theme.textTheme.bodySmall,
+                ),
+                Text(
+                  'Motivo: ${item.reason}',
+                  style: theme.textTheme.labelSmall,
+                ),
               ],
             ),
           ),

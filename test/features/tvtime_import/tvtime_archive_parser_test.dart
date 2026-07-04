@@ -42,10 +42,14 @@ void main() {
 
   test('lancia TvTimeInvalidArchiveFailure se manca un CSV richiesto', () {
     final zipBytes = _buildZip({
-      'tvtime-movies-2026-07-01.csv': 'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+      'tvtime-movies-2026-07-01.csv':
+          'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
     });
 
-    expect(() => parser.parse(zipBytes), throwsA(isA<TvTimeInvalidArchiveFailure>()));
+    expect(
+      () => parser.parse(zipBytes),
+      throwsA(isA<TvTimeInvalidArchiveFailure>()),
+    );
   });
 
   test('salta righe malformate senza lanciare eccezioni', () {
@@ -56,8 +60,7 @@ void main() {
       'tvtime-series-episodes-2026-07-01.csv':
           'series_tvdb_id,title,season,episode,is_watched,watched_at\n'
           '81189,Riga Rotta,NON_UN_NUMERO,1,true,2020-02-01T00:00:00Z\n',
-      'tvtime-lists-2026-07-01.csv':
-          'list_name,item_type,uuid,tvdb_id,name\n',
+      'tvtime-lists-2026-07-01.csv': 'list_name,item_type,uuid,tvdb_id,name\n',
     });
 
     final result = parser.parse(zipBytes);
