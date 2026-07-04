@@ -31,14 +31,16 @@ class TmdbFindDataSource {
     if (imdbId.isNotEmpty) {
       final r = await _find(imdbId, 'imdb_id');
       final results = r?['movie_results'] as List?;
-      if (results != null && results.isNotEmpty)
+      if (results != null && results.isNotEmpty) {
         return _toResult(results.first as Map<String, dynamic>, 'title');
+      }
     }
     if (tvdbId.isNotEmpty) {
       final r = await _find(tvdbId, 'tvdb_id');
       final results = r?['movie_results'] as List?;
-      if (results != null && results.isNotEmpty)
+      if (results != null && results.isNotEmpty) {
         return _toResult(results.first as Map<String, dynamic>, 'title');
+      }
     }
     return null;
   }
