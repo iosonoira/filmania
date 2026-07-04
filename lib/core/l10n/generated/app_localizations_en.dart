@@ -307,4 +307,45 @@ class AppLocalizationsEn extends AppLocalizations {
   String selectionActionPartialFailure(int count) {
     return '$count items not updated';
   }
+
+  @override
+  String get dataSection => 'Data';
+
+  @override
+  String get importTvTimeTitle => 'Import from TV Time';
+
+  @override
+  String get importTvTimeSubtitle =>
+      'Bring your watched history and lists into Filmania';
+
+  @override
+  String get importTvTimeInstructions =>
+      'Export your data from TV Time and select the .zip file below.';
+
+  @override
+  String get importTvTimePickButton => 'Select zip file';
+
+  @override
+  String get importTvTimeParsing => 'Extracting file...';
+
+  @override
+  String get importTvTimeMatchingMovies => 'Matching movies on TMDB...';
+
+  @override
+  String get importTvTimeMatchingSeries => 'Matching TV series on TMDB...';
+
+  @override
+  String get importTvTimeWriting => 'Saving your data...';
+
+  @override
+  String get importTvTimeConfirm => 'Confirm and import';
+
+  @override
+  String get importTvTimeUnmatchedTitle => 'Not found on TMDB';
+
+  @override
+  String get importTvTimeRetry => 'Try again';
+
+  @override
+  String get importTvTimeDone => 'Import completed';
 }

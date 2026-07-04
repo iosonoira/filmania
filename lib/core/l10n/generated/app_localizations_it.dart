@@ -306,4 +306,45 @@ class AppLocalizationsIt extends AppLocalizations {
   String selectionActionPartialFailure(int count) {
     return '$count elementi non aggiornati';
   }
+
+  @override
+  String get dataSection => 'Dati';
+
+  @override
+  String get importTvTimeTitle => 'Importa da TV Time';
+
+  @override
+  String get importTvTimeSubtitle =>
+      'Porta la cronologia visti e le liste dentro Filmania';
+
+  @override
+  String get importTvTimeInstructions =>
+      'Esporta i tuoi dati da TV Time e seleziona qui sotto il file .zip.';
+
+  @override
+  String get importTvTimePickButton => 'Seleziona file zip';
+
+  @override
+  String get importTvTimeParsing => 'Estrazione file...';
+
+  @override
+  String get importTvTimeMatchingMovies => 'Matching film su TMDB...';
+
+  @override
+  String get importTvTimeMatchingSeries => 'Matching serie TV su TMDB...';
+
+  @override
+  String get importTvTimeWriting => 'Salvataggio dati...';
+
+  @override
+  String get importTvTimeConfirm => 'Conferma e importa';
+
+  @override
+  String get importTvTimeUnmatchedTitle => 'Non trovati su TMDB';
+
+  @override
+  String get importTvTimeRetry => 'Riprova';
+
+  @override
+  String get importTvTimeDone => 'Import completato';
 }

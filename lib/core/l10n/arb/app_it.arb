@@ -127,5 +127,19 @@
         "type": "int"
       }
     }
-  }
+  },
+
+  "dataSection": "Dati",
+  "importTvTimeTitle": "Importa da TV Time",
+  "importTvTimeSubtitle": "Porta la cronologia visti e le liste dentro Filmania",
+  "importTvTimeInstructions": "Esporta i tuoi dati da TV Time e seleziona qui sotto il file .zip.",
+  "importTvTimePickButton": "Seleziona file zip",
+  "importTvTimeParsing": "Estrazione file...",
+  "importTvTimeMatchingMovies": "Matching film su TMDB...",
+  "importTvTimeMatchingSeries": "Matching serie TV su TMDB...",
+  "importTvTimeWriting": "Salvataggio dati...",
+  "importTvTimeConfirm": "Conferma e importa",
+  "importTvTimeUnmatchedTitle": "Non trovati su TMDB",
+  "importTvTimeRetry": "Riprova",
+  "importTvTimeDone": "Import completato"
 }

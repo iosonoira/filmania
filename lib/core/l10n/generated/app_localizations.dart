@@ -673,6 +673,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} items not updated'**
   String selectionActionPartialFailure(int count);
+
+  /// No description provided for @dataSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Data'**
+  String get dataSection;
+
+  /// No description provided for @importTvTimeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import from TV Time'**
+  String get importTvTimeTitle;
+
+  /// No description provided for @importTvTimeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring your watched history and lists into Filmania'**
+  String get importTvTimeSubtitle;
+
+  /// No description provided for @importTvTimeInstructions.
+  ///
+  /// In en, this message translates to:
+  /// **'Export your data from TV Time and select the .zip file below.'**
+  String get importTvTimeInstructions;
+
+  /// No description provided for @importTvTimePickButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Select zip file'**
+  String get importTvTimePickButton;
+
+  /// No description provided for @importTvTimeParsing.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracting file...'**
+  String get importTvTimeParsing;
+
+  /// No description provided for @importTvTimeMatchingMovies.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching movies on TMDB...'**
+  String get importTvTimeMatchingMovies;
+
+  /// No description provided for @importTvTimeMatchingSeries.
+  ///
+  /// In en, this message translates to:
+  /// **'Matching TV series on TMDB...'**
+  String get importTvTimeMatchingSeries;
+
+  /// No description provided for @importTvTimeWriting.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving your data...'**
+  String get importTvTimeWriting;
+
+  /// No description provided for @importTvTimeConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm and import'**
+  String get importTvTimeConfirm;
+
+  /// No description provided for @importTvTimeUnmatchedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found on TMDB'**
+  String get importTvTimeUnmatchedTitle;
+
+  /// No description provided for @importTvTimeRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get importTvTimeRetry;
+
+  /// No description provided for @importTvTimeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Import completed'**
+  String get importTvTimeDone;
 }
 
 class _AppLocalizationsDelegate
