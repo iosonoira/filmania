@@ -68,6 +68,7 @@ class TvTimeSupabaseWriter {
 
       if (data.episodes.isNotEmpty) {
         await _writeEpisodes(userId, data.episodes);
+        await _writeSeriesWatchedItems(userId, data.episodes);
         step++;
         onProgress(
           TvTimeImportProgress(
@@ -163,6 +164,62 @@ class TvTimeSupabaseWriter {
             payload,
             onConflict: 'user_id, series_id, season_number, episode_number',
           );
+    }
+  }
+
+  /// Scrive una riga di riepilogo per serie su `watched_items` (media_type='tv'),
+  /// mancante rispetto a `_writeEpisodes` che scrive solo su `watched_episodes`.
+  /// Senza questa riga, `categorizedTvSeries` (features/watched) non trova mai
+  /// le serie importate e le 4 categorie del profilo restano vuote, anche se
+  /// gli episodi risultano correttamente visti in `watched_episodes`.
+  ///
+  /// Raggruppa gli episodi per serie e usa, come rappresentante della serie,
+  /// l'episodio con `watchedAt` più recente (titolo/poster/data da quello).
+  /// Se nessun episodio della serie ha `watchedAt`, usa il primo episodio
+  /// incontrato e omette `watched_at` (stesso pattern di `_writeMovies`).
+  Future<void> _writeSeriesWatchedItems(
+    String userId,
+    List<TvTimeMatchedEpisode> episodes,
+  ) async {
+    final Map<int, TvTimeMatchedEpisode> latestBySeriesId = {};
+    for (final episode in episodes) {
+      final current = latestBySeriesId[episode.seriesTmdbId];
+      if (current == null) {
+        latestBySeriesId[episode.seriesTmdbId] = episode;
+        continue;
+      }
+      final currentWatchedAt = episode.watchedAt;
+      final storedWatchedAt = current.watchedAt;
+      if (currentWatchedAt != null &&
+          (storedWatchedAt == null ||
+              currentWatchedAt.isAfter(storedWatchedAt))) {
+        latestBySeriesId[episode.seriesTmdbId] = episode;
+      }
+    }
+
+    final seriesList = latestBySeriesId.values.toList();
+
+    for (var i = 0; i < seriesList.length; i += _batchSize) {
+      final batch = seriesList.sublist(
+        i,
+        i + _batchSize > seriesList.length ? seriesList.length : i + _batchSize,
+      );
+      final payload = batch
+          .map(
+            (s) => {
+              'user_id': userId,
+              'media_id': s.seriesTmdbId,
+              'media_title': s.seriesTitle,
+              'media_type': MediaType.tv.name,
+              'poster_path': s.seriesPosterPath,
+              if (s.watchedAt != null)
+                'watched_at': s.watchedAt!.toIso8601String(),
+            },
+          )
+          .toList();
+      await _supabase
+          .from('watched_items')
+          .upsert(payload, onConflict: 'user_id, media_id, media_type');
     }
   }
 
