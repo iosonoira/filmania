@@ -62,8 +62,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     Watchlist? created;
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null)
+      if (repo == null) {
         throw const WatchlistGenericFailure('Utente non autenticato.');
+      }
       created = await repo.createWatchlist(name: name);
       ref.invalidate(userWatchlistsProvider);
     });
@@ -74,8 +75,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null)
+      if (repo == null) {
         throw const WatchlistGenericFailure('Utente non autenticato.');
+      }
       await repo.deleteWatchlist(watchlistId);
       ref.invalidate(userWatchlistsProvider);
     });
@@ -113,8 +115,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null)
+      if (repo == null) {
         throw const WatchlistGenericFailure('Utente non autenticato.');
+      }
       await repo.removeItemFromWatchlist(
         watchlistId: watchlistId,
         mediaId: mediaId,
@@ -136,8 +139,9 @@ class WatchlistNotifier extends _$WatchlistNotifier {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       final repo = ref.read(watchlistRepositoryProvider);
-      if (repo == null)
+      if (repo == null) {
         throw const WatchlistGenericFailure('Utente non autenticato.');
+      }
       await repo.addItemToWatchlist(
         watchlistId: watchlistId,
         mediaId: id,
