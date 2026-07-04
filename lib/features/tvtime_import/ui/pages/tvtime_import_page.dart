@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
+import 'package:csv/csv.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +10,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/glassmorphic_app_bar.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/utils/logger.dart';
 import '../providers/tvtime_import_notifier.dart';
 import '../providers/tvtime_import_state.dart';
 import '../../domain/enums/tvtime_import_phase.dart';
@@ -332,6 +337,17 @@ class _UnmatchedExpansion extends StatelessWidget {
         style: theme.textTheme.bodyMedium,
       ),
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => _downloadUnmatchedCsv(unmatched),
+              icon: const Icon(Icons.download),
+              label: Text(l10n.downloadCsvTemplate as String),
+            ),
+          ),
+        ),
         for (final item in unmatched)
           Padding(
             padding: const EdgeInsets.all(AppSpacing.md),
@@ -351,5 +367,31 @@ class _UnmatchedExpansion extends StatelessWidget {
           ),
       ],
     );
+  }
+
+  /// Genera un CSV (tipo, titolo, motivo, tmdb_id vuoto) con gli item non
+  /// trovati su TMDB e apre il dialog di salvataggio del sistema operativo.
+  /// La colonna `tmdb_id` è lasciata vuota apposta: pensata per essere
+  /// compilata a mano in un secondo momento. Nessun re-import automatico da
+  /// questo CSV oggi — solo consultazione/compilazione manuale, fuori scope.
+  Future<void> _downloadUnmatchedCsv(List<UnmatchedTvTimeItem> items) async {
+    try {
+      final rows = <List>[
+        ['tipo', 'titolo', 'motivo', 'tmdb_id'],
+        for (final item in items) [item.type, item.title, item.reason, ''],
+      ];
+      final csvString = const ListToCsvConverter().convert(rows);
+      final bytes = Uint8List.fromList(utf8.encode(csvString));
+      await FilePicker.platform.saveFile(
+        fileName: 'tvtime_import_non_trovati.csv',
+        bytes: bytes,
+      );
+    } catch (e) {
+      AppLogger.error(
+        'TvTime unmatched CSV download failed',
+        tag: 'TvTimeImportPage',
+        exception: e,
+      );
+    }
   }
 }
