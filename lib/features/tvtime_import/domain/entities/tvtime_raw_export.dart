@@ -1,0 +1,52 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+part 'tvtime_raw_export.freezed.dart';
+
+/// Una riga grezza di `tvtime-movies-*.csv`, PRIMA del matching TMDB.
+@freezed
+abstract class TvTimeRawMovieRow with _$TvTimeRawMovieRow {
+  const factory TvTimeRawMovieRow({
+    required String uuid,
+    required String imdbId,
+    required String tvdbId,
+    required String title,
+    required bool isWatched,
+    String? watchedAt,
+    String? createdAt,
+  }) = _TvTimeRawMovieRow;
+}
+
+/// Una riga grezza di `tvtime-series-episodes-*.csv`, PRIMA del matching TMDB.
+@freezed
+abstract class TvTimeRawEpisodeRow with _$TvTimeRawEpisodeRow {
+  const factory TvTimeRawEpisodeRow({
+    required String seriesTvdbId,
+    required String seriesTitleHint,
+    required int season,
+    required int episode,
+    required bool isWatched,
+    String? watchedAt,
+  }) = _TvTimeRawEpisodeRow;
+}
+
+/// Una riga grezza di `tvtime-lists-*.csv`, PRIMA del matching TMDB.
+@freezed
+abstract class TvTimeRawListRow with _$TvTimeRawListRow {
+  const factory TvTimeRawListRow({
+    required String listName,
+    required String itemType, // "movie" | "series"
+    required String uuid,
+    required String tvdbId,
+    required String nameHint,
+  }) = _TvTimeRawListRow;
+}
+
+/// Contenuto grezzo completo estratto dallo zip, prima del matching.
+@freezed
+abstract class TvTimeRawExport with _$TvTimeRawExport {
+  const factory TvTimeRawExport({
+    required List<TvTimeRawMovieRow> movies,
+    required List<TvTimeRawEpisodeRow> episodes,
+    required List<TvTimeRawListRow> lists,
+  }) = _TvTimeRawExport;
+}
