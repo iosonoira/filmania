@@ -47,28 +47,46 @@ class TvTimeMatchService {
     // --- Film: solo quelli watched (import di quelli visti, coerente con lo script Python) ---
     final watchedMovies = raw.movies.where((m) => m.isWatched).toList();
     var moviesDone = 0;
-    final matchedMoviesNullable = await _mapWithConcurrency<dynamic, TvTimeMatchedMovie?>(
-      watchedMovies,
-      _concurrency,
-      (m) async {
-        final found = await _tmdb.findMovie(imdbId: m.imdbId, tvdbId: m.tvdbId);
-        if (found == null) {
-          unmatched.add(UnmatchedTvTimeItem(type: 'movie', title: m.title, reason: 'Nessun match TMDB per imdb_id/tvdb_id'));
-          return null;
-        }
-        return TvTimeMatchedMovie(
-          tmdbId: found.tmdbId,
-          title: found.title.isEmpty ? m.title : found.title,
-          posterPath: found.posterPath,
-          watchedAt: _parseDate(m.watchedAt),
+    final matchedMoviesNullable =
+        await _mapWithConcurrency<dynamic, TvTimeMatchedMovie?>(
+          watchedMovies,
+          _concurrency,
+          (m) async {
+            final found = await _tmdb.findMovie(
+              imdbId: m.imdbId,
+              tvdbId: m.tvdbId,
+            );
+            if (found == null) {
+              unmatched.add(
+                UnmatchedTvTimeItem(
+                  type: 'movie',
+                  title: m.title,
+                  reason: 'Nessun match TMDB per imdb_id/tvdb_id',
+                ),
+              );
+              return null;
+            }
+            return TvTimeMatchedMovie(
+              tmdbId: found.tmdbId,
+              title: found.title.isEmpty ? m.title : found.title,
+              posterPath: found.posterPath,
+              watchedAt: _parseDate(m.watchedAt),
+            );
+          },
+          onEach: () {
+            moviesDone++;
+            onProgress(
+              TvTimeImportProgress(
+                phase: TvTimeImportPhase.matchingMovies,
+                current: moviesDone,
+                total: watchedMovies.length,
+              ),
+            );
+          },
         );
-      },
-      onEach: () {
-        moviesDone++;
-        onProgress(TvTimeImportProgress(phase: TvTimeImportPhase.matchingMovies, current: moviesDone, total: watchedMovies.length));
-      },
-    );
-    final matchedMovies = matchedMoviesNullable.whereType<TvTimeMatchedMovie>().toList();
+    final matchedMovies = matchedMoviesNullable
+        .whereType<TvTimeMatchedMovie>()
+        .toList();
 
     // --- Episodi: raggruppa per series_tvdb_id PRIMA di chiamare TMDB (una chiamata per serie, non per episodio) ---
     final watchedEpisodes = raw.episodes.where((e) => e.isWatched).toList();
@@ -84,26 +102,41 @@ class TvTimeMatchService {
       _concurrency,
       (seriesTvdbId) async {
         final episodesForSeries = episodesBySeries[seriesTvdbId]!;
-        final titleHint = (episodesForSeries.first as dynamic).seriesTitleHint as String;
+        final titleHint =
+            (episodesForSeries.first as dynamic).seriesTitleHint as String;
         final found = await _tmdb.findSeries(tvdbId: seriesTvdbId);
         if (found == null) {
-          unmatched.add(UnmatchedTvTimeItem(type: 'series', title: titleHint, reason: 'Nessun match TMDB per tvdb_id'));
+          unmatched.add(
+            UnmatchedTvTimeItem(
+              type: 'series',
+              title: titleHint,
+              reason: 'Nessun match TMDB per tvdb_id',
+            ),
+          );
           return;
         }
         for (final e in episodesForSeries) {
-          matchedEpisodes.add(TvTimeMatchedEpisode(
-            seriesTmdbId: found.tmdbId,
-            seriesTitle: found.title.isEmpty ? titleHint : found.title,
-            seriesPosterPath: found.posterPath,
-            seasonNumber: e.season as int,
-            episodeNumber: e.episode as int,
-            watchedAt: _parseDate(e.watchedAt as String?),
-          ));
+          matchedEpisodes.add(
+            TvTimeMatchedEpisode(
+              seriesTmdbId: found.tmdbId,
+              seriesTitle: found.title.isEmpty ? titleHint : found.title,
+              seriesPosterPath: found.posterPath,
+              seasonNumber: e.season as int,
+              episodeNumber: e.episode as int,
+              watchedAt: _parseDate(e.watchedAt as String?),
+            ),
+          );
         }
       },
       onEach: () {
         seriesDone++;
-        onProgress(TvTimeImportProgress(phase: TvTimeImportPhase.matchingSeries, current: seriesDone, total: seriesIds.length));
+        onProgress(
+          TvTimeImportProgress(
+            phase: TvTimeImportPhase.matchingSeries,
+            current: seriesDone,
+            total: seriesIds.length,
+          ),
+        );
       },
     );
 
@@ -113,27 +146,58 @@ class TvTimeMatchService {
       if (row.itemType == 'series') {
         final found = await _tmdb.findSeries(tvdbId: row.tvdbId);
         if (found == null) {
-          unmatched.add(UnmatchedTvTimeItem(type: 'series', title: row.nameHint, reason: 'Nessun match TMDB per tvdb_id (lista)'));
+          unmatched.add(
+            UnmatchedTvTimeItem(
+              type: 'series',
+              title: row.nameHint,
+              reason: 'Nessun match TMDB per tvdb_id (lista)',
+            ),
+          );
           continue;
         }
-        listsByName.putIfAbsent(row.listName, () => []).add(TvTimeMatchedListItem(
-          tmdbId: found.tmdbId, title: found.title.isEmpty ? row.nameHint : found.title,
-          mediaType: MediaType.tv, posterPath: found.posterPath,
-        ));
+        listsByName
+            .putIfAbsent(row.listName, () => [])
+            .add(
+              TvTimeMatchedListItem(
+                tmdbId: found.tmdbId,
+                title: found.title.isEmpty ? row.nameHint : found.title,
+                mediaType: MediaType.tv,
+                posterPath: found.posterPath,
+              ),
+            );
       } else if (row.itemType == 'movie') {
-        final movieRow = raw.movies.where((m) => m.uuid == row.uuid).firstOrNull;
-        final found = await _tmdb.findMovie(imdbId: movieRow?.imdbId ?? '', tvdbId: movieRow?.tvdbId ?? row.tvdbId);
+        final movieRow = raw.movies
+            .where((m) => m.uuid == row.uuid)
+            .firstOrNull;
+        final found = await _tmdb.findMovie(
+          imdbId: movieRow?.imdbId ?? '',
+          tvdbId: movieRow?.tvdbId ?? row.tvdbId,
+        );
         if (found == null) {
-          unmatched.add(UnmatchedTvTimeItem(type: 'movie', title: row.nameHint, reason: 'Nessun match TMDB per imdb_id/tvdb_id (lista)'));
+          unmatched.add(
+            UnmatchedTvTimeItem(
+              type: 'movie',
+              title: row.nameHint,
+              reason: 'Nessun match TMDB per imdb_id/tvdb_id (lista)',
+            ),
+          );
           continue;
         }
-        listsByName.putIfAbsent(row.listName, () => []).add(TvTimeMatchedListItem(
-          tmdbId: found.tmdbId, title: found.title.isEmpty ? row.nameHint : found.title,
-          mediaType: MediaType.movie, posterPath: found.posterPath,
-        ));
+        listsByName
+            .putIfAbsent(row.listName, () => [])
+            .add(
+              TvTimeMatchedListItem(
+                tmdbId: found.tmdbId,
+                title: found.title.isEmpty ? row.nameHint : found.title,
+                mediaType: MediaType.movie,
+                posterPath: found.posterPath,
+              ),
+            );
       }
     }
-    final matchedLists = listsByName.entries.map((e) => TvTimeMatchedList(name: e.key, items: e.value)).toList();
+    final matchedLists = listsByName.entries
+        .map((e) => TvTimeMatchedList(name: e.key, items: e.value))
+        .toList();
 
     return TvTimeMatchResult(
       movies: matchedMovies,

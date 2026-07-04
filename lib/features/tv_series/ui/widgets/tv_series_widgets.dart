@@ -300,8 +300,9 @@ class EpisodeCard extends ConsumerWidget {
             .value ??
         false;
 
-    final selectionActive =
-        SelectionScope.controllerOf<EpisodeSelectionItem>(context).isActive;
+    final selectionActive = SelectionScope.controllerOf<EpisodeSelectionItem>(
+      context,
+    ).isActive;
 
     return Semantics(
       label: 'Episodio ${episode.episodeNumber}: ${episode.name}',

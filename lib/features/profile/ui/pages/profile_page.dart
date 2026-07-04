@@ -419,9 +419,7 @@ class _RecentActivitySection extends ConsumerWidget {
                   return asyncFavorites.when(
                     data: (favorites) => _CategoryCard(
                       title: AppLocalizations.of(context)!.favoritesTitle,
-                      posterPaths: favorites
-                          .map((f) => f.posterPath)
-                          .toList(),
+                      posterPaths: favorites.map((f) => f.posterPath).toList(),
                       onTap: () => context.push(AppRoutes.favorites),
                     ),
                     loading: () => const _CategoryCardPlaceholder(),
