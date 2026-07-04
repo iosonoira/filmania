@@ -1,5 +1,0 @@
-# Local run artifacts — never commit these (they contain personal viewing data / IDs)
-tmdb_id_cache.json
-unmapped_report.json
-import_report.json
-*.log

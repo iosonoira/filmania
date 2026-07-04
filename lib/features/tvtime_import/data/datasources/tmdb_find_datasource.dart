@@ -9,11 +9,7 @@ class TmdbFindResult {
   final int tmdbId;
   final String title;
   final String? posterPath;
-  const TmdbFindResult({
-    required this.tmdbId,
-    required this.title,
-    this.posterPath,
-  });
+  const TmdbFindResult({required this.tmdbId, required this.title, this.posterPath});
 }
 
 /// Chiama GET /find/{external_id}?external_source=imdb_id|tvdb_id.
@@ -24,21 +20,16 @@ class TmdbFindDataSource {
   final Dio _dio;
   TmdbFindDataSource(this._dio);
 
-  Future<TmdbFindResult?> findMovie({
-    required String imdbId,
-    required String tvdbId,
-  }) async {
+  Future<TmdbFindResult?> findMovie({required String imdbId, required String tvdbId}) async {
     if (imdbId.isNotEmpty) {
       final r = await _find(imdbId, 'imdb_id');
       final results = r?['movie_results'] as List?;
-      if (results != null && results.isNotEmpty)
-        return _toResult(results.first as Map<String, dynamic>, 'title');
+      if (results != null && results.isNotEmpty) return _toResult(results.first as Map<String, dynamic>, 'title');
     }
     if (tvdbId.isNotEmpty) {
       final r = await _find(tvdbId, 'tvdb_id');
       final results = r?['movie_results'] as List?;
-      if (results != null && results.isNotEmpty)
-        return _toResult(results.first as Map<String, dynamic>, 'title');
+      if (results != null && results.isNotEmpty) return _toResult(results.first as Map<String, dynamic>, 'title');
     }
     return null;
   }
@@ -59,11 +50,7 @@ class TmdbFindDataSource {
     );
   }
 
-  Future<Map<String, dynamic>?> _find(
-    String externalId,
-    String source, {
-    int attempt = 0,
-  }) async {
+  Future<Map<String, dynamic>?> _find(String externalId, String source, {int attempt = 0}) async {
     try {
       final response = await _dio.get<Map<String, dynamic>>(
         'find/$externalId',

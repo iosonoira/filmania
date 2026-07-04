@@ -14,28 +14,15 @@ class TvTimeArchiveParser {
     try {
       archive = ZipDecoder().decodeBytes(zipBytes);
     } catch (e) {
-      AppLogger.error(
-        'TvTime zip decode failed',
-        tag: 'TvTimeParser',
-        exception: e,
-      );
+      AppLogger.error('TvTime zip decode failed', tag: 'TvTimeParser', exception: e);
       throw const TvTimeInvalidArchiveFailure(
         'Il file selezionato non è uno zip valido.',
       );
     }
 
-    final moviesFile = _findFile(
-      archive,
-      RegExp(r'tvtime-movies-.*\.csv$', caseSensitive: false),
-    );
-    final episodesFile = _findFile(
-      archive,
-      RegExp(r'tvtime-series-episodes-.*\.csv$', caseSensitive: false),
-    );
-    final listsFile = _findFile(
-      archive,
-      RegExp(r'tvtime-lists-.*\.csv$', caseSensitive: false),
-    );
+    final moviesFile = _findFile(archive, RegExp(r'tvtime-movies-.*\.csv$', caseSensitive: false));
+    final episodesFile = _findFile(archive, RegExp(r'tvtime-series-episodes-.*\.csv$', caseSensitive: false));
+    final listsFile = _findFile(archive, RegExp(r'tvtime-lists-.*\.csv$', caseSensitive: false));
 
     if (moviesFile == null || episodesFile == null || listsFile == null) {
       final missing = [
@@ -63,10 +50,7 @@ class TvTimeArchiveParser {
   }
 
   List<List<dynamic>> _decodeCsv(ArchiveFile file) {
-    final content = utf8.decode(
-      file.content as List<int>,
-      allowMalformed: true,
-    );
+    final content = utf8.decode(file.content as List<int>, allowMalformed: true);
     return const CsvToListConverter(eol: '\n').convert(content);
   }
 
@@ -79,15 +63,10 @@ class TvTimeArchiveParser {
     for (var i = 1; i < rows.length; i++) {
       final row = rows[i];
       if (row.length != header.length) {
-        AppLogger.error(
-          'TvTime CSV riga malformata saltata: indice $i',
-          tag: 'TvTimeParser',
-        );
+        AppLogger.error('TvTime CSV riga malformata saltata: indice $i', tag: 'TvTimeParser');
         continue;
       }
-      result.add({
-        for (var j = 0; j < header.length; j++) header[j]: row[j].toString(),
-      });
+      result.add({for (var j = 0; j < header.length; j++) header[j]: row[j].toString()});
     }
     return result;
   }
@@ -112,16 +91,14 @@ class TvTimeArchiveParser {
       final season = int.tryParse(r['season'] ?? '');
       final episode = int.tryParse(r['episode'] ?? '');
       if (season == null || episode == null) continue; // riga malformata, salta
-      result.add(
-        TvTimeRawEpisodeRow(
-          seriesTvdbId: r['series_tvdb_id'] ?? '',
-          seriesTitleHint: r['title'] ?? '',
-          season: season,
-          episode: episode,
-          isWatched: r['is_watched']?.trim().toLowerCase() == 'true',
-          watchedAt: (r['watched_at'] ?? '').isEmpty ? null : r['watched_at'],
-        ),
-      );
+      result.add(TvTimeRawEpisodeRow(
+        seriesTvdbId: r['series_tvdb_id'] ?? '',
+        seriesTitleHint: r['title'] ?? '',
+        season: season,
+        episode: episode,
+        isWatched: r['is_watched']?.trim().toLowerCase() == 'true',
+        watchedAt: (r['watched_at'] ?? '').isEmpty ? null : r['watched_at'],
+      ));
     }
     return result;
   }
