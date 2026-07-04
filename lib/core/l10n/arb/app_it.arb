@@ -141,5 +141,25 @@
   "importTvTimeConfirm": "Conferma e importa",
   "importTvTimeUnmatchedTitle": "Non trovati su TMDB",
   "importTvTimeRetry": "Riprova",
-  "importTvTimeDone": "Import completato"
+  "importTvTimeDone": "Import completato",
+  "importTvTimePreviewTitle": "Anteprima import",
+  "importTvTimeCountMovies": "Film",
+  "importTvTimeCountEpisodes": "Episodi",
+  "importTvTimeCountLists": "Liste",
+  "importTvTimeCountListItems": "Item liste",
+  "importTvTimeCountMoviesImported": "Film importati",
+  "importTvTimeCountEpisodesImported": "Episodi importati",
+  "importTvTimeCountListsImported": "Liste importate",
+  "importTvTimeCountListItemsImported": "Item liste importati",
+  "importTvTimeBackToSettings": "Torna alle impostazioni",
+  "importTvTimeErrorTitle": "Errore durante l'import",
+  "importTvTimeUnmatchedReason": "Motivo",
+  "importTvTimeUnmatchedCount": "{count} elementi non trovati su TMDB",
+  "@importTvTimeUnmatchedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

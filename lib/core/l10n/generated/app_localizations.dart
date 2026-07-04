@@ -751,6 +751,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Import completed'**
   String get importTvTimeDone;
+
+  /// No description provided for @importTvTimePreviewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Import preview'**
+  String get importTvTimePreviewTitle;
+
+  /// No description provided for @importTvTimeCountMovies.
+  ///
+  /// In en, this message translates to:
+  /// **'Movies'**
+  String get importTvTimeCountMovies;
+
+  /// No description provided for @importTvTimeCountEpisodes.
+  ///
+  /// In en, this message translates to:
+  /// **'Episodes'**
+  String get importTvTimeCountEpisodes;
+
+  /// No description provided for @importTvTimeCountLists.
+  ///
+  /// In en, this message translates to:
+  /// **'Lists'**
+  String get importTvTimeCountLists;
+
+  /// No description provided for @importTvTimeCountListItems.
+  ///
+  /// In en, this message translates to:
+  /// **'List items'**
+  String get importTvTimeCountListItems;
+
+  /// No description provided for @importTvTimeCountMoviesImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Movies imported'**
+  String get importTvTimeCountMoviesImported;
+
+  /// No description provided for @importTvTimeCountEpisodesImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Episodes imported'**
+  String get importTvTimeCountEpisodesImported;
+
+  /// No description provided for @importTvTimeCountListsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'Lists imported'**
+  String get importTvTimeCountListsImported;
+
+  /// No description provided for @importTvTimeCountListItemsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'List items imported'**
+  String get importTvTimeCountListItemsImported;
+
+  /// No description provided for @importTvTimeBackToSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Settings'**
+  String get importTvTimeBackToSettings;
+
+  /// No description provided for @importTvTimeErrorTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Error during import'**
+  String get importTvTimeErrorTitle;
+
+  /// No description provided for @importTvTimeUnmatchedReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Reason'**
+  String get importTvTimeUnmatchedReason;
+
+  /// No description provided for @importTvTimeUnmatchedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items not found on TMDB'**
+  String importTvTimeUnmatchedCount(int count);
 }
 
 class _AppLocalizationsDelegate

@@ -348,4 +348,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importTvTimeDone => 'Import completed';
+
+  @override
+  String get importTvTimePreviewTitle => 'Import preview';
+
+  @override
+  String get importTvTimeCountMovies => 'Movies';
+
+  @override
+  String get importTvTimeCountEpisodes => 'Episodes';
+
+  @override
+  String get importTvTimeCountLists => 'Lists';
+
+  @override
+  String get importTvTimeCountListItems => 'List items';
+
+  @override
+  String get importTvTimeCountMoviesImported => 'Movies imported';
+
+  @override
+  String get importTvTimeCountEpisodesImported => 'Episodes imported';
+
+  @override
+  String get importTvTimeCountListsImported => 'Lists imported';
+
+  @override
+  String get importTvTimeCountListItemsImported => 'List items imported';
+
+  @override
+  String get importTvTimeBackToSettings => 'Back to Settings';
+
+  @override
+  String get importTvTimeErrorTitle => 'Error during import';
+
+  @override
+  String get importTvTimeUnmatchedReason => 'Reason';
+
+  @override
+  String importTvTimeUnmatchedCount(int count) {
+    return '$count items not found on TMDB';
+  }
 }
