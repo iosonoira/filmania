@@ -1,12 +1,16 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import '../providers/tvtime_import_notifier.dart';
 import '../providers/tvtime_import_state.dart';
 import '../../domain/enums/tvtime_import_phase.dart';
+import '../../domain/entities/tvtime_import_progress.dart';
+import '../../domain/entities/tvtime_matched_data.dart';
 
 class TvTimeImportPage extends ConsumerWidget {
   const TvTimeImportPage({super.key});
@@ -14,6 +18,7 @@ class TvTimeImportPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(tvTimeImportProvider);
+    final l10n = ref.watch(appLocalizationsProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -23,23 +28,29 @@ class TvTimeImportPage extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: switch (state) {
             TvTimeImportIdle() => _IdleView(
+              l10n: l10n,
               onPick: () => _pickAndProcess(context, ref),
             ),
             TvTimeImportProcessing(:final progress) => _ProgressView(
+              l10n: l10n,
               progress: progress,
             ),
             TvTimeImportReady(:final matchResult) => _PreviewView(
+              l10n: l10n,
               matchResult: matchResult,
               onConfirm: () =>
                   ref.read(tvTimeImportProvider.notifier).confirmImport(),
             ),
             TvTimeImportWriting(:final progress) => _ProgressView(
+              l10n: l10n,
               progress: progress,
             ),
             TvTimeImportDone(:final matchResult) => _DoneView(
+              l10n: l10n,
               matchResult: matchResult,
             ),
             TvTimeImportError(:final failure) => _ErrorView(
+              l10n: l10n,
               message: failure.message,
               onRetry: () => ref.read(tvTimeImportProvider.notifier).reset(),
             ),
@@ -64,7 +75,8 @@ class TvTimeImportPage extends ConsumerWidget {
 }
 
 class _IdleView extends StatelessWidget {
-  const _IdleView({required this.onPick});
+  const _IdleView({required this.l10n, required this.onPick});
+  final dynamic l10n;
   final VoidCallback onPick;
 
   @override
@@ -75,20 +87,20 @@ class _IdleView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(
-          'Importa da TV Time',
+          l10n.importTvTimeTitle,
           style: theme.textTheme.headlineMedium,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Esporta i tuoi dati da TV Time e seleziona il file .zip',
+          l10n.importTvTimeInstructions,
           style: theme.textTheme.bodyMedium,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.xl),
         ElevatedButton(
           onPressed: onPick,
-          child: const Text('Seleziona file zip'),
+          child: Text(l10n.importTvTimePickButton),
         ),
       ],
     );
@@ -96,22 +108,22 @@ class _IdleView extends StatelessWidget {
 }
 
 class _ProgressView extends StatelessWidget {
-  const _ProgressView({required this.progress});
-  final dynamic progress;
+  const _ProgressView({required this.l10n, required this.progress});
+  final dynamic l10n;
+  final TvTimeImportProgress progress;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final pct = progress.total == 0 ? 0.0 : progress.current / progress.total;
     final phaseLabel = switch (progress.phase) {
-      TvTimeImportPhase.parsingArchive => 'Estrazione file...',
+      TvTimeImportPhase.parsingArchive => l10n.importTvTimeParsing as String,
       TvTimeImportPhase.matchingMovies =>
-        'Matching film TMDB... ${progress.current}/${progress.total}',
+        '${l10n.importTvTimeMatchingMovies} ${progress.current}/${progress.total}',
       TvTimeImportPhase.matchingSeries =>
-        'Matching serie TMDB... ${progress.current}/${progress.total}',
+        '${l10n.importTvTimeMatchingSeries} ${progress.current}/${progress.total}',
       TvTimeImportPhase.writingData =>
-        'Scrittura dati... ${progress.current}/${progress.total}',
-      _ => 'Processamento...',
+        '${l10n.importTvTimeWriting} ${progress.current}/${progress.total}',
     };
 
     return Column(
@@ -131,8 +143,13 @@ class _ProgressView extends StatelessWidget {
 }
 
 class _PreviewView extends StatelessWidget {
-  const _PreviewView({required this.matchResult, required this.onConfirm});
-  final dynamic matchResult;
+  const _PreviewView({
+    required this.l10n,
+    required this.matchResult,
+    required this.onConfirm,
+  });
+  final dynamic l10n;
+  final TvTimeMatchResult matchResult;
   final VoidCallback onConfirm;
 
   @override
@@ -148,21 +165,33 @@ class _PreviewView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            'Anteprima import',
+            l10n.importTvTimePreviewTitle,
             style: theme.textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.lg),
-          _CountCard(label: 'Film', count: matchResult.movies.length),
-          _CountCard(label: 'Episodi', count: matchResult.episodes.length),
-          _CountCard(label: 'Liste', count: matchResult.lists.length),
-          _CountCard(label: 'Item liste', count: totalListItems),
+          _CountCard(
+            label: l10n.importTvTimeCountMovies,
+            count: matchResult.movies.length,
+          ),
+          _CountCard(
+            label: l10n.importTvTimeCountEpisodes,
+            count: matchResult.episodes.length,
+          ),
+          _CountCard(
+            label: l10n.importTvTimeCountLists,
+            count: matchResult.lists.length,
+          ),
+          _CountCard(
+            label: l10n.importTvTimeCountListItems,
+            count: totalListItems,
+          ),
           if (matchResult.unmatched.isNotEmpty)
-            _UnmatchedExpansion(unmatched: matchResult.unmatched),
+            _UnmatchedExpansion(l10n: l10n, unmatched: matchResult.unmatched),
           const SizedBox(height: AppSpacing.lg),
           ElevatedButton(
             onPressed: onConfirm,
-            child: const Text('Conferma e importa'),
+            child: Text(l10n.importTvTimeConfirm),
           ),
         ],
       ),
@@ -171,8 +200,9 @@ class _PreviewView extends StatelessWidget {
 }
 
 class _DoneView extends StatelessWidget {
-  const _DoneView({required this.matchResult});
-  final dynamic matchResult;
+  const _DoneView({required this.l10n, required this.matchResult});
+  final dynamic l10n;
+  final TvTimeMatchResult matchResult;
 
   @override
   Widget build(BuildContext context) {
@@ -190,22 +220,31 @@ class _DoneView extends StatelessWidget {
           Icon(Icons.check_circle, size: 64, color: colors.primary),
           const SizedBox(height: AppSpacing.lg),
           Text(
-            'Import completato',
+            l10n.importTvTimeDone,
             style: theme.textTheme.headlineMedium,
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.lg),
-          _CountCard(label: 'Film importati', count: matchResult.movies.length),
           _CountCard(
-            label: 'Episodi importati',
+            label: l10n.importTvTimeCountMoviesImported,
+            count: matchResult.movies.length,
+          ),
+          _CountCard(
+            label: l10n.importTvTimeCountEpisodesImported,
             count: matchResult.episodes.length,
           ),
-          _CountCard(label: 'Liste importate', count: matchResult.lists.length),
-          _CountCard(label: 'Item liste importati', count: totalListItems),
+          _CountCard(
+            label: l10n.importTvTimeCountListsImported,
+            count: matchResult.lists.length,
+          ),
+          _CountCard(
+            label: l10n.importTvTimeCountListItemsImported,
+            count: totalListItems,
+          ),
           const SizedBox(height: AppSpacing.lg),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Torna alle impostazioni'),
+            onPressed: () => context.pop(),
+            child: Text(l10n.importTvTimeBackToSettings),
           ),
         ],
       ),
@@ -214,7 +253,12 @@ class _DoneView extends StatelessWidget {
 }
 
 class _ErrorView extends StatelessWidget {
-  const _ErrorView({required this.message, required this.onRetry});
+  const _ErrorView({
+    required this.l10n,
+    required this.message,
+    required this.onRetry,
+  });
+  final dynamic l10n;
   final String message;
   final VoidCallback onRetry;
 
@@ -229,7 +273,7 @@ class _ErrorView extends StatelessWidget {
         Icon(Icons.error, size: 64, color: colors.error),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Errore durante l\'import',
+          l10n.importTvTimeErrorTitle,
           style: theme.textTheme.headlineMedium,
           textAlign: TextAlign.center,
         ),
@@ -240,7 +284,7 @@ class _ErrorView extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.lg),
-        ElevatedButton(onPressed: onRetry, child: const Text('Riprova')),
+        ElevatedButton(onPressed: onRetry, child: Text(l10n.importTvTimeRetry)),
       ],
     );
   }
@@ -275,15 +319,16 @@ class _CountCard extends StatelessWidget {
 }
 
 class _UnmatchedExpansion extends StatelessWidget {
-  const _UnmatchedExpansion({required this.unmatched});
-  final List<dynamic> unmatched;
+  const _UnmatchedExpansion({required this.l10n, required this.unmatched});
+  final dynamic l10n;
+  final List<UnmatchedTvTimeItem> unmatched;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ExpansionTile(
       title: Text(
-        '${unmatched.length} elementi non trovati su TMDB',
+        l10n.importTvTimeUnmatchedCount(unmatched.length) as String,
         style: theme.textTheme.bodyMedium,
       ),
       children: [
@@ -298,7 +343,7 @@ class _UnmatchedExpansion extends StatelessWidget {
                   style: theme.textTheme.bodySmall,
                 ),
                 Text(
-                  'Motivo: ${item.reason}',
+                  '${l10n.importTvTimeUnmatchedReason}: ${item.reason}',
                   style: theme.textTheme.labelSmall,
                 ),
               ],
