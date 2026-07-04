@@ -290,6 +290,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dropSeriesAction => 'Interrompi';
 
   @override
+  String get markSelectedEpisodesWatchedAction => 'Segna come visti';
+
+  @override
   String get removeFromThisList => 'Rimuovi dalla lista';
 
   @override

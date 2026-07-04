@@ -116,6 +116,7 @@
   "toggleWatchedAction": "Segna come visto/non visto",
   "markAsUnwatchedAction": "Segna come non visto",
   "dropSeriesAction": "Interrompi",
+  "markSelectedEpisodesWatchedAction": "Segna come visti",
   "removeFromThisList": "Rimuovi dalla lista",
   "noWatchlistsAvailableHint": "Nessuna lista disponibile. Creane una dal dettaglio di un titolo.",
   "selectionActionDone": "Fatto",

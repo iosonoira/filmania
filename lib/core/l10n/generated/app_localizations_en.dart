@@ -291,6 +291,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dropSeriesAction => 'Drop series';
 
   @override
+  String get markSelectedEpisodesWatchedAction => 'Mark as watched';
+
+  @override
   String get removeFromThisList => 'Remove from this list';
 
   @override

@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/widgets/selection/episode_selection_item.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../data/repositories/watched_repository_impl.dart';
@@ -103,5 +105,59 @@ Future<int> markSeriesDroppedBulk(
     }
   }
   ref.invalidate(categorizedTvSeriesProvider);
+  return failureCount;
+}
+
+/// Marks every episode in [items] as watched, mirroring the per-episode
+/// logic in `WatchedEpisodeButton.toggleWatched`'s watched branch. Used by
+/// the episode list's multi-select action bar (Task 12) so bulk marking
+/// reuses the same repository call and invalidation set as the single-item
+/// button instead of duplicating them.
+///
+/// Each item is applied independently: a failure on one item is caught so
+/// it doesn't abort the rest of the batch. Returns the number of items that
+/// failed, so the caller can surface an error toast.
+Future<int> markEpisodesWatchedBulk(
+  WidgetRef ref, {
+  required List<EpisodeSelectionItem> items,
+}) async {
+  final user = ref.read(authStateProvider).value;
+  if (user == null) return items.length;
+  final repo = ref.read(watchedRepositoryProvider);
+
+  var failureCount = 0;
+  final affectedSeriesIds = <int>{};
+  for (final item in items) {
+    try {
+      await repo.markEpisodeAsWatched(
+        userId: user.id,
+        seriesId: item.seriesId,
+        seasonNumber: item.seasonNumber,
+        episodeNumber: item.episodeNumber,
+        seriesTitle: item.seriesTitle,
+        seriesPosterPath: item.seriesPosterPath,
+        runtimeMinutes: item.runtimeMinutes,
+      );
+      affectedSeriesIds.add(item.seriesId);
+
+      ref.invalidate(
+        isEpisodeWatchedProvider(
+          seriesId: item.seriesId,
+          seasonNumber: item.seasonNumber,
+          episodeNumber: item.episodeNumber,
+        ),
+      );
+    } catch (_) {
+      failureCount++;
+    }
+  }
+
+  for (final seriesId in affectedSeriesIds) {
+    ref.invalidate(watchedEpisodesProvider(seriesId));
+    ref.invalidate(
+      isMediaWatchedProvider(mediaId: seriesId, mediaType: MediaType.tv),
+    );
+  }
+  ref.invalidate(watchedItemsProvider(MediaType.tv));
   return failureCount;
 }

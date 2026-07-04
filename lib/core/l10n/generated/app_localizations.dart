@@ -644,6 +644,12 @@ abstract class AppLocalizations {
   /// **'Drop series'**
   String get dropSeriesAction;
 
+  /// No description provided for @markSelectedEpisodesWatchedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as watched'**
+  String get markSelectedEpisodesWatchedAction;
+
   /// No description provided for @removeFromThisList.
   ///
   /// In en, this message translates to:

@@ -9,8 +9,14 @@ import '../../domain/entities/tv_episode.dart';
 import '../../domain/entities/tv_season.dart';
 import '../providers/tv_series_provider.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/selection/episode_selection_item.dart';
+import '../../../../core/widgets/selection/selectable_card.dart';
+import '../../../../core/widgets/selection/selection_action_bar.dart';
+import '../../../../core/widgets/selection/selection_scope.dart';
+import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import '../../../watched/ui/widgets/watched_bulk_actions.dart';
 import '../../../watched/ui/widgets/watched_episode_button.dart';
 
 class EpisodesSection extends ConsumerWidget {
@@ -34,23 +40,48 @@ class EpisodesSection extends ConsumerWidget {
     if (mainSeasons.isEmpty) return const SizedBox.shrink();
 
     final selectedSeason = ref.watch(selectedSeasonProvider(tvId));
+    final l10n = AppLocalizations.of(context)!;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _EpisodesSectionHeader(
-          tvId: tvId,
-          seasons: mainSeasons,
-          selectedSeason: selectedSeason,
-        ),
-        const SizedBox(height: AppSpacing.md),
-        _EpisodesList(
-          tvId: tvId,
-          seasonNumber: selectedSeason,
-          seriesTitle: seriesTitle,
-          seriesPosterPath: seriesPosterPath,
-        ),
-      ],
+    return SelectionScope<EpisodeSelectionItem>(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _EpisodesSectionHeader(
+            tvId: tvId,
+            seasons: mainSeasons,
+            selectedSeason: selectedSeason,
+          ),
+          const SizedBox(height: AppSpacing.sm),
+          SelectionActionBar<EpisodeSelectionItem>(
+            closeTooltip: l10n.closeSelection,
+            actions: [
+              SelectionAction<EpisodeSelectionItem>(
+                icon: Icons.check_circle_rounded,
+                label: l10n.markSelectedEpisodesWatchedAction,
+                onPressed: (selected) async {
+                  final failures = await markEpisodesWatchedBulk(
+                    ref,
+                    items: selected.toList(),
+                  );
+                  if (!context.mounted) return;
+                  handleBulkSelectionResult<EpisodeSelectionItem>(
+                    context,
+                    ref,
+                    failureCount: failures,
+                  );
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          _EpisodesList(
+            tvId: tvId,
+            seasonNumber: selectedSeason,
+            seriesTitle: seriesTitle,
+            seriesPosterPath: seriesPosterPath,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -269,10 +300,21 @@ class EpisodeCard extends ConsumerWidget {
             .value ??
         false;
 
+    final selectionActive =
+        SelectionScope.controllerOf<EpisodeSelectionItem>(context).isActive;
+
     return Semantics(
       label: 'Episodio ${episode.episodeNumber}: ${episode.name}',
       button: true,
-      child: GestureDetector(
+      child: SelectableCard<EpisodeSelectionItem>(
+        id: EpisodeSelectionItem(
+          seriesId: tvId,
+          seasonNumber: episode.seasonNumber,
+          episodeNumber: episode.episodeNumber,
+          seriesTitle: seriesTitle,
+          seriesPosterPath: seriesPosterPath,
+          runtimeMinutes: episode.runtime,
+        ),
         onTap: () {
           context.push(
             AppRoutes.tvEpisodeDetails
@@ -301,14 +343,20 @@ class EpisodeCard extends ConsumerWidget {
               _EpisodeCardThumbnail(episode: episode, isWatched: isWatched),
               const SizedBox(width: AppSpacing.md),
               _EpisodeCardInfo(episode: episode, isWatched: isWatched),
-              WatchedEpisodeButton(
-                isIconOnly: true,
-                seriesId: tvId,
-                seasonNumber: episode.seasonNumber,
-                episodeNumber: episode.episodeNumber,
-                seriesTitle: seriesTitle,
-                seriesPosterPath: seriesPosterPath,
-                runtimeMinutes: episode.runtime,
+              IgnorePointer(
+                ignoring: selectionActive,
+                child: Opacity(
+                  opacity: selectionActive ? 0.4 : 1,
+                  child: WatchedEpisodeButton(
+                    isIconOnly: true,
+                    seriesId: tvId,
+                    seasonNumber: episode.seasonNumber,
+                    episodeNumber: episode.episodeNumber,
+                    seriesTitle: seriesTitle,
+                    seriesPosterPath: seriesPosterPath,
+                    runtimeMinutes: episode.runtime,
+                  ),
+                ),
               ),
             ],
           ),
