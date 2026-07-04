@@ -20,6 +20,9 @@ dependencies:
   supabase_flutter: ^2.12.2
   cached_network_image: ^3.4.1
   image_picker: ^1.2.1
+  file_picker: ^8.1.4
+  archive: ^3.6.1
+  csv: ^6.0.0
   pretty_dio_logger: ^1.4.0
   flutter_localizations:
     sdk: flutter
