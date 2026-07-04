@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
 
@@ -82,6 +84,20 @@ class SettingsPage extends ConsumerWidget {
                       icon: Icons.attribution_rounded,
                       title: l10n.dataSource,
                       subtitle: 'TMDB API',
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: AppSpacing.xl),
+
+                _SettingsSection(
+                  title: l10n.dataSection,
+                  children: [
+                    _SettingsTile(
+                      icon: Icons.cloud_upload_outlined,
+                      title: l10n.importTvTimeTitle,
+                      subtitle: l10n.importTvTimeSubtitle,
+                      onTap: () => context.push(AppRoutes.importTvTime),
                     ),
                   ],
                 ),
