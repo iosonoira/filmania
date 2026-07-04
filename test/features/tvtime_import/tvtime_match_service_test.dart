@@ -89,7 +89,7 @@ void main() {
         final service = TvTimeMatchService(ds);
 
         // Raw export: 3 episodi della stessa serie (tvdb_id 81189)
-        final raw = TvTimeRawExport(
+        const raw = TvTimeRawExport(
           movies: [],
           episodes: [
             TvTimeRawEpisodeRow(
@@ -140,7 +140,7 @@ void main() {
       final ds = TmdbFindDataSource(dio);
       final service = TvTimeMatchService(ds);
 
-      final raw = TvTimeRawExport(
+      const raw = TvTimeRawExport(
         movies: [],
         episodes: [
           TvTimeRawEpisodeRow(
@@ -177,7 +177,7 @@ void main() {
       final ds = TmdbFindDataSource(dio);
       final service = TvTimeMatchService(ds);
 
-      final raw = TvTimeRawExport(
+      const raw = TvTimeRawExport(
         movies: [],
         episodes: [
           TvTimeRawEpisodeRow(
