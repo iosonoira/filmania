@@ -829,6 +829,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} items not found on TMDB'**
   String importTvTimeUnmatchedCount(int count);
+
+  /// No description provided for @importTvTimeDownloadUnmatched.
+  ///
+  /// In en, this message translates to:
+  /// **'Download list (CSV)'**
+  String get importTvTimeDownloadUnmatched;
 }
 
 class _AppLocalizationsDelegate

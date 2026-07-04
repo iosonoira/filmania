@@ -162,15 +162,5 @@
       }
     }
   },
-
-  "downloadCsvTemplate": "Download CSV template",
-  "downloadSuccess": "CSV file downloaded successfully",
-  "downloadFailed": "Failed to download CSV file: {error}",
-  "@downloadFailed": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  }
+  "importTvTimeDownloadUnmatched": "Download list (CSV)"
 }

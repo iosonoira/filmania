@@ -388,4 +388,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String importTvTimeUnmatchedCount(int count) {
     return '$count elementi non trovati su TMDB';
   }
+
+  @override
+  String get importTvTimeDownloadUnmatched => 'Scarica lista (CSV)';
 }

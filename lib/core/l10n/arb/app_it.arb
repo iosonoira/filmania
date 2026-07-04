@@ -162,15 +162,5 @@
       }
     }
   },
-
-  "downloadCsvTemplate": "Scarica template CSV",
-  "downloadSuccess": "File CSV scaricato con successo",
-  "downloadFailed": "Errore nel download del file CSV: {error}",
-  "@downloadFailed": {
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  }
+  "importTvTimeDownloadUnmatched": "Scarica lista (CSV)"
 }

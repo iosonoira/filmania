@@ -344,7 +344,7 @@ class _UnmatchedExpansion extends StatelessWidget {
             child: TextButton.icon(
               onPressed: () => _downloadUnmatchedCsv(unmatched),
               icon: const Icon(Icons.download),
-              label: Text(l10n.downloadCsvTemplate as String),
+              label: Text(l10n.importTvTimeDownloadUnmatched as String),
             ),
           ),
         ),

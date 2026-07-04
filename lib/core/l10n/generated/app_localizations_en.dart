@@ -389,4 +389,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String importTvTimeUnmatchedCount(int count) {
     return '$count items not found on TMDB';
   }
+
+  @override
+  String get importTvTimeDownloadUnmatched => 'Download list (CSV)';
 }
