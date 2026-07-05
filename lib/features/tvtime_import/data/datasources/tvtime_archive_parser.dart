@@ -36,9 +36,14 @@ class TvTimeArchiveParser {
       archive,
       RegExp(r'tvtime-lists-.*\.csv$', caseSensitive: false),
     );
-    final seriesFile = _findFile(
+    // File dei metadati/status delle serie (es. "stopped" = interrotta).
+    // Il pattern esclude esplicitamente "tvtime-series-episodes-*.csv" con
+    // una negative lookahead, così non collide col pattern sopra.
+    // OPZIONALE: se assente, nessuna serie viene marcata interrotta
+    // dall'import (comportamento identico a oggi), nessun errore sollevato.
+    final seriesMetaFile = _findFile(
       archive,
-      RegExp(r'tvtime-series-(?!episodes).*\.csv$', caseSensitive: false),
+      RegExp(r'^tvtime-series-(?!episodes-).*\.csv$', caseSensitive: false),
     );
 
     if (moviesFile == null || episodesFile == null || listsFile == null) {
@@ -56,7 +61,7 @@ class TvTimeArchiveParser {
       movies: _parseMovies(moviesFile),
       episodes: _parseEpisodes(episodesFile),
       lists: _parseLists(listsFile),
-      series: seriesFile != null ? _parseSeries(seriesFile) : [],
+      series: seriesMetaFile == null ? [] : _parseSeriesMeta(seriesMetaFile),
     );
   }
 
@@ -143,7 +148,12 @@ class TvTimeArchiveParser {
     }).toList();
   }
 
-  List<TvTimeRawSeriesRow> _parseSeries(ArchiveFile file) {
+  /// Legge `tvtime-series-*.csv` (metadati/status delle serie, NON gli
+  /// episodi). Usato solo per lo `status` ("stopped" = interrotta): gli
+  /// altri valori (`up_to_date`, `not_started_yet`, `continuing`,
+  /// `watch_later`) non servono, non usarli, la categoria viene già
+  /// calcolata altrove dal conteggio episodi.
+  List<TvTimeRawSeriesRow> _parseSeriesMeta(ArchiveFile file) {
     return _rowsAsMaps(_decodeCsv(file)).map((r) {
       return TvTimeRawSeriesRow(
         tvdbId: r['tvdb_id'] ?? '',
