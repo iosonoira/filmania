@@ -36,6 +36,10 @@ class TvTimeArchiveParser {
       archive,
       RegExp(r'tvtime-lists-.*\.csv$', caseSensitive: false),
     );
+    final seriesFile = _findFile(
+      archive,
+      RegExp(r'tvtime-series-(?!episodes).*\.csv$', caseSensitive: false),
+    );
 
     if (moviesFile == null || episodesFile == null || listsFile == null) {
       final missing = [
@@ -52,6 +56,7 @@ class TvTimeArchiveParser {
       movies: _parseMovies(moviesFile),
       episodes: _parseEpisodes(episodesFile),
       lists: _parseLists(listsFile),
+      series: seriesFile != null ? _parseSeries(seriesFile) : [],
     );
   }
 
@@ -134,6 +139,15 @@ class TvTimeArchiveParser {
         uuid: r['uuid'] ?? '',
         tvdbId: r['tvdb_id'] ?? '',
         nameHint: r['name'] ?? '',
+      );
+    }).toList();
+  }
+
+  List<TvTimeRawSeriesRow> _parseSeries(ArchiveFile file) {
+    return _rowsAsMaps(_decodeCsv(file)).map((r) {
+      return TvTimeRawSeriesRow(
+        tvdbId: r['tvdb_id'] ?? '',
+        status: (r['status'] ?? '').trim(),
       );
     }).toList();
   }

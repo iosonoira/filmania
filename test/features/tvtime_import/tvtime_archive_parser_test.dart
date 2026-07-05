@@ -38,6 +38,29 @@ void main() {
     expect(result.episodes.first.seriesTvdbId, '81189');
     expect(result.lists, hasLength(1));
     expect(result.lists.first.listName, 'Da vedere');
+    expect(result.series, isEmpty); // no tvtime-series-*.csv file
+  });
+
+  test('parsifica tvtime-series-*.csv con status e tvdb_id', () {
+    final zipBytes = _buildZip({
+      'tvtime-movies-2026-07-01.csv':
+          'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+      'tvtime-series-episodes-2026-07-01.csv':
+          'series_tvdb_id,title,season,episode,is_watched,watched_at\n',
+      'tvtime-lists-2026-07-01.csv': 'list_name,item_type,uuid,tvdb_id,name\n',
+      'tvtime-series-2026-07-01.csv':
+          'uuid,tvdb_id,imdb_id,title,status,created_at\n'
+          'u1,81189,tt0944947,,stopped,2025-01-01T00:00:00Z\n'
+          'u2,1399,tt0903747,,continuing,2024-01-01T00:00:00Z\n',
+    });
+
+    final result = parser.parse(zipBytes);
+
+    expect(result.series, hasLength(2));
+    expect(result.series[0].tvdbId, '81189');
+    expect(result.series[0].status, 'stopped');
+    expect(result.series[1].tvdbId, '1399');
+    expect(result.series[1].status, 'continuing');
   });
 
   test('lancia TvTimeInvalidArchiveFailure se manca un CSV richiesto', () {

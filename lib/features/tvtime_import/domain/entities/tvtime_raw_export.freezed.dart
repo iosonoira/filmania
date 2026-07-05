@@ -830,9 +830,269 @@ as String,
 }
 
 /// @nodoc
+mixin _$TvTimeRawSeriesRow {
+
+ String get tvdbId; String get status;
+/// Create a copy of TvTimeRawSeriesRow
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$TvTimeRawSeriesRowCopyWith<TvTimeRawSeriesRow> get copyWith => _$TvTimeRawSeriesRowCopyWithImpl<TvTimeRawSeriesRow>(this as TvTimeRawSeriesRow, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeRawSeriesRow&&(identical(other.tvdbId, tvdbId) || other.tvdbId == tvdbId)&&(identical(other.status, status) || other.status == status));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tvdbId,status);
+
+@override
+String toString() {
+  return 'TvTimeRawSeriesRow(tvdbId: $tvdbId, status: $status)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $TvTimeRawSeriesRowCopyWith<$Res>  {
+  factory $TvTimeRawSeriesRowCopyWith(TvTimeRawSeriesRow value, $Res Function(TvTimeRawSeriesRow) _then) = _$TvTimeRawSeriesRowCopyWithImpl;
+@useResult
+$Res call({
+ String tvdbId, String status
+});
+
+
+
+
+}
+/// @nodoc
+class _$TvTimeRawSeriesRowCopyWithImpl<$Res>
+    implements $TvTimeRawSeriesRowCopyWith<$Res> {
+  _$TvTimeRawSeriesRowCopyWithImpl(this._self, this._then);
+
+  final TvTimeRawSeriesRow _self;
+  final $Res Function(TvTimeRawSeriesRow) _then;
+
+/// Create a copy of TvTimeRawSeriesRow
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? tvdbId = null,Object? status = null,}) {
+  return _then(_self.copyWith(
+tvdbId: null == tvdbId ? _self.tvdbId : tvdbId // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [TvTimeRawSeriesRow].
+extension TvTimeRawSeriesRowPatterns on TvTimeRawSeriesRow {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _TvTimeRawSeriesRow value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _TvTimeRawSeriesRow() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _TvTimeRawSeriesRow value)  $default,){
+final _that = this;
+switch (_that) {
+case _TvTimeRawSeriesRow():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _TvTimeRawSeriesRow value)?  $default,){
+final _that = this;
+switch (_that) {
+case _TvTimeRawSeriesRow() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String tvdbId,  String status)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _TvTimeRawSeriesRow() when $default != null:
+return $default(_that.tvdbId,_that.status);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String tvdbId,  String status)  $default,) {final _that = this;
+switch (_that) {
+case _TvTimeRawSeriesRow():
+return $default(_that.tvdbId,_that.status);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String tvdbId,  String status)?  $default,) {final _that = this;
+switch (_that) {
+case _TvTimeRawSeriesRow() when $default != null:
+return $default(_that.tvdbId,_that.status);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _TvTimeRawSeriesRow implements TvTimeRawSeriesRow {
+  const _TvTimeRawSeriesRow({required this.tvdbId, required this.status});
+  
+
+@override final  String tvdbId;
+@override final  String status;
+
+/// Create a copy of TvTimeRawSeriesRow
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$TvTimeRawSeriesRowCopyWith<_TvTimeRawSeriesRow> get copyWith => __$TvTimeRawSeriesRowCopyWithImpl<_TvTimeRawSeriesRow>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeRawSeriesRow&&(identical(other.tvdbId, tvdbId) || other.tvdbId == tvdbId)&&(identical(other.status, status) || other.status == status));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,tvdbId,status);
+
+@override
+String toString() {
+  return 'TvTimeRawSeriesRow(tvdbId: $tvdbId, status: $status)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$TvTimeRawSeriesRowCopyWith<$Res> implements $TvTimeRawSeriesRowCopyWith<$Res> {
+  factory _$TvTimeRawSeriesRowCopyWith(_TvTimeRawSeriesRow value, $Res Function(_TvTimeRawSeriesRow) _then) = __$TvTimeRawSeriesRowCopyWithImpl;
+@override @useResult
+$Res call({
+ String tvdbId, String status
+});
+
+
+
+
+}
+/// @nodoc
+class __$TvTimeRawSeriesRowCopyWithImpl<$Res>
+    implements _$TvTimeRawSeriesRowCopyWith<$Res> {
+  __$TvTimeRawSeriesRowCopyWithImpl(this._self, this._then);
+
+  final _TvTimeRawSeriesRow _self;
+  final $Res Function(_TvTimeRawSeriesRow) _then;
+
+/// Create a copy of TvTimeRawSeriesRow
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? tvdbId = null,Object? status = null,}) {
+  return _then(_TvTimeRawSeriesRow(
+tvdbId: null == tvdbId ? _self.tvdbId : tvdbId // ignore: cast_nullable_to_non_nullable
+as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$TvTimeRawExport {
 
- List<TvTimeRawMovieRow> get movies; List<TvTimeRawEpisodeRow> get episodes; List<TvTimeRawListRow> get lists;
+ List<TvTimeRawMovieRow> get movies; List<TvTimeRawEpisodeRow> get episodes; List<TvTimeRawListRow> get lists; List<TvTimeRawSeriesRow> get series;
 /// Create a copy of TvTimeRawExport
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -843,16 +1103,16 @@ $TvTimeRawExportCopyWith<TvTimeRawExport> get copyWith => _$TvTimeRawExportCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeRawExport&&const DeepCollectionEquality().equals(other.movies, movies)&&const DeepCollectionEquality().equals(other.episodes, episodes)&&const DeepCollectionEquality().equals(other.lists, lists));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeRawExport&&const DeepCollectionEquality().equals(other.movies, movies)&&const DeepCollectionEquality().equals(other.episodes, episodes)&&const DeepCollectionEquality().equals(other.lists, lists)&&const DeepCollectionEquality().equals(other.series, series));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(movies),const DeepCollectionEquality().hash(episodes),const DeepCollectionEquality().hash(lists));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(movies),const DeepCollectionEquality().hash(episodes),const DeepCollectionEquality().hash(lists),const DeepCollectionEquality().hash(series));
 
 @override
 String toString() {
-  return 'TvTimeRawExport(movies: $movies, episodes: $episodes, lists: $lists)';
+  return 'TvTimeRawExport(movies: $movies, episodes: $episodes, lists: $lists, series: $series)';
 }
 
 
@@ -863,7 +1123,7 @@ abstract mixin class $TvTimeRawExportCopyWith<$Res>  {
   factory $TvTimeRawExportCopyWith(TvTimeRawExport value, $Res Function(TvTimeRawExport) _then) = _$TvTimeRawExportCopyWithImpl;
 @useResult
 $Res call({
- List<TvTimeRawMovieRow> movies, List<TvTimeRawEpisodeRow> episodes, List<TvTimeRawListRow> lists
+ List<TvTimeRawMovieRow> movies, List<TvTimeRawEpisodeRow> episodes, List<TvTimeRawListRow> lists, List<TvTimeRawSeriesRow> series
 });
 
 
@@ -880,12 +1140,13 @@ class _$TvTimeRawExportCopyWithImpl<$Res>
 
 /// Create a copy of TvTimeRawExport
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? movies = null,Object? episodes = null,Object? lists = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? movies = null,Object? episodes = null,Object? lists = null,Object? series = null,}) {
   return _then(_self.copyWith(
 movies: null == movies ? _self.movies : movies // ignore: cast_nullable_to_non_nullable
 as List<TvTimeRawMovieRow>,episodes: null == episodes ? _self.episodes : episodes // ignore: cast_nullable_to_non_nullable
 as List<TvTimeRawEpisodeRow>,lists: null == lists ? _self.lists : lists // ignore: cast_nullable_to_non_nullable
-as List<TvTimeRawListRow>,
+as List<TvTimeRawListRow>,series: null == series ? _self.series : series // ignore: cast_nullable_to_non_nullable
+as List<TvTimeRawSeriesRow>,
   ));
 }
 
@@ -970,10 +1231,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TvTimeRawMovieRow> movies,  List<TvTimeRawEpisodeRow> episodes,  List<TvTimeRawListRow> lists)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<TvTimeRawMovieRow> movies,  List<TvTimeRawEpisodeRow> episodes,  List<TvTimeRawListRow> lists,  List<TvTimeRawSeriesRow> series)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TvTimeRawExport() when $default != null:
-return $default(_that.movies,_that.episodes,_that.lists);case _:
+return $default(_that.movies,_that.episodes,_that.lists,_that.series);case _:
   return orElse();
 
 }
@@ -991,10 +1252,10 @@ return $default(_that.movies,_that.episodes,_that.lists);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TvTimeRawMovieRow> movies,  List<TvTimeRawEpisodeRow> episodes,  List<TvTimeRawListRow> lists)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<TvTimeRawMovieRow> movies,  List<TvTimeRawEpisodeRow> episodes,  List<TvTimeRawListRow> lists,  List<TvTimeRawSeriesRow> series)  $default,) {final _that = this;
 switch (_that) {
 case _TvTimeRawExport():
-return $default(_that.movies,_that.episodes,_that.lists);case _:
+return $default(_that.movies,_that.episodes,_that.lists,_that.series);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1011,10 +1272,10 @@ return $default(_that.movies,_that.episodes,_that.lists);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TvTimeRawMovieRow> movies,  List<TvTimeRawEpisodeRow> episodes,  List<TvTimeRawListRow> lists)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<TvTimeRawMovieRow> movies,  List<TvTimeRawEpisodeRow> episodes,  List<TvTimeRawListRow> lists,  List<TvTimeRawSeriesRow> series)?  $default,) {final _that = this;
 switch (_that) {
 case _TvTimeRawExport() when $default != null:
-return $default(_that.movies,_that.episodes,_that.lists);case _:
+return $default(_that.movies,_that.episodes,_that.lists,_that.series);case _:
   return null;
 
 }
@@ -1026,7 +1287,7 @@ return $default(_that.movies,_that.episodes,_that.lists);case _:
 
 
 class _TvTimeRawExport implements TvTimeRawExport {
-  const _TvTimeRawExport({required final  List<TvTimeRawMovieRow> movies, required final  List<TvTimeRawEpisodeRow> episodes, required final  List<TvTimeRawListRow> lists}): _movies = movies,_episodes = episodes,_lists = lists;
+  const _TvTimeRawExport({required final  List<TvTimeRawMovieRow> movies, required final  List<TvTimeRawEpisodeRow> episodes, required final  List<TvTimeRawListRow> lists, final  List<TvTimeRawSeriesRow> series = const []}): _movies = movies,_episodes = episodes,_lists = lists,_series = series;
   
 
  final  List<TvTimeRawMovieRow> _movies;
@@ -1050,6 +1311,13 @@ class _TvTimeRawExport implements TvTimeRawExport {
   return EqualUnmodifiableListView(_lists);
 }
 
+ final  List<TvTimeRawSeriesRow> _series;
+@override@JsonKey() List<TvTimeRawSeriesRow> get series {
+  if (_series is EqualUnmodifiableListView) return _series;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_series);
+}
+
 
 /// Create a copy of TvTimeRawExport
 /// with the given fields replaced by the non-null parameter values.
@@ -1061,16 +1329,16 @@ _$TvTimeRawExportCopyWith<_TvTimeRawExport> get copyWith => __$TvTimeRawExportCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeRawExport&&const DeepCollectionEquality().equals(other._movies, _movies)&&const DeepCollectionEquality().equals(other._episodes, _episodes)&&const DeepCollectionEquality().equals(other._lists, _lists));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeRawExport&&const DeepCollectionEquality().equals(other._movies, _movies)&&const DeepCollectionEquality().equals(other._episodes, _episodes)&&const DeepCollectionEquality().equals(other._lists, _lists)&&const DeepCollectionEquality().equals(other._series, _series));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_movies),const DeepCollectionEquality().hash(_episodes),const DeepCollectionEquality().hash(_lists));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_movies),const DeepCollectionEquality().hash(_episodes),const DeepCollectionEquality().hash(_lists),const DeepCollectionEquality().hash(_series));
 
 @override
 String toString() {
-  return 'TvTimeRawExport(movies: $movies, episodes: $episodes, lists: $lists)';
+  return 'TvTimeRawExport(movies: $movies, episodes: $episodes, lists: $lists, series: $series)';
 }
 
 
@@ -1081,7 +1349,7 @@ abstract mixin class _$TvTimeRawExportCopyWith<$Res> implements $TvTimeRawExport
   factory _$TvTimeRawExportCopyWith(_TvTimeRawExport value, $Res Function(_TvTimeRawExport) _then) = __$TvTimeRawExportCopyWithImpl;
 @override @useResult
 $Res call({
- List<TvTimeRawMovieRow> movies, List<TvTimeRawEpisodeRow> episodes, List<TvTimeRawListRow> lists
+ List<TvTimeRawMovieRow> movies, List<TvTimeRawEpisodeRow> episodes, List<TvTimeRawListRow> lists, List<TvTimeRawSeriesRow> series
 });
 
 
@@ -1098,12 +1366,13 @@ class __$TvTimeRawExportCopyWithImpl<$Res>
 
 /// Create a copy of TvTimeRawExport
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? movies = null,Object? episodes = null,Object? lists = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? movies = null,Object? episodes = null,Object? lists = null,Object? series = null,}) {
   return _then(_TvTimeRawExport(
 movies: null == movies ? _self._movies : movies // ignore: cast_nullable_to_non_nullable
 as List<TvTimeRawMovieRow>,episodes: null == episodes ? _self._episodes : episodes // ignore: cast_nullable_to_non_nullable
 as List<TvTimeRawEpisodeRow>,lists: null == lists ? _self._lists : lists // ignore: cast_nullable_to_non_nullable
-as List<TvTimeRawListRow>,
+as List<TvTimeRawListRow>,series: null == series ? _self._series : series // ignore: cast_nullable_to_non_nullable
+as List<TvTimeRawSeriesRow>,
   ));
 }
 

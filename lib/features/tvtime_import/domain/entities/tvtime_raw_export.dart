@@ -41,6 +41,16 @@ abstract class TvTimeRawListRow with _$TvTimeRawListRow {
   }) = _TvTimeRawListRow;
 }
 
+/// Una riga grezza di `tvtime-series-*.csv` (metadati/status delle serie,
+/// file DIVERSO da `tvtime-series-episodes-*.csv`), PRIMA del matching TMDB.
+@freezed
+abstract class TvTimeRawSeriesRow with _$TvTimeRawSeriesRow {
+  const factory TvTimeRawSeriesRow({
+    required String tvdbId,
+    required String status, // es. "stopped", "up_to_date", "continuing", ...
+  }) = _TvTimeRawSeriesRow;
+}
+
 /// Contenuto grezzo completo estratto dallo zip, prima del matching.
 @freezed
 abstract class TvTimeRawExport with _$TvTimeRawExport {
@@ -48,5 +58,6 @@ abstract class TvTimeRawExport with _$TvTimeRawExport {
     required List<TvTimeRawMovieRow> movies,
     required List<TvTimeRawEpisodeRow> episodes,
     required List<TvTimeRawListRow> lists,
+    @Default([]) List<TvTimeRawSeriesRow> series,
   }) = _TvTimeRawExport;
 }
