@@ -89,4 +89,37 @@ void main() {
     final result = parser.parse(zipBytes);
     expect(result.episodes, isEmpty); // riga con season non numerico, scartata
   });
+
+  test('parsifica il file opzionale tvtime-series-*.csv (status serie)', () {
+    final zipBytes = _buildZip({
+      'tvtime-movies-2026-07-01.csv':
+          'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+      'tvtime-series-episodes-2026-07-01.csv':
+          'series_tvdb_id,title,season,episode,is_watched,watched_at\n',
+      'tvtime-lists-2026-07-01.csv': 'list_name,item_type,uuid,tvdb_id,name\n',
+      'tvtime-series-2026-07-01.csv':
+          'uuid,tvdb_id,imdb_id,title,status,created_at\n'
+          's1,81189,,Breaking Bad,stopped,2020-01-01T00:00:00Z\n',
+    });
+
+    final result = parser.parse(zipBytes);
+
+    expect(result.series, hasLength(1));
+    expect(result.series.first.tvdbId, '81189');
+    expect(result.series.first.status, 'stopped');
+  });
+
+  test('funziona anche senza il file opzionale tvtime-series-*.csv', () {
+    final zipBytes = _buildZip({
+      'tvtime-movies-2026-07-01.csv':
+          'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+      'tvtime-series-episodes-2026-07-01.csv':
+          'series_tvdb_id,title,season,episode,is_watched,watched_at\n',
+      'tvtime-lists-2026-07-01.csv': 'list_name,item_type,uuid,tvdb_id,name\n',
+    });
+
+    final result = parser.parse(zipBytes);
+
+    expect(result.series, isEmpty);
+  });
 }
