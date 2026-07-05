@@ -280,7 +280,7 @@ as DateTime?,
 /// @nodoc
 mixin _$TvTimeMatchedEpisode {
 
- int get seriesTmdbId; String get seriesTitle; String? get seriesPosterPath; int get seasonNumber; int get episodeNumber; DateTime? get watchedAt;
+ int get seriesTmdbId; String get seriesTitle; String? get seriesPosterPath; int get seasonNumber; int get episodeNumber; DateTime? get watchedAt; bool get isDropped;
 /// Create a copy of TvTimeMatchedEpisode
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -291,16 +291,16 @@ $TvTimeMatchedEpisodeCopyWith<TvTimeMatchedEpisode> get copyWith => _$TvTimeMatc
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeMatchedEpisode&&(identical(other.seriesTmdbId, seriesTmdbId) || other.seriesTmdbId == seriesTmdbId)&&(identical(other.seriesTitle, seriesTitle) || other.seriesTitle == seriesTitle)&&(identical(other.seriesPosterPath, seriesPosterPath) || other.seriesPosterPath == seriesPosterPath)&&(identical(other.seasonNumber, seasonNumber) || other.seasonNumber == seasonNumber)&&(identical(other.episodeNumber, episodeNumber) || other.episodeNumber == episodeNumber)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeMatchedEpisode&&(identical(other.seriesTmdbId, seriesTmdbId) || other.seriesTmdbId == seriesTmdbId)&&(identical(other.seriesTitle, seriesTitle) || other.seriesTitle == seriesTitle)&&(identical(other.seriesPosterPath, seriesPosterPath) || other.seriesPosterPath == seriesPosterPath)&&(identical(other.seasonNumber, seasonNumber) || other.seasonNumber == seasonNumber)&&(identical(other.episodeNumber, episodeNumber) || other.episodeNumber == episodeNumber)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt)&&(identical(other.isDropped, isDropped) || other.isDropped == isDropped));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,seriesTmdbId,seriesTitle,seriesPosterPath,seasonNumber,episodeNumber,watchedAt);
+int get hashCode => Object.hash(runtimeType,seriesTmdbId,seriesTitle,seriesPosterPath,seasonNumber,episodeNumber,watchedAt,isDropped);
 
 @override
 String toString() {
-  return 'TvTimeMatchedEpisode(seriesTmdbId: $seriesTmdbId, seriesTitle: $seriesTitle, seriesPosterPath: $seriesPosterPath, seasonNumber: $seasonNumber, episodeNumber: $episodeNumber, watchedAt: $watchedAt)';
+  return 'TvTimeMatchedEpisode(seriesTmdbId: $seriesTmdbId, seriesTitle: $seriesTitle, seriesPosterPath: $seriesPosterPath, seasonNumber: $seasonNumber, episodeNumber: $episodeNumber, watchedAt: $watchedAt, isDropped: $isDropped)';
 }
 
 
@@ -311,7 +311,7 @@ abstract mixin class $TvTimeMatchedEpisodeCopyWith<$Res>  {
   factory $TvTimeMatchedEpisodeCopyWith(TvTimeMatchedEpisode value, $Res Function(TvTimeMatchedEpisode) _then) = _$TvTimeMatchedEpisodeCopyWithImpl;
 @useResult
 $Res call({
- int seriesTmdbId, String seriesTitle, String? seriesPosterPath, int seasonNumber, int episodeNumber, DateTime? watchedAt
+ int seriesTmdbId, String seriesTitle, String? seriesPosterPath, int seasonNumber, int episodeNumber, DateTime? watchedAt, bool isDropped
 });
 
 
@@ -328,7 +328,7 @@ class _$TvTimeMatchedEpisodeCopyWithImpl<$Res>
 
 /// Create a copy of TvTimeMatchedEpisode
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? seriesTmdbId = null,Object? seriesTitle = null,Object? seriesPosterPath = freezed,Object? seasonNumber = null,Object? episodeNumber = null,Object? watchedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? seriesTmdbId = null,Object? seriesTitle = null,Object? seriesPosterPath = freezed,Object? seasonNumber = null,Object? episodeNumber = null,Object? watchedAt = freezed,Object? isDropped = null,}) {
   return _then(_self.copyWith(
 seriesTmdbId: null == seriesTmdbId ? _self.seriesTmdbId : seriesTmdbId // ignore: cast_nullable_to_non_nullable
 as int,seriesTitle: null == seriesTitle ? _self.seriesTitle : seriesTitle // ignore: cast_nullable_to_non_nullable
@@ -336,7 +336,8 @@ as String,seriesPosterPath: freezed == seriesPosterPath ? _self.seriesPosterPath
 as String?,seasonNumber: null == seasonNumber ? _self.seasonNumber : seasonNumber // ignore: cast_nullable_to_non_nullable
 as int,episodeNumber: null == episodeNumber ? _self.episodeNumber : episodeNumber // ignore: cast_nullable_to_non_nullable
 as int,watchedAt: freezed == watchedAt ? _self.watchedAt : watchedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,isDropped: null == isDropped ? _self.isDropped : isDropped // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -421,10 +422,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int seriesTmdbId,  String seriesTitle,  String? seriesPosterPath,  int seasonNumber,  int episodeNumber,  DateTime? watchedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int seriesTmdbId,  String seriesTitle,  String? seriesPosterPath,  int seasonNumber,  int episodeNumber,  DateTime? watchedAt,  bool isDropped)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TvTimeMatchedEpisode() when $default != null:
-return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_that.seasonNumber,_that.episodeNumber,_that.watchedAt);case _:
+return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_that.seasonNumber,_that.episodeNumber,_that.watchedAt,_that.isDropped);case _:
   return orElse();
 
 }
@@ -442,10 +443,10 @@ return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int seriesTmdbId,  String seriesTitle,  String? seriesPosterPath,  int seasonNumber,  int episodeNumber,  DateTime? watchedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int seriesTmdbId,  String seriesTitle,  String? seriesPosterPath,  int seasonNumber,  int episodeNumber,  DateTime? watchedAt,  bool isDropped)  $default,) {final _that = this;
 switch (_that) {
 case _TvTimeMatchedEpisode():
-return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_that.seasonNumber,_that.episodeNumber,_that.watchedAt);case _:
+return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_that.seasonNumber,_that.episodeNumber,_that.watchedAt,_that.isDropped);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -462,10 +463,10 @@ return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int seriesTmdbId,  String seriesTitle,  String? seriesPosterPath,  int seasonNumber,  int episodeNumber,  DateTime? watchedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int seriesTmdbId,  String seriesTitle,  String? seriesPosterPath,  int seasonNumber,  int episodeNumber,  DateTime? watchedAt,  bool isDropped)?  $default,) {final _that = this;
 switch (_that) {
 case _TvTimeMatchedEpisode() when $default != null:
-return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_that.seasonNumber,_that.episodeNumber,_that.watchedAt);case _:
+return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_that.seasonNumber,_that.episodeNumber,_that.watchedAt,_that.isDropped);case _:
   return null;
 
 }
@@ -477,7 +478,7 @@ return $default(_that.seriesTmdbId,_that.seriesTitle,_that.seriesPosterPath,_tha
 
 
 class _TvTimeMatchedEpisode implements TvTimeMatchedEpisode {
-  const _TvTimeMatchedEpisode({required this.seriesTmdbId, required this.seriesTitle, this.seriesPosterPath, required this.seasonNumber, required this.episodeNumber, this.watchedAt});
+  const _TvTimeMatchedEpisode({required this.seriesTmdbId, required this.seriesTitle, this.seriesPosterPath, required this.seasonNumber, required this.episodeNumber, this.watchedAt, this.isDropped = false});
   
 
 @override final  int seriesTmdbId;
@@ -486,6 +487,7 @@ class _TvTimeMatchedEpisode implements TvTimeMatchedEpisode {
 @override final  int seasonNumber;
 @override final  int episodeNumber;
 @override final  DateTime? watchedAt;
+@override@JsonKey() final  bool isDropped;
 
 /// Create a copy of TvTimeMatchedEpisode
 /// with the given fields replaced by the non-null parameter values.
@@ -497,16 +499,16 @@ _$TvTimeMatchedEpisodeCopyWith<_TvTimeMatchedEpisode> get copyWith => __$TvTimeM
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeMatchedEpisode&&(identical(other.seriesTmdbId, seriesTmdbId) || other.seriesTmdbId == seriesTmdbId)&&(identical(other.seriesTitle, seriesTitle) || other.seriesTitle == seriesTitle)&&(identical(other.seriesPosterPath, seriesPosterPath) || other.seriesPosterPath == seriesPosterPath)&&(identical(other.seasonNumber, seasonNumber) || other.seasonNumber == seasonNumber)&&(identical(other.episodeNumber, episodeNumber) || other.episodeNumber == episodeNumber)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeMatchedEpisode&&(identical(other.seriesTmdbId, seriesTmdbId) || other.seriesTmdbId == seriesTmdbId)&&(identical(other.seriesTitle, seriesTitle) || other.seriesTitle == seriesTitle)&&(identical(other.seriesPosterPath, seriesPosterPath) || other.seriesPosterPath == seriesPosterPath)&&(identical(other.seasonNumber, seasonNumber) || other.seasonNumber == seasonNumber)&&(identical(other.episodeNumber, episodeNumber) || other.episodeNumber == episodeNumber)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt)&&(identical(other.isDropped, isDropped) || other.isDropped == isDropped));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,seriesTmdbId,seriesTitle,seriesPosterPath,seasonNumber,episodeNumber,watchedAt);
+int get hashCode => Object.hash(runtimeType,seriesTmdbId,seriesTitle,seriesPosterPath,seasonNumber,episodeNumber,watchedAt,isDropped);
 
 @override
 String toString() {
-  return 'TvTimeMatchedEpisode(seriesTmdbId: $seriesTmdbId, seriesTitle: $seriesTitle, seriesPosterPath: $seriesPosterPath, seasonNumber: $seasonNumber, episodeNumber: $episodeNumber, watchedAt: $watchedAt)';
+  return 'TvTimeMatchedEpisode(seriesTmdbId: $seriesTmdbId, seriesTitle: $seriesTitle, seriesPosterPath: $seriesPosterPath, seasonNumber: $seasonNumber, episodeNumber: $episodeNumber, watchedAt: $watchedAt, isDropped: $isDropped)';
 }
 
 
@@ -517,7 +519,7 @@ abstract mixin class _$TvTimeMatchedEpisodeCopyWith<$Res> implements $TvTimeMatc
   factory _$TvTimeMatchedEpisodeCopyWith(_TvTimeMatchedEpisode value, $Res Function(_TvTimeMatchedEpisode) _then) = __$TvTimeMatchedEpisodeCopyWithImpl;
 @override @useResult
 $Res call({
- int seriesTmdbId, String seriesTitle, String? seriesPosterPath, int seasonNumber, int episodeNumber, DateTime? watchedAt
+ int seriesTmdbId, String seriesTitle, String? seriesPosterPath, int seasonNumber, int episodeNumber, DateTime? watchedAt, bool isDropped
 });
 
 
@@ -534,7 +536,7 @@ class __$TvTimeMatchedEpisodeCopyWithImpl<$Res>
 
 /// Create a copy of TvTimeMatchedEpisode
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? seriesTmdbId = null,Object? seriesTitle = null,Object? seriesPosterPath = freezed,Object? seasonNumber = null,Object? episodeNumber = null,Object? watchedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? seriesTmdbId = null,Object? seriesTitle = null,Object? seriesPosterPath = freezed,Object? seasonNumber = null,Object? episodeNumber = null,Object? watchedAt = freezed,Object? isDropped = null,}) {
   return _then(_TvTimeMatchedEpisode(
 seriesTmdbId: null == seriesTmdbId ? _self.seriesTmdbId : seriesTmdbId // ignore: cast_nullable_to_non_nullable
 as int,seriesTitle: null == seriesTitle ? _self.seriesTitle : seriesTitle // ignore: cast_nullable_to_non_nullable
@@ -542,7 +544,8 @@ as String,seriesPosterPath: freezed == seriesPosterPath ? _self.seriesPosterPath
 as String?,seasonNumber: null == seasonNumber ? _self.seasonNumber : seasonNumber // ignore: cast_nullable_to_non_nullable
 as int,episodeNumber: null == episodeNumber ? _self.episodeNumber : episodeNumber // ignore: cast_nullable_to_non_nullable
 as int,watchedAt: freezed == watchedAt ? _self.watchedAt : watchedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,isDropped: null == isDropped ? _self.isDropped : isDropped // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

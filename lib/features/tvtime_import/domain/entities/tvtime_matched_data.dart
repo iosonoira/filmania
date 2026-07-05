@@ -22,6 +22,7 @@ abstract class TvTimeMatchedEpisode with _$TvTimeMatchedEpisode {
     required int seasonNumber,
     required int episodeNumber,
     DateTime? watchedAt,
+    @Default(false) bool isDropped,
   }) = _TvTimeMatchedEpisode;
 }
 

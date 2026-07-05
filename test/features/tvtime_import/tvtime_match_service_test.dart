@@ -200,5 +200,58 @@ void main() {
       expect(result.unmatched.first.type, 'series');
       expect(result.unmatched.first.title, 'Unknown Series');
     });
+
+    test('marca isDropped=true per le serie con status "stopped"', () async {
+      final dio = Dio(BaseOptions(baseUrl: 'https://api.themoviedb.org/3/'));
+      dio.httpClientAdapter = _FakeAdapter();
+      final ds = TmdbFindDataSource(dio);
+      final service = TvTimeMatchService(ds);
+
+      const raw = TvTimeRawExport(
+        movies: [],
+        episodes: [
+          TvTimeRawEpisodeRow(
+            seriesTvdbId: '81189',
+            seriesTitleHint: 'Breaking Bad',
+            season: 1,
+            episode: 1,
+            isWatched: true,
+          ),
+        ],
+        lists: [],
+        series: [TvTimeRawSeriesRow(tvdbId: '81189', status: 'stopped')],
+      );
+
+      final result = await service.matchAll(raw, onProgress: (_) {});
+
+      expect(result.episodes, hasLength(1));
+      expect(result.episodes.first.isDropped, isTrue);
+    });
+
+    test('isDropped=false se lo status non è "stopped"', () async {
+      final dio = Dio(BaseOptions(baseUrl: 'https://api.themoviedb.org/3/'));
+      dio.httpClientAdapter = _FakeAdapter();
+      final ds = TmdbFindDataSource(dio);
+      final service = TvTimeMatchService(ds);
+
+      const raw = TvTimeRawExport(
+        movies: [],
+        episodes: [
+          TvTimeRawEpisodeRow(
+            seriesTvdbId: '81189',
+            seriesTitleHint: 'Breaking Bad',
+            season: 1,
+            episode: 1,
+            isWatched: true,
+          ),
+        ],
+        lists: [],
+        series: [TvTimeRawSeriesRow(tvdbId: '81189', status: 'up_to_date')],
+      );
+
+      final result = await service.matchAll(raw, onProgress: (_) {});
+
+      expect(result.episodes.first.isDropped, isFalse);
+    });
   });
 }

@@ -89,6 +89,14 @@ class TvTimeMatchService {
         .toList();
 
     // --- Episodi: raggruppa per series_tvdb_id PRIMA di chiamare TMDB (una chiamata per serie, non per episodio) ---
+    // Set dei tvdb_id con status "stopped" in tvtime-series-*.csv (se il file
+    // era presente nello zip — è opzionale): usato per marcare la serie
+    // come "Interrotta" in Filmania.
+    final droppedTvdbIds = raw.series
+        .where((s) => s.status == 'stopped')
+        .map((s) => s.tvdbId)
+        .toSet();
+
     final watchedEpisodes = raw.episodes.where((e) => e.isWatched).toList();
     final episodesBySeries = <String, List<dynamic>>{};
     for (final e in watchedEpisodes) {
@@ -115,6 +123,7 @@ class TvTimeMatchService {
           );
           return;
         }
+        final isDropped = droppedTvdbIds.contains(seriesTvdbId);
         for (final e in episodesForSeries) {
           matchedEpisodes.add(
             TvTimeMatchedEpisode(
@@ -124,6 +133,7 @@ class TvTimeMatchService {
               seasonNumber: e.season as int,
               episodeNumber: e.episode as int,
               watchedAt: _parseDate(e.watchedAt as String?),
+              isDropped: isDropped,
             ),
           );
         }
