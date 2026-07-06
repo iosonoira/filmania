@@ -261,5 +261,65 @@ void main() {
 
       expect(result.episodes.first.isDropped, isFalse);
     });
+
+    test(
+      'marca isWatchLater=true per le serie con status "watch_later"',
+      () async {
+        final dio = Dio(BaseOptions(baseUrl: 'https://api.themoviedb.org/3/'));
+        dio.httpClientAdapter = _FakeAdapter();
+        final ds = TmdbFindDataSource(dio);
+        final service = TvTimeMatchService(ds);
+
+        const raw = TvTimeRawExport(
+          movies: [],
+          episodes: [
+            TvTimeRawEpisodeRow(
+              seriesTvdbId: '81189',
+              seriesTitleHint: 'Breaking Bad',
+              watchedAt: '2024-01-01T00:00:00Z',
+              season: 1,
+              episode: 1,
+              isWatched: true,
+              special: false,
+            ),
+          ],
+          lists: [],
+          series: [TvTimeRawSeriesRow(tvdbId: '81189', status: 'watch_later')],
+        );
+
+        final result = await service.matchAll(raw, onProgress: (_) {});
+
+        expect(result.episodes, hasLength(1));
+        expect(result.episodes.first.isWatchLater, isTrue);
+      },
+    );
+
+    test('isWatchLater=false se lo status non è "watch_later"', () async {
+      final dio = Dio(BaseOptions(baseUrl: 'https://api.themoviedb.org/3/'));
+      dio.httpClientAdapter = _FakeAdapter();
+      final ds = TmdbFindDataSource(dio);
+      final service = TvTimeMatchService(ds);
+
+      const raw = TvTimeRawExport(
+        movies: [],
+        episodes: [
+          TvTimeRawEpisodeRow(
+            seriesTvdbId: '81189',
+            seriesTitleHint: 'Breaking Bad',
+            watchedAt: '2024-01-01T00:00:00Z',
+            season: 1,
+            episode: 1,
+            isWatched: true,
+            special: false,
+          ),
+        ],
+        lists: [],
+        series: [TvTimeRawSeriesRow(tvdbId: '81189', status: 'up_to_date')],
+      );
+
+      final result = await service.matchAll(raw, onProgress: (_) {});
+
+      expect(result.episodes.first.isWatchLater, isFalse);
+    });
   });
 }

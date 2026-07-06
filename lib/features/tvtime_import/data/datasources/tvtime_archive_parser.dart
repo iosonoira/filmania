@@ -222,10 +222,10 @@ class TvTimeArchiveParser {
   }
 
   /// Legge `tvtime-series-*.csv` (metadati/status delle serie, NON gli
-  /// episodi). Usato solo per lo `status` ("stopped" = interrotta): gli
-  /// altri valori (`up_to_date`, `not_started_yet`, `continuing`,
-  /// `watch_later`) non servono, non usarli, la categoria viene già
-  /// calcolata altrove dal conteggio episodi.
+  /// episodi). Lo `status` viene usato per due mapping: "stopped" →
+  /// isDropped, "watch_later" → isWatchLater (vedi TvTimeMatchService). Gli
+  /// altri valori (`up_to_date`, `not_started_yet`, `continuing`) non
+  /// servono, la categoria viene già calcolata altrove dal conteggio episodi.
   List<TvTimeRawSeriesRow> _parseSeriesMeta(ArchiveFile file) {
     return _rowsAsMaps(_decodeCsv(file)).map((r) {
       return TvTimeRawSeriesRow(

@@ -23,6 +23,7 @@ abstract class TvTimeMatchedEpisode with _$TvTimeMatchedEpisode {
     required int episodeNumber,
     DateTime? watchedAt,
     @Default(false) bool isDropped,
+    @Default(false) bool isWatchLater,
   }) = _TvTimeMatchedEpisode;
 }
 

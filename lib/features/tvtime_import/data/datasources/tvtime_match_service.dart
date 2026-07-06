@@ -66,9 +66,17 @@ class TvTimeMatchService {
     // --- Episodi: raggruppa per series_tvdb_id PRIMA di chiamare TMDB (una chiamata per serie, non per episodio) ---
     // Set dei tvdb_id con status "stopped" in tvtime-series-*.csv (se il file
     // era presente nello zip — è opzionale): usato per marcare la serie
-    // come "Interrotta" in Filmania.
+    // come "Interrotta" in Filmania. "watch_later" è mappato allo stesso
+    // modo su isWatchLater — vedi ADR 0002 nel vault second-brain: le serie
+    // watch_later hanno sempre già ≥1 episodio visto (a differenza di
+    // not_started_yet, sempre 0), sono un concetto distinto da "mai iniziata"
+    // e vanno preservate, non scartate.
     final droppedTvdbIds = raw.series
         .where((s) => s.status == 'stopped')
+        .map((s) => s.tvdbId)
+        .toSet();
+    final watchLaterTvdbIds = raw.series
+        .where((s) => s.status == 'watch_later')
         .map((s) => s.tvdbId)
         .toSet();
 
@@ -99,6 +107,7 @@ class TvTimeMatchService {
           return;
         }
         final isDropped = droppedTvdbIds.contains(seriesTvdbId);
+        final isWatchLater = watchLaterTvdbIds.contains(seriesTvdbId);
         for (final e in episodesForSeries) {
           matchedEpisodes.add(
             TvTimeMatchedEpisode(
@@ -109,6 +118,7 @@ class TvTimeMatchService {
               episodeNumber: e.episode as int,
               watchedAt: _parseDate(e.watchedAt as String?),
               isDropped: isDropped,
+              isWatchLater: isWatchLater,
             ),
           );
         }
