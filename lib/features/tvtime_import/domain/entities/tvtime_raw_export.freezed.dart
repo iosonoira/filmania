@@ -289,7 +289,11 @@ as String?,
 /// @nodoc
 mixin _$TvTimeRawEpisodeRow {
 
- String get seriesTvdbId; String get seriesTitleHint; int get season; int get episode; bool get isWatched; String? get watchedAt;
+ String get seriesTvdbId; String get seriesTitleHint; int get season; int get episode; bool get isWatched;// `special=true` indica che questa riga è una entry TVDB "special"
+// (recap/OVA/extra) che collide sullo stesso (season, episode) di un
+// episodio regolare nello stesso export. Vedi TvTimeArchiveParser per
+// il dedup che usa questo campo.
+ bool get special; String? get watchedAt;
 /// Create a copy of TvTimeRawEpisodeRow
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,16 +304,16 @@ $TvTimeRawEpisodeRowCopyWith<TvTimeRawEpisodeRow> get copyWith => _$TvTimeRawEpi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeRawEpisodeRow&&(identical(other.seriesTvdbId, seriesTvdbId) || other.seriesTvdbId == seriesTvdbId)&&(identical(other.seriesTitleHint, seriesTitleHint) || other.seriesTitleHint == seriesTitleHint)&&(identical(other.season, season) || other.season == season)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.isWatched, isWatched) || other.isWatched == isWatched)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TvTimeRawEpisodeRow&&(identical(other.seriesTvdbId, seriesTvdbId) || other.seriesTvdbId == seriesTvdbId)&&(identical(other.seriesTitleHint, seriesTitleHint) || other.seriesTitleHint == seriesTitleHint)&&(identical(other.season, season) || other.season == season)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.isWatched, isWatched) || other.isWatched == isWatched)&&(identical(other.special, special) || other.special == special)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,seriesTvdbId,seriesTitleHint,season,episode,isWatched,watchedAt);
+int get hashCode => Object.hash(runtimeType,seriesTvdbId,seriesTitleHint,season,episode,isWatched,special,watchedAt);
 
 @override
 String toString() {
-  return 'TvTimeRawEpisodeRow(seriesTvdbId: $seriesTvdbId, seriesTitleHint: $seriesTitleHint, season: $season, episode: $episode, isWatched: $isWatched, watchedAt: $watchedAt)';
+  return 'TvTimeRawEpisodeRow(seriesTvdbId: $seriesTvdbId, seriesTitleHint: $seriesTitleHint, season: $season, episode: $episode, isWatched: $isWatched, special: $special, watchedAt: $watchedAt)';
 }
 
 
@@ -320,7 +324,7 @@ abstract mixin class $TvTimeRawEpisodeRowCopyWith<$Res>  {
   factory $TvTimeRawEpisodeRowCopyWith(TvTimeRawEpisodeRow value, $Res Function(TvTimeRawEpisodeRow) _then) = _$TvTimeRawEpisodeRowCopyWithImpl;
 @useResult
 $Res call({
- String seriesTvdbId, String seriesTitleHint, int season, int episode, bool isWatched, String? watchedAt
+ String seriesTvdbId, String seriesTitleHint, int season, int episode, bool isWatched, bool special, String? watchedAt
 });
 
 
@@ -337,13 +341,14 @@ class _$TvTimeRawEpisodeRowCopyWithImpl<$Res>
 
 /// Create a copy of TvTimeRawEpisodeRow
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? seriesTvdbId = null,Object? seriesTitleHint = null,Object? season = null,Object? episode = null,Object? isWatched = null,Object? watchedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? seriesTvdbId = null,Object? seriesTitleHint = null,Object? season = null,Object? episode = null,Object? isWatched = null,Object? special = null,Object? watchedAt = freezed,}) {
   return _then(_self.copyWith(
 seriesTvdbId: null == seriesTvdbId ? _self.seriesTvdbId : seriesTvdbId // ignore: cast_nullable_to_non_nullable
 as String,seriesTitleHint: null == seriesTitleHint ? _self.seriesTitleHint : seriesTitleHint // ignore: cast_nullable_to_non_nullable
 as String,season: null == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
 as int,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
 as int,isWatched: null == isWatched ? _self.isWatched : isWatched // ignore: cast_nullable_to_non_nullable
+as bool,special: null == special ? _self.special : special // ignore: cast_nullable_to_non_nullable
 as bool,watchedAt: freezed == watchedAt ? _self.watchedAt : watchedAt // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -430,10 +435,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String seriesTvdbId,  String seriesTitleHint,  int season,  int episode,  bool isWatched,  String? watchedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String seriesTvdbId,  String seriesTitleHint,  int season,  int episode,  bool isWatched,  bool special,  String? watchedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TvTimeRawEpisodeRow() when $default != null:
-return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.episode,_that.isWatched,_that.watchedAt);case _:
+return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.episode,_that.isWatched,_that.special,_that.watchedAt);case _:
   return orElse();
 
 }
@@ -451,10 +456,10 @@ return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.epis
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String seriesTvdbId,  String seriesTitleHint,  int season,  int episode,  bool isWatched,  String? watchedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String seriesTvdbId,  String seriesTitleHint,  int season,  int episode,  bool isWatched,  bool special,  String? watchedAt)  $default,) {final _that = this;
 switch (_that) {
 case _TvTimeRawEpisodeRow():
-return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.episode,_that.isWatched,_that.watchedAt);case _:
+return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.episode,_that.isWatched,_that.special,_that.watchedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -471,10 +476,10 @@ return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.epis
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String seriesTvdbId,  String seriesTitleHint,  int season,  int episode,  bool isWatched,  String? watchedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String seriesTvdbId,  String seriesTitleHint,  int season,  int episode,  bool isWatched,  bool special,  String? watchedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _TvTimeRawEpisodeRow() when $default != null:
-return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.episode,_that.isWatched,_that.watchedAt);case _:
+return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.episode,_that.isWatched,_that.special,_that.watchedAt);case _:
   return null;
 
 }
@@ -486,7 +491,7 @@ return $default(_that.seriesTvdbId,_that.seriesTitleHint,_that.season,_that.epis
 
 
 class _TvTimeRawEpisodeRow implements TvTimeRawEpisodeRow {
-  const _TvTimeRawEpisodeRow({required this.seriesTvdbId, required this.seriesTitleHint, required this.season, required this.episode, required this.isWatched, this.watchedAt});
+  const _TvTimeRawEpisodeRow({required this.seriesTvdbId, required this.seriesTitleHint, required this.season, required this.episode, required this.isWatched, required this.special, this.watchedAt});
   
 
 @override final  String seriesTvdbId;
@@ -494,6 +499,11 @@ class _TvTimeRawEpisodeRow implements TvTimeRawEpisodeRow {
 @override final  int season;
 @override final  int episode;
 @override final  bool isWatched;
+// `special=true` indica che questa riga è una entry TVDB "special"
+// (recap/OVA/extra) che collide sullo stesso (season, episode) di un
+// episodio regolare nello stesso export. Vedi TvTimeArchiveParser per
+// il dedup che usa questo campo.
+@override final  bool special;
 @override final  String? watchedAt;
 
 /// Create a copy of TvTimeRawEpisodeRow
@@ -506,16 +516,16 @@ _$TvTimeRawEpisodeRowCopyWith<_TvTimeRawEpisodeRow> get copyWith => __$TvTimeRaw
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeRawEpisodeRow&&(identical(other.seriesTvdbId, seriesTvdbId) || other.seriesTvdbId == seriesTvdbId)&&(identical(other.seriesTitleHint, seriesTitleHint) || other.seriesTitleHint == seriesTitleHint)&&(identical(other.season, season) || other.season == season)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.isWatched, isWatched) || other.isWatched == isWatched)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TvTimeRawEpisodeRow&&(identical(other.seriesTvdbId, seriesTvdbId) || other.seriesTvdbId == seriesTvdbId)&&(identical(other.seriesTitleHint, seriesTitleHint) || other.seriesTitleHint == seriesTitleHint)&&(identical(other.season, season) || other.season == season)&&(identical(other.episode, episode) || other.episode == episode)&&(identical(other.isWatched, isWatched) || other.isWatched == isWatched)&&(identical(other.special, special) || other.special == special)&&(identical(other.watchedAt, watchedAt) || other.watchedAt == watchedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,seriesTvdbId,seriesTitleHint,season,episode,isWatched,watchedAt);
+int get hashCode => Object.hash(runtimeType,seriesTvdbId,seriesTitleHint,season,episode,isWatched,special,watchedAt);
 
 @override
 String toString() {
-  return 'TvTimeRawEpisodeRow(seriesTvdbId: $seriesTvdbId, seriesTitleHint: $seriesTitleHint, season: $season, episode: $episode, isWatched: $isWatched, watchedAt: $watchedAt)';
+  return 'TvTimeRawEpisodeRow(seriesTvdbId: $seriesTvdbId, seriesTitleHint: $seriesTitleHint, season: $season, episode: $episode, isWatched: $isWatched, special: $special, watchedAt: $watchedAt)';
 }
 
 
@@ -526,7 +536,7 @@ abstract mixin class _$TvTimeRawEpisodeRowCopyWith<$Res> implements $TvTimeRawEp
   factory _$TvTimeRawEpisodeRowCopyWith(_TvTimeRawEpisodeRow value, $Res Function(_TvTimeRawEpisodeRow) _then) = __$TvTimeRawEpisodeRowCopyWithImpl;
 @override @useResult
 $Res call({
- String seriesTvdbId, String seriesTitleHint, int season, int episode, bool isWatched, String? watchedAt
+ String seriesTvdbId, String seriesTitleHint, int season, int episode, bool isWatched, bool special, String? watchedAt
 });
 
 
@@ -543,13 +553,14 @@ class __$TvTimeRawEpisodeRowCopyWithImpl<$Res>
 
 /// Create a copy of TvTimeRawEpisodeRow
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? seriesTvdbId = null,Object? seriesTitleHint = null,Object? season = null,Object? episode = null,Object? isWatched = null,Object? watchedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? seriesTvdbId = null,Object? seriesTitleHint = null,Object? season = null,Object? episode = null,Object? isWatched = null,Object? special = null,Object? watchedAt = freezed,}) {
   return _then(_TvTimeRawEpisodeRow(
 seriesTvdbId: null == seriesTvdbId ? _self.seriesTvdbId : seriesTvdbId // ignore: cast_nullable_to_non_nullable
 as String,seriesTitleHint: null == seriesTitleHint ? _self.seriesTitleHint : seriesTitleHint // ignore: cast_nullable_to_non_nullable
 as String,season: null == season ? _self.season : season // ignore: cast_nullable_to_non_nullable
 as int,episode: null == episode ? _self.episode : episode // ignore: cast_nullable_to_non_nullable
 as int,isWatched: null == isWatched ? _self.isWatched : isWatched // ignore: cast_nullable_to_non_nullable
+as bool,special: null == special ? _self.special : special // ignore: cast_nullable_to_non_nullable
 as bool,watchedAt: freezed == watchedAt ? _self.watchedAt : watchedAt // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

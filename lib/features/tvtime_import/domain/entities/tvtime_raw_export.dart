@@ -25,6 +25,11 @@ abstract class TvTimeRawEpisodeRow with _$TvTimeRawEpisodeRow {
     required int season,
     required int episode,
     required bool isWatched,
+    // `special=true` indica che questa riga è una entry TVDB "special"
+    // (recap/OVA/extra) che collide sullo stesso (season, episode) di un
+    // episodio regolare nello stesso export. Vedi TvTimeArchiveParser per
+    // il dedup che usa questo campo.
+    required bool special,
     String? watchedAt,
   }) = _TvTimeRawEpisodeRow;
 }
