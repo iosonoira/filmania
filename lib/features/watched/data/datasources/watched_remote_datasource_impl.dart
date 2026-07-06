@@ -365,26 +365,27 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
     if (seriesIds.isEmpty) return {};
 
     try {
-      // NOTA: Supabase/PostgREST limita di default le risposte a 1000 righe
-      // (non configurabile lato client, solo lato progetto). Con la
-      // libreria attuale (~100 film/serie totali) non è un problema
-      // osservabile. Se in futuro un utente avesse migliaia di episodi
-      // visti distribuiti su molte serie, questa query potrebbe troncare
-      // silenziosamente il risultato oltre le 1000 righe: in quel caso
-      // paginare con `.range()` (già usato altrove nel progetto) finché
-      // il numero di righe ricevute non è più uguale al totale atteso.
-      // Non implementato preventivamente ora per non aggiungere complessità
-      // non necessaria al volume attuale.
-      final response = await _supabase
-          .from('watched_episodes')
-          .select('series_id')
-          .eq('user_id', userId)
-          .inFilter('series_id', seriesIds);
+      // Conteggio via RPC Postgres `get_watched_episode_counts` (GROUP BY
+      // lato server, una riga per serie) invece di scaricare una riga per
+      // episodio e contare in Dart. La versione precedente (select raw +
+      // conteggio client-side) troncava silenziosamente oltre le 1000 righe
+      // di default di PostgREST — bug reale confermato con un utente che ha
+      // 7895 episodi visti: molte serie "Terminate"/"In pari" ricadevano in
+      // "In visione" per conteggio sottostimato. La RPC ritorna sempre al
+      // massimo una riga per serie in `seriesIds` (mai vicina al limite),
+      // e filtra internamente per `auth.uid()` — il parametro `userId` resta
+      // nella firma solo per compatibilità con l'interfaccia esistente, non
+      // viene più usato in questa implementazione.
+      final response = await _supabase.rpc(
+        'get_watched_episode_counts',
+        params: {'p_series_ids': seriesIds},
+      );
 
       final counts = <int, int>{};
-      for (final row in response) {
-        final seriesId = row['series_id'] as int;
-        counts[seriesId] = (counts[seriesId] ?? 0) + 1;
+      for (final row in response as List) {
+        final seriesId = (row['series_id'] as num).toInt();
+        final watchedCount = (row['watched_count'] as num).toInt();
+        counts[seriesId] = watchedCount;
       }
       return counts;
     } on PostgrestException catch (e) {
