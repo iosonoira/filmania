@@ -108,6 +108,40 @@ Future<int> markSeriesDroppedBulk(
   return failureCount;
 }
 
+/// Marks every TV series in [items] as "watch later" ("Guarda più tardi"),
+/// moving them out of the "watching"/"up to date"/"completed" tabs the same
+/// way [markSeriesDroppedBulk] does for dropped series — see
+/// [TvSeriesWatchStatus.watchLater] and its priority handling in
+/// `categorizedTvSeries`.
+///
+/// Each item is applied independently: a failure on one item is caught so
+/// it doesn't abort the rest of the batch. Returns the number of items
+/// that failed, so the caller can surface an error toast.
+Future<int> markSeriesWatchLaterBulk(
+  WidgetRef ref, {
+  required List<MediaSelectionItem> items,
+  required bool isWatchLater,
+}) async {
+  final user = ref.read(authStateProvider).value;
+  if (user == null) return items.length;
+  final repo = ref.read(watchedRepositoryProvider);
+
+  var failureCount = 0;
+  for (final item in items) {
+    try {
+      await repo.markSeriesAsWatchLater(
+        userId: user.id,
+        seriesId: item.mediaId,
+        isWatchLater: isWatchLater,
+      );
+    } catch (_) {
+      failureCount++;
+    }
+  }
+  ref.invalidate(categorizedTvSeriesProvider);
+  return failureCount;
+}
+
 /// Marks every episode in [items] as watched, mirroring the per-episode
 /// logic in `WatchedEpisodeButton.toggleWatched`'s watched branch. Used by
 /// the episode list's multi-select action bar (Task 12) so bulk marking
