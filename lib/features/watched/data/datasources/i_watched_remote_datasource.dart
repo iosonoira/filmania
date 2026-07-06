@@ -55,6 +55,16 @@ abstract class IWatchedRemoteDataSource {
     required int seriesId,
   });
 
+  /// Ritorna il conteggio di episodi visti per ciascuna serie in [seriesIds],
+  /// in un'unica query invece di una chiamata per serie (evita l'N+1 verso
+  /// Supabase quando serve categorizzare molte serie in un colpo solo — vedi
+  /// `categorizedTvSeries`). Le serie senza episodi visti semplicemente non
+  /// compaiono come chiave nella mappa risultante: trattarle come conteggio 0.
+  Future<Map<int, int>> getWatchedEpisodesCountsForSeries({
+    required String userId,
+    required List<int> seriesIds,
+  });
+
   Future<void> markSeriesAsDropped({
     required String userId,
     required int seriesId,

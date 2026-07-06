@@ -1,36 +1,11 @@
 import 'dart:async';
 import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/core/utils/concurrency.dart';
 import '../../domain/entities/tvtime_raw_export.dart';
 import '../../domain/entities/tvtime_matched_data.dart';
 import '../../domain/entities/tvtime_import_progress.dart';
 import '../../domain/enums/tvtime_import_phase.dart';
 import 'tmdb_find_datasource.dart';
-
-/// Esegue N task con al massimo [concurrency] in volo contemporaneamente.
-/// Implementazione manuale (niente package esterni): non serve altro che
-/// una coda di Future limitata per il volume atteso (centinaia di item, non milioni).
-Future<List<R>> _mapWithConcurrency<T, R>(
-  List<T> items,
-  int concurrency,
-  Future<R> Function(T item) worker, {
-  void Function()? onEach,
-}) async {
-  final results = List<R?>.filled(items.length, null);
-  var nextIndex = 0;
-
-  Future<void> runWorker() async {
-    while (true) {
-      final i = nextIndex;
-      if (i >= items.length) return;
-      nextIndex++;
-      results[i] = await worker(items[i]);
-      onEach?.call();
-    }
-  }
-
-  await Future.wait(List.generate(concurrency, (_) => runWorker()));
-  return results.cast<R>();
-}
 
 class TvTimeMatchService {
   final TmdbFindDataSource _tmdb;
@@ -48,7 +23,7 @@ class TvTimeMatchService {
     final watchedMovies = raw.movies.where((m) => m.isWatched).toList();
     var moviesDone = 0;
     final matchedMoviesNullable =
-        await _mapWithConcurrency<dynamic, TvTimeMatchedMovie?>(
+        await mapWithConcurrency<dynamic, TvTimeMatchedMovie?>(
           watchedMovies,
           _concurrency,
           (m) async {
@@ -105,7 +80,7 @@ class TvTimeMatchService {
     final seriesIds = episodesBySeries.keys.toList();
     var seriesDone = 0;
     final matchedEpisodes = <TvTimeMatchedEpisode>[];
-    await _mapWithConcurrency<String, void>(
+    await mapWithConcurrency<String, void>(
       seriesIds,
       _concurrency,
       (seriesTvdbId) async {

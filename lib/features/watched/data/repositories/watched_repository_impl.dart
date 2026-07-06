@@ -236,6 +236,17 @@ class WatchedRepositoryImpl implements IWatchedRepository {
   }
 
   @override
+  Future<Map<int, int>> getWatchedEpisodesCountsForSeries({
+    required String userId,
+    required List<int> seriesIds,
+  }) async {
+    return _remoteDS.getWatchedEpisodesCountsForSeries(
+      userId: userId,
+      seriesIds: seriesIds,
+    );
+  }
+
+  @override
   Stream<List<String>> watchWatchedEpisodes(String userId, int seriesId) {
     return _remoteDS
         .watchWatchedEpisodes(userId, seriesId)

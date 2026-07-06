@@ -140,12 +140,17 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('watched_at', ascending: false)
-        .map(
-          (data) => data
+        .map((data) {
+          AppLogger.debug(
+            '[DIAG] watchUserWatchedItems emission: ${data.length} total '
+            'rows, mediaType=$mediaType, at ${DateTime.now()}',
+            tag: 'WatchedDS',
+          );
+          return data
               .where((json) => json['media_type'] == mediaType.name)
               .map((json) => WatchedItemDto.fromJson(json))
-              .toList(),
-        );
+              .toList();
+        });
   }
 
   @override
@@ -344,6 +349,53 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
     } catch (e) {
       AppLogger.error(
         'getWatchedEpisodesCount unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
+      throw const WatchedGenericFailure();
+    }
+  }
+
+  @override
+  Future<Map<int, int>> getWatchedEpisodesCountsForSeries({
+    required String userId,
+    required List<int> seriesIds,
+  }) async {
+    if (seriesIds.isEmpty) return {};
+
+    try {
+      // NOTA: Supabase/PostgREST limita di default le risposte a 1000 righe
+      // (non configurabile lato client, solo lato progetto). Con la
+      // libreria attuale (~100 film/serie totali) non è un problema
+      // osservabile. Se in futuro un utente avesse migliaia di episodi
+      // visti distribuiti su molte serie, questa query potrebbe troncare
+      // silenziosamente il risultato oltre le 1000 righe: in quel caso
+      // paginare con `.range()` (già usato altrove nel progetto) finché
+      // il numero di righe ricevute non è più uguale al totale atteso.
+      // Non implementato preventivamente ora per non aggiungere complessità
+      // non necessaria al volume attuale.
+      final response = await _supabase
+          .from('watched_episodes')
+          .select('series_id')
+          .eq('user_id', userId)
+          .inFilter('series_id', seriesIds);
+
+      final counts = <int, int>{};
+      for (final row in response) {
+        final seriesId = row['series_id'] as int;
+        counts[seriesId] = (counts[seriesId] ?? 0) + 1;
+      }
+      return counts;
+    } on PostgrestException catch (e) {
+      AppLogger.error(
+        'getWatchedEpisodesCountsForSeries failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
+      throw SupabaseWatchedFailure(e.message);
+    } catch (e) {
+      AppLogger.error(
+        'getWatchedEpisodesCountsForSeries unexpected',
         tag: 'WatchedDS',
         exception: e,
       );
