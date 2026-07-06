@@ -67,10 +67,7 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
 
   for (final item in watchLaterItems) {
     result.add(
-      CategorizedTvSeries(
-        series: item,
-        status: TvSeriesWatchStatus.watchLater,
-      ),
+      CategorizedTvSeries(series: item, status: TvSeriesWatchStatus.watchLater),
     );
   }
 
@@ -98,41 +95,37 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
   // (5, stessa convenzione già usata in tvtime_match_service.dart) invece
   // di un `for` con `await` sequenziale — era il secondo N+1 di questo
   // provider ed è quello che pesa di più (chiamata di rete esterna).
-  final categorized = await mapWithConcurrency(
-    activeItems,
-    5,
-    (item) async {
-      try {
-        final watchedCount = watchedCounts[item.mediaId] ?? 0;
+  final categorized = await mapWithConcurrency(activeItems, 5, (item) async {
+    try {
+      final watchedCount = watchedCounts[item.mediaId] ?? 0;
 
-        final seriesDetails = await ref.watch(
-          tvSeriesDetailsProvider(item.mediaId).future,
-        );
-        final totalEpisodes = seriesDetails.seasons
-            .where((s) => s.seasonNumber > 0)
-            .fold(0, (sum, s) => sum + s.episodeCount);
+      final seriesDetails = await ref.watch(
+        tvSeriesDetailsProvider(item.mediaId).future,
+      );
+      final totalEpisodes = seriesDetails.seasons
+          .where((s) => s.seasonNumber > 0)
+          .fold(0, (sum, s) => sum + s.episodeCount);
 
-        TvSeriesWatchStatus status;
-        if (watchedCount < totalEpisodes) {
-          status = TvSeriesWatchStatus.watching;
+      TvSeriesWatchStatus status;
+      if (watchedCount < totalEpisodes) {
+        status = TvSeriesWatchStatus.watching;
+      } else {
+        if (seriesDetails.status.toLowerCase() == 'ended' ||
+            seriesDetails.status.toLowerCase() == 'canceled') {
+          status = TvSeriesWatchStatus.completed;
         } else {
-          if (seriesDetails.status.toLowerCase() == 'ended' ||
-              seriesDetails.status.toLowerCase() == 'canceled') {
-            status = TvSeriesWatchStatus.completed;
-          } else {
-            status = TvSeriesWatchStatus.upToDate;
-          }
+          status = TvSeriesWatchStatus.upToDate;
         }
-
-        return CategorizedTvSeries(series: item, status: status);
-      } catch (e) {
-        return CategorizedTvSeries(
-          series: item,
-          status: TvSeriesWatchStatus.watching,
-        );
       }
-    },
-  );
+
+      return CategorizedTvSeries(series: item, status: status);
+    } catch (e) {
+      return CategorizedTvSeries(
+        series: item,
+        status: TvSeriesWatchStatus.watching,
+      );
+    }
+  });
 
   result.addAll(categorized);
   return result;
