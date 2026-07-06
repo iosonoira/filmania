@@ -12,6 +12,7 @@ part 'categorized_tv_series_provider.g.dart';
 enum TvSeriesWatchStatus {
   watching, // "In visione"
   upToDate, // "In pari"
+  watchLater, // "Guarda più tardi"
   completed, // "Terminate"
   dropped, // "Interrotte"
 }
@@ -42,11 +43,17 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
   // Le serie già marcate "interrotta" hanno priorità assoluta sul calcolo
   // automatico e non richiedono nessuna chiamata di rete: separate subito
   // dalle altre, che invece vanno arricchite con conteggio episodi + dettagli TMDB.
+  // Le serie "guarda più tardi" hanno la stessa ottimizzazione e la priorità
+  // subito dopo isDropped: l'utente ha scelto esplicitamente di rimandarle,
+  // il calcolo automatico non deve sovrascrivere questa scelta.
   final droppedItems = [];
+  final watchLaterItems = [];
   final activeItems = [];
   for (final item in watchedItems) {
     if (item.isDropped) {
       droppedItems.add(item);
+    } else if (item.isWatchLater) {
+      watchLaterItems.add(item);
     } else {
       activeItems.add(item);
     }
@@ -55,6 +62,15 @@ Future<List<CategorizedTvSeries>> categorizedTvSeries(Ref ref) async {
   for (final item in droppedItems) {
     result.add(
       CategorizedTvSeries(series: item, status: TvSeriesWatchStatus.dropped),
+    );
+  }
+
+  for (final item in watchLaterItems) {
+    result.add(
+      CategorizedTvSeries(
+        series: item,
+        status: TvSeriesWatchStatus.watchLater,
+      ),
     );
   }
 
