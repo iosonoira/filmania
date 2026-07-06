@@ -25,7 +25,9 @@ Future<UserStats?> userStats(Ref ref) async {
   String summarize(AsyncValue<List<WatchedItem>> value) =>
       value.value?.map((i) => '${i.mediaId}:${i.watchedAt}').join(',') ?? '';
 
-  final baselineMovies = summarize(ref.read(watchedItemsProvider(MediaType.movie)));
+  final baselineMovies = summarize(
+    ref.read(watchedItemsProvider(MediaType.movie)),
+  );
   ref.listen(watchedItemsProvider(MediaType.movie), (previous, next) {
     if (summarize(next) != baselineMovies) {
       ref.invalidateSelf();
