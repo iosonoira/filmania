@@ -62,4 +62,10 @@ abstract class IWatchedRepository {
     required int seriesId,
     required bool isDropped,
   });
+
+  Future<void> markSeriesAsWatchLater({
+    required String userId,
+    required int seriesId,
+    required bool isWatchLater,
+  });
 }

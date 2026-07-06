@@ -160,7 +160,11 @@ class WatchedRepositoryImpl implements IWatchedRepository {
       final totalRuntime =
           (watchedCount > 0 ? watchedCount : totalEpisodes) * avgRuntime;
 
-      // Mark as complete in watched_items
+      // Mark as complete in watched_items. isWatchLater is explicitly reset
+      // here (not left to the DTO default) because this is the single
+      // write path shared by both the per-episode toggle and the bulk
+      // "mark watched" action: any new episode watched must clear a
+      // previous "watch later" postponement.
       final seriesDto = WatchedItemDto(
         userId: userId,
         mediaId: seriesId,
@@ -169,11 +173,13 @@ class WatchedRepositoryImpl implements IWatchedRepository {
         posterPath: seriesPosterPath,
         watchedAt: DateTime.now(),
         runtimeMinutes: totalRuntime > 0 ? totalRuntime : null,
+        isWatchLater: false,
       );
       await _remoteDS.markAsWatched(seriesDto);
     } else {
       // Update the series item but don't mark as full runtime yet
-      // (or we could sum the episodes seen so far)
+      // (or we could sum the episodes seen so far). isWatchLater is
+      // explicitly reset here for the same reason as the branch above.
       final seriesDto = WatchedItemDto(
         userId: userId,
         mediaId: seriesId,
@@ -181,6 +187,7 @@ class WatchedRepositoryImpl implements IWatchedRepository {
         mediaType: MediaType.tv.name,
         posterPath: seriesPosterPath,
         watchedAt: DateTime.now(),
+        isWatchLater: false,
       );
       await _remoteDS.markAsWatched(seriesDto);
     }
@@ -266,6 +273,19 @@ class WatchedRepositoryImpl implements IWatchedRepository {
       userId: userId,
       seriesId: seriesId,
       isDropped: isDropped,
+    );
+  }
+
+  @override
+  Future<void> markSeriesAsWatchLater({
+    required String userId,
+    required int seriesId,
+    required bool isWatchLater,
+  }) {
+    return _remoteDS.markSeriesAsWatchLater(
+      userId: userId,
+      seriesId: seriesId,
+      isWatchLater: isWatchLater,
     );
   }
 }

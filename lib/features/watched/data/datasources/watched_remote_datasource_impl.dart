@@ -22,6 +22,7 @@ Table: watched_items
   - poster_path: text, nullable
   - watched_at:  timestamptz, default now()
   - is_dropped:  boolean, not null, default false
+  - is_watch_later: boolean, not null, default false
   - UNIQUE(user_id, media_id, media_type)
 
 Table: watched_episodes
@@ -426,6 +427,36 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
     } catch (e) {
       AppLogger.error(
         'markSeriesAsDropped unexpected',
+        tag: 'WatchedDS',
+        exception: e,
+      );
+      throw const WatchedGenericFailure();
+    }
+  }
+
+  @override
+  Future<void> markSeriesAsWatchLater({
+    required String userId,
+    required int seriesId,
+    required bool isWatchLater,
+  }) async {
+    try {
+      await _supabase
+          .from('watched_items')
+          .update({'is_watch_later': isWatchLater})
+          .eq('user_id', userId)
+          .eq('media_id', seriesId)
+          .eq('media_type', MediaType.tv.name);
+    } on PostgrestException catch (e) {
+      AppLogger.error(
+        'markSeriesAsWatchLater failed',
+        tag: 'WatchedDS',
+        exception: e,
+      );
+      throw SupabaseWatchedFailure(e.message);
+    } catch (e) {
+      AppLogger.error(
+        'markSeriesAsWatchLater unexpected',
         tag: 'WatchedDS',
         exception: e,
       );
