@@ -98,6 +98,7 @@ void main() {
               season: 1,
               episode: 1,
               isWatched: true,
+              special: false,
             ),
             TvTimeRawEpisodeRow(
               seriesTvdbId: '81189',
@@ -105,6 +106,7 @@ void main() {
               season: 1,
               episode: 2,
               isWatched: true,
+              special: false,
             ),
             TvTimeRawEpisodeRow(
               seriesTvdbId: '81189',
@@ -112,6 +114,7 @@ void main() {
               season: 2,
               episode: 1,
               isWatched: true,
+              special: false,
             ),
           ],
           lists: [],
@@ -149,6 +152,7 @@ void main() {
             season: 1,
             episode: 1,
             isWatched: true,
+            special: false,
           ),
           TvTimeRawEpisodeRow(
             seriesTvdbId: '81189',
@@ -156,6 +160,7 @@ void main() {
             season: 1,
             episode: 2,
             isWatched: false, // Non watched
+            special: false,
           ),
         ],
         lists: [],
@@ -186,6 +191,7 @@ void main() {
             season: 1,
             episode: 1,
             isWatched: true,
+            special: false,
           ),
         ],
         lists: [],
@@ -216,6 +222,7 @@ void main() {
             season: 1,
             episode: 1,
             isWatched: true,
+            special: false,
           ),
         ],
         lists: [],
@@ -243,6 +250,7 @@ void main() {
             season: 1,
             episode: 1,
             isWatched: true,
+            special: false,
           ),
         ],
         lists: [],

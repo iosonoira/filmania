@@ -122,4 +122,65 @@ void main() {
 
     expect(result.series, isEmpty);
   });
+
+  test(
+    'scarta la riga special quando collide con una regular entrambe watched',
+    () {
+      final zipBytes = _buildZip({
+        'tvtime-movies-2026-07-01.csv':
+            'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+        'tvtime-series-episodes-2026-07-01.csv':
+            'series_tvdb_id,title,season,episode,is_watched,watched_at,special\n'
+            '352408,Slime,1,1,true,2021-01-12T19:27:37Z,false\n'
+            '352408,Slime,1,1,true,2025-01-08T21:53:28Z,true\n',
+        'tvtime-lists-2026-07-01.csv':
+            'list_name,item_type,uuid,tvdb_id,name\n',
+      });
+
+      final result = parser.parse(zipBytes);
+
+      expect(result.episodes, hasLength(1));
+      expect(result.episodes.first.special, isFalse);
+      expect(result.episodes.first.watchedAt, '2021-01-12T19:27:37Z');
+    },
+  );
+
+  test('non deduplica se solo una delle due righe collidenti è watched', () {
+    final zipBytes = _buildZip({
+      'tvtime-movies-2026-07-01.csv':
+          'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+      'tvtime-series-episodes-2026-07-01.csv':
+          'series_tvdb_id,title,season,episode,is_watched,watched_at,special\n'
+          '352408,Slime,1,1,true,2021-01-12T19:27:37Z,false\n'
+          '352408,Slime,1,1,false,,true\n',
+      'tvtime-lists-2026-07-01.csv': 'list_name,item_type,uuid,tvdb_id,name\n',
+    });
+
+    final result = parser.parse(zipBytes);
+
+    expect(
+      result.episodes,
+      hasLength(2),
+    ); // nessuna collisione reale, entrambe tenute
+  });
+
+  test(
+    'parsifica special=false quando la colonna special è assente (retrocompatibilità)',
+    () {
+      final zipBytes = _buildZip({
+        'tvtime-movies-2026-07-01.csv':
+            'uuid,imdb_id,tvdb_id,title,is_watched,watched_at,created_at\n',
+        'tvtime-series-episodes-2026-07-01.csv':
+            'series_tvdb_id,title,season,episode,is_watched,watched_at\n'
+            '81189,Breaking Bad,1,1,true,2020-02-01T00:00:00Z\n',
+        'tvtime-lists-2026-07-01.csv':
+            'list_name,item_type,uuid,tvdb_id,name\n',
+      });
+
+      final result = parser.parse(zipBytes);
+
+      expect(result.episodes, hasLength(1));
+      expect(result.episodes.first.special, isFalse);
+    },
+  );
 }
