@@ -129,9 +129,82 @@ class TvTimeArchiveParser {
           season: season,
           episode: episode,
           isWatched: r['is_watched']?.trim().toLowerCase() == 'true',
+          special: (r['special'] ?? '').trim().toLowerCase() == 'true',
           watchedAt: (r['watched_at'] ?? '').isEmpty ? null : r['watched_at'],
         ),
       );
+    }
+    return _dedupeCollidingEpisodes(result);
+  }
+
+  /// Deduplica episodi che collidono sullo stesso `(seriesTvdbId, season,
+  /// episode)` con più righe `isWatched=true` — capita quando TV Time/TVDB
+  /// assegna lo stesso numero di stagione/episodio sia a un episodio
+  /// regolare sia a una entry "special" (recap/OVA/extra, `special=true`)
+  /// con un `tvdb_id` diverso. Non deduplicato, questo causa
+  /// `PostgrestException ... ON CONFLICT DO UPDATE ... affect row a second
+  /// time` sull'upsert `UNIQUE(user_id, series_id, season, episode)` in
+  /// `watched_episodes`.
+  ///
+  /// Regola (decisa esplicitamente, non un'euristica): quando una riga
+  /// regular (`special=false`) e una riga special (`special=true`) sono
+  /// entrambe `isWatched=true` per lo stesso slot, la riga regular vince
+  /// sempre — la special viene scartata e loggata.
+  ///
+  /// Caso limite non osservato in export reali ma gestito per non violare
+  /// comunque il vincolo Supabase: se un gruppo ha ≥2 righe watched=true e
+  /// NESSUNA di queste è regular (es. due entry special diverse collidono
+  /// tra loro), viene tenuta solo la prima riga watched incontrata nel CSV
+  /// e le altre vengono scartate e loggate.
+  List<TvTimeRawEpisodeRow> _dedupeCollidingEpisodes(
+    List<TvTimeRawEpisodeRow> rows,
+  ) {
+    final byKey = <String, List<TvTimeRawEpisodeRow>>{};
+    for (final row in rows) {
+      final key = '${row.seriesTvdbId}|${row.season}|${row.episode}';
+      byKey.putIfAbsent(key, () => []).add(row);
+    }
+
+    final result = <TvTimeRawEpisodeRow>[];
+    for (final group in byKey.values) {
+      final watchedCount = group.where((r) => r.isWatched).length;
+      if (watchedCount < 2) {
+        result.addAll(group);
+        continue;
+      }
+
+      final hasWatchedRegular = group.any((r) => r.isWatched && !r.special);
+      if (hasWatchedRegular) {
+        for (final row in group) {
+          if (row.isWatched && row.special) {
+            AppLogger.error(
+              'TvTime episodio special scartato per collisione season/episode '
+              'con una riga regular watched: series=${row.seriesTvdbId} '
+              'S${row.season}E${row.episode}',
+              tag: 'TvTimeParser',
+            );
+            continue;
+          }
+          result.add(row);
+        }
+      } else {
+        var firstWatchedKept = false;
+        for (final row in group) {
+          if (row.isWatched) {
+            if (firstWatchedKept) {
+              AppLogger.error(
+                'TvTime episodio scartato per collisione season/episode senza '
+                'riga regular disponibile: series=${row.seriesTvdbId} '
+                'S${row.season}E${row.episode}',
+                tag: 'TvTimeParser',
+              );
+              continue;
+            }
+            firstWatchedKept = true;
+          }
+          result.add(row);
+        }
+      }
     }
     return result;
   }
