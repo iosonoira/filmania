@@ -6,6 +6,7 @@ import '../../domain/entities/user_stats.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
+import '../../../watched/domain/entities/watched_item.dart';
 
 part 'user_stats_provider.g.dart';
 
@@ -14,9 +15,29 @@ Future<UserStats?> userStats(Ref ref) async {
   final user = ref.watch(authStateProvider).value;
   if (user == null) return null;
 
-  // React to changes in the watched lists to trigger a re-fetch of stats
-  ref.watch(watchedItemsProvider(MediaType.movie));
-  ref.watch(watchedItemsProvider(MediaType.tv));
+  // React to changes in the watched lists to trigger a re-fetch of stats,
+  // but only when the underlying data actually changed — the raw Supabase
+  // Realtime streams can emit a new List instance with identical content,
+  // which was causing this provider to re-run needlessly (Filmania backlog
+  // P2). provider.select() is not available on these generated family
+  // Stream providers in this Riverpod version (verified via `flutter
+  // analyze`), so we compare content manually instead.
+  String summarize(AsyncValue<List<WatchedItem>> value) =>
+      value.value?.map((i) => '${i.mediaId}:${i.watchedAt}').join(',') ?? '';
+
+  final baselineMovies = summarize(ref.read(watchedItemsProvider(MediaType.movie)));
+  ref.listen(watchedItemsProvider(MediaType.movie), (previous, next) {
+    if (summarize(next) != baselineMovies) {
+      ref.invalidateSelf();
+    }
+  });
+
+  final baselineTv = summarize(ref.read(watchedItemsProvider(MediaType.tv)));
+  ref.listen(watchedItemsProvider(MediaType.tv), (previous, next) {
+    if (summarize(next) != baselineTv) {
+      ref.invalidateSelf();
+    }
+  });
 
   final supabase = ref.watch(supabaseClientProvider);
   final response = await supabase.rpc(
