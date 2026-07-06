@@ -33,6 +33,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get dropped => 'Interrotte';
 
   @override
+  String get watchLater => 'Guarda più tardi';
+
+  @override
   String genericError(String error) {
     return 'Errore: $error';
   }
@@ -288,6 +291,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get dropSeriesAction => 'Interrompi';
+
+  @override
+  String get watchLaterAction => 'Guarda più tardi';
 
   @override
   String get markSelectedEpisodesWatchedAction => 'Segna come visti';

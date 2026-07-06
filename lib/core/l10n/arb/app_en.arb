@@ -8,6 +8,7 @@
   "upToDate": "Up to date",
   "completed": "Completed",
   "dropped": "Dropped",
+  "watchLater": "Watch later",
   "genericError": "Error: {error}",
   "@genericError": {
     "placeholders": {
@@ -116,6 +117,7 @@
   "toggleWatchedAction": "Mark as watched/unwatched",
   "markAsUnwatchedAction": "Mark as unwatched",
   "dropSeriesAction": "Drop series",
+  "watchLaterAction": "Watch later",
   "markSelectedEpisodesWatchedAction": "Mark as watched",
   "removeFromThisList": "Remove from this list",
   "noWatchlistsAvailableHint": "No watchlist available. Create one from a title's details page.",

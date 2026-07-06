@@ -146,6 +146,12 @@ abstract class AppLocalizations {
   /// **'Dropped'**
   String get dropped;
 
+  /// No description provided for @watchLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch later'**
+  String get watchLater;
+
   /// No description provided for @genericError.
   ///
   /// In en, this message translates to:
@@ -643,6 +649,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Drop series'**
   String get dropSeriesAction;
+
+  /// No description provided for @watchLaterAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch later'**
+  String get watchLaterAction;
 
   /// No description provided for @markSelectedEpisodesWatchedAction.
   ///

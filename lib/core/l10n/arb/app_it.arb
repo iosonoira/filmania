@@ -8,6 +8,7 @@
   "upToDate": "In pari",
   "completed": "Terminate",
   "dropped": "Interrotte",
+  "watchLater": "Guarda più tardi",
   "genericError": "Errore: {error}",
   "@genericError": {
     "placeholders": {
@@ -116,6 +117,7 @@
   "toggleWatchedAction": "Segna come visto/non visto",
   "markAsUnwatchedAction": "Segna come non visto",
   "dropSeriesAction": "Interrompi",
+  "watchLaterAction": "Guarda più tardi",
   "markSelectedEpisodesWatchedAction": "Segna come visti",
   "removeFromThisList": "Rimuovi dalla lista",
   "noWatchlistsAvailableHint": "Nessuna lista disponibile. Creane una dal dettaglio di un titolo.",
