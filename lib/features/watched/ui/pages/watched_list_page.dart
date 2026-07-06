@@ -115,7 +115,7 @@ class WatchedListPage extends ConsumerWidget {
     final l10n = ref.watch(appLocalizationsProvider);
 
     return DefaultTabController(
-      length: 4,
+      length: 5,
       child: Scaffold(
         backgroundColor: colors.background,
         appBar: AppBar(
@@ -130,6 +130,7 @@ class WatchedListPage extends ConsumerWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
+            isScrollable: true,
             indicatorColor: colors.primary,
             dividerColor: Colors.transparent,
             labelColor: colors.onSurfacePrimary,
@@ -137,6 +138,7 @@ class WatchedListPage extends ConsumerWidget {
             tabs: [
               Tab(text: l10n.watching),
               Tab(text: l10n.upToDate),
+              Tab(text: l10n.watchLater),
               Tab(text: l10n.completed),
               Tab(text: l10n.dropped),
             ],
@@ -155,6 +157,10 @@ class WatchedListPage extends ConsumerWidget {
                       .where((e) => e.status == TvSeriesWatchStatus.upToDate)
                       .map((e) => e.series)
                       .toList();
+                  final watchLater = items
+                      .where((e) => e.status == TvSeriesWatchStatus.watchLater)
+                      .map((e) => e.series)
+                      .toList();
                   final completed = items
                       .where((e) => e.status == TvSeriesWatchStatus.completed)
                       .map((e) => e.series)
@@ -168,6 +174,7 @@ class WatchedListPage extends ConsumerWidget {
                     children: [
                       _buildGrid(context, watching, colors, textTheme, l10n),
                       _buildGrid(context, upToDate, colors, textTheme, l10n),
+                      _buildGrid(context, watchLater, colors, textTheme, l10n),
                       _buildGrid(context, completed, colors, textTheme, l10n),
                       _buildGrid(context, dropped, colors, textTheme, l10n),
                     ],
@@ -221,6 +228,23 @@ class WatchedListPage extends ConsumerWidget {
                         ref,
                         items: selected.toList(),
                         isDropped: true,
+                      );
+                      if (!context.mounted) return;
+                      handleBulkSelectionResult<MediaSelectionItem>(
+                        context,
+                        ref,
+                        failureCount: failures,
+                      );
+                    },
+                  ),
+                  SelectionAction<MediaSelectionItem>(
+                    icon: Icons.watch_later_outlined,
+                    label: l10n.watchLaterAction,
+                    onPressed: (selected) async {
+                      final failures = await markSeriesWatchLaterBulk(
+                        ref,
+                        items: selected.toList(),
+                        isWatchLater: true,
                       );
                       if (!context.mounted) return;
                       handleBulkSelectionResult<MediaSelectionItem>(
