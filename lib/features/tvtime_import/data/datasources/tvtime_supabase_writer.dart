@@ -213,6 +213,7 @@ class TvTimeSupabaseWriter {
               'media_type': MediaType.tv.name,
               'poster_path': s.seriesPosterPath,
               'is_dropped': s.isDropped,
+              'is_watch_later': s.isWatchLater,
               if (s.watchedAt != null)
                 'watched_at': s.watchedAt!.toIso8601String(),
             },
