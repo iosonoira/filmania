@@ -15,5 +15,6 @@ abstract class WatchedItem with _$WatchedItem {
     required DateTime watchedAt,
     int? runtimeMinutes,
     @Default(false) bool isDropped,
+    @Default(false) bool isWatchLater,
   }) = _WatchedItem;
 }

@@ -19,6 +19,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
     @JsonKey(name: 'watched_at') DateTime? watchedAt,
     @JsonKey(name: 'runtime_minutes') int? runtimeMinutes,
     @JsonKey(name: 'is_dropped') @Default(false) bool isDropped,
+    @JsonKey(name: 'is_watch_later') @Default(false) bool isWatchLater,
   }) = _WatchedItemDto;
 
   factory WatchedItemDto.fromJson(Map<String, dynamic> json) =>
@@ -38,6 +39,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
       watchedAt: watchedAt ?? DateTime.now(),
       runtimeMinutes: runtimeMinutes,
       isDropped: isDropped,
+      isWatchLater: isWatchLater,
     );
   }
 
@@ -52,6 +54,7 @@ abstract class WatchedItemDto with _$WatchedItemDto {
       watchedAt: entity.watchedAt,
       runtimeMinutes: entity.runtimeMinutes,
       isDropped: entity.isDropped,
+      isWatchLater: entity.isWatchLater,
     );
   }
 }

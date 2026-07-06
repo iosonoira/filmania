@@ -19,6 +19,7 @@ _WatchedItemDto _$WatchedItemDtoFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['watched_at'] as String),
       runtimeMinutes: (json['runtime_minutes'] as num?)?.toInt(),
       isDropped: json['is_dropped'] as bool? ?? false,
+      isWatchLater: json['is_watch_later'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$WatchedItemDtoToJson(_WatchedItemDto instance) =>
@@ -32,4 +33,5 @@ Map<String, dynamic> _$WatchedItemDtoToJson(_WatchedItemDto instance) =>
       'watched_at': instance.watchedAt?.toIso8601String(),
       'runtime_minutes': instance.runtimeMinutes,
       'is_dropped': instance.isDropped,
+      'is_watch_later': instance.isWatchLater,
     };
