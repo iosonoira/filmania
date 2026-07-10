@@ -156,6 +156,8 @@
   },
   "watchedButtonLabelWatched": "Watched",
   "watchedButtonLabelUnwatched": "Mark as Watched",
+  "undoAction": "Undo",
+  "unwatchedSnackbarMessage": "Removed from your watched history.",
 
   "dataSection": "Data",
   "importTvTimeTitle": "Import from TV Time",

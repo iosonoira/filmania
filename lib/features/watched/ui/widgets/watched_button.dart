@@ -42,6 +42,46 @@ class WatchedButton extends ConsumerWidget {
 
     final isWatched = isWatchedAsync.value ?? false;
 
+    void refreshWatchedState() {
+      ref.invalidate(
+        isMediaWatchedProvider(mediaId: mediaId, mediaType: mediaType),
+      );
+      ref.invalidate(watchedItemsProvider(mediaType));
+      if (mediaType == MediaType.tv) {
+        ref.invalidate(watchedEpisodesProvider(mediaId));
+      }
+    }
+
+    Future<void> markWatched() async {
+      if (user == null) return;
+      final repo = ref.read(watchedRepositoryProvider);
+      await repo.markAsWatched(
+        WatchedItem(
+          id: '',
+          userId: user.id,
+          mediaId: mediaId,
+          mediaTitle: mediaTitle,
+          mediaType: mediaType,
+          posterPath: posterPath,
+          watchedAt: DateTime.now(),
+          runtimeMinutes: runtimeMinutes,
+        ),
+      );
+      refreshWatchedState();
+    }
+
+    Future<void> undoUnwatch() async {
+      try {
+        await markWatched();
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
+        }
+      }
+    }
+
     Future<void> toggleWatched() async {
       if (user == null) return;
       final repo = ref.read(watchedRepositoryProvider);
@@ -53,30 +93,20 @@ class WatchedButton extends ConsumerWidget {
             mediaId: mediaId,
             mediaType: mediaType,
           );
+          refreshWatchedState();
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.unwatchedSnackbarMessage),
+                action: SnackBarAction(
+                  label: l10n.undoAction,
+                  onPressed: () => undoUnwatch(),
+                ),
+              ),
+            );
+          }
         } else {
-          await repo.markAsWatched(
-            WatchedItem(
-              id: '',
-              userId: user.id,
-              mediaId: mediaId,
-              mediaTitle: mediaTitle,
-              mediaType: mediaType,
-              posterPath: posterPath,
-              watchedAt: DateTime.now(),
-              runtimeMinutes: runtimeMinutes,
-            ),
-          );
-        }
-        // Invalidate to refresh immediately
-        ref.invalidate(
-          isMediaWatchedProvider(mediaId: mediaId, mediaType: mediaType),
-        );
-
-        // Ensure the "Watched" page list refreshes
-        ref.invalidate(watchedItemsProvider(mediaType));
-
-        if (mediaType == MediaType.tv) {
-          ref.invalidate(watchedEpisodesProvider(mediaId));
+          await markWatched();
         }
       } catch (e) {
         if (context.mounted) {
@@ -88,34 +118,33 @@ class WatchedButton extends ConsumerWidget {
     }
 
     if (isIconOnly) {
+      // Visual badge stays 32x32 (unchanged look on poster overlays); the
+      // IconButton's own hit area is left at the platform default (min
+      // 48x48) so the tap target meets the project's accessibility rule
+      // without growing the visible circle.
       return IconButton(
         tooltip: isWatched
             ? l10n.watchedButtonLabelWatched
             : l10n.watchedButtonLabelUnwatched,
         padding: EdgeInsets.zero,
-        constraints: const BoxConstraints(
-          minWidth: 32,
-          minHeight: 32,
-          maxWidth: 32,
-          maxHeight: 32,
-        ),
-        style: IconButton.styleFrom(
-          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-          backgroundColor: hasBackground
-              ? (isWatched
-                    ? colors.primary.withValues(alpha: 0.8)
-                    : Colors.black.withValues(alpha: 0.3))
-              : Colors.transparent,
-          foregroundColor: (hasBackground || !isWatched)
-              ? Colors.white
-              : colors.primary,
-          minimumSize: const Size(32, 32),
-          fixedSize: const Size(32, 32),
-          padding: EdgeInsets.zero,
-        ),
-        icon: Icon(
-          isWatched ? Icons.visibility : Icons.visibility_outlined,
-          size: 18,
+        icon: Container(
+          width: 32,
+          height: 32,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: hasBackground
+                ? (isWatched
+                      ? colors.primary.withValues(alpha: 0.8)
+                      : Colors.black.withValues(alpha: 0.3))
+                : Colors.transparent,
+          ),
+          child: Icon(
+            isWatched ? Icons.visibility : Icons.visibility_outlined,
+            size: 18,
+            color: (hasBackground || !isWatched)
+                ? Colors.white
+                : colors.primary,
+          ),
         ),
         onPressed: toggleWatched,
       );

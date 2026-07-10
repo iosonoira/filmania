@@ -358,6 +358,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get watchedButtonLabelUnwatched => 'Mark as Watched';
 
   @override
+  String get undoAction => 'Undo';
+
+  @override
+  String get unwatchedSnackbarMessage => 'Removed from your watched history.';
+
+  @override
   String get dataSection => 'Data';
 
   @override

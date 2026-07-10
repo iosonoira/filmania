@@ -357,6 +357,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get watchedButtonLabelUnwatched => 'Segna come Visto';
 
   @override
+  String get undoAction => 'Annulla';
+
+  @override
+  String get unwatchedSnackbarMessage => 'Rimosso dalla cronologia visti.';
+
+  @override
   String get dataSection => 'Dati';
 
   @override

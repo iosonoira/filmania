@@ -156,6 +156,8 @@
   },
   "watchedButtonLabelWatched": "Visto",
   "watchedButtonLabelUnwatched": "Segna come Visto",
+  "undoAction": "Annulla",
+  "unwatchedSnackbarMessage": "Rimosso dalla cronologia visti.",
 
   "dataSection": "Dati",
   "importTvTimeTitle": "Importa da TV Time",

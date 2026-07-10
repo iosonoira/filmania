@@ -758,6 +758,18 @@ abstract class AppLocalizations {
   /// **'Mark as Watched'**
   String get watchedButtonLabelUnwatched;
 
+  /// No description provided for @undoAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Undo'**
+  String get undoAction;
+
+  /// No description provided for @unwatchedSnackbarMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from your watched history.'**
+  String get unwatchedSnackbarMessage;
+
   /// No description provided for @dataSection.
   ///
   /// In en, this message translates to:

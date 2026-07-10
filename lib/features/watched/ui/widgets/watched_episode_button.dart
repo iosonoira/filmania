@@ -44,6 +44,53 @@ class WatchedEpisodeButton extends ConsumerWidget {
 
     final isWatched = isWatchedAsync.value ?? false;
 
+    void refreshEpisodeState() {
+      // Invalidate both the episode status AND the series watched status
+      // since marking an episode might trigger marking the series as watched
+      ref.invalidate(
+        isEpisodeWatchedProvider(
+          seriesId: seriesId,
+          seasonNumber: seasonNumber,
+          episodeNumber: episodeNumber,
+        ),
+      );
+      // Also refresh the series progress stream if anyone is watching it
+      ref.invalidate(watchedEpisodesProvider(seriesId));
+      // Refreshes the eye icon on the series poster
+      ref.invalidate(
+        isMediaWatchedProvider(mediaId: seriesId, mediaType: MediaType.tv),
+      );
+      // Refreshes the list in the "Watched" page
+      ref.invalidate(watchedItemsProvider(MediaType.tv));
+    }
+
+    Future<void> markEpisodeWatched() async {
+      if (user == null) return;
+      final repo = ref.read(watchedRepositoryProvider);
+      await repo.markEpisodeAsWatched(
+        userId: user.id,
+        seriesId: seriesId,
+        seasonNumber: seasonNumber,
+        episodeNumber: episodeNumber,
+        seriesTitle: seriesTitle,
+        seriesPosterPath: seriesPosterPath,
+        runtimeMinutes: runtimeMinutes,
+      );
+      refreshEpisodeState();
+    }
+
+    Future<void> undoUnwatch() async {
+      try {
+        await markEpisodeWatched();
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
+        }
+      }
+    }
+
     Future<void> toggleWatched() async {
       if (user == null) return;
       final repo = ref.read(watchedRepositoryProvider);
@@ -56,38 +103,21 @@ class WatchedEpisodeButton extends ConsumerWidget {
             seasonNumber: seasonNumber,
             episodeNumber: episodeNumber,
           );
+          refreshEpisodeState();
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.unwatchedSnackbarMessage),
+                action: SnackBarAction(
+                  label: l10n.undoAction,
+                  onPressed: () => undoUnwatch(),
+                ),
+              ),
+            );
+          }
         } else {
-          await repo.markEpisodeAsWatched(
-            userId: user.id,
-            seriesId: seriesId,
-            seasonNumber: seasonNumber,
-            episodeNumber: episodeNumber,
-            seriesTitle: seriesTitle,
-            seriesPosterPath: seriesPosterPath,
-            runtimeMinutes: runtimeMinutes,
-          );
+          await markEpisodeWatched();
         }
-
-        // Invalidate both the episode status AND the series watched status
-        // since marking an episode might trigger marking the series as watched
-        ref.invalidate(
-          isEpisodeWatchedProvider(
-            seriesId: seriesId,
-            seasonNumber: seasonNumber,
-            episodeNumber: episodeNumber,
-          ),
-        );
-
-        // Also refresh the series progress stream if anyone is watching it
-        ref.invalidate(watchedEpisodesProvider(seriesId));
-
-        // Refreshes the eye icon on the series poster
-        ref.invalidate(
-          isMediaWatchedProvider(mediaId: seriesId, mediaType: MediaType.tv),
-        );
-
-        // Refreshes the list in the "Watched" page
-        ref.invalidate(watchedItemsProvider(MediaType.tv));
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(
