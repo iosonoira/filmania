@@ -32,6 +32,20 @@
 Post this exact SQL block to the user, to be pasted and run in the Supabase SQL Editor:
 
 ```sql
+-- Drop pre-existing row-level triggers that also called
+-- recalculate_user_stats (stats_on_watched_items_change /
+-- stats_on_watched_episodes_change, functions
+-- trigger_update_stats_from_watched_items/_episodes). Found live on this
+-- database during Task 1 execution (created outside this plan, before
+-- this session) — they duplicate the statement-level triggers below and
+-- would cause double recalculation (correctness + the exact O(n) bulk
+-- cost this design exists to avoid) if left in place. Idempotent: safe
+-- to re-run even if they don't exist.
+DROP TRIGGER IF EXISTS stats_on_watched_items_change ON watched_items;
+DROP TRIGGER IF EXISTS stats_on_watched_episodes_change ON watched_episodes;
+DROP FUNCTION IF EXISTS trigger_update_stats_from_watched_items();
+DROP FUNCTION IF EXISTS trigger_update_stats_from_watched_episodes();
+
 -- Statement-level trigger functions: recalculate user_stats for every
 -- distinct user_id touched by an INSERT/UPDATE/DELETE statement on
 -- watched_items or watched_episodes. Statement-level (not row-level) so
@@ -68,8 +82,17 @@ $$ LANGUAGE plpgsql;
 
 -- watched_items
 DROP TRIGGER IF EXISTS watched_items_refresh_stats_iu ON watched_items;
-CREATE TRIGGER watched_items_refresh_stats_iu
-AFTER INSERT OR UPDATE ON watched_items
+DROP TRIGGER IF EXISTS watched_items_refresh_stats_i ON watched_items;
+DROP TRIGGER IF EXISTS watched_items_refresh_stats_u ON watched_items;
+
+CREATE TRIGGER watched_items_refresh_stats_i
+AFTER INSERT ON watched_items
+REFERENCING NEW TABLE AS new_rows
+FOR EACH STATEMENT
+EXECUTE FUNCTION trg_refresh_user_stats_on_insert_update();
+
+CREATE TRIGGER watched_items_refresh_stats_u
+AFTER UPDATE ON watched_items
 REFERENCING NEW TABLE AS new_rows
 FOR EACH STATEMENT
 EXECUTE FUNCTION trg_refresh_user_stats_on_insert_update();
@@ -83,8 +106,17 @@ EXECUTE FUNCTION trg_refresh_user_stats_on_delete();
 
 -- watched_episodes
 DROP TRIGGER IF EXISTS watched_episodes_refresh_stats_iu ON watched_episodes;
-CREATE TRIGGER watched_episodes_refresh_stats_iu
-AFTER INSERT OR UPDATE ON watched_episodes
+DROP TRIGGER IF EXISTS watched_episodes_refresh_stats_i ON watched_episodes;
+DROP TRIGGER IF EXISTS watched_episodes_refresh_stats_u ON watched_episodes;
+
+CREATE TRIGGER watched_episodes_refresh_stats_i
+AFTER INSERT ON watched_episodes
+REFERENCING NEW TABLE AS new_rows
+FOR EACH STATEMENT
+EXECUTE FUNCTION trg_refresh_user_stats_on_insert_update();
+
+CREATE TRIGGER watched_episodes_refresh_stats_u
+AFTER UPDATE ON watched_episodes
 REFERENCING NEW TABLE AS new_rows
 FOR EACH STATEMENT
 EXECUTE FUNCTION trg_refresh_user_stats_on_insert_update();
@@ -96,6 +128,10 @@ REFERENCING OLD TABLE AS old_rows
 FOR EACH STATEMENT
 EXECUTE FUNCTION trg_refresh_user_stats_on_delete();
 ```
+
+> **Correction applied 2026-07-10:** Postgres rejects a transition table on a trigger bound to more than one event (`ERROR: 0A000: transition tables cannot be specified for triggers with more than one event`). `AFTER INSERT OR UPDATE ... REFERENCING NEW TABLE` must be split into two single-event triggers (`_i` and `_u`) sharing the same function. Applied and verified against the live Supabase instance.
+>
+> **Discovery during Task 1 (2026-07-10):** `information_schema.triggers` showed pre-existing row-level triggers `stats_on_watched_items_change` / `stats_on_watched_episodes_change` (functions `trigger_update_stats_from_watched_items`/`_episodes`, both `FOR EACH ROW`, both calling `recalculate_user_stats(NEW.user_id)`/`(OLD.user_id)` on every event) — created by the user prior to this session, contradicting the original diagnosis text ("Nessun trigger... verificato"). This means `user_stats` was NOT actually permanently frozen; it *was* refreshing after every write, just one row at a time — exactly the O(n) bulk-import cost this design was meant to avoid. Resolution: dropped the old row-level triggers (`DROP TRIGGER stats_on_watched_items_change ON watched_items;` / same for episodes) and kept only the new statement-level ones. Verified via `information_schema.triggers`: exactly 6 rows remain (the new INSERT/UPDATE/DELETE × 2 tables), no duplication. The `runtime_minutes` NULL bug (Tasks 2-4) is unaffected by this — independent root cause.
 
 - [ ] **Step 2: User confirms the SQL ran without errors**
 
@@ -112,7 +148,7 @@ WHERE event_object_table IN ('watched_items', 'watched_episodes')
 ORDER BY event_object_table, trigger_name;
 ```
 
-Expected: 4 rows (2 per table — one `INSERT`+`UPDATE` combined row shows as two entries by `event_manipulation`, so actually 6 rows: INSERT, UPDATE, DELETE × 2 tables). Confirm all 4 trigger names from Step 1 appear.
+Expected: 6 rows (INSERT, UPDATE, DELETE × 2 tables). Confirm all 6 trigger names from Step 1 appear (`_i`, `_u`, `_d` per table).
 
 - [ ] **Step 4: Functional smoke test**
 
@@ -671,6 +707,8 @@ WHERE user_id = '<your-user-id>';
 ```
 
 Expected: `null_runtime` close to 0 (some items may legitimately have no TMDB runtime data — acceptable, not a regression).
+
+> **Result (2026-07-10):** `watched_items`: 66/931 NULL (7.1%). `watched_episodes`: 3877/7933 NULL (48.9%) — far above "close to 0". Investigated: re-ran the import a second time to rule out a transient rate-limit cause (retry exhaustion under `TmdbDetailsDataSource`'s max-3-attempt backoff); the NULL count was byte-identical after the second run (3877/7933), confirming this is TMDB's `episode_run_time` field genuinely being empty/absent for a large fraction of these series, not a recoverable failure in our fetch/retry logic. Average runtime among episodes that DO have data: ~25.8 min/episode (104820 min / 4056 populated rows) — a normal, plausible value, confirming the fix's *arithmetic* is correct; the gap is upstream data coverage, not a computation bug. User accepted this as a known TMDB limitation, out of scope to fix further in this plan.
 
 - [ ] **Step 4: Verify the profile stats page**
 
