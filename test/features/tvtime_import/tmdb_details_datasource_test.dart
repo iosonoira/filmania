@@ -59,6 +59,43 @@ class _FakeAdapter implements HttpClientAdapter {
   }
 }
 
+/// Simula un endpoint TMDB che risponde 429 alla prima chiamata (qualsiasi
+/// path) e 200 con un payload movie valido alla seconda, per esercitare
+/// davvero il ramo di retry/backoff di `TmdbDetailsDataSource._get`.
+class _FlakyMovieAdapter implements HttpClientAdapter {
+  int callCount = 0;
+
+  @override
+  void close({bool force = false}) {}
+
+  @override
+  Future<ResponseBody> fetch(
+    RequestOptions options,
+    Stream<List<int>>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
+    callCount++;
+
+    if (callCount == 1) {
+      return ResponseBody.fromString(
+        '{}',
+        429,
+        headers: {
+          Headers.contentTypeHeader: [Headers.jsonContentType],
+        },
+      );
+    }
+
+    return ResponseBody.fromString(
+      '{"id":603,"runtime":136}',
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
+  }
+}
+
 class _EmptyRuntimeAdapter implements HttpClientAdapter {
   @override
   void close({bool force = false}) {}
@@ -119,14 +156,14 @@ void main() {
 
     test('ritenta su 429 e alla fine ottiene il runtime', () async {
       final dio = Dio(BaseOptions(baseUrl: 'https://api.themoviedb.org/3/'));
-      dio.httpClientAdapter = _FakeAdapter();
+      final adapter = _FlakyMovieAdapter();
+      dio.httpClientAdapter = adapter;
       final ds = TmdbDetailsDataSource(dio);
 
-      final runtime = await ds.getMovieRuntime(429999);
+      final runtime = await ds.getMovieRuntime(603);
 
-      // path 'movie/429999' non contiene '429test', quindi niente 429
-      // simulato: verifica solo che la chiamata normale funzioni.
       expect(runtime, 136);
+      expect(adapter.callCount, 2);
     });
   });
 }
