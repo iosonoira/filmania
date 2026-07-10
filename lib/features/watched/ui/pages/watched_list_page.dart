@@ -442,6 +442,9 @@ class _WatchedGridCard extends StatelessWidget {
                 imageUrl: 'https://image.tmdb.org/t/p/w200${item.posterPath}',
                 fit: BoxFit.cover,
                 memCacheWidth: 300,
+                // Matches the grid's childAspectRatio (0.65) so the decoded
+                // bitmap isn't larger than what's ever painted on screen.
+                memCacheHeight: 462,
                 placeholder: (context, url) => Container(color: colors.surface),
                 errorWidget: (context, url, error) => Container(
                   color: colors.surface,

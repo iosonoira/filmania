@@ -4,6 +4,7 @@ import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../data/repositories/watched_repository_impl.dart';
 import '../providers/watched_providers.dart';
@@ -82,7 +83,13 @@ class WatchedEpisodeButton extends ConsumerWidget {
     Future<void> undoUnwatch() async {
       try {
         await markEpisodeWatched();
-      } catch (e) {
+      } catch (e, stack) {
+        AppLogger.error(
+          'undoUnwatch failed',
+          tag: 'WatchedEpisodeButton',
+          exception: e,
+          stackTrace: stack,
+        );
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
@@ -118,7 +125,13 @@ class WatchedEpisodeButton extends ConsumerWidget {
         } else {
           await markEpisodeWatched();
         }
-      } catch (e) {
+      } catch (e, stack) {
+        AppLogger.error(
+          'toggleWatched failed',
+          tag: 'WatchedEpisodeButton',
+          exception: e,
+          stackTrace: stack,
+        );
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
@@ -147,18 +160,13 @@ class WatchedEpisodeButton extends ConsumerWidget {
       );
     }
 
-    return OutlinedButton.icon(
+    return FilledButton.tonalIcon(
       onPressed: toggleWatched,
-      style: OutlinedButton.styleFrom(
+      style: FilledButton.styleFrom(
         foregroundColor: isWatched ? colors.primary : colors.onSurfacePrimary,
         backgroundColor: isWatched
-            ? colors.primary.withValues(alpha: 0.1)
-            : Colors.transparent,
-        side: BorderSide(
-          color: isWatched
-              ? colors.primary.withValues(alpha: 0.5)
-              : colors.onSurfaceSecondary.withValues(alpha: 0.3),
-        ),
+            ? colors.primary.withValues(alpha: 0.14)
+            : colors.onSurfaceSecondary.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,

@@ -4,6 +4,7 @@ import '../../../../core/domain/enums/media_type.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../domain/entities/watched_item.dart';
 import '../providers/watched_providers.dart';
@@ -73,7 +74,13 @@ class WatchedButton extends ConsumerWidget {
     Future<void> undoUnwatch() async {
       try {
         await markWatched();
-      } catch (e) {
+      } catch (e, stack) {
+        AppLogger.error(
+          'undoUnwatch failed',
+          tag: 'WatchedButton',
+          exception: e,
+          stackTrace: stack,
+        );
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
@@ -108,7 +115,13 @@ class WatchedButton extends ConsumerWidget {
         } else {
           await markWatched();
         }
-      } catch (e) {
+      } catch (e, stack) {
+        AppLogger.error(
+          'toggleWatched failed',
+          tag: 'WatchedButton',
+          exception: e,
+          stackTrace: stack,
+        );
         if (context.mounted) {
           ScaffoldMessenger.of(
             context,
@@ -150,14 +163,13 @@ class WatchedButton extends ConsumerWidget {
       );
     }
 
-    return OutlinedButton.icon(
+    return FilledButton.tonalIcon(
       onPressed: toggleWatched,
-      style: OutlinedButton.styleFrom(
-        foregroundColor: isWatched ? colors.primary : colors.primary,
+      style: FilledButton.styleFrom(
+        foregroundColor: colors.primary,
         backgroundColor: isWatched
-            ? colors.primary.withValues(alpha: 0.1)
-            : Colors.transparent,
-        side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
+            ? colors.primary.withValues(alpha: 0.15)
+            : colors.onSurfaceSecondary.withValues(alpha: 0.08),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.md,
