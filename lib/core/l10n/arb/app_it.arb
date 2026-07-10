@@ -130,6 +130,27 @@
       }
     }
   },
+  "confirm": "Conferma",
+  "markUnwatchedConfirmTitle": "Segnare come non visti?",
+  "markUnwatchedConfirmMessage": "{count} elementi verranno rimossi dalla cronologia visti.",
+  "@markUnwatchedConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dropSeriesConfirmTitle": "Interrompere la serie?",
+  "dropSeriesConfirmMessage": "{count} serie verranno segnate come interrotte.",
+  "@dropSeriesConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "watchedButtonLabelWatched": "Visto",
+  "watchedButtonLabelUnwatched": "Segna come Visto",
 
   "dataSection": "Dati",
   "importTvTimeTitle": "Importa da TV Time",

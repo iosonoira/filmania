@@ -315,6 +315,31 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get markUnwatchedConfirmTitle => 'Mark as unwatched?';
+
+  @override
+  String markUnwatchedConfirmMessage(int count) {
+    return '$count items will be removed from your watched history.';
+  }
+
+  @override
+  String get dropSeriesConfirmTitle => 'Drop series?';
+
+  @override
+  String dropSeriesConfirmMessage(int count) {
+    return '$count series will be marked as dropped.';
+  }
+
+  @override
+  String get watchedButtonLabelWatched => 'Watched';
+
+  @override
+  String get watchedButtonLabelUnwatched => 'Mark as Watched';
+
+  @override
   String get dataSection => 'Data';
 
   @override

@@ -10,6 +10,7 @@ import '../providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../domain/entities/watched_item.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
@@ -88,6 +89,16 @@ class WatchedListPage extends ConsumerWidget {
                   icon: Icons.visibility_off_rounded,
                   label: l10n.markAsUnwatchedAction,
                   onPressed: (selected) async {
+                    final confirmed = await showConfirmDialog(
+                      context,
+                      title: l10n.markUnwatchedConfirmTitle,
+                      message: l10n.markUnwatchedConfirmMessage(
+                        selected.length,
+                      ),
+                      confirmLabel: l10n.markAsUnwatchedAction,
+                      cancelLabel: l10n.cancel,
+                    );
+                    if (!confirmed || !context.mounted) return;
                     final failures = await toggleWatchedBulk(
                       ref,
                       items: selected.toList(),
@@ -208,6 +219,16 @@ class WatchedListPage extends ConsumerWidget {
                     icon: Icons.visibility_off_rounded,
                     label: l10n.markAsUnwatchedAction,
                     onPressed: (selected) async {
+                      final confirmed = await showConfirmDialog(
+                        context,
+                        title: l10n.markUnwatchedConfirmTitle,
+                        message: l10n.markUnwatchedConfirmMessage(
+                          selected.length,
+                        ),
+                        confirmLabel: l10n.markAsUnwatchedAction,
+                        cancelLabel: l10n.cancel,
+                      );
+                      if (!confirmed || !context.mounted) return;
                       final failures = await toggleWatchedBulk(
                         ref,
                         items: selected.toList(),
@@ -224,6 +245,16 @@ class WatchedListPage extends ConsumerWidget {
                     icon: Icons.stop_circle_outlined,
                     label: l10n.dropSeriesAction,
                     onPressed: (selected) async {
+                      final confirmed = await showConfirmDialog(
+                        context,
+                        title: l10n.dropSeriesConfirmTitle,
+                        message: l10n.dropSeriesConfirmMessage(
+                          selected.length,
+                        ),
+                        confirmLabel: l10n.dropSeriesAction,
+                        cancelLabel: l10n.cancel,
+                      );
+                      if (!confirmed || !context.mounted) return;
                       final failures = await markSeriesDroppedBulk(
                         ref,
                         items: selected.toList(),

@@ -686,6 +686,48 @@ abstract class AppLocalizations {
   /// **'{count} items not updated'**
   String selectionActionPartialFailure(int count);
 
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @markUnwatchedConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as unwatched?'**
+  String get markUnwatchedConfirmTitle;
+
+  /// No description provided for @markUnwatchedConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items will be removed from your watched history.'**
+  String markUnwatchedConfirmMessage(int count);
+
+  /// No description provided for @dropSeriesConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drop series?'**
+  String get dropSeriesConfirmTitle;
+
+  /// No description provided for @dropSeriesConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} series will be marked as dropped.'**
+  String dropSeriesConfirmMessage(int count);
+
+  /// No description provided for @watchedButtonLabelWatched.
+  ///
+  /// In en, this message translates to:
+  /// **'Watched'**
+  String get watchedButtonLabelWatched;
+
+  /// No description provided for @watchedButtonLabelUnwatched.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark as Watched'**
+  String get watchedButtonLabelUnwatched;
+
   /// No description provided for @dataSection.
   ///
   /// In en, this message translates to:

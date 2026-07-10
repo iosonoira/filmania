@@ -314,6 +314,31 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get confirm => 'Conferma';
+
+  @override
+  String get markUnwatchedConfirmTitle => 'Segnare come non visti?';
+
+  @override
+  String markUnwatchedConfirmMessage(int count) {
+    return '$count elementi verranno rimossi dalla cronologia visti.';
+  }
+
+  @override
+  String get dropSeriesConfirmTitle => 'Interrompere la serie?';
+
+  @override
+  String dropSeriesConfirmMessage(int count) {
+    return '$count serie verranno segnate come interrotte.';
+  }
+
+  @override
+  String get watchedButtonLabelWatched => 'Visto';
+
+  @override
+  String get watchedButtonLabelUnwatched => 'Segna come Visto';
+
+  @override
   String get dataSection => 'Dati';
 
   @override

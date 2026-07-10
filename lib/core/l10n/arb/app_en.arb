@@ -130,6 +130,27 @@
       }
     }
   },
+  "confirm": "Confirm",
+  "markUnwatchedConfirmTitle": "Mark as unwatched?",
+  "markUnwatchedConfirmMessage": "{count} items will be removed from your watched history.",
+  "@markUnwatchedConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dropSeriesConfirmTitle": "Drop series?",
+  "dropSeriesConfirmMessage": "{count} series will be marked as dropped.",
+  "@dropSeriesConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "watchedButtonLabelWatched": "Watched",
+  "watchedButtonLabelUnwatched": "Mark as Watched",
 
   "dataSection": "Data",
   "importTvTimeTitle": "Import from TV Time",

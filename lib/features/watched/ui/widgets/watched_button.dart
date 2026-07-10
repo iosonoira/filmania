@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
@@ -31,6 +32,7 @@ class WatchedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = AppColors.of(context);
+    final l10n = ref.watch(appLocalizationsProvider);
     final user = ref.watch(authStateProvider).value;
 
     // FutureProvider for checking watched status
@@ -78,9 +80,9 @@ class WatchedButton extends ConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Errore durante l\'aggiornamento.')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
         }
       }
     }
@@ -135,7 +137,9 @@ class WatchedButton extends ConsumerWidget {
         size: 18,
       ),
       label: Text(
-        isWatched ? 'Visto' : 'Segna come Visto',
+        isWatched
+            ? l10n.watchedButtonLabelWatched
+            : l10n.watchedButtonLabelUnwatched,
         style: const TextStyle(fontWeight: FontWeight.w600),
       ),
     );
