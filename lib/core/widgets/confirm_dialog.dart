@@ -20,10 +20,7 @@ Future<bool> showConfirmDialog(
       title: Text(title),
       content: Text(message),
       actions: [
-        TextButton(
-          onPressed: () => ctx.pop(false),
-          child: Text(cancelLabel),
-        ),
+        TextButton(onPressed: () => ctx.pop(false), child: Text(cancelLabel)),
         TextButton(
           onPressed: () => ctx.pop(true),
           style: TextButton.styleFrom(foregroundColor: AppColors.error),

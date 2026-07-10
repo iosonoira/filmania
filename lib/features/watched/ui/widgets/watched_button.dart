@@ -89,6 +89,9 @@ class WatchedButton extends ConsumerWidget {
 
     if (isIconOnly) {
       return IconButton(
+        tooltip: isWatched
+            ? l10n.watchedButtonLabelWatched
+            : l10n.watchedButtonLabelUnwatched,
         padding: EdgeInsets.zero,
         constraints: const BoxConstraints(
           minWidth: 32,

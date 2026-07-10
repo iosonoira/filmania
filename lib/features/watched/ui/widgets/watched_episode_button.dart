@@ -99,6 +99,9 @@ class WatchedEpisodeButton extends ConsumerWidget {
 
     if (isIconOnly) {
       return IconButton(
+        tooltip: isWatched
+            ? l10n.watchedButtonLabelWatched
+            : l10n.watchedButtonLabelUnwatched,
         style: IconButton.styleFrom(
           backgroundColor: isWatched
               ? colors.primary.withValues(alpha: 0.14)

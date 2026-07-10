@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
@@ -51,6 +52,7 @@ class WatchedListPage extends ConsumerWidget {
         ),
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: colors.onSurfacePrimary),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -142,6 +144,7 @@ class WatchedListPage extends ConsumerWidget {
           ),
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: colors.onSurfacePrimary),
+            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             onPressed: () => Navigator.of(context).pop(),
           ),
           bottom: TabBar(
@@ -282,9 +285,7 @@ class WatchedListPage extends ConsumerWidget {
                       final confirmed = await showConfirmDialog(
                         context,
                         title: l10n.dropSeriesConfirmTitle,
-                        message: l10n.dropSeriesConfirmMessage(
-                          selected.length,
-                        ),
+                        message: l10n.dropSeriesConfirmMessage(selected.length),
                         confirmLabel: l10n.dropSeriesAction,
                         cancelLabel: l10n.cancel,
                       );
@@ -409,10 +410,19 @@ class _WatchedGridCard extends StatelessWidget {
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppSpacing.radius),
+        clipBehavior: Clip.hardEdge,
         child: item.posterPath != null
-            ? Image.network(
-                'https://image.tmdb.org/t/p/w200${item.posterPath}',
+            ? CachedNetworkImage(
+                imageUrl: 'https://image.tmdb.org/t/p/w200${item.posterPath}',
                 fit: BoxFit.cover,
+                memCacheWidth: 300,
+                placeholder: (context, url) => Container(color: colors.surface),
+                errorWidget: (context, url, error) => Container(
+                  color: colors.surface,
+                  child: Center(
+                    child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
+                  ),
+                ),
               )
             : Container(
                 color: colors.surface,
