@@ -11,6 +11,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../domain/entities/watched_item.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
+import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
@@ -68,8 +69,10 @@ class WatchedListPage extends ConsumerWidget {
                 emptyMessage: l10n.emptyWatchedMovies,
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) =>
-                  Center(child: Text(l10n.genericError(err.toString()))),
+              error: (err, stack) => AppErrorView(
+                error: err,
+                onRetry: () => ref.invalidate(watchedItemsProvider(mediaType)),
+              ),
             ),
             SelectionActionBar<MediaSelectionItem>(
               closeTooltip: l10n.closeSelection,
@@ -229,8 +232,10 @@ class WatchedListPage extends ConsumerWidget {
                   );
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) =>
-                    Center(child: Text(l10n.genericError(err.toString()))),
+                error: (err, stack) => AppErrorView(
+                  error: err,
+                  onRetry: () => ref.invalidate(categorizedTvSeriesProvider),
+                ),
               ),
               SelectionActionBar<MediaSelectionItem>(
                 closeTooltip: l10n.closeSelection,

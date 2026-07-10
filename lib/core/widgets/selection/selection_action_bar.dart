@@ -78,13 +78,32 @@ class SelectionActionBar<T> extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const Spacer(),
                   for (final action in actions)
-                    Tooltip(
-                      message: action.label,
-                      child: IconButton(
-                        icon: Icon(action.icon),
-                        onPressed: () => action.onPressed(selected),
+                    Expanded(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(AppSpacing.radius),
+                        onTap: () => action.onPressed(selected),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: AppSpacing.xs,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(action.icon, color: colors.onSurfacePrimary),
+                              const SizedBox(height: 2),
+                              Text(
+                                action.label,
+                                style: textTheme.labelSmall?.copyWith(
+                                  color: colors.onSurfacePrimary,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                 ],
