@@ -158,11 +158,41 @@ abstract class AppLocalizations {
   /// **'Error: {error}'**
   String genericError(String error);
 
-  /// No description provided for @emptySection.
+  /// No description provided for @emptyWatching.
   ///
   /// In en, this message translates to:
-  /// **'No items in this section.'**
-  String get emptySection;
+  /// **'Nothing in progress. Start a series to see it here.'**
+  String get emptyWatching;
+
+  /// No description provided for @emptyUpToDate.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up here.'**
+  String get emptyUpToDate;
+
+  /// No description provided for @emptyWatchLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing saved for later yet.'**
+  String get emptyWatchLater;
+
+  /// No description provided for @emptyCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed series yet.'**
+  String get emptyCompleted;
+
+  /// No description provided for @emptyDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t dropped any series.'**
+  String get emptyDropped;
+
+  /// No description provided for @emptyWatchedMovies.
+  ///
+  /// In en, this message translates to:
+  /// **'No watched movies yet. Mark one from its details page.'**
+  String get emptyWatchedMovies;
 
   /// No description provided for @networkErrorDesc.
   ///
@@ -317,7 +347,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorUpdating.
   ///
   /// In en, this message translates to:
-  /// **'Error during update.'**
+  /// **'Couldn\'t update. Check your connection and try again.'**
   String get errorUpdating;
 
   /// No description provided for @signOut.
@@ -677,13 +707,13 @@ abstract class AppLocalizations {
   /// No description provided for @selectionActionDone.
   ///
   /// In en, this message translates to:
-  /// **'Done'**
+  /// **'Updated'**
   String get selectionActionDone;
 
   /// No description provided for @selectionActionPartialFailure.
   ///
   /// In en, this message translates to:
-  /// **'{count} items not updated'**
+  /// **'{count} items couldn\'t be updated. Try again.'**
   String selectionActionPartialFailure(int count);
 
   /// No description provided for @confirm.

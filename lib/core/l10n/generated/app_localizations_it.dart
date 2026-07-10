@@ -41,7 +41,24 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get emptySection => 'Nessun elemento presente in questa sezione.';
+  String get emptyWatching =>
+      'Niente in corso. Inizia una serie per vederla qui.';
+
+  @override
+  String get emptyUpToDate => 'Sei in pari con tutto qui.';
+
+  @override
+  String get emptyWatchLater => 'Non hai ancora salvato nulla per dopo.';
+
+  @override
+  String get emptyCompleted => 'Nessuna serie completata.';
+
+  @override
+  String get emptyDropped => 'Non hai interrotto nessuna serie.';
+
+  @override
+  String get emptyWatchedMovies =>
+      'Nessun film visto. Segnane uno dalla sua pagina dettaglio.';
 
   @override
   String get networkErrorDesc => 'Controlla la tua connessione internet.';
@@ -121,7 +138,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get addToWatchlist => 'Aggiungi alla Watchlist';
 
   @override
-  String get errorUpdating => 'Errore durante l\'aggiornamento.';
+  String get errorUpdating =>
+      'Impossibile aggiornare. Controlla la connessione e riprova.';
 
   @override
   String get signOut => 'Esci';
@@ -306,11 +324,11 @@ class AppLocalizationsIt extends AppLocalizations {
       'Nessuna lista disponibile. Creane una dal dettaglio di un titolo.';
 
   @override
-  String get selectionActionDone => 'Fatto';
+  String get selectionActionDone => 'Aggiornato';
 
   @override
   String selectionActionPartialFailure(int count) {
-    return '$count elementi non aggiornati';
+    return '$count elementi non aggiornati. Riprova.';
   }
 
   @override

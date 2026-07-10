@@ -41,7 +41,24 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get emptySection => 'No items in this section.';
+  String get emptyWatching =>
+      'Nothing in progress. Start a series to see it here.';
+
+  @override
+  String get emptyUpToDate => 'You\'re all caught up here.';
+
+  @override
+  String get emptyWatchLater => 'Nothing saved for later yet.';
+
+  @override
+  String get emptyCompleted => 'No completed series yet.';
+
+  @override
+  String get emptyDropped => 'You haven\'t dropped any series.';
+
+  @override
+  String get emptyWatchedMovies =>
+      'No watched movies yet. Mark one from its details page.';
 
   @override
   String get networkErrorDesc => 'Check your internet connection.';
@@ -121,7 +138,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addToWatchlist => 'Add to Watchlist';
 
   @override
-  String get errorUpdating => 'Error during update.';
+  String get errorUpdating =>
+      'Couldn\'t update. Check your connection and try again.';
 
   @override
   String get signOut => 'Sign Out';
@@ -307,11 +325,11 @@ class AppLocalizationsEn extends AppLocalizations {
       'No watchlist available. Create one from a title\'s details page.';
 
   @override
-  String get selectionActionDone => 'Done';
+  String get selectionActionDone => 'Updated';
 
   @override
   String selectionActionPartialFailure(int count) {
-    return '$count items not updated';
+    return '$count items couldn\'t be updated. Try again.';
   }
 
   @override

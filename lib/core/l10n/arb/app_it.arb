@@ -17,7 +17,12 @@
       }
     }
   },
-  "emptySection": "Nessun elemento presente in questa sezione.",
+  "emptyWatching": "Niente in corso. Inizia una serie per vederla qui.",
+  "emptyUpToDate": "Sei in pari con tutto qui.",
+  "emptyWatchLater": "Non hai ancora salvato nulla per dopo.",
+  "emptyCompleted": "Nessuna serie completata.",
+  "emptyDropped": "Non hai interrotto nessuna serie.",
+  "emptyWatchedMovies": "Nessun film visto. Segnane uno dalla sua pagina dettaglio.",
 
   "networkErrorDesc": "Controlla la tua connessione internet.",
   "genericErrorDesc": "Si è verificato un errore. Riprova.",
@@ -52,7 +57,7 @@
   "delete": "Elimina",
   "inYourWatchlists": "Nelle tue Watchlist",
   "addToWatchlist": "Aggiungi alla Watchlist",
-  "errorUpdating": "Errore durante l'aggiornamento.",
+  "errorUpdating": "Impossibile aggiornare. Controlla la connessione e riprova.",
   "signOut": "Esci",
   "retryBtn": "Riprova",
   "pageNotFound": "Pagina non trovata",
@@ -121,8 +126,8 @@
   "markSelectedEpisodesWatchedAction": "Segna come visti",
   "removeFromThisList": "Rimuovi dalla lista",
   "noWatchlistsAvailableHint": "Nessuna lista disponibile. Creane una dal dettaglio di un titolo.",
-  "selectionActionDone": "Fatto",
-  "selectionActionPartialFailure": "{count} elementi non aggiornati",
+  "selectionActionDone": "Aggiornato",
+  "selectionActionPartialFailure": "{count} elementi non aggiornati. Riprova.",
   "@selectionActionPartialFailure": {
     "placeholders": {
       "count": {

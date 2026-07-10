@@ -4,7 +4,6 @@ import '../../../../core/domain/enums/media_type.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
-import '../../../../core/l10n/generated/app_localizations.dart';
 import '../providers/watched_providers.dart';
 import '../providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
@@ -59,8 +58,13 @@ class WatchedListPage extends ConsumerWidget {
         child: Stack(
           children: [
             asyncItems.when(
-              data: (items) =>
-                  _buildGrid(context, items, colors, textTheme, l10n),
+              data: (items) => _buildGrid(
+                context,
+                items,
+                colors,
+                textTheme,
+                emptyMessage: l10n.emptyWatchedMovies,
+              ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) =>
                   Center(child: Text(l10n.genericError(err.toString()))),
@@ -183,11 +187,41 @@ class WatchedListPage extends ConsumerWidget {
 
                   return TabBarView(
                     children: [
-                      _buildGrid(context, watching, colors, textTheme, l10n),
-                      _buildGrid(context, upToDate, colors, textTheme, l10n),
-                      _buildGrid(context, watchLater, colors, textTheme, l10n),
-                      _buildGrid(context, completed, colors, textTheme, l10n),
-                      _buildGrid(context, dropped, colors, textTheme, l10n),
+                      _buildGrid(
+                        context,
+                        watching,
+                        colors,
+                        textTheme,
+                        emptyMessage: l10n.emptyWatching,
+                      ),
+                      _buildGrid(
+                        context,
+                        upToDate,
+                        colors,
+                        textTheme,
+                        emptyMessage: l10n.emptyUpToDate,
+                      ),
+                      _buildGrid(
+                        context,
+                        watchLater,
+                        colors,
+                        textTheme,
+                        emptyMessage: l10n.emptyWatchLater,
+                      ),
+                      _buildGrid(
+                        context,
+                        completed,
+                        colors,
+                        textTheme,
+                        emptyMessage: l10n.emptyCompleted,
+                      ),
+                      _buildGrid(
+                        context,
+                        dropped,
+                        colors,
+                        textTheme,
+                        emptyMessage: l10n.emptyDropped,
+                      ),
                     ],
                   );
                 },
@@ -298,15 +332,19 @@ class WatchedListPage extends ConsumerWidget {
     BuildContext context,
     List<WatchedItem> items,
     AppColorScheme colors,
-    TextTheme textTheme,
-    AppLocalizations l10n,
-  ) {
+    TextTheme textTheme, {
+    required String emptyMessage,
+  }) {
     if (items.isEmpty) {
       return Center(
-        child: Text(
-          l10n.emptySection,
-          style: textTheme.bodyLarge?.copyWith(
-            color: colors.onSurfaceSecondary,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Text(
+            emptyMessage,
+            textAlign: TextAlign.center,
+            style: textTheme.bodyLarge?.copyWith(
+              color: colors.onSurfaceSecondary,
+            ),
           ),
         ),
       );
