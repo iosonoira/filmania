@@ -3,10 +3,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
 import 'package:filmania/core/utils/logger.dart';
 import 'package:filmania/core/supabase/supabase_client.dart';
+import 'package:filmania/core/utils/concurrency.dart';
 import '../../domain/entities/tvtime_matched_data.dart';
 import '../../domain/entities/tvtime_import_progress.dart';
 import '../../domain/enums/tvtime_import_phase.dart';
 import '../../domain/failures/tvtime_import_failure.dart';
+import 'tmdb_details_datasource.dart';
 
 part 'tvtime_supabase_writer.g.dart';
 
@@ -28,9 +30,11 @@ NON introdurre dipendenze cross-feature per un'operazione usa-e-getta).
 */
 class TvTimeSupabaseWriter {
   final SupabaseClient _supabase;
+  final TmdbDetailsDataSource _tmdbDetails;
   static const _batchSize = 400;
+  static const _detailsConcurrency = 5;
 
-  TvTimeSupabaseWriter(this._supabase);
+  TvTimeSupabaseWriter(this._supabase, this._tmdbDetails);
 
   String get _userId {
     final id = _supabase.auth.currentUser?.id;
@@ -67,8 +71,15 @@ class TvTimeSupabaseWriter {
       }
 
       if (data.episodes.isNotEmpty) {
-        await _writeEpisodes(userId, data.episodes);
-        await _writeSeriesWatchedItems(userId, data.episodes);
+        final episodeRuntimeBySeriesId = await _fetchSeriesEpisodeRuntimes(
+          data.episodes,
+        );
+        await _writeEpisodes(userId, data.episodes, episodeRuntimeBySeriesId);
+        await _writeSeriesWatchedItems(
+          userId,
+          data.episodes,
+          episodeRuntimeBySeriesId,
+        );
         step++;
         onProgress(
           TvTimeImportProgress(
@@ -113,6 +124,8 @@ class TvTimeSupabaseWriter {
     String userId,
     List<TvTimeMatchedMovie> movies,
   ) async {
+    final runtimeByTmdbId = await _fetchMovieRuntimes(movies);
+
     for (var i = 0; i < movies.length; i += _batchSize) {
       final batch = movies.sublist(
         i,
@@ -126,6 +139,7 @@ class TvTimeSupabaseWriter {
               'media_title': m.title,
               'media_type': MediaType.movie.name,
               'poster_path': m.posterPath,
+              'runtime_minutes': runtimeByTmdbId[m.tmdbId],
               if (m.watchedAt != null)
                 'watched_at': m.watchedAt!.toIso8601String(),
             },
@@ -137,9 +151,35 @@ class TvTimeSupabaseWriter {
     }
   }
 
+  Future<Map<int, int?>> _fetchMovieRuntimes(
+    List<TvTimeMatchedMovie> movies,
+  ) async {
+    final uniqueIds = movies.map((m) => m.tmdbId).toSet().toList();
+    final entries = await mapWithConcurrency<int, MapEntry<int, int?>>(
+      uniqueIds,
+      _detailsConcurrency,
+      (id) async => MapEntry(id, await _tmdbDetails.getMovieRuntime(id)),
+    );
+    return Map<int, int?>.fromEntries(entries);
+  }
+
+  Future<Map<int, int?>> _fetchSeriesEpisodeRuntimes(
+    List<TvTimeMatchedEpisode> episodes,
+  ) async {
+    final uniqueIds = episodes.map((e) => e.seriesTmdbId).toSet().toList();
+    final entries = await mapWithConcurrency<int, MapEntry<int, int?>>(
+      uniqueIds,
+      _detailsConcurrency,
+      (id) async =>
+          MapEntry(id, await _tmdbDetails.getSeriesEpisodeRuntime(id)),
+    );
+    return Map<int, int?>.fromEntries(entries);
+  }
+
   Future<void> _writeEpisodes(
     String userId,
     List<TvTimeMatchedEpisode> episodes,
+    Map<int, int?> runtimeBySeriesId,
   ) async {
     for (var i = 0; i < episodes.length; i += _batchSize) {
       final batch = episodes.sublist(
@@ -153,6 +193,7 @@ class TvTimeSupabaseWriter {
               'series_id': e.seriesTmdbId,
               'season_number': e.seasonNumber,
               'episode_number': e.episodeNumber,
+              'runtime_minutes': runtimeBySeriesId[e.seriesTmdbId],
               if (e.watchedAt != null)
                 'watched_at': e.watchedAt!.toIso8601String(),
             },
@@ -180,9 +221,14 @@ class TvTimeSupabaseWriter {
   Future<void> _writeSeriesWatchedItems(
     String userId,
     List<TvTimeMatchedEpisode> episodes,
+    Map<int, int?> runtimeBySeriesId,
   ) async {
     final Map<int, TvTimeMatchedEpisode> latestBySeriesId = {};
+    final Map<int, int> episodeCountBySeriesId = {};
     for (final episode in episodes) {
+      episodeCountBySeriesId[episode.seriesTmdbId] =
+          (episodeCountBySeriesId[episode.seriesTmdbId] ?? 0) + 1;
+
       final current = latestBySeriesId[episode.seriesTmdbId];
       if (current == null) {
         latestBySeriesId[episode.seriesTmdbId] = episode;
@@ -204,21 +250,22 @@ class TvTimeSupabaseWriter {
         i,
         i + _batchSize > seriesList.length ? seriesList.length : i + _batchSize,
       );
-      final payload = batch
-          .map(
-            (s) => {
-              'user_id': userId,
-              'media_id': s.seriesTmdbId,
-              'media_title': s.seriesTitle,
-              'media_type': MediaType.tv.name,
-              'poster_path': s.seriesPosterPath,
-              'is_dropped': s.isDropped,
-              'is_watch_later': s.isWatchLater,
-              if (s.watchedAt != null)
-                'watched_at': s.watchedAt!.toIso8601String(),
-            },
-          )
-          .toList();
+      final payload = batch.map((s) {
+        final avgRuntime = runtimeBySeriesId[s.seriesTmdbId] ?? 0;
+        final count = episodeCountBySeriesId[s.seriesTmdbId] ?? 0;
+        final totalRuntime = avgRuntime * count;
+        return {
+          'user_id': userId,
+          'media_id': s.seriesTmdbId,
+          'media_title': s.seriesTitle,
+          'media_type': MediaType.tv.name,
+          'poster_path': s.seriesPosterPath,
+          'is_dropped': s.isDropped,
+          'is_watch_later': s.isWatchLater,
+          'runtime_minutes': totalRuntime > 0 ? totalRuntime : null,
+          if (s.watchedAt != null) 'watched_at': s.watchedAt!.toIso8601String(),
+        };
+      }).toList();
       await _supabase
           .from('watched_items')
           .upsert(payload, onConflict: 'user_id, media_id, media_type');
@@ -269,5 +316,8 @@ class TvTimeSupabaseWriter {
 
 @riverpod
 TvTimeSupabaseWriter tvTimeSupabaseWriter(Ref ref) {
-  return TvTimeSupabaseWriter(ref.watch(supabaseClientProvider));
+  return TvTimeSupabaseWriter(
+    ref.watch(supabaseClientProvider),
+    ref.watch(tmdbDetailsDataSourceProvider),
+  );
 }
