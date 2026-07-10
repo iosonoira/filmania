@@ -734,6 +734,12 @@ abstract class AppLocalizations {
   /// **'Matching TV series on TMDB...'**
   String get importTvTimeMatchingSeries;
 
+  /// No description provided for @importTvTimeFetchingRuntimes.
+  ///
+  /// In en, this message translates to:
+  /// **'Fetching runtime details...'**
+  String get importTvTimeFetchingRuntimes;
+
   /// No description provided for @importTvTimeWriting.
   ///
   /// In en, this message translates to:

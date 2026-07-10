@@ -55,4 +55,4 @@ final class TvTimeSupabaseWriterProvider
 }
 
 String _$tvTimeSupabaseWriterHash() =>
-    r'5c7b9d32d6bd330a5269bed2147a318ae0d05dcb';
+    r'32327cbfca6202e7e85f0673f10ed72c77cbf7d5';

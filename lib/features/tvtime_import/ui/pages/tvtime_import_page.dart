@@ -127,6 +127,8 @@ class _ProgressView extends StatelessWidget {
         '${l10n.importTvTimeMatchingMovies} ${progress.current}/${progress.total}',
       TvTimeImportPhase.matchingSeries =>
         '${l10n.importTvTimeMatchingSeries} ${progress.current}/${progress.total}',
+      TvTimeImportPhase.fetchingRuntimes =>
+        '${l10n.importTvTimeFetchingRuntimes} ${progress.current}/${progress.total}',
       TvTimeImportPhase.writingData =>
         '${l10n.importTvTimeWriting} ${progress.current}/${progress.total}',
     };

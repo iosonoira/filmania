@@ -340,6 +340,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get importTvTimeMatchingSeries => 'Matching serie TV su TMDB...';
 
   @override
+  String get importTvTimeFetchingRuntimes => 'Recupero durate...';
+
+  @override
   String get importTvTimeWriting => 'Salvataggio dati...';
 
   @override

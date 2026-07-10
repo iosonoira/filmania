@@ -139,6 +139,7 @@
   "importTvTimeParsing": "Estrazione file...",
   "importTvTimeMatchingMovies": "Matching film su TMDB...",
   "importTvTimeMatchingSeries": "Matching serie TV su TMDB...",
+  "importTvTimeFetchingRuntimes": "Recupero durate...",
   "importTvTimeWriting": "Salvataggio dati...",
   "importTvTimeConfirm": "Conferma e importa",
   "importTvTimeUnmatchedTitle": "Non trovati su TMDB",

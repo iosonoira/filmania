@@ -59,7 +59,7 @@ class TvTimeSupabaseWriter {
       var step = 0;
 
       if (data.movies.isNotEmpty) {
-        await _writeMovies(userId, data.movies);
+        await _writeMovies(userId, data.movies, onProgress);
         step++;
         onProgress(
           TvTimeImportProgress(
@@ -73,6 +73,7 @@ class TvTimeSupabaseWriter {
       if (data.episodes.isNotEmpty) {
         final episodeRuntimeBySeriesId = await _fetchSeriesEpisodeRuntimes(
           data.episodes,
+          onProgress,
         );
         await _writeEpisodes(userId, data.episodes, episodeRuntimeBySeriesId);
         await _writeSeriesWatchedItems(
@@ -123,8 +124,9 @@ class TvTimeSupabaseWriter {
   Future<void> _writeMovies(
     String userId,
     List<TvTimeMatchedMovie> movies,
+    void Function(TvTimeImportProgress progress) onProgress,
   ) async {
-    final runtimeByTmdbId = await _fetchMovieRuntimes(movies);
+    final runtimeByTmdbId = await _fetchMovieRuntimes(movies, onProgress);
 
     for (var i = 0; i < movies.length; i += _batchSize) {
       final batch = movies.sublist(
@@ -153,25 +155,49 @@ class TvTimeSupabaseWriter {
 
   Future<Map<int, int?>> _fetchMovieRuntimes(
     List<TvTimeMatchedMovie> movies,
+    void Function(TvTimeImportProgress progress) onProgress,
   ) async {
     final uniqueIds = movies.map((m) => m.tmdbId).toSet().toList();
+    var done = 0;
     final entries = await mapWithConcurrency<int, MapEntry<int, int?>>(
       uniqueIds,
       _detailsConcurrency,
       (id) async => MapEntry(id, await _tmdbDetails.getMovieRuntime(id)),
+      onEach: () {
+        done++;
+        onProgress(
+          TvTimeImportProgress(
+            phase: TvTimeImportPhase.fetchingRuntimes,
+            current: done,
+            total: uniqueIds.length,
+          ),
+        );
+      },
     );
     return Map<int, int?>.fromEntries(entries);
   }
 
   Future<Map<int, int?>> _fetchSeriesEpisodeRuntimes(
     List<TvTimeMatchedEpisode> episodes,
+    void Function(TvTimeImportProgress progress) onProgress,
   ) async {
     final uniqueIds = episodes.map((e) => e.seriesTmdbId).toSet().toList();
+    var done = 0;
     final entries = await mapWithConcurrency<int, MapEntry<int, int?>>(
       uniqueIds,
       _detailsConcurrency,
       (id) async =>
           MapEntry(id, await _tmdbDetails.getSeriesEpisodeRuntime(id)),
+      onEach: () {
+        done++;
+        onProgress(
+          TvTimeImportProgress(
+            phase: TvTimeImportPhase.fetchingRuntimes,
+            current: done,
+            total: uniqueIds.length,
+          ),
+        );
+      },
     );
     return Map<int, int?>.fromEntries(entries);
   }
