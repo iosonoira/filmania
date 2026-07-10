@@ -58,22 +58,8 @@ class WatchedListPage extends ConsumerWidget {
         ),
       ),
       body: SelectionScope<MediaSelectionItem>(
-        child: Stack(
+        child: Column(
           children: [
-            asyncItems.when(
-              data: (items) => _buildGrid(
-                context,
-                items,
-                colors,
-                textTheme,
-                emptyMessage: l10n.emptyWatchedMovies,
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => AppErrorView(
-                error: err,
-                onRetry: () => ref.invalidate(watchedItemsProvider(mediaType)),
-              ),
-            ),
             SelectionActionBar<MediaSelectionItem>(
               closeTooltip: l10n.closeSelection,
               actions: [
@@ -108,19 +94,37 @@ class WatchedListPage extends ConsumerWidget {
                       cancelLabel: l10n.cancel,
                     );
                     if (!confirmed || !context.mounted) return;
-                    final failures = await toggleWatchedBulk(
-                      ref,
-                      items: selected.toList(),
-                    );
+                    final items = selected.toList();
+                    final failures = await toggleWatchedBulk(ref, items: items);
                     if (!context.mounted) return;
                     handleBulkSelectionResult<MediaSelectionItem>(
                       context,
                       ref,
                       failureCount: failures,
+                      onUndo: () async {
+                        await toggleWatchedBulk(ref, items: items);
+                      },
                     );
                   },
                 ),
               ],
+            ),
+            Expanded(
+              child: asyncItems.when(
+                data: (items) => _buildGrid(
+                  context,
+                  items,
+                  colors,
+                  textTheme,
+                  emptyMessage: l10n.emptyWatchedMovies,
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => AppErrorView(
+                  error: err,
+                  onRetry: () =>
+                      ref.invalidate(watchedItemsProvider(mediaType)),
+                ),
+              ),
             ),
           ],
         ),
@@ -166,77 +170,8 @@ class WatchedListPage extends ConsumerWidget {
           ),
         ),
         body: SelectionScope<MediaSelectionItem>(
-          child: Stack(
+          child: Column(
             children: [
-              asyncItems.when(
-                data: (items) {
-                  final watching = items
-                      .where((e) => e.status == TvSeriesWatchStatus.watching)
-                      .map((e) => e.series)
-                      .toList();
-                  final upToDate = items
-                      .where((e) => e.status == TvSeriesWatchStatus.upToDate)
-                      .map((e) => e.series)
-                      .toList();
-                  final watchLater = items
-                      .where((e) => e.status == TvSeriesWatchStatus.watchLater)
-                      .map((e) => e.series)
-                      .toList();
-                  final completed = items
-                      .where((e) => e.status == TvSeriesWatchStatus.completed)
-                      .map((e) => e.series)
-                      .toList();
-                  final dropped = items
-                      .where((e) => e.status == TvSeriesWatchStatus.dropped)
-                      .map((e) => e.series)
-                      .toList();
-
-                  return TabBarView(
-                    children: [
-                      _buildGrid(
-                        context,
-                        watching,
-                        colors,
-                        textTheme,
-                        emptyMessage: l10n.emptyWatching,
-                      ),
-                      _buildGrid(
-                        context,
-                        upToDate,
-                        colors,
-                        textTheme,
-                        emptyMessage: l10n.emptyUpToDate,
-                      ),
-                      _buildGrid(
-                        context,
-                        watchLater,
-                        colors,
-                        textTheme,
-                        emptyMessage: l10n.emptyWatchLater,
-                      ),
-                      _buildGrid(
-                        context,
-                        completed,
-                        colors,
-                        textTheme,
-                        emptyMessage: l10n.emptyCompleted,
-                      ),
-                      _buildGrid(
-                        context,
-                        dropped,
-                        colors,
-                        textTheme,
-                        emptyMessage: l10n.emptyDropped,
-                      ),
-                    ],
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => AppErrorView(
-                  error: err,
-                  onRetry: () => ref.invalidate(categorizedTvSeriesProvider),
-                ),
-              ),
               SelectionActionBar<MediaSelectionItem>(
                 closeTooltip: l10n.closeSelection,
                 actions: [
@@ -271,15 +206,19 @@ class WatchedListPage extends ConsumerWidget {
                         cancelLabel: l10n.cancel,
                       );
                       if (!confirmed || !context.mounted) return;
+                      final items = selected.toList();
                       final failures = await toggleWatchedBulk(
                         ref,
-                        items: selected.toList(),
+                        items: items,
                       );
                       if (!context.mounted) return;
                       handleBulkSelectionResult<MediaSelectionItem>(
                         context,
                         ref,
                         failureCount: failures,
+                        onUndo: () async {
+                          await toggleWatchedBulk(ref, items: items);
+                        },
                       );
                     },
                   ),
@@ -295,9 +234,10 @@ class WatchedListPage extends ConsumerWidget {
                         cancelLabel: l10n.cancel,
                       );
                       if (!confirmed || !context.mounted) return;
+                      final items = selected.toList();
                       final failures = await markSeriesDroppedBulk(
                         ref,
-                        items: selected.toList(),
+                        items: items,
                         isDropped: true,
                       );
                       if (!context.mounted) return;
@@ -305,6 +245,13 @@ class WatchedListPage extends ConsumerWidget {
                         context,
                         ref,
                         failureCount: failures,
+                        onUndo: () async {
+                          await markSeriesDroppedBulk(
+                            ref,
+                            items: items,
+                            isDropped: false,
+                          );
+                        },
                       );
                     },
                   ),
@@ -326,6 +273,80 @@ class WatchedListPage extends ConsumerWidget {
                     },
                   ),
                 ],
+              ),
+              Expanded(
+                child: asyncItems.when(
+                  data: (items) {
+                    final watching = items
+                        .where((e) => e.status == TvSeriesWatchStatus.watching)
+                        .map((e) => e.series)
+                        .toList();
+                    final upToDate = items
+                        .where((e) => e.status == TvSeriesWatchStatus.upToDate)
+                        .map((e) => e.series)
+                        .toList();
+                    final watchLater = items
+                        .where(
+                          (e) => e.status == TvSeriesWatchStatus.watchLater,
+                        )
+                        .map((e) => e.series)
+                        .toList();
+                    final completed = items
+                        .where((e) => e.status == TvSeriesWatchStatus.completed)
+                        .map((e) => e.series)
+                        .toList();
+                    final dropped = items
+                        .where((e) => e.status == TvSeriesWatchStatus.dropped)
+                        .map((e) => e.series)
+                        .toList();
+
+                    return TabBarView(
+                      children: [
+                        _buildGrid(
+                          context,
+                          watching,
+                          colors,
+                          textTheme,
+                          emptyMessage: l10n.emptyWatching,
+                        ),
+                        _buildGrid(
+                          context,
+                          upToDate,
+                          colors,
+                          textTheme,
+                          emptyMessage: l10n.emptyUpToDate,
+                        ),
+                        _buildGrid(
+                          context,
+                          watchLater,
+                          colors,
+                          textTheme,
+                          emptyMessage: l10n.emptyWatchLater,
+                        ),
+                        _buildGrid(
+                          context,
+                          completed,
+                          colors,
+                          textTheme,
+                          emptyMessage: l10n.emptyCompleted,
+                        ),
+                        _buildGrid(
+                          context,
+                          dropped,
+                          colors,
+                          textTheme,
+                          emptyMessage: l10n.emptyDropped,
+                        ),
+                      ],
+                    );
+                  },
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => AppErrorView(
+                    error: err,
+                    onRetry: () => ref.invalidate(categorizedTvSeriesProvider),
+                  ),
+                ),
               ),
             ],
           ),

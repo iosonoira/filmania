@@ -3,16 +3,29 @@ import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
 class AppToast {
+  /// Shows a bottom toast. Pass [actionLabel]+[onAction] together to add a
+  /// tappable action (e.g. "Undo"); tapping it dismisses the toast
+  /// immediately instead of waiting out [duration].
   static void show(
     BuildContext context,
     String message, {
     Duration duration = const Duration(seconds: 2),
+    String? actionLabel,
+    VoidCallback? onAction,
   }) {
     final overlay = Overlay.of(context, rootOverlay: true);
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
     late OverlayEntry entry;
+    var dismissed = false;
+    void dismiss() {
+      if (dismissed) return;
+      dismissed = true;
+      if (entry.mounted) {
+        entry.remove();
+      }
+    }
 
     entry = OverlayEntry(
       builder: (context) {
@@ -66,6 +79,34 @@ class AppToast {
                         ),
                       ),
                     ),
+                    if (actionLabel != null && onAction != null)
+                      Semantics(
+                        button: true,
+                        label: actionLabel,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(
+                            AppSpacing.radius,
+                          ),
+                          onTap: () {
+                            dismiss();
+                            onAction();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.sm,
+                            ),
+                            child: Text(
+                              actionLabel,
+                              style: textTheme.titleMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -77,10 +118,6 @@ class AppToast {
 
     overlay.insert(entry);
 
-    Future.delayed(duration, () {
-      if (entry.mounted) {
-        entry.remove();
-      }
-    });
+    Future.delayed(duration, dismiss);
   }
 }

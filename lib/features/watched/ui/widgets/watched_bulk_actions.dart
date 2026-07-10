@@ -33,6 +33,7 @@ Future<int> toggleWatchedBulk(
   final repo = ref.read(watchedRepositoryProvider);
 
   var failureCount = 0;
+  final affectedMediaTypes = <MediaType>{};
   for (final item in items) {
     try {
       final isWatched = await repo.isWatched(
@@ -61,16 +62,26 @@ Future<int> toggleWatchedBulk(
         );
       }
 
+      affectedMediaTypes.add(item.mediaType);
       ref.invalidate(
         isMediaWatchedProvider(
           mediaId: item.mediaId,
           mediaType: item.mediaType,
         ),
       );
-      ref.invalidate(watchedItemsProvider(item.mediaType));
     } catch (_) {
       failureCount++;
     }
+  }
+  // Invalidated once per distinct media type after the whole batch settles,
+  // not per item: `watchedItemsProvider` wraps a Supabase Realtime stream,
+  // and invalidating it N times in a tight loop tears down and recreates
+  // the channel subscription N times back-to-back — a race that can render
+  // a transient duplicate/stale item list before the final subscription
+  // catches up (most visible when a second bulk call, e.g. undo, follows
+  // the first one within a couple of seconds).
+  for (final mediaType in affectedMediaTypes) {
+    ref.invalidate(watchedItemsProvider(mediaType));
   }
   return failureCount;
 }
