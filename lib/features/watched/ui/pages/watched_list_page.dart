@@ -170,185 +170,196 @@ class WatchedListPage extends ConsumerWidget {
           ),
         ),
         body: SelectionScope<MediaSelectionItem>(
-          child: Column(
-            children: [
-              SelectionActionBar<MediaSelectionItem>(
-                closeTooltip: l10n.closeSelection,
-                actions: [
-                  SelectionAction<MediaSelectionItem>(
-                    icon: Icons.bookmark_add_rounded,
-                    label: l10n.addToListAction,
-                    onPressed: (selected) async {
-                      final failures = await showBulkWatchlistPicker(
-                        context,
-                        ref,
-                        items: selected.toList(),
-                      );
-                      if (!context.mounted) return;
-                      handleBulkSelectionResult<MediaSelectionItem>(
-                        context,
-                        ref,
-                        failureCount: failures,
-                      );
-                    },
-                  ),
-                  SelectionAction<MediaSelectionItem>(
-                    icon: Icons.visibility_off_rounded,
-                    label: l10n.markAsUnwatchedAction,
-                    onPressed: (selected) async {
-                      final confirmed = await showConfirmDialog(
-                        context,
-                        title: l10n.markUnwatchedConfirmTitle,
-                        message: l10n.markUnwatchedConfirmMessage(
-                          selected.length,
-                        ),
-                        confirmLabel: l10n.markAsUnwatchedAction,
-                        cancelLabel: l10n.cancel,
-                      );
-                      if (!confirmed || !context.mounted) return;
-                      final items = selected.toList();
-                      final failures = await toggleWatchedBulk(
-                        ref,
-                        items: items,
-                      );
-                      if (!context.mounted) return;
-                      handleBulkSelectionResult<MediaSelectionItem>(
-                        context,
-                        ref,
-                        failureCount: failures,
-                        onUndo: () async {
-                          await toggleWatchedBulk(ref, items: items);
-                        },
-                      );
-                    },
-                  ),
-                  SelectionAction<MediaSelectionItem>(
-                    icon: Icons.stop_circle_outlined,
-                    label: l10n.dropSeriesAction,
-                    onPressed: (selected) async {
-                      final confirmed = await showConfirmDialog(
-                        context,
-                        title: l10n.dropSeriesConfirmTitle,
-                        message: l10n.dropSeriesConfirmMessage(selected.length),
-                        confirmLabel: l10n.dropSeriesAction,
-                        cancelLabel: l10n.cancel,
-                      );
-                      if (!confirmed || !context.mounted) return;
-                      final items = selected.toList();
-                      final failures = await markSeriesDroppedBulk(
-                        ref,
-                        items: items,
-                        isDropped: true,
-                      );
-                      if (!context.mounted) return;
-                      handleBulkSelectionResult<MediaSelectionItem>(
-                        context,
-                        ref,
-                        failureCount: failures,
-                        onUndo: () async {
-                          await markSeriesDroppedBulk(
-                            ref,
-                            items: items,
-                            isDropped: false,
-                          );
-                        },
-                      );
-                    },
-                  ),
-                  SelectionAction<MediaSelectionItem>(
-                    icon: Icons.watch_later_outlined,
-                    label: l10n.watchLaterAction,
-                    onPressed: (selected) async {
-                      final failures = await markSeriesWatchLaterBulk(
-                        ref,
-                        items: selected.toList(),
-                        isWatchLater: true,
-                      );
-                      if (!context.mounted) return;
-                      handleBulkSelectionResult<MediaSelectionItem>(
-                        context,
-                        ref,
-                        failureCount: failures,
-                      );
-                    },
-                  ),
-                ],
-              ),
-              Expanded(
-                child: asyncItems.when(
-                  data: (items) {
-                    final watching = items
-                        .where((e) => e.status == TvSeriesWatchStatus.watching)
-                        .map((e) => e.series)
-                        .toList();
-                    final upToDate = items
-                        .where((e) => e.status == TvSeriesWatchStatus.upToDate)
-                        .map((e) => e.series)
-                        .toList();
-                    final watchLater = items
-                        .where(
-                          (e) => e.status == TvSeriesWatchStatus.watchLater,
-                        )
-                        .map((e) => e.series)
-                        .toList();
-                    final completed = items
-                        .where((e) => e.status == TvSeriesWatchStatus.completed)
-                        .map((e) => e.series)
-                        .toList();
-                    final dropped = items
-                        .where((e) => e.status == TvSeriesWatchStatus.dropped)
-                        .map((e) => e.series)
-                        .toList();
+          child: _ClearSelectionOnTabChange(
+            child: Column(
+              children: [
+                SelectionActionBar<MediaSelectionItem>(
+                  closeTooltip: l10n.closeSelection,
+                  actions: [
+                    SelectionAction<MediaSelectionItem>(
+                      icon: Icons.bookmark_add_rounded,
+                      label: l10n.addToListAction,
+                      onPressed: (selected) async {
+                        final failures = await showBulkWatchlistPicker(
+                          context,
+                          ref,
+                          items: selected.toList(),
+                        );
+                        if (!context.mounted) return;
+                        handleBulkSelectionResult<MediaSelectionItem>(
+                          context,
+                          ref,
+                          failureCount: failures,
+                        );
+                      },
+                    ),
+                    SelectionAction<MediaSelectionItem>(
+                      icon: Icons.visibility_off_rounded,
+                      label: l10n.markAsUnwatchedAction,
+                      onPressed: (selected) async {
+                        final confirmed = await showConfirmDialog(
+                          context,
+                          title: l10n.markUnwatchedConfirmTitle,
+                          message: l10n.markUnwatchedConfirmMessage(
+                            selected.length,
+                          ),
+                          confirmLabel: l10n.markAsUnwatchedAction,
+                          cancelLabel: l10n.cancel,
+                        );
+                        if (!confirmed || !context.mounted) return;
+                        final items = selected.toList();
+                        final failures = await toggleWatchedBulk(
+                          ref,
+                          items: items,
+                        );
+                        if (!context.mounted) return;
+                        handleBulkSelectionResult<MediaSelectionItem>(
+                          context,
+                          ref,
+                          failureCount: failures,
+                          onUndo: () async {
+                            await toggleWatchedBulk(ref, items: items);
+                          },
+                        );
+                      },
+                    ),
+                    SelectionAction<MediaSelectionItem>(
+                      icon: Icons.stop_circle_outlined,
+                      label: l10n.dropSeriesAction,
+                      onPressed: (selected) async {
+                        final confirmed = await showConfirmDialog(
+                          context,
+                          title: l10n.dropSeriesConfirmTitle,
+                          message: l10n.dropSeriesConfirmMessage(
+                            selected.length,
+                          ),
+                          confirmLabel: l10n.dropSeriesAction,
+                          cancelLabel: l10n.cancel,
+                        );
+                        if (!confirmed || !context.mounted) return;
+                        final items = selected.toList();
+                        final failures = await markSeriesDroppedBulk(
+                          ref,
+                          items: items,
+                          isDropped: true,
+                        );
+                        if (!context.mounted) return;
+                        handleBulkSelectionResult<MediaSelectionItem>(
+                          context,
+                          ref,
+                          failureCount: failures,
+                          onUndo: () async {
+                            await markSeriesDroppedBulk(
+                              ref,
+                              items: items,
+                              isDropped: false,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                    SelectionAction<MediaSelectionItem>(
+                      icon: Icons.watch_later_outlined,
+                      label: l10n.watchLaterAction,
+                      onPressed: (selected) async {
+                        final failures = await markSeriesWatchLaterBulk(
+                          ref,
+                          items: selected.toList(),
+                          isWatchLater: true,
+                        );
+                        if (!context.mounted) return;
+                        handleBulkSelectionResult<MediaSelectionItem>(
+                          context,
+                          ref,
+                          failureCount: failures,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: asyncItems.when(
+                    data: (items) {
+                      final watching = items
+                          .where(
+                            (e) => e.status == TvSeriesWatchStatus.watching,
+                          )
+                          .map((e) => e.series)
+                          .toList();
+                      final upToDate = items
+                          .where(
+                            (e) => e.status == TvSeriesWatchStatus.upToDate,
+                          )
+                          .map((e) => e.series)
+                          .toList();
+                      final watchLater = items
+                          .where(
+                            (e) => e.status == TvSeriesWatchStatus.watchLater,
+                          )
+                          .map((e) => e.series)
+                          .toList();
+                      final completed = items
+                          .where(
+                            (e) => e.status == TvSeriesWatchStatus.completed,
+                          )
+                          .map((e) => e.series)
+                          .toList();
+                      final dropped = items
+                          .where((e) => e.status == TvSeriesWatchStatus.dropped)
+                          .map((e) => e.series)
+                          .toList();
 
-                    return TabBarView(
-                      children: [
-                        _buildGrid(
-                          context,
-                          watching,
-                          colors,
-                          textTheme,
-                          emptyMessage: l10n.emptyWatching,
-                        ),
-                        _buildGrid(
-                          context,
-                          upToDate,
-                          colors,
-                          textTheme,
-                          emptyMessage: l10n.emptyUpToDate,
-                        ),
-                        _buildGrid(
-                          context,
-                          watchLater,
-                          colors,
-                          textTheme,
-                          emptyMessage: l10n.emptyWatchLater,
-                        ),
-                        _buildGrid(
-                          context,
-                          completed,
-                          colors,
-                          textTheme,
-                          emptyMessage: l10n.emptyCompleted,
-                        ),
-                        _buildGrid(
-                          context,
-                          dropped,
-                          colors,
-                          textTheme,
-                          emptyMessage: l10n.emptyDropped,
-                        ),
-                      ],
-                    );
-                  },
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (err, stack) => AppErrorView(
-                    error: err,
-                    onRetry: () => ref.invalidate(categorizedTvSeriesProvider),
+                      return TabBarView(
+                        children: [
+                          _buildGrid(
+                            context,
+                            watching,
+                            colors,
+                            textTheme,
+                            emptyMessage: l10n.emptyWatching,
+                          ),
+                          _buildGrid(
+                            context,
+                            upToDate,
+                            colors,
+                            textTheme,
+                            emptyMessage: l10n.emptyUpToDate,
+                          ),
+                          _buildGrid(
+                            context,
+                            watchLater,
+                            colors,
+                            textTheme,
+                            emptyMessage: l10n.emptyWatchLater,
+                          ),
+                          _buildGrid(
+                            context,
+                            completed,
+                            colors,
+                            textTheme,
+                            emptyMessage: l10n.emptyCompleted,
+                          ),
+                          _buildGrid(
+                            context,
+                            dropped,
+                            colors,
+                            textTheme,
+                            emptyMessage: l10n.emptyDropped,
+                          ),
+                        ],
+                      );
+                    },
+                    loading: () =>
+                        const Center(child: CircularProgressIndicator()),
+                    error: (err, stack) => AppErrorView(
+                      error: err,
+                      onRetry: () =>
+                          ref.invalidate(categorizedTvSeriesProvider),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -462,4 +473,50 @@ class _WatchedGridCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Clears the nearest `SelectionScope<MediaSelectionItem>` whenever the
+/// enclosing `DefaultTabController` lands on a different tab. Selection is
+/// otherwise shared across every tab in [TabBarView], so a user could build
+/// a selection on one tab, swipe to another, and apply a bulk action to a
+/// mixed set of items they can no longer see.
+class _ClearSelectionOnTabChange extends StatefulWidget {
+  const _ClearSelectionOnTabChange({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_ClearSelectionOnTabChange> createState() =>
+      _ClearSelectionOnTabChangeState();
+}
+
+class _ClearSelectionOnTabChangeState
+    extends State<_ClearSelectionOnTabChange> {
+  TabController? _tabController;
+
+  void _handleTabChange() {
+    SelectionScope.controllerOf<MediaSelectionItem>(
+      context,
+      listen: false,
+    ).clear();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final controller = DefaultTabController.of(context);
+    if (identical(controller, _tabController)) return;
+    _tabController?.removeListener(_handleTabChange);
+    _tabController = controller;
+    _tabController!.addListener(_handleTabChange);
+  }
+
+  @override
+  void dispose() {
+    _tabController?.removeListener(_handleTabChange);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
