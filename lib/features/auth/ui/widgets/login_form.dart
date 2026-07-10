@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/auth_failure_l10n.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import '../../domain/failures/auth_failure.dart';
 
@@ -48,10 +49,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     ref.listen(authProvider, (previous, next) {
       if (next case AsyncError(:final error)) {
         final message = switch (error) {
-          InvalidCredentials() => error.message,
-          EmailAlreadyInUse() => error.message,
-          NetworkError() => l10n.networkErrorDesc,
-          RateLimitExceeded() => error.message,
+          final AuthFailure failure => authFailureMessage(failure, l10n),
           _ => l10n.genericErrorDesc,
         };
         ScaffoldMessenger.of(context).showSnackBar(

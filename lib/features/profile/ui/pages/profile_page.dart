@@ -14,7 +14,9 @@ import '../../../favorites/ui/providers/favorites_providers.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/auth_failure_l10n.dart';
 import '../../../../core/l10n/generated/app_localizations.dart';
+import '../../../auth/domain/failures/auth_failure.dart';
 import '../providers/user_stats_provider.dart';
 
 class ProfilePage extends ConsumerWidget {
@@ -65,7 +67,13 @@ class ProfilePage extends ConsumerWidget {
                 if (uploadState.hasError) ...[
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    l10n.uploadError(uploadState.error.toString()),
+                    switch (uploadState.error) {
+                      final AuthFailure failure => authFailureMessage(
+                        failure,
+                        l10n,
+                      ),
+                      final err => l10n.uploadError(err.toString()),
+                    },
                     style: TextStyle(color: colors.error),
                     textAlign: TextAlign.center,
                   ),

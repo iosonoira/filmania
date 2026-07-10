@@ -67,6 +67,65 @@ class AppLocalizationsEn extends AppLocalizations {
   String get genericErrorDesc => 'An error occurred. Please try again.';
 
   @override
+  String get errorNoConnectionTitle => 'No connection.';
+
+  @override
+  String get errorNoConnectionDesc => 'Check your Wi-Fi or mobile data.';
+
+  @override
+  String get errorSlowConnectionTitle => 'Slow connection.';
+
+  @override
+  String get errorSlowConnectionDesc => 'Try again shortly.';
+
+  @override
+  String get errorNotFoundTitle => 'Not found.';
+
+  @override
+  String get errorNotFoundDesc => 'The requested content doesn\'t exist.';
+
+  @override
+  String get errorServerTitle => 'Server error.';
+
+  @override
+  String get errorServerDesc => 'Something went wrong on our end.';
+
+  @override
+  String get errorSessionExpiredTitle => 'Session expired.';
+
+  @override
+  String get errorSessionExpiredDesc => 'Please log in again.';
+
+  @override
+  String get errorNetworkGenericTitle => 'Network error.';
+
+  @override
+  String get errorNetworkGenericDesc => 'Try again later.';
+
+  @override
+  String get errorAuthTitle => 'Authentication error';
+
+  @override
+  String get errorUnexpectedTitle => 'Unexpected error.';
+
+  @override
+  String get errorUnexpectedDesc => 'Something unexpected happened.';
+
+  @override
+  String get authInvalidCredentials => 'Invalid credentials. Please try again.';
+
+  @override
+  String get authEmailAlreadyInUse =>
+      'This email address is already in use by another account.';
+
+  @override
+  String get authRateLimitExceeded =>
+      'Too many attempts. Try again in a few minutes.';
+
+  @override
+  String get authNotSignedIn => 'You need to be signed in to do that.';
+
+  @override
   String get emailAddress => 'Email Address';
 
   @override

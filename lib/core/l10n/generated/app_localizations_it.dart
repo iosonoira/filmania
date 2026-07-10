@@ -67,6 +67,65 @@ class AppLocalizationsIt extends AppLocalizations {
   String get genericErrorDesc => 'Si è verificato un errore. Riprova.';
 
   @override
+  String get errorNoConnectionTitle => 'Nessuna connessione.';
+
+  @override
+  String get errorNoConnectionDesc => 'Controlla il tuo Wi-Fi o i dati mobili.';
+
+  @override
+  String get errorSlowConnectionTitle => 'Connessione lenta.';
+
+  @override
+  String get errorSlowConnectionDesc => 'Riprova tra poco.';
+
+  @override
+  String get errorNotFoundTitle => 'Non trovato.';
+
+  @override
+  String get errorNotFoundDesc => 'Il contenuto richiesto non esiste.';
+
+  @override
+  String get errorServerTitle => 'Errore server.';
+
+  @override
+  String get errorServerDesc => 'Qualcosa è andato storto lato server.';
+
+  @override
+  String get errorSessionExpiredTitle => 'Sessione scaduta.';
+
+  @override
+  String get errorSessionExpiredDesc => 'Effettua di nuovo il login.';
+
+  @override
+  String get errorNetworkGenericTitle => 'Errore di rete.';
+
+  @override
+  String get errorNetworkGenericDesc => 'Riprova più tardi.';
+
+  @override
+  String get errorAuthTitle => 'Errore Autenticazione';
+
+  @override
+  String get errorUnexpectedTitle => 'Errore imprevisto.';
+
+  @override
+  String get errorUnexpectedDesc => 'Si è verificato un errore inaspettato.';
+
+  @override
+  String get authInvalidCredentials => 'Credenziali non valide. Riprova.';
+
+  @override
+  String get authEmailAlreadyInUse =>
+      'Questo indirizzo email è già in uso da un altro account.';
+
+  @override
+  String get authRateLimitExceeded =>
+      'Troppi tentativi. Riprova tra qualche minuto.';
+
+  @override
+  String get authNotSignedIn => 'Devi effettuare l\'accesso per farlo.';
+
+  @override
   String get emailAddress => 'Indirizzo Email';
 
   @override

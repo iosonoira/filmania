@@ -19,7 +19,7 @@ class ImageUploadController extends _$ImageUploadController {
     state = await AsyncValue.guard(() async {
       final user = ref.read(authStateProvider).value;
       if (user == null) {
-        throw const UnknownAuthFailure('Utente non autenticato');
+        throw const NotSignedIn();
       }
 
       AppLogger.debug('Leggo bytes file', tag: 'ImageUpload');

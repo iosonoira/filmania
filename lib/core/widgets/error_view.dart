@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../network/network_failure.dart';
 import '../../features/auth/domain/failures/auth_failure.dart';
+import '../l10n/app_localizations_provider.dart';
+import '../l10n/auth_failure_l10n.dart';
+import '../l10n/generated/app_localizations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 
@@ -21,28 +24,35 @@ class AppErrorView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final (icon, title, subtitle) = _resolveErrorData();
+    final l10n = ref.watch(appLocalizationsProvider);
+    final (icon, title, subtitle) = _resolveErrorData(l10n);
 
     if (compact) {
-      return _CompactErrorView(icon: icon, message: title, onRetry: onRetry);
+      return _CompactErrorView(
+        icon: icon,
+        message: title,
+        retryLabel: l10n.retryBtn,
+        onRetry: onRetry,
+      );
     }
 
     return _FullErrorView(
       icon: icon,
       title: title,
       subtitle: subtitle,
+      retryLabel: l10n.retryBtn,
       onRetry: onRetry,
     );
   }
 
-  (IconData, String, String) _resolveErrorData() {
+  (IconData, String, String) _resolveErrorData(AppLocalizations l10n) {
     // ClientException (from Supabase/http) often means connection issues on Web
     if (error.toString().contains('ClientException') ||
         error.toString().contains('Failed to fetch')) {
       return (
         Icons.signal_wifi_off_rounded,
-        'Nessuna connessione.',
-        'Controlla il tuo Wi-Fi o i dati mobili.',
+        l10n.errorNoConnectionTitle,
+        l10n.errorNoConnectionDesc,
       );
     }
 
@@ -50,46 +60,46 @@ class AppErrorView extends ConsumerWidget {
       final NetworkFailure failure => switch (failure) {
         TimeoutFailure() => (
           Icons.wifi_off_rounded,
-          'Connessione lenta.',
-          'Riprova tra poco.',
+          l10n.errorSlowConnectionTitle,
+          l10n.errorSlowConnectionDesc,
         ),
         ConnectionFailure() => (
           Icons.signal_wifi_off_rounded,
-          'Nessuna connessione.',
-          'Controlla il tuo Wi-Fi o i dati mobili.',
+          l10n.errorNoConnectionTitle,
+          l10n.errorNoConnectionDesc,
         ),
         ServerFailure(:final statusCode) =>
           statusCode == 404
               ? (
                   Icons.search_off_rounded,
-                  'Non trovato.',
-                  'Il contenuto richiesto non esiste.',
+                  l10n.errorNotFoundTitle,
+                  l10n.errorNotFoundDesc,
                 )
               : (
                   Icons.cloud_off_rounded,
-                  'Errore server.',
-                  'Qualcosa è andato storto lato server.',
+                  l10n.errorServerTitle,
+                  l10n.errorServerDesc,
                 ),
         UnauthorizedFailure() => (
           Icons.lock_outline_rounded,
-          'Sessione scaduta.',
-          'Effettua di nuovo il login.',
+          l10n.errorSessionExpiredTitle,
+          l10n.errorSessionExpiredDesc,
         ),
         _ => (
           Icons.error_outline_rounded,
-          'Errore di rete.',
-          'Riprova più tardi.',
+          l10n.errorNetworkGenericTitle,
+          l10n.errorNetworkGenericDesc,
         ),
       },
       final AuthFailure failure => (
         Icons.person_outline_rounded,
-        'Errore Autenticazione',
-        failure.message,
+        l10n.errorAuthTitle,
+        authFailureMessage(failure, l10n),
       ),
       _ => (
         Icons.error_outline_rounded,
-        'Errore imprevisto.',
-        'Si è verificato un errore inaspettato.',
+        l10n.errorUnexpectedTitle,
+        l10n.errorUnexpectedDesc,
       ),
     };
   }
@@ -99,12 +109,14 @@ class _FullErrorView extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
+  final String retryLabel;
   final VoidCallback? onRetry;
 
   const _FullErrorView({
     required this.icon,
     required this.title,
     required this.subtitle,
+    required this.retryLabel,
     this.onRetry,
   });
 
@@ -136,7 +148,7 @@ class _FullErrorView extends StatelessWidget {
           ),
           if (onRetry != null) ...[
             const SizedBox(height: AppSpacing.lg),
-            OutlinedButton(onPressed: onRetry, child: const Text('Riprova')),
+            OutlinedButton(onPressed: onRetry, child: Text(retryLabel)),
           ],
         ],
       ),
@@ -147,11 +159,13 @@ class _FullErrorView extends StatelessWidget {
 class _CompactErrorView extends StatelessWidget {
   final IconData icon;
   final String message;
+  final String retryLabel;
   final VoidCallback? onRetry;
 
   const _CompactErrorView({
     required this.icon,
     required this.message,
+    required this.retryLabel,
     this.onRetry,
   });
 
@@ -175,6 +189,7 @@ class _CompactErrorView extends StatelessWidget {
         ),
         if (onRetry != null)
           IconButton(
+            tooltip: retryLabel,
             onPressed: onRetry,
             icon: const Icon(Icons.refresh_rounded, size: 20),
             color: colors.primary,

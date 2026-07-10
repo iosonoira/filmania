@@ -206,6 +206,120 @@ abstract class AppLocalizations {
   /// **'An error occurred. Please try again.'**
   String get genericErrorDesc;
 
+  /// No description provided for @errorNoConnectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No connection.'**
+  String get errorNoConnectionTitle;
+
+  /// No description provided for @errorNoConnectionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your Wi-Fi or mobile data.'**
+  String get errorNoConnectionDesc;
+
+  /// No description provided for @errorSlowConnectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Slow connection.'**
+  String get errorSlowConnectionTitle;
+
+  /// No description provided for @errorSlowConnectionDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again shortly.'**
+  String get errorSlowConnectionDesc;
+
+  /// No description provided for @errorNotFoundTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Not found.'**
+  String get errorNotFoundTitle;
+
+  /// No description provided for @errorNotFoundDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'The requested content doesn\'t exist.'**
+  String get errorNotFoundDesc;
+
+  /// No description provided for @errorServerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error.'**
+  String get errorServerTitle;
+
+  /// No description provided for @errorServerDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong on our end.'**
+  String get errorServerDesc;
+
+  /// No description provided for @errorSessionExpiredTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired.'**
+  String get errorSessionExpiredTitle;
+
+  /// No description provided for @errorSessionExpiredDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Please log in again.'**
+  String get errorSessionExpiredDesc;
+
+  /// No description provided for @errorNetworkGenericTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error.'**
+  String get errorNetworkGenericTitle;
+
+  /// No description provided for @errorNetworkGenericDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again later.'**
+  String get errorNetworkGenericDesc;
+
+  /// No description provided for @errorAuthTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication error'**
+  String get errorAuthTitle;
+
+  /// No description provided for @errorUnexpectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected error.'**
+  String get errorUnexpectedTitle;
+
+  /// No description provided for @errorUnexpectedDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Something unexpected happened.'**
+  String get errorUnexpectedDesc;
+
+  /// No description provided for @authInvalidCredentials.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid credentials. Please try again.'**
+  String get authInvalidCredentials;
+
+  /// No description provided for @authEmailAlreadyInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'This email address is already in use by another account.'**
+  String get authEmailAlreadyInUse;
+
+  /// No description provided for @authRateLimitExceeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Try again in a few minutes.'**
+  String get authRateLimitExceeded;
+
+  /// No description provided for @authNotSignedIn.
+  ///
+  /// In en, this message translates to:
+  /// **'You need to be signed in to do that.'**
+  String get authNotSignedIn;
+
   /// No description provided for @emailAddress.
   ///
   /// In en, this message translates to:

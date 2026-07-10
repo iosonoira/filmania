@@ -36,3 +36,7 @@ class RateLimitExceeded extends AuthFailure {
     super.message = 'Troppi tentativi. Riprova tra qualche minuto.',
   ]);
 }
+
+class NotSignedIn extends AuthFailure {
+  const NotSignedIn([super.message = 'Utente non autenticato.']);
+}
