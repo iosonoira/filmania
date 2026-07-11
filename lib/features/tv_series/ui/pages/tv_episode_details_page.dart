@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import 'package:filmania/core/utils/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/cast_section.dart';
 import '../../../watched/ui/widgets/watched_episode_button.dart';
 import '../../domain/entities/tv_episode.dart';
@@ -45,14 +47,14 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
             seriesTitle: series.name,
             seriesPosterPath: series.posterPath,
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const _EpisodeDetailsSkeleton(),
           error: (err, stack) => _TVEpisodeDetailsContent(
             episode: episode,
             seriesId: tvId,
             seriesTitle: 'Serie TV', // Fallback
           ),
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const _EpisodeDetailsSkeleton(),
         error: (err, stack) => AppErrorView(
           error: err,
           onRetry: () => ref.invalidate(
@@ -301,8 +303,89 @@ class _TVEpisodeCastSection extends ConsumerWidget {
         padding: const EdgeInsets.only(bottom: AppSpacing.lg),
         child: CastSection(cast: cast),
       ),
-      loading: () => const SizedBox.shrink(),
-      error: (err, stack) => const SizedBox.shrink(),
+      loading: () => const CastRowSkeleton(),
+      error: (err, stack) {
+        AppLogger.error(
+          'Cast load failed',
+          tag: 'TVEpisodeCastSection',
+          exception: err,
+        );
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}
+
+/// Episode page skeleton: full-width still (300dp, no separate poster,
+/// unlike movie/TV series details), a stats row, one full-width action
+/// button, an overview block, and a cast row.
+class _EpisodeDetailsSkeleton extends StatelessWidget {
+  const _EpisodeDetailsSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(height: MediaQuery.of(context).padding.top),
+        ),
+        const SliverToBoxAdapter(
+          child: Skeleton(
+            width: double.infinity,
+            height: 300,
+            borderRadius: BorderRadius.zero,
+            gradient: false,
+          ),
+        ),
+        const SliverPadding(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.lg,
+          ),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Skeleton(height: 16, width: 140),
+                SizedBox(height: AppSpacing.sm),
+                Skeleton(height: 26, width: 220),
+                SizedBox(height: AppSpacing.lg),
+                Skeleton(height: 20, width: 180),
+                SizedBox(height: AppSpacing.lg),
+                Skeleton(
+                  height: 52,
+                  borderRadius: BorderRadius.all(Radius.circular(16)),
+                ),
+                SizedBox(height: AppSpacing.lg),
+                Skeleton(height: 20, width: 100),
+                SizedBox(height: AppSpacing.md),
+                Skeleton(height: 14, width: double.infinity),
+                SizedBox(height: AppSpacing.xs),
+                Skeleton(height: 14, width: 200),
+              ],
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 160,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              scrollDirection: Axis.horizontal,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 6,
+              separatorBuilder: (context, index) =>
+                  const SizedBox(width: AppSpacing.md),
+              itemBuilder: (context, index) => const Skeleton(
+                width: 100,
+                height: 100,
+                shape: SkeletonShape.circle,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -12,6 +12,7 @@ import '../providers/watchlist_providers.dart';
 import '../widgets/watchlist_widgets.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/selection_action_feedback.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../../core/widgets/selection/selection_action_bar.dart';
@@ -194,7 +195,7 @@ class WatchlistDetailPage extends ConsumerWidget {
                             mainAxisSpacing: AppSpacing.md,
                           ),
                       delegate: SliverChildBuilderDelegate(
-                        (context, index) => const WatchlistShimmerCard(),
+                        (context, index) => const Skeleton(),
                         childCount: 6,
                       ),
                     ),

@@ -12,6 +12,7 @@ import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/cast_section.dart';
 import 'package:filmania/core/widgets/crew_section.dart';
 import 'package:filmania/core/widgets/recommendations_section.dart';
@@ -36,7 +37,7 @@ class TVSeriesDetailsPage extends ConsumerWidget {
       appBar: const GlassmorphicAppBar(showBackButton: true),
       body: seriesAsync.when(
         data: (series) => _TVSeriesDetailsContent(series: series),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const MediaDetailsSkeleton(),
         error: (err, stack) => AppErrorView(
           error: err,
           onRetry: () => ref.invalidate(tvSeriesDetailsProvider(seriesId)),
@@ -383,7 +384,10 @@ class _WatchlistButton extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Skeleton(
+        height: 56,
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+      ),
       error: (error, stack) {
         AppLogger.error(
           'Watchlist status load failed',
@@ -423,8 +427,15 @@ class _TVSeriesCastSection extends ConsumerWidget {
           ),
         ],
       ),
-      loading: () => const SizedBox.shrink(),
-      error: (err, stack) => const SizedBox.shrink(),
+      loading: () => const CastRowSkeleton(),
+      error: (err, stack) {
+        AppLogger.error(
+          'Cast/crew load failed',
+          tag: 'TVSeriesCastSection',
+          exception: err,
+        );
+        return const SizedBox.shrink();
+      },
     );
   }
 }
@@ -457,8 +468,15 @@ class _TVSeriesRecommendationsSection extends ConsumerWidget {
           );
         },
       ),
-      loading: () => const SizedBox.shrink(),
-      error: (err, stack) => const SizedBox.shrink(),
+      loading: () => const RecommendationsRowSkeleton(),
+      error: (err, stack) {
+        AppLogger.error(
+          'Recommendations load failed',
+          tag: 'TVSeriesRecommendationsSection',
+          exception: err,
+        );
+        return const SizedBox.shrink();
+      },
     );
   }
 }

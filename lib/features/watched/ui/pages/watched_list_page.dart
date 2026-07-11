@@ -13,6 +13,7 @@ import '../../../../core/router/app_router.dart';
 import '../../domain/entities/watched_item.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/selection_action_feedback.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
@@ -71,7 +72,7 @@ class _WatchedMoviesScaffold extends ConsumerWidget {
                   items: items,
                   emptyMessage: l10n.emptyWatchedMovies,
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
+                loading: () => const WatchedGridSkeleton(),
                 error: (err, stack) => AppErrorView(
                   error: err,
                   onRetry: () =>
@@ -466,7 +467,7 @@ class _WatchedTvSeriesBody extends ConsumerWidget {
 
     return asyncItems.when(
       data: (items) => _WatchedTvSeriesTabs(items: items),
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const WatchedGridSkeleton(),
       error: (err, stack) => AppErrorView(
         error: err,
         onRetry: () => ref.invalidate(categorizedTvSeriesProvider),

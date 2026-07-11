@@ -90,12 +90,8 @@ class _CastCard extends StatelessWidget {
                   ? CachedNetworkImage(
                       imageUrl: member.fullProfileUrl!,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: colors.primary.withValues(alpha: 0.5),
-                        ),
-                      ),
+                      memCacheWidth: 200,
+                      memCacheHeight: 200,
                       errorWidget: (context, url, error) =>
                           _CastFallback(colors: colors),
                     )

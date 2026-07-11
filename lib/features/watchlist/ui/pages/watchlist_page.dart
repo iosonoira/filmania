@@ -8,6 +8,7 @@ import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import '../providers/watchlist_providers.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../domain/entities/watchlist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -103,7 +104,7 @@ class WatchlistPage extends ConsumerWidget {
                   mainAxisSpacing: AppSpacing.md,
                 ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => _WatchlistShimmerCard(),
+                  (context, index) => const Skeleton(),
                   childCount: 4,
                 ),
               ),
@@ -267,28 +268,6 @@ class _WatchlistCoverPlaceholder extends StatelessWidget {
           Icons.movie_filter_rounded,
           size: 40,
           color: colors.onSurfaceSecondary.withValues(alpha: 0.4),
-        ),
-      ),
-    );
-  }
-}
-
-class _WatchlistShimmerCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [
-            colors.surface.withValues(alpha: 0.05),
-            colors.surface.withValues(alpha: 0.12),
-            colors.surface.withValues(alpha: 0.05),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
         ),
       ),
     );

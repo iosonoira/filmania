@@ -91,12 +91,7 @@ class _CrewCard extends StatelessWidget {
                       imageUrl: member.fullProfileUrl!,
                       fit: BoxFit.cover,
                       memCacheWidth: 200,
-                      placeholder: (context, url) => Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: colors.primary.withValues(alpha: 0.5),
-                        ),
-                      ),
+                      memCacheHeight: 200,
                       errorWidget: (context, url, error) =>
                           _CrewFallback(colors: colors),
                     )

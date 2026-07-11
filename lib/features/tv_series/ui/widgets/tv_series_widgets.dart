@@ -14,6 +14,7 @@ import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../../core/widgets/selection/selection_action_bar.dart';
 import '../../../../core/widgets/selection/selection_scope.dart';
 import '../../../../core/widgets/selection_action_feedback.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 import '../../../watched/ui/widgets/watched_bulk_actions.dart';
@@ -545,25 +546,14 @@ class _EpisodesLoadingSkeleton extends StatelessWidget {
       child: Column(
         children: List.generate(
           3,
-          (index) => Padding(
-            padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-            child: _SkeletonCard(),
+          (index) => const Padding(
+            padding: EdgeInsets.only(bottom: AppSpacing.sm),
+            child: Skeleton(
+              height: 90,
+              borderRadius: BorderRadius.all(Radius.circular(AppSpacing.md)),
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SkeletonCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    return Container(
-      height: 90,
-      decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(AppSpacing.md),
       ),
     );
   }

@@ -10,6 +10,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/glass_overlay.dart';
 import '../../../../core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../domain/entities/favorite_item.dart';
 import '../providers/favorites_providers.dart';
 import '../widgets/favorite_button.dart';
@@ -88,7 +89,7 @@ class FavoritesPage extends ConsumerWidget {
                   mainAxisSpacing: AppSpacing.md,
                 ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => const _FavoriteShimmerCard(),
+                  (context, index) => const Skeleton(),
                   childCount: 4,
                 ),
               ),
@@ -233,30 +234,6 @@ class _FavoritePosterPlaceholder extends StatelessWidget {
           Icons.movie_filter_rounded,
           size: 40,
           color: colors.onSurfaceSecondary.withValues(alpha: 0.4),
-        ),
-      ),
-    );
-  }
-}
-
-class _FavoriteShimmerCard extends StatelessWidget {
-  const _FavoriteShimmerCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [
-            colors.surface.withValues(alpha: 0.05),
-            colors.surface.withValues(alpha: 0.12),
-            colors.surface.withValues(alpha: 0.05),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
         ),
       ),
     );

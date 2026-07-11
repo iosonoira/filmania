@@ -149,38 +149,3 @@ class WatchlistMediaCard extends StatelessWidget {
   }
 }
 
-class WatchlistShimmerCard extends StatelessWidget {
-  const WatchlistShimmerCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = AppColors.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    colors.surface.withValues(alpha: 0.05),
-                    colors.surface.withValues(alpha: 0.1),
-                    colors.surface.withValues(alpha: 0.05),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
