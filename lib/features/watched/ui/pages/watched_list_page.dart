@@ -183,12 +183,7 @@ class _WatchedTvSeriesScaffold extends ConsumerWidget {
             tooltip: MaterialLocalizations.of(context).backButtonTooltip,
             onPressed: () => Navigator.of(context).pop(),
           ),
-          bottom: TabBar(
-            isScrollable: true,
-            indicatorColor: colors.primary,
-            dividerColor: Colors.transparent,
-            labelColor: colors.onSurfacePrimary,
-            unselectedLabelColor: colors.onSurfaceSecondary,
+          bottom: _ScrollHintTabBar(
             tabs: [
               Tab(text: l10n.watching),
               Tab(text: l10n.upToDate),
@@ -205,6 +200,125 @@ class _WatchedTvSeriesScaffold extends ConsumerWidget {
                 _WatchedTvSeriesActionBar(),
                 Expanded(child: _WatchedTvSeriesBody()),
               ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A scrollable [TabBar] gives no signal that swiping reveals more tabs —
+/// with 5 categories and long localized labels, 2 can sit off-screen with
+/// no visual hint they exist. Overlays edge fades that appear only while
+/// there's unseen content in that direction (tracked via scroll metrics),
+/// so the hint disappears once a user has scrolled all the way to an edge.
+class _ScrollHintTabBar extends StatefulWidget implements PreferredSizeWidget {
+  const _ScrollHintTabBar({required this.tabs});
+
+  final List<Widget> tabs;
+
+  @override
+  Size get preferredSize => const TabBar(tabs: []).preferredSize;
+
+  @override
+  State<_ScrollHintTabBar> createState() => _ScrollHintTabBarState();
+}
+
+class _ScrollHintTabBarState extends State<_ScrollHintTabBar> {
+  // Assume overflow until the first real scroll metrics arrive, since the
+  // tabs are known to overflow on most locales/screen widths; this favors
+  // showing the hint over silently hiding a real overflow on first frame.
+  bool _canScrollForward = true;
+  bool _canScrollBackward = false;
+
+  bool _handleScrollMetrics(ScrollMetrics metrics) {
+    final canForward = metrics.pixels < metrics.maxScrollExtent - 1;
+    final canBackward = metrics.pixels > metrics.minScrollExtent + 1;
+    if (canForward == _canScrollForward && canBackward == _canScrollBackward) {
+      return false;
+    }
+    setState(() {
+      _canScrollForward = canForward;
+      _canScrollBackward = canBackward;
+    });
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: (notification) =>
+          _handleScrollMetrics(notification.metrics),
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) =>
+            _handleScrollMetrics(notification.metrics),
+        child: Stack(
+          children: [
+            TabBar(
+              isScrollable: true,
+              indicatorSize: TabBarIndicatorSize.label,
+              // Reuses DESIGN.md's Filter Chip active-state vocabulary
+              // ("primary + soft glow") instead of a second, unstyled
+              // selection language for the same "this is active" concept.
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSpacing.lg),
+                color: colors.primary.withValues(alpha: 0.16),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.primary.withValues(alpha: 0.35),
+                    blurRadius: AppSpacing.md,
+                  ),
+                ],
+              ),
+              dividerColor: Colors.transparent,
+              labelColor: colors.onSurfacePrimary,
+              unselectedLabelColor: colors.onSurfaceSecondary,
+              tabs: widget.tabs,
+            ),
+            if (_canScrollBackward)
+              _TabEdgeFade(
+                alignment: Alignment.centerLeft,
+                color: colors.background,
+              ),
+            if (_canScrollForward)
+              _TabEdgeFade(
+                alignment: Alignment.centerRight,
+                color: colors.background,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Directional gradient hinting that scrolling reveals more tabs. Ignores
+/// touches so it never blocks the [TabBar] underneath.
+class _TabEdgeFade extends StatelessWidget {
+  const _TabEdgeFade({required this.alignment, required this.color});
+
+  final Alignment alignment;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    final isLeading = alignment == Alignment.centerLeft;
+    return Positioned(
+      top: 0,
+      bottom: 0,
+      left: isLeading ? 0 : null,
+      right: isLeading ? null : 0,
+      child: IgnorePointer(
+        child: Container(
+          width: AppSpacing.xl,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: isLeading ? Alignment.centerLeft : Alignment.centerRight,
+              end: isLeading ? Alignment.centerRight : Alignment.centerLeft,
+              colors: [color, color.withValues(alpha: 0)],
             ),
           ),
         ),
@@ -493,18 +607,19 @@ class _WatchedGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // DESIGN.md's Ambient Shadow spec: tinted (primary), 32-64px blur,
+    // 4-8% opacity (dark) / 8-12% (light) — the prior flat black/8px
+    // shadow matched neither the color nor the blur range.
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppSpacing.radius),
-        boxShadow: Theme.of(context).brightness == Brightness.dark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+        boxShadow: [
+          BoxShadow(
+            color: colors.primary.withValues(alpha: isDark ? 0.06 : 0.10),
+            blurRadius: 40,
+          ),
+        ],
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppSpacing.radius),

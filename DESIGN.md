@@ -24,10 +24,10 @@ Deep Violet palette. Material tonal tiers for depth.
 - **Accent/Selection:** #E1D5FF
 
 #### Light Mode
-- **Background:** #FAFAFA
+- **Background:** #F2F2F7 (iOS-style light grey)
 - **Surface/Cards:** #FFFFFF
-- **Primary Text:** #1A1A1A
-- **Secondary Text:** #666666
+- **Primary Text:** #1C1C1E
+- **Secondary Text:** #636366
 - **Primary Action:** #7C4DFF
 - **Accent/Selection:** #E1D5FF
 
