@@ -518,19 +518,44 @@ class _WatchedGridCard extends StatelessWidget {
                 // bitmap isn't larger than what's ever painted on screen.
                 memCacheHeight: 462,
                 placeholder: (context, url) => Container(color: colors.surface),
-                errorWidget: (context, url, error) => Container(
-                  color: colors.surface,
-                  child: Center(
-                    child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
-                  ),
-                ),
+                errorWidget: (context, url, error) =>
+                    _NoPosterFallback(title: item.mediaTitle),
               )
-            : Container(
-                color: colors.surface,
-                child: Center(
-                  child: Icon(Icons.movie, color: colors.onSurfaceSecondary),
-                ),
-              ),
+            : _NoPosterFallback(title: item.mediaTitle),
+      ),
+    );
+  }
+}
+
+/// Shown in place of the poster art when there's none to fetch, or the
+/// fetch failed — a title label keeps the card recognizable instead of
+/// collapsing to an indistinguishable gray tile among other no-poster items.
+class _NoPosterFallback extends StatelessWidget {
+  const _NoPosterFallback({required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return Container(
+      color: colors.surface,
+      padding: const EdgeInsets.all(AppSpacing.xs),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.movie, color: colors.onSurfaceSecondary),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            title,
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: colors.onSurfaceSecondary),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
       ),
     );
   }

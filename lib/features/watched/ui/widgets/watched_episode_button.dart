@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
+import '../../../../core/l10n/generated/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/domain/enums/media_type.dart';
@@ -29,12 +30,115 @@ class WatchedEpisodeButton extends ConsumerWidget {
     this.runtimeMinutes,
   });
 
+  void _refreshEpisodeState(WidgetRef ref) {
+    // Invalidate both the episode status AND the series watched status
+    // since marking an episode might trigger marking the series as watched
+    ref.invalidate(
+      isEpisodeWatchedProvider(
+        seriesId: seriesId,
+        seasonNumber: seasonNumber,
+        episodeNumber: episodeNumber,
+      ),
+    );
+    // Also refresh the series progress stream if anyone is watching it
+    ref.invalidate(watchedEpisodesProvider(seriesId));
+    // Refreshes the eye icon on the series poster
+    ref.invalidate(
+      isMediaWatchedProvider(mediaId: seriesId, mediaType: MediaType.tv),
+    );
+    // Refreshes the list in the "Watched" page
+    ref.invalidate(watchedItemsProvider(MediaType.tv));
+  }
+
+  Future<void> _markEpisodeWatched(WidgetRef ref) async {
+    final user = ref.read(authStateProvider).value;
+    if (user == null) return;
+    final repo = ref.read(watchedRepositoryProvider);
+    await repo.markEpisodeAsWatched(
+      userId: user.id,
+      seriesId: seriesId,
+      seasonNumber: seasonNumber,
+      episodeNumber: episodeNumber,
+      seriesTitle: seriesTitle,
+      seriesPosterPath: seriesPosterPath,
+      runtimeMinutes: runtimeMinutes,
+    );
+    _refreshEpisodeState(ref);
+  }
+
+  Future<void> _undoUnwatch(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) async {
+    try {
+      await _markEpisodeWatched(ref);
+    } catch (e, stack) {
+      AppLogger.error(
+        'undoUnwatch failed',
+        tag: 'WatchedEpisodeButton',
+        exception: e,
+        stackTrace: stack,
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
+      }
+    }
+  }
+
+  Future<void> _toggleWatched(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    bool isWatched,
+  ) async {
+    final user = ref.read(authStateProvider).value;
+    if (user == null) return;
+    final repo = ref.read(watchedRepositoryProvider);
+
+    try {
+      if (isWatched) {
+        await repo.markEpisodeAsUnwatched(
+          userId: user.id,
+          seriesId: seriesId,
+          seasonNumber: seasonNumber,
+          episodeNumber: episodeNumber,
+        );
+        _refreshEpisodeState(ref);
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(l10n.unwatchedSnackbarMessage),
+              action: SnackBarAction(
+                label: l10n.undoAction,
+                onPressed: () => _undoUnwatch(context, ref, l10n),
+              ),
+            ),
+          );
+        }
+      } else {
+        await _markEpisodeWatched(ref);
+      }
+    } catch (e, stack) {
+      AppLogger.error(
+        'toggleWatched failed',
+        tag: 'WatchedEpisodeButton',
+        exception: e,
+        stackTrace: stack,
+      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = AppColors.of(context);
     final l10n = ref.watch(appLocalizationsProvider);
-    final user = ref.watch(authStateProvider).value;
-
     final isWatchedAsync = ref.watch(
       isEpisodeWatchedProvider(
         seriesId: seriesId,
@@ -42,126 +146,76 @@ class WatchedEpisodeButton extends ConsumerWidget {
         episodeNumber: episodeNumber,
       ),
     );
-
     final isWatched = isWatchedAsync.value ?? false;
-
-    void refreshEpisodeState() {
-      // Invalidate both the episode status AND the series watched status
-      // since marking an episode might trigger marking the series as watched
-      ref.invalidate(
-        isEpisodeWatchedProvider(
-          seriesId: seriesId,
-          seasonNumber: seasonNumber,
-          episodeNumber: episodeNumber,
-        ),
-      );
-      // Also refresh the series progress stream if anyone is watching it
-      ref.invalidate(watchedEpisodesProvider(seriesId));
-      // Refreshes the eye icon on the series poster
-      ref.invalidate(
-        isMediaWatchedProvider(mediaId: seriesId, mediaType: MediaType.tv),
-      );
-      // Refreshes the list in the "Watched" page
-      ref.invalidate(watchedItemsProvider(MediaType.tv));
-    }
-
-    Future<void> markEpisodeWatched() async {
-      if (user == null) return;
-      final repo = ref.read(watchedRepositoryProvider);
-      await repo.markEpisodeAsWatched(
-        userId: user.id,
-        seriesId: seriesId,
-        seasonNumber: seasonNumber,
-        episodeNumber: episodeNumber,
-        seriesTitle: seriesTitle,
-        seriesPosterPath: seriesPosterPath,
-        runtimeMinutes: runtimeMinutes,
-      );
-      refreshEpisodeState();
-    }
-
-    Future<void> undoUnwatch() async {
-      try {
-        await markEpisodeWatched();
-      } catch (e, stack) {
-        AppLogger.error(
-          'undoUnwatch failed',
-          tag: 'WatchedEpisodeButton',
-          exception: e,
-          stackTrace: stack,
-        );
-        if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
-        }
-      }
-    }
-
-    Future<void> toggleWatched() async {
-      if (user == null) return;
-      final repo = ref.read(watchedRepositoryProvider);
-
-      try {
-        if (isWatched) {
-          await repo.markEpisodeAsUnwatched(
-            userId: user.id,
-            seriesId: seriesId,
-            seasonNumber: seasonNumber,
-            episodeNumber: episodeNumber,
-          );
-          refreshEpisodeState();
-          if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.unwatchedSnackbarMessage),
-                action: SnackBarAction(
-                  label: l10n.undoAction,
-                  onPressed: () => undoUnwatch(),
-                ),
-              ),
-            );
-          }
-        } else {
-          await markEpisodeWatched();
-        }
-      } catch (e, stack) {
-        AppLogger.error(
-          'toggleWatched failed',
-          tag: 'WatchedEpisodeButton',
-          exception: e,
-          stackTrace: stack,
-        );
-        if (context.mounted) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(l10n.errorUpdating)));
-        }
-      }
-    }
+    final label = isWatched
+        ? l10n.watchedButtonLabelWatched
+        : l10n.watchedButtonLabelUnwatched;
+    void onPressed() => _toggleWatched(context, ref, l10n, isWatched);
 
     if (isIconOnly) {
-      return IconButton(
-        tooltip: isWatched
-            ? l10n.watchedButtonLabelWatched
-            : l10n.watchedButtonLabelUnwatched,
-        style: IconButton.styleFrom(
-          backgroundColor: isWatched
-              ? colors.primary.withValues(alpha: 0.14)
-              : Colors.transparent,
-        ),
-        icon: Icon(
-          isWatched
-              ? Icons.check_circle_rounded
-              : Icons.check_circle_outline_rounded,
-          color: isWatched ? colors.primary : colors.onSurfaceSecondary,
-        ),
-        onPressed: toggleWatched,
+      return _WatchedEpisodeIconBadge(
+        isWatched: isWatched,
+        label: label,
+        onPressed: onPressed,
       );
     }
 
+    return _WatchedEpisodeFilledButton(
+      isWatched: isWatched,
+      label: label,
+      onPressed: onPressed,
+    );
+  }
+}
+
+class _WatchedEpisodeIconBadge extends StatelessWidget {
+  final bool isWatched;
+  final String label;
+  final VoidCallback onPressed;
+
+  const _WatchedEpisodeIconBadge({
+    required this.isWatched,
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    return IconButton(
+      tooltip: label,
+      style: IconButton.styleFrom(
+        backgroundColor: isWatched
+            ? colors.primary.withValues(alpha: 0.14)
+            : Colors.transparent,
+      ),
+      icon: Icon(
+        isWatched
+            ? Icons.check_circle_rounded
+            : Icons.check_circle_outline_rounded,
+        color: isWatched ? colors.primary : colors.onSurfaceSecondary,
+      ),
+      onPressed: onPressed,
+    );
+  }
+}
+
+class _WatchedEpisodeFilledButton extends StatelessWidget {
+  final bool isWatched;
+  final String label;
+  final VoidCallback onPressed;
+
+  const _WatchedEpisodeFilledButton({
+    required this.isWatched,
+    required this.label,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
     return FilledButton.tonalIcon(
-      onPressed: toggleWatched,
+      onPressed: onPressed,
       style: FilledButton.styleFrom(
         foregroundColor: isWatched ? colors.primary : colors.onSurfacePrimary,
         backgroundColor: isWatched
@@ -177,12 +231,7 @@ class WatchedEpisodeButton extends ConsumerWidget {
         isWatched ? Icons.check_circle : Icons.visibility_outlined,
         size: 18,
       ),
-      label: Text(
-        isWatched
-            ? l10n.watchedButtonLabelWatched
-            : l10n.watchedButtonLabelUnwatched,
-        style: const TextStyle(fontWeight: FontWeight.w600),
-      ),
+      label: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
     );
   }
 }

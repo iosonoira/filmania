@@ -37,7 +37,7 @@ void main() {
                     SelectionAction<int>(
                       icon: Icons.bookmark_add_rounded,
                       label: 'Aggiungi a lista',
-                      onPressed: (selected) => pressedWith = selected,
+                      onPressed: (selected) async => pressedWith = selected,
                     ),
                   ],
                 ),

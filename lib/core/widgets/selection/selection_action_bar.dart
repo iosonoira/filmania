@@ -14,7 +14,10 @@ class SelectionAction<T> {
 
   final IconData icon;
   final String label;
-  final void Function(Set<T> selected) onPressed;
+
+  /// Awaited by the bar so it can show a busy state and block re-entrant
+  /// taps while a bulk action is in flight (see `_SelectionActionBarState`).
+  final Future<void> Function(Set<T> selected) onPressed;
 }
 
 /// Contextual bar shown while a [SelectionScope<T>] is active: a close
@@ -24,7 +27,7 @@ class SelectionAction<T> {
 /// Place it wherever the screen's layout has room (e.g. above a grid, or
 /// `Positioned` at the top of a `Stack`) — it renders as `SizedBox.shrink`
 /// while inactive, so it can always be mounted unconditionally.
-class SelectionActionBar<T> extends StatelessWidget {
+class SelectionActionBar<T> extends StatefulWidget {
   const SelectionActionBar({
     super.key,
     required this.actions,
@@ -41,10 +44,26 @@ class SelectionActionBar<T> extends StatelessWidget {
   final String closeTooltip;
 
   @override
+  State<SelectionActionBar<T>> createState() => _SelectionActionBarState<T>();
+}
+
+class _SelectionActionBarState<T> extends State<SelectionActionBar<T>> {
+  bool _busy = false;
+
+  Future<void> _runAction(SelectionAction<T> action, Set<T> selected) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await action.onPressed(selected);
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final controller = SelectionScope.controllerOf<T>(context);
     final colors = AppColors.of(context);
-    final textTheme = Theme.of(context).textTheme;
 
     return AnimatedBuilder(
       animation: controller,
@@ -64,47 +83,19 @@ class SelectionActionBar<T> extends StatelessWidget {
               child: Row(
                 children: [
                   Tooltip(
-                    message: closeTooltip,
+                    message: widget.closeTooltip,
                     child: IconButton(
                       icon: const Icon(Icons.close_rounded),
-                      onPressed: controller.clear,
+                      onPressed: _busy ? null : controller.clear,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  Text(
-                    '${selected.length}',
-                    style: textTheme.titleMedium?.copyWith(
-                      color: colors.onSurfacePrimary,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  for (final action in actions)
-                    Expanded(
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(AppSpacing.radius),
-                        onTap: () => action.onPressed(selected),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: AppSpacing.xs,
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(action.icon, color: colors.onSurfacePrimary),
-                              const SizedBox(height: 2),
-                              Text(
-                                action.label,
-                                style: textTheme.labelSmall?.copyWith(
-                                  color: colors.onSurfacePrimary,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                  _SelectionCountOrSpinner(busy: _busy, count: selected.length),
+                  for (final action in widget.actions)
+                    _SelectionActionTile<T>(
+                      action: action,
+                      busy: _busy,
+                      onTap: () => _runAction(action, selected),
                     ),
                 ],
               ),
@@ -112,6 +103,85 @@ class SelectionActionBar<T> extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+/// Live selected-count while idle, a small spinner while a bulk action from
+/// [SelectionActionBar] is in flight.
+class _SelectionCountOrSpinner extends StatelessWidget {
+  const _SelectionCountOrSpinner({required this.busy, required this.count});
+
+  final bool busy;
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    if (busy) {
+      return SizedBox(
+        width: 16,
+        height: 16,
+        child: CircularProgressIndicator(
+          strokeWidth: 2,
+          color: colors.onSurfacePrimary,
+        ),
+      );
+    }
+    return Text(
+      '$count',
+      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+        color: colors.onSurfacePrimary,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+}
+
+/// One icon+label tile in [SelectionActionBar], dimmed and untappable while
+/// [busy] so a bulk action can't be re-entered mid-flight.
+class _SelectionActionTile<T> extends StatelessWidget {
+  const _SelectionActionTile({
+    required this.action,
+    required this.busy,
+    required this.onTap,
+  });
+
+  final SelectionAction<T> action;
+  final bool busy;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final contentColor = colors.onSurfacePrimary.withValues(
+      alpha: busy ? 0.4 : 1.0,
+    );
+
+    return Expanded(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppSpacing.radius),
+        onTap: busy ? null : onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(action.icon, color: contentColor),
+              const SizedBox(height: 2),
+              Text(
+                action.label,
+                style: Theme.of(
+                  context,
+                ).textTheme.labelSmall?.copyWith(color: contentColor),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

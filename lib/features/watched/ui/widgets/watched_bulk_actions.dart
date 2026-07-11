@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/domain/enums/media_type.dart';
+import '../../../../core/utils/concurrency.dart';
 import '../../../../core/widgets/selection/episode_selection_item.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
@@ -7,6 +8,14 @@ import '../../data/repositories/watched_repository_impl.dart';
 import '../../domain/entities/watched_item.dart';
 import '../providers/categorized_tv_series_provider.dart';
 import '../providers/watched_providers.dart';
+
+/// Bulk actions apply to at most a screenful of selected items, but run
+/// against Supabase over the network — bounded concurrency (matching the
+/// concurrency already used for TMDB/Supabase batch fetches in
+/// `categorized_tv_series_provider.dart`) is faster than a sequential loop
+/// without risking a `Future.wait`-everything-at-once burst against
+/// Supabase's rate limits.
+const _bulkActionConcurrency = 5;
 
 /// Toggles watched status for every item in [items], one at a time,
 /// mirroring the per-item logic in `WatchedButton`. An already-watched
@@ -32,47 +41,51 @@ Future<int> toggleWatchedBulk(
   if (user == null) return items.length;
   final repo = ref.read(watchedRepositoryProvider);
 
-  var failureCount = 0;
   final affectedMediaTypes = <MediaType>{};
-  for (final item in items) {
-    try {
-      final isWatched = await repo.isWatched(
-        userId: user.id,
-        mediaId: item.mediaId,
-        mediaType: item.mediaType,
-      );
-
-      if (isWatched) {
-        await repo.removeFromWatched(
+  final results = await mapWithConcurrency<MediaSelectionItem, bool>(
+    items,
+    _bulkActionConcurrency,
+    (item) async {
+      try {
+        final isWatched = await repo.isWatched(
           userId: user.id,
           mediaId: item.mediaId,
           mediaType: item.mediaType,
         );
-      } else {
-        await repo.markAsWatched(
-          WatchedItem(
-            id: '',
+
+        if (isWatched) {
+          await repo.removeFromWatched(
             userId: user.id,
             mediaId: item.mediaId,
-            mediaTitle: item.title,
             mediaType: item.mediaType,
-            posterPath: item.posterPath,
-            watchedAt: DateTime.now(),
+          );
+        } else {
+          await repo.markAsWatched(
+            WatchedItem(
+              id: '',
+              userId: user.id,
+              mediaId: item.mediaId,
+              mediaTitle: item.title,
+              mediaType: item.mediaType,
+              posterPath: item.posterPath,
+              watchedAt: DateTime.now(),
+            ),
+          );
+        }
+
+        affectedMediaTypes.add(item.mediaType);
+        ref.invalidate(
+          isMediaWatchedProvider(
+            mediaId: item.mediaId,
+            mediaType: item.mediaType,
           ),
         );
+        return true;
+      } catch (_) {
+        return false;
       }
-
-      affectedMediaTypes.add(item.mediaType);
-      ref.invalidate(
-        isMediaWatchedProvider(
-          mediaId: item.mediaId,
-          mediaType: item.mediaType,
-        ),
-      );
-    } catch (_) {
-      failureCount++;
-    }
-  }
+    },
+  );
   // Invalidated once per distinct media type after the whole batch settles,
   // not per item: `watchedItemsProvider` wraps a Supabase Realtime stream,
   // and invalidating it N times in a tight loop tears down and recreates
@@ -83,7 +96,7 @@ Future<int> toggleWatchedBulk(
   for (final mediaType in affectedMediaTypes) {
     ref.invalidate(watchedItemsProvider(mediaType));
   }
-  return failureCount;
+  return results.where((succeeded) => !succeeded).length;
 }
 
 /// Marks every TV series in [items] as dropped ("Interrotta"), moving them
@@ -103,20 +116,24 @@ Future<int> markSeriesDroppedBulk(
   if (user == null) return items.length;
   final repo = ref.read(watchedRepositoryProvider);
 
-  var failureCount = 0;
-  for (final item in items) {
-    try {
-      await repo.markSeriesAsDropped(
-        userId: user.id,
-        seriesId: item.mediaId,
-        isDropped: isDropped,
-      );
-    } catch (_) {
-      failureCount++;
-    }
-  }
+  final results = await mapWithConcurrency<MediaSelectionItem, bool>(
+    items,
+    _bulkActionConcurrency,
+    (item) async {
+      try {
+        await repo.markSeriesAsDropped(
+          userId: user.id,
+          seriesId: item.mediaId,
+          isDropped: isDropped,
+        );
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+  );
   ref.invalidate(categorizedTvSeriesProvider);
-  return failureCount;
+  return results.where((succeeded) => !succeeded).length;
 }
 
 /// Marks every TV series in [items] as "watch later" ("Guarda più tardi"),
@@ -137,20 +154,24 @@ Future<int> markSeriesWatchLaterBulk(
   if (user == null) return items.length;
   final repo = ref.read(watchedRepositoryProvider);
 
-  var failureCount = 0;
-  for (final item in items) {
-    try {
-      await repo.markSeriesAsWatchLater(
-        userId: user.id,
-        seriesId: item.mediaId,
-        isWatchLater: isWatchLater,
-      );
-    } catch (_) {
-      failureCount++;
-    }
-  }
+  final results = await mapWithConcurrency<MediaSelectionItem, bool>(
+    items,
+    _bulkActionConcurrency,
+    (item) async {
+      try {
+        await repo.markSeriesAsWatchLater(
+          userId: user.id,
+          seriesId: item.mediaId,
+          isWatchLater: isWatchLater,
+        );
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+  );
   ref.invalidate(categorizedTvSeriesProvider);
-  return failureCount;
+  return results.where((succeeded) => !succeeded).length;
 }
 
 /// Marks every episode in [items] as watched, mirroring the per-episode
@@ -170,32 +191,36 @@ Future<int> markEpisodesWatchedBulk(
   if (user == null) return items.length;
   final repo = ref.read(watchedRepositoryProvider);
 
-  var failureCount = 0;
   final affectedSeriesIds = <int>{};
-  for (final item in items) {
-    try {
-      await repo.markEpisodeAsWatched(
-        userId: user.id,
-        seriesId: item.seriesId,
-        seasonNumber: item.seasonNumber,
-        episodeNumber: item.episodeNumber,
-        seriesTitle: item.seriesTitle,
-        seriesPosterPath: item.seriesPosterPath,
-        runtimeMinutes: item.runtimeMinutes,
-      );
-      affectedSeriesIds.add(item.seriesId);
-
-      ref.invalidate(
-        isEpisodeWatchedProvider(
+  final results = await mapWithConcurrency<EpisodeSelectionItem, bool>(
+    items,
+    _bulkActionConcurrency,
+    (item) async {
+      try {
+        await repo.markEpisodeAsWatched(
+          userId: user.id,
           seriesId: item.seriesId,
           seasonNumber: item.seasonNumber,
           episodeNumber: item.episodeNumber,
-        ),
-      );
-    } catch (_) {
-      failureCount++;
-    }
-  }
+          seriesTitle: item.seriesTitle,
+          seriesPosterPath: item.seriesPosterPath,
+          runtimeMinutes: item.runtimeMinutes,
+        );
+        affectedSeriesIds.add(item.seriesId);
+
+        ref.invalidate(
+          isEpisodeWatchedProvider(
+            seriesId: item.seriesId,
+            seasonNumber: item.seasonNumber,
+            episodeNumber: item.episodeNumber,
+          ),
+        );
+        return true;
+      } catch (_) {
+        return false;
+      }
+    },
+  );
 
   for (final seriesId in affectedSeriesIds) {
     ref.invalidate(watchedEpisodesProvider(seriesId));
@@ -204,5 +229,5 @@ Future<int> markEpisodesWatchedBulk(
     );
   }
   ref.invalidate(watchedItemsProvider(MediaType.tv));
-  return failureCount;
+  return results.where((succeeded) => !succeeded).length;
 }
