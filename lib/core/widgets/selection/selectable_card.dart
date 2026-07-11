@@ -17,11 +17,17 @@ class SelectableCard<T> extends StatelessWidget {
     required this.id,
     required this.onTap,
     required this.child,
+    this.semanticLabel,
   });
 
   final T id;
   final VoidCallback onTap;
   final Widget child;
+
+  /// Accessible name for the card, read by screen readers ahead of its
+  /// selected/unselected state. Optional — omit for callers whose [child]
+  /// already exposes its own label (e.g. via a visible `Text`).
+  final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +42,8 @@ class SelectableCard<T> extends StatelessWidget {
 
         return Semantics(
           container: true,
+          button: true,
+          label: semanticLabel,
           selected: active ? selected : null,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,

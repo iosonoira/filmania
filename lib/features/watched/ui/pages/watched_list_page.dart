@@ -405,6 +405,7 @@ class WatchedListPage extends ConsumerWidget {
             title: item.mediaTitle,
             posterPath: item.posterPath,
           ),
+          semanticLabel: item.mediaTitle,
           onTap: () {
             final path = item.mediaType == MediaType.movie
                 ? AppRoutes.movieDetails.replaceAll(
