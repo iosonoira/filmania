@@ -259,20 +259,8 @@ class _ScrollHintTabBarState extends State<_ScrollHintTabBar> {
           children: [
             TabBar(
               isScrollable: true,
-              indicatorSize: TabBarIndicatorSize.label,
-              // Reuses DESIGN.md's Filter Chip active-state vocabulary
-              // ("primary + soft glow") instead of a second, unstyled
-              // selection language for the same "this is active" concept.
-              indicator: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppSpacing.lg),
-                color: colors.primary.withValues(alpha: 0.16),
-                boxShadow: [
-                  BoxShadow(
-                    color: colors.primary.withValues(alpha: 0.35),
-                    blurRadius: AppSpacing.md,
-                  ),
-                ],
-              ),
+              tabAlignment: TabAlignment.start,
+              indicatorColor: colors.primary,
               dividerColor: Colors.transparent,
               labelColor: colors.onSurfacePrimary,
               unselectedLabelColor: colors.onSurfaceSecondary,
