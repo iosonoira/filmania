@@ -292,8 +292,17 @@ class _WatchedTvSeriesActionBar extends ConsumerWidget {
   Future<void> _handleWatchLater(
     BuildContext context,
     WidgetRef ref,
+    AppLocalizations l10n,
     List<MediaSelectionItem> items,
   ) async {
+    final confirmed = await showConfirmDialog(
+      context,
+      title: l10n.watchLaterConfirmTitle,
+      message: l10n.watchLaterConfirmMessage(items.length),
+      confirmLabel: l10n.watchLaterAction,
+      cancelLabel: l10n.cancel,
+    );
+    if (!confirmed || !context.mounted) return;
     final failures = await markSeriesWatchLaterBulk(
       ref,
       items: items,
@@ -304,6 +313,9 @@ class _WatchedTvSeriesActionBar extends ConsumerWidget {
       context,
       ref,
       failureCount: failures,
+      onUndo: () async {
+        await markSeriesWatchLaterBulk(ref, items: items, isWatchLater: false);
+      },
     );
   }
 
@@ -336,7 +348,7 @@ class _WatchedTvSeriesActionBar extends ConsumerWidget {
           icon: Icons.watch_later_outlined,
           label: l10n.watchLaterAction,
           onPressed: (selected) =>
-              _handleWatchLater(context, ref, selected.toList()),
+              _handleWatchLater(context, ref, l10n, selected.toList()),
         ),
       ],
     );

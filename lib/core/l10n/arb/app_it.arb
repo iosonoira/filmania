@@ -173,6 +173,15 @@
       }
     }
   },
+  "watchLaterConfirmTitle": "Spostare in Guarda più tardi?",
+  "watchLaterConfirmMessage": "{count} serie verranno spostate in Guarda più tardi.",
+  "@watchLaterConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "watchedButtonLabelWatched": "Visto",
   "watchedButtonLabelUnwatched": "Segna come Visto",
   "undoAction": "Annulla",

@@ -410,6 +410,14 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
+  String get watchLaterConfirmTitle => 'Spostare in Guarda più tardi?';
+
+  @override
+  String watchLaterConfirmMessage(int count) {
+    return '$count serie verranno spostate in Guarda più tardi.';
+  }
+
+  @override
   String get watchedButtonLabelWatched => 'Visto';
 
   @override

@@ -860,6 +860,18 @@ abstract class AppLocalizations {
   /// **'{count} series will be marked as dropped.'**
   String dropSeriesConfirmMessage(int count);
 
+  /// No description provided for @watchLaterConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Move to Watch Later?'**
+  String get watchLaterConfirmTitle;
+
+  /// No description provided for @watchLaterConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} series will be moved to Watch Later.'**
+  String watchLaterConfirmMessage(int count);
+
   /// No description provided for @watchedButtonLabelWatched.
   ///
   /// In en, this message translates to:

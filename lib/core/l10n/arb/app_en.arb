@@ -173,6 +173,15 @@
       }
     }
   },
+  "watchLaterConfirmTitle": "Move to Watch Later?",
+  "watchLaterConfirmMessage": "{count} series will be moved to Watch Later.",
+  "@watchLaterConfirmMessage": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "watchedButtonLabelWatched": "Watched",
   "watchedButtonLabelUnwatched": "Mark as Watched",
   "undoAction": "Undo",
