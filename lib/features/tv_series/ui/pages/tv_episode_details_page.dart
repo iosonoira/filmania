@@ -310,7 +310,20 @@ class _TVEpisodeCastSection extends ConsumerWidget {
           tag: 'TVEpisodeCastSection',
           exception: err,
         );
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () => ref.invalidate(
+              tvEpisodeCreditsProvider(
+                tvId: tvId,
+                seasonNumber: seasonNumber,
+                episodeNumber: episodeNumber,
+              ),
+            ),
+          ),
+        );
       },
     );
   }

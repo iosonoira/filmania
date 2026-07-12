@@ -422,14 +422,21 @@ class _MovieCastSection extends ConsumerWidget {
           ),
         ],
       ),
-      loading: () => const CastRowSkeleton(),
+      loading: () => const CastCrewSkeleton(),
       error: (err, stack) {
         AppLogger.error(
           'Cast/crew load failed',
           tag: 'MovieCastSection',
           exception: err,
         );
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () => ref.invalidate(movieCreditsProvider(movieId)),
+          ),
+        );
       },
     );
   }
@@ -470,7 +477,15 @@ class _MovieRecommendationsSection extends ConsumerWidget {
           tag: 'MovieRecommendationsSection',
           exception: err,
         );
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () =>
+                ref.invalidate(movieRecommendationsProvider(movieId)),
+          ),
+        );
       },
     );
   }

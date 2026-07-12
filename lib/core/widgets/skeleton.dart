@@ -220,6 +220,50 @@ class CastRowSkeleton extends StatelessWidget {
   }
 }
 
+/// Two-row loading placeholder for stacked cast + crew sections (matches
+/// [CastSection] followed by [CrewSection], each a title label + 160dp
+/// avatar row with [AppSpacing.lg] bottom padding). Use instead of a bare
+/// [CastRowSkeleton] wherever both sections render together; [CastRowSkeleton]
+/// alone remains correct where only cast is shown (e.g. the episode page).
+class CastCrewSkeleton extends StatelessWidget {
+  const CastCrewSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(bottom: AppSpacing.lg),
+          child: _TitledRowSkeleton(),
+        ),
+        Padding(
+          padding: EdgeInsets.only(bottom: AppSpacing.lg),
+          child: _TitledRowSkeleton(),
+        ),
+      ],
+    );
+  }
+}
+
+class _TitledRowSkeleton extends StatelessWidget {
+  const _TitledRowSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Skeleton(height: 20, width: 100),
+        ),
+        SizedBox(height: AppSpacing.md),
+        CastRowSkeleton(),
+      ],
+    );
+  }
+}
+
 /// Lightweight loading placeholder for a recommendations row (matches
 /// [RecommendationsSection]'s 220dp-tall horizontal list of 140dp-wide
 /// media cards), used while the recommendations section loads.

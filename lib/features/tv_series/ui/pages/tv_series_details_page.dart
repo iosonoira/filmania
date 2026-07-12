@@ -427,14 +427,21 @@ class _TVSeriesCastSection extends ConsumerWidget {
           ),
         ],
       ),
-      loading: () => const CastRowSkeleton(),
+      loading: () => const CastCrewSkeleton(),
       error: (err, stack) {
         AppLogger.error(
           'Cast/crew load failed',
           tag: 'TVSeriesCastSection',
           exception: err,
         );
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () => ref.invalidate(tvSeriesCreditsProvider(seriesId)),
+          ),
+        );
       },
     );
   }
@@ -475,7 +482,15 @@ class _TVSeriesRecommendationsSection extends ConsumerWidget {
           tag: 'TVSeriesRecommendationsSection',
           exception: err,
         );
-        return const SizedBox.shrink();
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () =>
+                ref.invalidate(tvSeriesRecommendationsProvider(seriesId)),
+          ),
+        );
       },
     );
   }
