@@ -9,6 +9,7 @@ import 'package:filmania/core/theme/app_colors.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/error_view.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import 'package:filmania/core/widgets/skeleton.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:filmania/features/person/domain/entities/person.dart';
 import 'package:filmania/features/person/domain/entities/person_credit.dart';
@@ -28,7 +29,7 @@ class PersonDetailsPage extends ConsumerWidget {
       appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
       body: personAsync.when(
         data: (person) => _PersonDetailsContent(person: person),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const PersonDetailsSkeleton(),
         error: (err, stack) => AppErrorView(
           error: err,
           onRetry: () => ref.invalidate(personDetailsProvider(personId)),

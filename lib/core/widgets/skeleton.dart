@@ -87,6 +87,94 @@ class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin
   }
 }
 
+/// Person details page skeleton. Displays circular 160x160 profile image,
+/// name + birthdate/place + biography text, filmography grid (2-col, 0.7 ratio).
+/// Matches [_PersonDetailsContent] + [_PersonHeader] + [_PersonFilmographySection] layout.
+class PersonDetailsSkeleton extends StatelessWidget {
+  const PersonDetailsSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(height: MediaQuery.of(context).padding.top),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.lg,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Skeleton(
+                    width: 160,
+                    height: 160,
+                    shape: SkeletonShape.circle,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Center(
+                  child: Skeleton(height: 28, width: 180),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Center(
+                  child: Skeleton(height: 16, width: 220),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Skeleton(height: 24, width: 120),
+                const SizedBox(height: AppSpacing.md),
+                Column(
+                  children: [
+                    Skeleton(height: 16, width: double.infinity),
+                    const SizedBox(height: AppSpacing.sm),
+                    Skeleton(height: 16, width: double.infinity),
+                    const SizedBox(height: AppSpacing.sm),
+                    Skeleton(height: 16, width: 200),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: AppSpacing.lg),
+                Skeleton(height: 24, width: 140),
+                const SizedBox(height: AppSpacing.md),
+              ],
+            ),
+          ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.7,
+              crossAxisSpacing: AppSpacing.md,
+              mainAxisSpacing: AppSpacing.md,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => Skeleton(),
+              childCount: 6,
+            ),
+          ),
+        ),
+        const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.xxxl)),
+      ],
+    );
+  }
+}
+
 /// Full detail-page skeleton for the movie and TV series details pages,
 /// which share the same backdrop (300dp) + overlapping poster (120x180)
 /// hero layout, two full-width action-button rows, an overview block, and
