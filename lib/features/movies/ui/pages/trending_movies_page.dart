@@ -6,6 +6,7 @@ import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/glassmorphic_app_bar.dart';
 import '../../../../core/router/app_router.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../providers/movies_provider.dart';
 import '../../../discover/ui/widgets/discover_widgets.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
@@ -73,8 +74,14 @@ class TrendingMoviesPage extends ConsumerWidget {
                 }, childCount: movies.length),
               ),
             ),
-            loading: () => const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()),
+            loading: () => const SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+              sliver: GridSliverSkeleton(
+                crossAxisCount: 2,
+                childAspectRatio: 0.7,
+                itemCount: 6,
+                spacing: AppSpacing.md,
+              ),
             ),
             error: (err, stack) => SliverFillRemaining(
               child: AppErrorView(

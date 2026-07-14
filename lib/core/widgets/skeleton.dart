@@ -202,6 +202,75 @@ class MediaDetailsSkeleton extends StatelessWidget {
   }
 }
 
+/// Generic grid skeleton for loading states. Configurable columns, aspect
+/// ratio, and item count for flex use across different grids (trending, watched,
+/// categorized TV tabs).
+class GridSkeleton extends StatelessWidget {
+  const GridSkeleton({
+    super.key,
+    this.crossAxisCount = 3,
+    this.childAspectRatio = 0.65,
+    this.itemCount = 9,
+    this.spacing = AppSpacing.md,
+    this.padding = const EdgeInsets.all(AppSpacing.md),
+  });
+
+  final int crossAxisCount;
+  final double childAspectRatio;
+  final int itemCount;
+  final double spacing;
+  final EdgeInsets padding;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      padding: padding,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        childAspectRatio: childAspectRatio,
+        crossAxisSpacing: spacing,
+        mainAxisSpacing: spacing,
+      ),
+      itemCount: itemCount,
+      itemBuilder: (context, index) => Skeleton(),
+    );
+  }
+}
+
+/// Sliver variant of [GridSkeleton] for use in CustomScrollView contexts.
+/// Configurable for different grid layouts (trending pages, watched grids).
+class GridSliverSkeleton extends StatelessWidget {
+  const GridSliverSkeleton({
+    super.key,
+    this.crossAxisCount = 3,
+    this.childAspectRatio = 0.65,
+    this.itemCount = 9,
+    this.spacing = AppSpacing.md,
+  });
+
+  final int crossAxisCount;
+  final double childAspectRatio;
+  final int itemCount;
+  final double spacing;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverGrid(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        childAspectRatio: childAspectRatio,
+        crossAxisSpacing: spacing,
+        mainAxisSpacing: spacing,
+      ),
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => Skeleton(),
+        childCount: itemCount,
+      ),
+    );
+  }
+}
+
 /// Grid skeleton matching `_WatchedGrid`'s 3-column, 0.65-aspect-ratio
 /// layout, used for both the Watched movies grid and the categorized TV
 /// series tabs.
@@ -210,17 +279,12 @@ class WatchedGridSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 0.65,
-        crossAxisSpacing: AppSpacing.sm,
-        mainAxisSpacing: AppSpacing.sm,
-      ),
+    return const GridSkeleton(
+      crossAxisCount: 3,
+      childAspectRatio: 0.65,
       itemCount: 9,
-      itemBuilder: (context, index) => Skeleton(),
+      spacing: AppSpacing.sm,
+      padding: EdgeInsets.all(AppSpacing.md),
     );
   }
 }

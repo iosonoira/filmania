@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
 import '../../../tv_series/ui/providers/tv_series_provider.dart';
 import '../widgets/discover_widgets.dart';
@@ -771,8 +772,14 @@ class _DiscoverResultsSliver extends StatelessWidget {
           ),
         );
       },
-      loading: () => const SliverFillRemaining(
-        child: Center(child: CircularProgressIndicator()),
+      loading: () => const SliverPadding(
+        padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        sliver: GridSliverSkeleton(
+          crossAxisCount: 2,
+          childAspectRatio: 0.7,
+          itemCount: 6,
+          spacing: AppSpacing.md,
+        ),
       ),
       error: (err, stack) => SliverFillRemaining(
         hasScrollBody: false,
