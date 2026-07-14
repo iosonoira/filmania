@@ -379,7 +379,7 @@ class _WatchlistButton extends ConsumerWidget {
           ),
         );
       },
-      loading: () => const Skeleton(
+      loading: () => Skeleton(
         height: 56,
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),

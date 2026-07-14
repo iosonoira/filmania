@@ -343,7 +343,7 @@ class _EpisodeDetailsSkeleton extends StatelessWidget {
         SliverToBoxAdapter(
           child: SizedBox(height: MediaQuery.of(context).padding.top),
         ),
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Skeleton(
             width: double.infinity,
             height: 300,
@@ -351,7 +351,7 @@ class _EpisodeDetailsSkeleton extends StatelessWidget {
             gradient: false,
           ),
         ),
-        const SliverPadding(
+        SliverPadding(
           padding: EdgeInsets.symmetric(
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.lg,
@@ -390,7 +390,7 @@ class _EpisodeDetailsSkeleton extends StatelessWidget {
               itemCount: 6,
               separatorBuilder: (context, index) =>
                   const SizedBox(width: AppSpacing.md),
-              itemBuilder: (context, index) => const Skeleton(
+              itemBuilder: (context, index) => Skeleton(
                 width: 100,
                 height: 100,
                 shape: SkeletonShape.circle,

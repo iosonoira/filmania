@@ -4,13 +4,13 @@ import '../theme/app_theme.dart';
 
 enum SkeletonShape { rect, circle }
 
-/// Static tonal placeholder for loading states with a known, predictable
+/// Animated pulse placeholder for loading states with a known, predictable
 /// layout (grid cards, list rows, avatars, buttons). Consolidates three
 /// near-identical hand-rolled placeholders that existed independently in
-/// episodes, favorites, and watchlist. No shimmer sweep/animation by
-/// design — matches DESIGN.md's quiet, No-Line aesthetic.
-class Skeleton extends StatelessWidget {
-  const Skeleton({
+/// episodes, favorites, and watchlist. Includes a subtle breathing animation
+/// — opacité oscillates from 0.5 to 1.0 over ~1.2 seconds.
+class Skeleton extends StatefulWidget {
+  Skeleton({
     super.key,
     this.width,
     this.height,
@@ -28,28 +28,60 @@ class Skeleton extends StatelessWidget {
   final bool gradient;
 
   @override
+  State<Skeleton> createState() => _SkeletonState();
+}
+
+class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _opacityAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1200),
+      vsync: this,
+    );
+
+    _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+
+    _controller.repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
-    final isCircle = shape == SkeletonShape.circle;
+    final isCircle = widget.shape == SkeletonShape.circle;
 
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
-        borderRadius: isCircle ? null : borderRadius,
-        color: gradient ? null : colors.surface.withValues(alpha: 0.15),
-        gradient: gradient
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  colors.surface.withValues(alpha: 0.05),
-                  colors.surface.withValues(alpha: 0.15),
-                  colors.surface.withValues(alpha: 0.05),
-                ],
-              )
-            : null,
+    return FadeTransition(
+      opacity: _opacityAnimation,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        decoration: BoxDecoration(
+          shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
+          borderRadius: isCircle ? null : widget.borderRadius,
+          color: widget.gradient ? null : colors.surface.withValues(alpha: 0.15),
+          gradient: widget.gradient
+              ? LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    colors.surface.withValues(alpha: 0.05),
+                    colors.surface.withValues(alpha: 0.15),
+                    colors.surface.withValues(alpha: 0.05),
+                  ],
+                )
+              : null,
+        ),
       ),
     );
   }
@@ -70,7 +102,7 @@ class MediaDetailsSkeleton extends StatelessWidget {
         SliverToBoxAdapter(
           child: SizedBox(height: MediaQuery.of(context).padding.top),
         ),
-        const SliverToBoxAdapter(
+        SliverToBoxAdapter(
           child: Stack(
             clipBehavior: Clip.none,
             children: [
@@ -112,7 +144,7 @@ class MediaDetailsSkeleton extends StatelessWidget {
         const SliverToBoxAdapter(
           child: SizedBox(height: AppSpacing.xxxl + AppSpacing.md),
         ),
-        const SliverPadding(
+        SliverPadding(
           padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           sliver: SliverToBoxAdapter(
             child: Column(
@@ -130,7 +162,7 @@ class MediaDetailsSkeleton extends StatelessWidget {
             ),
           ),
         ),
-        const SliverPadding(
+        SliverPadding(
           padding: EdgeInsets.all(AppSpacing.lg),
           sliver: SliverToBoxAdapter(
             child: Column(
@@ -157,7 +189,7 @@ class MediaDetailsSkeleton extends StatelessWidget {
               itemCount: 6,
               separatorBuilder: (context, index) =>
                   const SizedBox(width: AppSpacing.md),
-              itemBuilder: (context, index) => const Skeleton(
+              itemBuilder: (context, index) => Skeleton(
                 width: 100,
                 height: 100,
                 shape: SkeletonShape.circle,
@@ -188,7 +220,7 @@ class WatchedGridSkeleton extends StatelessWidget {
         mainAxisSpacing: AppSpacing.sm,
       ),
       itemCount: 9,
-      itemBuilder: (context, index) => const Skeleton(),
+      itemBuilder: (context, index) => Skeleton(),
     );
   }
 }
@@ -210,7 +242,7 @@ class CastRowSkeleton extends StatelessWidget {
         itemCount: 4,
         separatorBuilder: (context, index) =>
             const SizedBox(width: AppSpacing.md),
-        itemBuilder: (context, index) => const Skeleton(
+        itemBuilder: (context, index) => Skeleton(
           width: 100,
           height: 100,
           shape: SkeletonShape.circle,
@@ -230,7 +262,7 @@ class CastCrewSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       children: [
         Padding(
           padding: EdgeInsets.only(bottom: AppSpacing.lg),
@@ -250,7 +282,7 @@ class _TitledRowSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
@@ -282,7 +314,7 @@ class RecommendationsRowSkeleton extends StatelessWidget {
         separatorBuilder: (context, index) =>
             const SizedBox(width: AppSpacing.md),
         itemBuilder: (context, index) =>
-            const Skeleton(width: 140, height: 200),
+            Skeleton(width: 140, height: 200),
       ),
     );
   }

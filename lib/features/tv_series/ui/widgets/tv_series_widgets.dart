@@ -546,7 +546,7 @@ class _EpisodesLoadingSkeleton extends StatelessWidget {
       child: Column(
         children: List.generate(
           3,
-          (index) => const Padding(
+          (index) => Padding(
             padding: EdgeInsets.only(bottom: AppSpacing.sm),
             child: Skeleton(
               height: 90,

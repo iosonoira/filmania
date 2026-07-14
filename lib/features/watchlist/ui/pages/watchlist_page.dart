@@ -104,7 +104,7 @@ class WatchlistPage extends ConsumerWidget {
                   mainAxisSpacing: AppSpacing.md,
                 ),
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => const Skeleton(),
+                  (context, index) => Skeleton(),
                   childCount: 4,
                 ),
               ),
