@@ -316,6 +316,172 @@ class CastRowSkeleton extends StatelessWidget {
   }
 }
 
+/// Horizontal scrolling row skeleton for trending content (280dp tall).
+/// Displays 4 card-like skeletons suitable for poster cards in a horizontal
+/// list (e.g., trending movies carousel).
+class TrendingRowSkeleton extends StatelessWidget {
+  const TrendingRowSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 280,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 4,
+        separatorBuilder: (context, index) =>
+            const SizedBox(width: AppSpacing.lg),
+        itemBuilder: (context, index) => SizedBox(
+          width: 140,
+          height: 280,
+          child: Skeleton(),
+        ),
+      ),
+    );
+  }
+}
+
+/// List skeleton for upcoming episodes. Displays 4 rows matching the layout
+/// of [_UpcomingEpisodeItem]: 50x75 poster + title + subtitle + rating row.
+class UpcomingEpisodeListSkeleton extends StatelessWidget {
+  const UpcomingEpisodeListSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList.separated(
+      itemCount: 4,
+      separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
+      itemBuilder: (context, index) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+        child: Row(
+          children: [
+            Skeleton(width: 50, height: 75),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Skeleton(height: 18, width: double.infinity),
+                  const SizedBox(height: AppSpacing.xs),
+                  Skeleton(height: 14, width: 100),
+                  const SizedBox(height: AppSpacing.xs),
+                  Skeleton(height: 14, width: 80),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Curated content section skeleton. Displays featured card (300dp),
+/// optional secondary card, and a trending row. Matches [_CuratedContent] layout.
+class CuratedContentSkeleton extends StatelessWidget {
+  const CuratedContentSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Skeleton(height: 300, width: double.infinity),
+        const SizedBox(height: AppSpacing.md),
+        Skeleton(height: 200, width: double.infinity),
+        const SizedBox(height: AppSpacing.md),
+        Skeleton(height: 280, width: double.infinity),
+      ],
+    );
+  }
+}
+
+/// Activity item row skeleton. Displays poster (50x75) + title/subtitle/date
+/// layout matching [_ActivityItem]. Use in a Column for multiple items.
+class ActivityRowSkeleton extends StatelessWidget {
+  const ActivityRowSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.of(context).surface.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.md),
+      ),
+      child: Row(
+        children: [
+          Skeleton(width: 50, height: 75),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Skeleton(height: 18, width: double.infinity),
+                const SizedBox(height: AppSpacing.xs),
+                Skeleton(height: 14, width: 150),
+                const SizedBox(height: AppSpacing.xs),
+                Skeleton(height: 12, width: 100),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Watchlist item list skeleton. Displays 2-3 rows of watchlist title
+/// skeletons for use in a bottom sheet or list.
+class WatchlistListSkeleton extends StatelessWidget {
+  const WatchlistListSkeleton({super.key, this.itemCount = 3});
+
+  final int itemCount;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: List.generate(
+        itemCount,
+        (index) => Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.sm,
+          ),
+          child: Skeleton(height: 48, width: double.infinity),
+        ),
+      ),
+    );
+  }
+}
+
+/// Genre chip filter skeleton. Displays a wrap of 6 pill-shaped skeleton
+/// items matching the width/height of [_GenreChip] elements.
+class GenreChipsSkeleton extends StatelessWidget {
+  const GenreChipsSkeleton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+      child: Wrap(
+        spacing: AppSpacing.md,
+        runSpacing: AppSpacing.sm,
+        children: List.generate(
+          6,
+          (index) => Skeleton(
+            width: 80 + (index % 3) * 20,
+            height: 36,
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// Two-row loading placeholder for stacked cast + crew sections (matches
 /// [CastSection] followed by [CrewSection], each a title label + 160dp
 /// avatar row with [AppSpacing.lg] bottom padding). Use instead of a bare

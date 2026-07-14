@@ -6,6 +6,7 @@ import '../providers/image_upload_controller.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../auth/ui/providers/auth_notifier.dart';
 import '../../../../core/domain/enums/media_type.dart';
 import '../../../watched/ui/providers/watched_providers.dart';
@@ -209,12 +210,45 @@ class _StatsBentoGrid extends ConsumerWidget {
 
     return statsAsync.when(
       loading: () => _BentoCard(
-        child: Center(
-          child: SizedBox(
-            height: 120,
-            child: Center(
-              child: CircularProgressIndicator(color: colors.primary),
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.lg,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Skeleton(height: 24, width: 80),
+                    const SizedBox(height: AppSpacing.sm),
+                    Skeleton(height: 14, width: 60),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Skeleton(height: 24, width: 80),
+                    const SizedBox(height: AppSpacing.sm),
+                    Skeleton(height: 14, width: 60),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Skeleton(height: 24, width: 80),
+                    const SizedBox(height: AppSpacing.sm),
+                    Skeleton(height: 14, width: 60),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -464,11 +498,20 @@ class _RecentActivitySection extends ConsumerWidget {
                     .toList(),
               );
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
-
+            loading: () => Column(
+              children: List.generate(
+                4,
+                (index) => const ActivityRowSkeleton(),
+              ),
+            ),
             error: (e, _) => Text('Errore: $e'),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => Column(
+            children: List.generate(
+              4,
+              (index) => const ActivityRowSkeleton(),
+            ),
+          ),
           error: (e, _) => Text('Errore: $e'),
         ),
       ],
@@ -582,7 +625,13 @@ class _CategoryCardPlaceholder extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
-      child: const Center(child: CircularProgressIndicator()),
+      child: Center(
+        child: SizedBox(
+          width: 80,
+          height: 80,
+          child: Skeleton(),
+        ),
+      ),
     );
   }
 }

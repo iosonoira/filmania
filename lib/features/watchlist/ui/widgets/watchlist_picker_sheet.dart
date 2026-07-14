@@ -9,6 +9,7 @@ import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../domain/entities/watchlist.dart';
 import '../providers/watchlist_providers.dart';
 import '../../../../core/widgets/app_toast.dart';
+import '../../../../core/widgets/skeleton.dart';
 
 /// Opens the WatchlistPickerSheet and handles result.
 /// Call from movie/tv detail pages instead of toggling directly.
@@ -225,10 +226,7 @@ class _WatchlistPickerSheetState extends ConsumerState<WatchlistPickerSheet> {
                 ],
               );
             },
-            loading: () => const Padding(
-              padding: EdgeInsets.all(AppSpacing.lg),
-              child: Center(child: CircularProgressIndicator()),
-            ),
+            loading: () => const WatchlistListSkeleton(itemCount: 2),
             error: (err, stack) => const SizedBox.shrink(),
           ),
 

@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import '../../../../core/widgets/error_view.dart';
+import '../../../../core/widgets/skeleton.dart';
 import '../../../../core/widgets/selection/media_selection_item.dart';
 import '../../../../core/widgets/selection/selectable_card.dart';
 import '../../../movies/ui/providers/movies_provider.dart';
@@ -36,10 +37,7 @@ class TrendingMoviesSection extends ConsumerWidget {
         const SizedBox(height: AppSpacing.lg),
         moviesAsync.when(
           data: (movies) => _TrendingMoviesList(movies: movies),
-          loading: () => const SizedBox(
-            height: 280,
-            child: Center(child: CircularProgressIndicator()),
-          ),
+          loading: () => const TrendingRowSkeleton(),
           error: (err, stack) => AppErrorView(
             error: err,
             compact: true,
@@ -380,9 +378,7 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
               ),
             );
           },
-          loading: () => const SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator()),
-          ),
+          loading: () => const UpcomingEpisodeListSkeleton(),
           error: (err, stack) => SliverToBoxAdapter(
             child: AppErrorView(
               error: err,
@@ -582,7 +578,7 @@ class CuratedSection extends ConsumerWidget {
               movies: movies,
               containerColor: containerColorLow,
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const CuratedContentSkeleton(),
             error: (err, stack) => AppErrorView(
               error: err,
               compact: true,

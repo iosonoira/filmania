@@ -505,7 +505,7 @@ class _GenreFilterSection extends ConsumerWidget {
                 )
                 .toList(),
           ),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const GenreChipsSkeleton(),
           error: (e, st) => Text(
             'Impossibile caricare i generi.',
             style: TextStyle(color: colors.error),
