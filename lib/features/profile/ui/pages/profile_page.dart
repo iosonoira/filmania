@@ -507,10 +507,7 @@ class _RecentActivitySection extends ConsumerWidget {
             error: (e, _) => Text('Errore: $e'),
           ),
           loading: () => Column(
-            children: List.generate(
-              4,
-              (index) => const ActivityRowSkeleton(),
-            ),
+            children: List.generate(4, (index) => const ActivityRowSkeleton()),
           ),
           error: (e, _) => Text('Errore: $e'),
         ),
@@ -594,13 +591,26 @@ class _CategoryCard extends StatelessWidget {
                       .toList(),
                 ),
               ),
+            // Three cards share a phone-width row, so a long label like
+            // "PREFERITI" would wrap mid-word; scale it down instead.
             Center(
-              child: Text(
-                title.toUpperCase(),
-                style: textTheme.titleMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 2,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    title.toUpperCase(),
+                    maxLines: 1,
+                    style: textTheme.titleMedium?.copyWith(
+                      // White only over the darkened posters; on the plain
+                      // light-mode surface it would be invisible.
+                      color: posterPaths.isNotEmpty
+                          ? Colors.white
+                          : colors.onSurfacePrimary,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -625,13 +635,7 @@ class _CategoryCardPlaceholder extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(AppSpacing.radius),
       ),
-      child: Center(
-        child: SizedBox(
-          width: 80,
-          height: 80,
-          child: Skeleton(),
-        ),
-      ),
+      child: Center(child: SizedBox(width: 80, height: 80, child: Skeleton())),
     );
   }
 }
