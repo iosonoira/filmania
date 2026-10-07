@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
 import 'package:filmania/core/utils/logger.dart';
+import '../../../../core/network/network_failure.dart';
 import '../../../../core/supabase/supabase_client.dart';
 import '../models/watched_episode_dto.dart';
 import '../models/watched_item_dto.dart';
@@ -9,6 +12,34 @@ import '../../domain/failures/watched_failure.dart';
 import 'i_watched_remote_datasource.dart';
 
 part 'watched_remote_datasource_impl.g.dart';
+
+/// Realtime streams are the only datasource methods that can't use
+/// try/catch, so their errors used to reach the UI raw. Network drops map to
+/// the shared [ConnectionFailure] so the error view still says "no
+/// connection"; everything else becomes a [WatchedFailure].
+StreamTransformer<T, T> _mapStreamErrors<T>(String operation) {
+  return StreamTransformer<T, T>.fromHandlers(
+    handleError: (error, stackTrace, sink) {
+      AppLogger.error(
+        '$operation stream failed',
+        tag: 'WatchedDS',
+        exception: error,
+        stackTrace: stackTrace,
+      );
+      final text = error.toString();
+      final Object failure;
+      if (text.contains('ClientException') ||
+          text.contains('Failed to fetch')) {
+        failure = const ConnectionFailure();
+      } else if (error is PostgrestException) {
+        failure = SupabaseWatchedFailure(error.message);
+      } else {
+        failure = const WatchedGenericFailure();
+      }
+      sink.addError(failure, stackTrace);
+    },
+  );
+}
 
 /*
 SQL SCHEMA REQUIRED IN SUPABASE:
@@ -141,17 +172,13 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
         .stream(primaryKey: ['id'])
         .eq('user_id', userId)
         .order('watched_at', ascending: false)
-        .map((data) {
-          AppLogger.debug(
-            '[DIAG] watchUserWatchedItems emission: ${data.length} total '
-            'rows, mediaType=$mediaType, at ${DateTime.now()}',
-            tag: 'WatchedDS',
-          );
-          return data
+        .map(
+          (data) => data
               .where((json) => json['media_type'] == mediaType.name)
               .map((json) => WatchedItemDto.fromJson(json))
-              .toList();
-        });
+              .toList(),
+        )
+        .transform(_mapStreamErrors('watchUserWatchedItems'));
   }
 
   @override
@@ -297,7 +324,8 @@ class WatchedRemoteDataSourceImpl implements IWatchedRemoteDataSource {
               .where((json) => json['series_id'] == seriesId)
               .map((json) => WatchedEpisodeDto.fromJson(json))
               .toList(),
-        );
+        )
+        .transform(_mapStreamErrors('watchWatchedEpisodes'));
   }
 
   @override
