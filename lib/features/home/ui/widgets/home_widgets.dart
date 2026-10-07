@@ -108,6 +108,9 @@ class _TrendingMoviesList extends StatelessWidget {
     return SizedBox(
       height: 280,
       child: ListView.separated(
+        // The default Clip.hardEdge cut WatchingCard's drop shadow at the
+        // list's bottom edge, which showed as a hard band in light mode.
+        clipBehavior: Clip.none,
         padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
