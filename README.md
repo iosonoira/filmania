@@ -315,29 +315,6 @@ Flutter's built-in `flutter_localizations` + ARB files. Locale managed by `local
 
 ---
 
-## Development Workflow
-
-This project is developed with an AI-assisted workflow using [Claude Code](https://claude.ai/code). The `.agents/` directory contains:
-
-```
-.agents/
-├── rules/              # Enforced architectural rules (loaded into every session)
-│   ├── architecture.md
-│   ├── state-management.md
-│   ├── networking.md
-│   ├── ui_ux.md
-│   ├── secret_management.md
-│   └── global_best_practices.md
-└── skills/             # Task-specific instruction sets
-    ├── generate_feature/     # Scaffold a new Clean Architecture feature
-    ├── apply_design_system/  # Apply Aura Cinema tokens to any UI component
-    └── state_management_and_routing/  # Add providers, routes, navigation
-```
-
-Rules are always-on constraints. Skills are invoked for specific categories of work. This setup makes it possible to hand off complex tasks to an AI agent without losing architectural consistency.
-
----
-
 ## Getting Started
 
 ### Prerequisites
