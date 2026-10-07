@@ -20,6 +20,12 @@ class WatchedButton extends ConsumerWidget {
   final bool hasBackground;
   final int? runtimeMinutes;
 
+  /// Icon color for the unwatched state when [hasBackground] is false.
+  /// Defaults to white because most icon-only uses sit on top of a poster
+  /// or a tinted glass badge; pass a theme color when the button sits on a
+  /// plain surface, where white would be invisible in light mode.
+  final Color? unwatchedIconColor;
+
   const WatchedButton({
     super.key,
     required this.mediaId,
@@ -29,6 +35,7 @@ class WatchedButton extends ConsumerWidget {
     this.isIconOnly = false,
     this.hasBackground = true,
     this.runtimeMinutes,
+    this.unwatchedIconColor,
   });
 
   void _refreshWatchedState(WidgetRef ref) {
@@ -145,6 +152,7 @@ class WatchedButton extends ConsumerWidget {
       return _WatchedIconBadge(
         isWatched: isWatched,
         hasBackground: hasBackground,
+        unwatchedIconColor: unwatchedIconColor,
         label: label,
         onPressed: onPressed,
       );
@@ -165,12 +173,14 @@ class WatchedButton extends ConsumerWidget {
 class _WatchedIconBadge extends StatelessWidget {
   final bool isWatched;
   final bool hasBackground;
+  final Color? unwatchedIconColor;
   final String label;
   final VoidCallback onPressed;
 
   const _WatchedIconBadge({
     required this.isWatched,
     required this.hasBackground,
+    this.unwatchedIconColor,
     required this.label,
     required this.onPressed,
   });
@@ -178,6 +188,14 @@ class _WatchedIconBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = AppColors.of(context);
+    final Color iconColor;
+    if (hasBackground) {
+      iconColor = Colors.white;
+    } else if (isWatched) {
+      iconColor = colors.primary;
+    } else {
+      iconColor = unwatchedIconColor ?? Colors.white;
+    }
     return IconButton(
       tooltip: label,
       padding: EdgeInsets.zero,
@@ -195,7 +213,7 @@ class _WatchedIconBadge extends StatelessWidget {
         child: Icon(
           isWatched ? Icons.visibility : Icons.visibility_outlined,
           size: 18,
-          color: (hasBackground || !isWatched) ? Colors.white : colors.primary,
+          color: iconColor,
         ),
       ),
       onPressed: onPressed,

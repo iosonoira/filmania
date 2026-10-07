@@ -513,6 +513,7 @@ class _UpcomingEpisodeItem extends ConsumerWidget {
                   posterPath: posterPath,
                   isIconOnly: true,
                   hasBackground: false,
+                  unwatchedIconColor: colors.onSurfaceSecondary,
                 ),
                 IconButton(
                   style: IconButton.styleFrom(
