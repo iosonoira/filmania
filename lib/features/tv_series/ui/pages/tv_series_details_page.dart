@@ -34,7 +34,7 @@ class TVSeriesDetailsPage extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: const GlassmorphicAppBar(showBackButton: true),
+      appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
       body: seriesAsync.when(
         data: (series) => _TVSeriesDetailsContent(series: series),
         loading: () => const MediaDetailsSkeleton(),
