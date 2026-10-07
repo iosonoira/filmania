@@ -131,7 +131,8 @@ class _PersonHeader extends StatelessWidget {
             Center(
               child: Text(
                 [
-                  if (person.birthday != null) _formatDate(person.birthday!),
+                  if (person.birthday != null)
+                    l10n.mediumDate(person.birthday!),
                   if (person.placeOfBirth != null) person.placeOfBirth!,
                 ].join(' · '),
                 textAlign: TextAlign.center,
@@ -157,24 +158,6 @@ class _PersonHeader extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
 }
 

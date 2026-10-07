@@ -6,6 +6,7 @@ import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showBackButton;
@@ -89,7 +90,7 @@ class _ProfileAvatarButton extends ConsumerWidget {
     final photoUrl = authState.value?.photoUrl;
 
     return Semantics(
-      label: 'Profilo',
+      label: AppLocalizations.of(context)!.navProfile,
       button: true,
       child: GestureDetector(
         onTap: () => context.go(AppRoutes.profile),

@@ -83,7 +83,9 @@ class WatchlistDetailPage extends ConsumerWidget {
                               const SizedBox(height: AppSpacing.sm),
                               itemsAsync.when(
                                 data: (items) => Text(
-                                  '${items.length} titoli',
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.titlesCount(items.length),
                                   style: textTheme.labelLarge?.copyWith(
                                     color: colors.onSurfaceSecondary,
                                   ),

@@ -5,6 +5,7 @@ import '../../../../core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import '../../domain/entities/watchlist_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class WatchlistMediaCard extends StatelessWidget {
   final WatchlistItem item;
@@ -24,8 +25,9 @@ class WatchlistMediaCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Semantics(
-      label:
-          'Media: ${item.title}, aggiunto il ${item.addedAt.day}/${item.addedAt.month}/${item.addedAt.year}',
+      label: AppLocalizations.of(
+        context,
+      )!.watchlistItemSemantics(item.title, item.addedAt),
       button: true,
       child: GestureDetector(
         onTap: onTap,
@@ -92,7 +94,9 @@ class WatchlistMediaCard extends StatelessWidget {
                 top: 8,
                 right: 8,
                 child: Semantics(
-                  label: 'Rimuovi ${item.title} dalla watchlist',
+                  label: AppLocalizations.of(
+                    context,
+                  )!.removeFromWatchlistSemantics(item.title),
                   button: true,
                   child: GestureDetector(
                     onTap: onRemove,
@@ -133,7 +137,7 @@ class WatchlistMediaCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Added ${item.addedAt.day}/${item.addedAt.month}/${item.addedAt.year}',
+                      AppLocalizations.of(context)!.addedOn(item.addedAt),
                       style: textTheme.labelSmall?.copyWith(
                         color: Colors.white70,
                       ),
@@ -148,4 +152,3 @@ class WatchlistMediaCard extends StatelessWidget {
     );
   }
 }
-

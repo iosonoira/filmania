@@ -407,7 +407,7 @@ class _WatchlistButton extends ConsumerWidget {
         );
         return Center(
           child: Text(
-            'Error loading watchlist status',
+            AppLocalizations.of(context)!.watchlistStatusError,
             style: TextStyle(color: colors.error, fontSize: 12),
           ),
         );

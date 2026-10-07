@@ -11,6 +11,7 @@ import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/skeleton.dart';
 import '../../domain/entities/watchlist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class WatchlistPage extends ConsumerWidget {
   const WatchlistPage({super.key});
@@ -43,7 +44,7 @@ class WatchlistPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Le mie Watchlist',
+                    AppLocalizations.of(context)!.myWatchlistsTitle,
                     style: textTheme.displaySmall?.copyWith(
                       fontWeight: FontWeight.w900,
                       letterSpacing: -1.5,
@@ -52,7 +53,7 @@ class WatchlistPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Organizza film e serie nelle tue liste personali.',
+                    AppLocalizations.of(context)!.myWatchlistsSubtitle,
                     style: textTheme.labelLarge?.copyWith(
                       color: colors.onSurfaceSecondary,
                     ),
@@ -215,7 +216,7 @@ class _WatchlistCard extends ConsumerWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${items.length} titoli',
+                    AppLocalizations.of(context)!.titlesCount(items.length),
                     style: textTheme.labelSmall?.copyWith(
                       color: Colors.white70,
                     ),
@@ -297,14 +298,14 @@ class _WatchlistEmptyState extends StatelessWidget {
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Nessuna Watchlist',
+              AppLocalizations.of(context)!.noWatchlistsTitle,
               style: textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Aggiungi un film o una serie dalla pagina dettaglio per creare la tua prima watchlist!',
+              AppLocalizations.of(context)!.noWatchlistsDescription,
               textAlign: TextAlign.center,
               style: textTheme.bodyMedium?.copyWith(
                 color: colors.onSurfaceSecondary,

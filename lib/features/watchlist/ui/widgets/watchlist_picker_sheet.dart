@@ -326,7 +326,7 @@ class _WatchlistPickerTile extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    '$count titoli',
+                    AppLocalizations.of(context)!.titlesCount(count),
                     style: textTheme.labelSmall?.copyWith(
                       color: colors.onSurfaceSecondary,
                     ),

@@ -51,7 +51,9 @@ class TVEpisodeDetailsPage extends ConsumerWidget {
           error: (err, stack) => _TVEpisodeDetailsContent(
             episode: episode,
             seriesId: tvId,
-            seriesTitle: 'Serie TV', // Fallback
+            seriesTitle: AppLocalizations.of(
+              context,
+            )!.tvSeriesTitle, // Fallback
           ),
         ),
         loading: () => const _EpisodeDetailsSkeleton(),

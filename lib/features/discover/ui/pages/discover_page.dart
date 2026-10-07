@@ -21,6 +21,7 @@ import '../../../../core/widgets/selection/selection_scope.dart';
 import '../../../../core/l10n/app_localizations_provider.dart';
 import '../../../watched/ui/widgets/watched_bulk_actions.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class DiscoverPage extends ConsumerWidget {
   const DiscoverPage({super.key});
@@ -220,7 +221,7 @@ class _DiscoverHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Discover',
+          AppLocalizations.of(context)!.navDiscover,
           style: textTheme.displaySmall?.copyWith(
             fontWeight: FontWeight.w900,
             letterSpacing: -1.5,
@@ -248,12 +249,12 @@ class _DiscoverHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               _MediaTypeButton(
-                label: 'Film',
+                label: AppLocalizations.of(context)!.moviesTitle,
                 isSelected: selectedMediaType == DiscoverMediaType.movie,
                 onTap: onMovieSelected,
               ),
               _MediaTypeButton(
-                label: 'Serie TV',
+                label: AppLocalizations.of(context)!.tvSeriesTitle,
                 isSelected: selectedMediaType == DiscoverMediaType.tv,
                 onTap: onTvSelected,
               ),
@@ -313,8 +314,8 @@ class _DiscoverSearchBar extends StatelessWidget {
                     ),
                     decoration: InputDecoration(
                       hintText: selectedMediaType == DiscoverMediaType.movie
-                          ? 'Cerca film, attori, registi...'
-                          : 'Cerca serie TV...',
+                          ? AppLocalizations.of(context)!.searchMoviesHint
+                          : AppLocalizations.of(context)!.searchTvHint,
                       hintStyle: textTheme.bodyLarge?.copyWith(
                         color: colors.onSurfaceSecondary,
                       ),
@@ -359,7 +360,7 @@ class _FiltersButton extends StatelessWidget {
     final colors = AppColors.of(context);
 
     return Semantics(
-      label: 'Filtri',
+      label: AppLocalizations.of(context)!.filtersTitle,
       button: true,
       child: GestureDetector(
         onTap: onTap,
@@ -438,7 +439,7 @@ class _FiltersSheetHeader extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Filtri',
+          AppLocalizations.of(context)!.filtersTitle,
           style: textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         if (filters.isActive)
@@ -447,7 +448,7 @@ class _FiltersSheetHeader extends ConsumerWidget {
                 ? ref.read(movieDiscoverFiltersProvider.notifier).clear()
                 : ref.read(tvDiscoverFiltersProvider.notifier).clear(),
             child: Text(
-              'Cancella filtri',
+              AppLocalizations.of(context)!.clearFilters,
               style: TextStyle(color: colors.error),
             ),
           ),
@@ -477,7 +478,7 @@ class _GenreFilterSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'GENERE',
+          AppLocalizations.of(context)!.genreLabel.toUpperCase(),
           style: textTheme.labelSmall?.copyWith(
             color: colors.onSurfaceSecondary,
             letterSpacing: 1.5,
@@ -507,7 +508,7 @@ class _GenreFilterSection extends ConsumerWidget {
           ),
           loading: () => const GenreChipsSkeleton(),
           error: (e, st) => Text(
-            'Impossibile caricare i generi.',
+            AppLocalizations.of(context)!.genresLoadError,
             style: TextStyle(color: colors.error),
           ),
         ),
@@ -644,7 +645,7 @@ class _YearRangeFilterSectionState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'ANNO DI USCITA',
+          AppLocalizations.of(context)!.releaseYearLabel.toUpperCase(),
           style: textTheme.labelSmall?.copyWith(
             color: colors.onSurfaceSecondary,
             letterSpacing: 1.5,
@@ -653,7 +654,7 @@ class _YearRangeFilterSectionState
         ),
         Text(
           isDefaultRange
-              ? 'Qualsiasi periodo'
+              ? AppLocalizations.of(context)!.anyPeriod
               : '${_values.start.round()} – ${_values.end.round()}',
           style: textTheme.bodyMedium?.copyWith(color: colors.onSurfacePrimary),
         ),
@@ -707,7 +708,7 @@ class _DiscoverResultsSliver extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
-                    'Nessun risultato trovato',
+                    AppLocalizations.of(context)!.noResultsTitle,
                     style: textTheme.titleMedium?.copyWith(
                       color: colors.onSurfacePrimary,
                       fontWeight: FontWeight.bold,
@@ -715,7 +716,7 @@ class _DiscoverResultsSliver extends StatelessWidget {
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    'Prova con parole chiave diverse.',
+                    AppLocalizations.of(context)!.noResultsHint,
                     style: textTheme.bodySmall?.copyWith(
                       color: colors.onSurfaceSecondary,
                     ),

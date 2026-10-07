@@ -319,7 +319,9 @@ class EpisodeCard extends ConsumerWidget {
     ).isActive;
 
     return Semantics(
-      label: 'Episodio ${episode.episodeNumber}: ${episode.name}',
+      label: AppLocalizations.of(
+        context,
+      )!.episodeSemantics(episode.episodeNumber, episode.name),
       button: true,
       child: SelectableCard<EpisodeSelectionItem>(
         id: EpisodeSelectionItem(

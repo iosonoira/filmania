@@ -23,6 +23,7 @@ import '../../features/settings/ui/pages/settings_page.dart';
 import '../../features/tvtime_import/ui/pages/tvtime_import_page.dart';
 import '../domain/enums/media_type.dart';
 import '../widgets/splash_page.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 part 'app_router.g.dart';
 
@@ -126,9 +127,7 @@ GoRouter appRouter(Ref ref) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
           if (id == null) {
-            return const Scaffold(
-              body: Center(child: Text('Pagina non trovata')),
-            );
+            return const _InvalidRoutePage();
           }
           return MovieDetailsPage(movieId: id);
         },
@@ -139,9 +138,7 @@ GoRouter appRouter(Ref ref) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
           if (id == null) {
-            return const Scaffold(
-              body: Center(child: Text('Pagina non trovata')),
-            );
+            return const _InvalidRoutePage();
           }
           return TVSeriesDetailsPage(seriesId: id);
         },
@@ -152,9 +149,7 @@ GoRouter appRouter(Ref ref) {
           final rawId = state.pathParameters['id'];
           final id = rawId != null ? int.tryParse(rawId) : null;
           if (id == null) {
-            return const Scaffold(
-              body: Center(child: Text('Pagina non trovata')),
-            );
+            return const _InvalidRoutePage();
           }
           return PersonDetailsPage(personId: id);
         },
@@ -171,9 +166,7 @@ GoRouter appRouter(Ref ref) {
           );
 
           if (tvId == null || seasonNumber == null || episodeNumber == null) {
-            return const Scaffold(
-              body: Center(child: Text('Pagina non trovata')),
-            );
+            return const _InvalidRoutePage();
           }
 
           return TVEpisodeDetailsPage(
@@ -188,9 +181,7 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final id = state.pathParameters['id'];
           if (id == null) {
-            return const Scaffold(
-              body: Center(child: Text('Pagina non trovata')),
-            );
+            return const _InvalidRoutePage();
           }
           return WatchlistDetailPage(watchlistId: id);
         },
@@ -265,5 +256,18 @@ GoRouter appRouter(Ref ref) {
 class _AuthStateListenable extends ChangeNotifier {
   _AuthStateListenable(Ref ref) {
     ref.listen(authStateProvider, (_, _) => notifyListeners());
+  }
+}
+
+/// Shown when a details route gets an id that isn't a valid number (e.g. a
+/// hand-typed or stale deep link).
+class _InvalidRoutePage extends StatelessWidget {
+  const _InvalidRoutePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: Text(AppLocalizations.of(context)!.pageNotFound)),
+    );
   }
 }

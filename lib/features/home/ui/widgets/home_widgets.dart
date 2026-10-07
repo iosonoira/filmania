@@ -17,6 +17,7 @@ import '../../../../core/domain/enums/media_type.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/app_router.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 // --- Trending Movies Section ---
 class TrendingMoviesSection extends ConsumerWidget {
@@ -78,7 +79,7 @@ class _SectionHeader extends StatelessWidget {
             child: Row(
               children: [
                 Text(
-                  'Vedi tutti',
+                  AppLocalizations.of(context)!.seeAll,
                   style: textTheme.labelLarge?.copyWith(
                     color: colors.primary,
                     fontWeight: FontWeight.w600,
@@ -163,7 +164,7 @@ class WatchingCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Semantics(
-      label: 'Guarda $title, $subtitle',
+      label: AppLocalizations.of(context)!.watchCardSemantics(title, subtitle),
       button: true,
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.85,
@@ -369,7 +370,7 @@ class TrendingTVSeriesSliver extends ConsumerWidget {
                     mediaId: item.id,
                     title: item.name,
                     subtitle: item.firstAirDate?.year.toString() ?? '',
-                    time: 'Voto: ${item.voteAverage.toStringAsFixed(1)}',
+                    time: l10n.ratingLabel(item.voteAverage.toStringAsFixed(1)),
                     timeColor: AppColors.of(context).primary,
                     imageUrl: item.posterPath != null
                         ? 'https://image.tmdb.org/t/p/w500${item.posterPath}'
@@ -570,7 +571,7 @@ class CuratedSection extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Selezionati per Te',
+            AppLocalizations.of(context)!.curatedForYou,
             style: textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
               letterSpacing: -0.5,
@@ -759,7 +760,7 @@ class _FeaturedBentoTags extends StatelessWidget {
             borderRadius: BorderRadius.circular(100),
           ),
           child: Text(
-            'FILM',
+            AppLocalizations.of(context)!.movieTag.toUpperCase(),
             style: textTheme.labelSmall?.copyWith(
               color: isDark ? const Color(0xFFCAC3D8) : const Color(0xFF4A4264),
               fontWeight: FontWeight.bold,
@@ -826,7 +827,7 @@ class _FeaturedBentoButton extends ConsumerWidget {
         foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
       ),
-      child: const Text('Aggiungi alla Watchlist'),
+      child: Text(AppLocalizations.of(context)!.addToWatchlist),
     );
   }
 }
@@ -923,8 +924,8 @@ class _TrendingTopRatedRow extends StatelessWidget {
           child: _BentoSmallBox(
             icon: Icons.trending_up_rounded,
             iconColor: colors.primary,
-            title: 'Tendenze',
-            subtitle: 'Novità questa settimana',
+            title: AppLocalizations.of(context)!.trendingTitle,
+            subtitle: AppLocalizations.of(context)!.newThisWeek,
             containerColor: containerColor,
           ),
         ),
@@ -933,8 +934,8 @@ class _TrendingTopRatedRow extends StatelessWidget {
           child: _BentoSmallBox(
             icon: Icons.star_rounded,
             iconColor: AppColors.tertiary,
-            title: 'I Più Votati',
-            subtitle: 'Classici intramontabili',
+            title: AppLocalizations.of(context)!.topRatedTitle,
+            subtitle: AppLocalizations.of(context)!.timelessClassics,
             containerColor: containerColor,
           ),
         ),
@@ -1047,40 +1048,49 @@ class _NavBarItemsRow extends StatelessWidget {
     final colors = AppColors.of(context);
     final textTheme = Theme.of(context).textTheme;
 
+    // Equal-width slots: English labels ("DISCOVER", "WATCHLIST") are longer
+    // than the Italian ones and overflowed the row at phone width.
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _NavBarItem(
-          icon: Icons.home_outlined,
-          label: 'Home',
-          isSelected: currentIndex == 0,
-          color: colors.onSurfaceSecondary,
-          textTheme: textTheme,
-          onTap: () => onDestinationSelected(0),
+        Expanded(
+          child: _NavBarItem(
+            icon: Icons.home_outlined,
+            label: AppLocalizations.of(context)!.navHome,
+            isSelected: currentIndex == 0,
+            color: colors.onSurfaceSecondary,
+            textTheme: textTheme,
+            onTap: () => onDestinationSelected(0),
+          ),
         ),
-        _NavBarItem(
-          icon: Icons.explore_outlined,
-          label: 'Scopri',
-          isSelected: currentIndex == 1,
-          color: colors.onSurfaceSecondary,
-          textTheme: textTheme,
-          onTap: () => onDestinationSelected(1),
+        Expanded(
+          child: _NavBarItem(
+            icon: Icons.explore_outlined,
+            label: AppLocalizations.of(context)!.navDiscover,
+            isSelected: currentIndex == 1,
+            color: colors.onSurfaceSecondary,
+            textTheme: textTheme,
+            onTap: () => onDestinationSelected(1),
+          ),
         ),
-        _NavBarItem(
-          icon: Icons.bookmark_border_rounded,
-          label: 'Watchlist',
-          isSelected: currentIndex == 2,
-          color: colors.onSurfaceSecondary,
-          textTheme: textTheme,
-          onTap: () => onDestinationSelected(2),
+        Expanded(
+          child: _NavBarItem(
+            icon: Icons.bookmark_border_rounded,
+            label: AppLocalizations.of(context)!.navWatchlist,
+            isSelected: currentIndex == 2,
+            color: colors.onSurfaceSecondary,
+            textTheme: textTheme,
+            onTap: () => onDestinationSelected(2),
+          ),
         ),
-        _NavBarItem(
-          icon: Icons.person_outline_rounded,
-          label: 'Profilo',
-          isSelected: currentIndex == 3,
-          color: colors.onSurfaceSecondary,
-          textTheme: textTheme,
-          onTap: () => onDestinationSelected(3),
+        Expanded(
+          child: _NavBarItem(
+            icon: Icons.person_outline_rounded,
+            label: AppLocalizations.of(context)!.navProfile,
+            isSelected: currentIndex == 3,
+            color: colors.onSurfaceSecondary,
+            textTheme: textTheme,
+            onTap: () => onDestinationSelected(3),
+          ),
         ),
       ],
     );
@@ -1117,7 +1127,10 @@ class _NavBarItem extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         child: Container(
           constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.sm,
+          ),
           decoration: isSelected
               ? BoxDecoration(
                   color: itemColor.withValues(alpha: 0.15),
@@ -1133,13 +1146,19 @@ class _NavBarItem extends StatelessWidget {
                 color: isSelected ? itemColor : color.withValues(alpha: 0.8),
               ),
               const SizedBox(height: 2),
-              Text(
-                label.toUpperCase(),
-                style: textTheme.labelSmall?.copyWith(
-                  color: isSelected ? itemColor : color.withValues(alpha: 0.8),
-                  fontWeight: FontWeight.w600,
-                  fontSize: 10,
-                  letterSpacing: 0.5,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  label.toUpperCase(),
+                  maxLines: 1,
+                  style: textTheme.labelSmall?.copyWith(
+                    color: isSelected
+                        ? itemColor
+                        : color.withValues(alpha: 0.8),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ],

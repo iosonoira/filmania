@@ -23,7 +23,6 @@
   "emptyCompleted": "No completed series yet.",
   "emptyDropped": "You haven't dropped any series.",
   "emptyWatchedMovies": "No watched movies yet. Mark one from its details page.",
-
   "networkErrorDesc": "Check your internet connection.",
   "genericErrorDesc": "An error occurred. Please try again.",
   "errorNoConnectionTitle": "No connection.",
@@ -61,7 +60,6 @@
   "forgotPassword": "Forgot password?",
   "dontHavePass": "Don't have a pass?",
   "requestItHere": "Request it here",
-
   "cancel": "Cancel",
   "create": "Create",
   "deleteWatchlist": "Delete watchlist",
@@ -80,7 +78,6 @@
   "signOut": "Sign Out",
   "retryBtn": "Retry",
   "pageNotFound": "Page not found",
-  
   "addedToWatchlist": "Added to watchlist!",
   "createNewWatchlist": "Create new watchlist",
   "watchlistNameHint": "Watchlist name…",
@@ -135,7 +132,6 @@
       }
     }
   },
-
   "closeSelection": "Close selection",
   "addToListAction": "Add to list",
   "toggleWatchedAction": "Mark as watched/unwatched",
@@ -186,7 +182,6 @@
   "watchedButtonLabelUnwatched": "Mark as Watched",
   "undoAction": "Undo",
   "unwatchedSnackbarMessage": "Removed from your watched history.",
-
   "dataSection": "Data",
   "importTvTimeTitle": "Import from TV Time",
   "importTvTimeSubtitle": "Bring your watched history and lists into Filmania",
@@ -221,5 +216,121 @@
       }
     }
   },
-  "importTvTimeDownloadUnmatched": "Download list (CSV)"
+  "importTvTimeDownloadUnmatched": "Download list (CSV)",
+  "navHome": "Home",
+  "navDiscover": "Discover",
+  "navWatchlist": "Watchlist",
+  "navProfile": "Profile",
+  "loginTagline": "Curate your personal gallery\nof cinematic works.",
+  "registerTagline": "Create your entry pass\nto the world of cinema.",
+  "searchMoviesHint": "Search movies, actors, directors...",
+  "searchTvHint": "Search TV series...",
+  "filtersTitle": "Filters",
+  "clearFilters": "Clear filters",
+  "genresLoadError": "Couldn't load genres.",
+  "releaseYearLabel": "Release year",
+  "anyPeriod": "Any period",
+  "noResultsTitle": "No results found",
+  "noResultsHint": "Try different keywords.",
+  "mediaCardSemantics": "Media: {title}, rated {rating}",
+  "@mediaCardSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "seeAll": "See all",
+  "ratingLabel": "Rating: {rating}",
+  "@ratingLabel": {
+    "placeholders": {
+      "rating": {
+        "type": "String"
+      }
+    }
+  },
+  "trendingTitle": "Trending",
+  "newThisWeek": "New this week",
+  "topRatedTitle": "Top Rated",
+  "timelessClassics": "Timeless classics",
+  "curatedForYou": "Picked for You",
+  "watchCardSemantics": "Watch {title}, {subtitle}",
+  "@watchCardSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "subtitle": {
+        "type": "String"
+      }
+    }
+  },
+  "episodeSemantics": "Episode {number}: {name}",
+  "@episodeSemantics": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "watchlistStatusError": "Couldn't load watchlist status",
+  "noWatchlistsTitle": "No watchlists",
+  "noWatchlistsDescription": "Add a movie or a series from its details page to create your first watchlist!",
+  "titlesCount": "{count, plural, =1{1 title} other{{count} titles}}",
+  "@titlesCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "removeFromWatchlistSemantics": "Remove {title} from the watchlist",
+  "@removeFromWatchlistSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "addedOn": "Added {date}",
+  "@addedOn": {
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  },
+  "mediumDate": "{date}",
+  "@mediumDate": {
+    "description": "A date on its own, formatted for the current locale (e.g. a person's birthday).",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMd"
+      }
+    }
+  },
+  "genreLabel": "Genre",
+  "movieTag": "Movie",
+  "myWatchlistsTitle": "My Watchlists",
+  "myWatchlistsSubtitle": "Organize movies and series in your personal lists.",
+  "watchlistItemSemantics": "Media: {title}, added {date}",
+  "@watchlistItemSemantics": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "date": {
+        "type": "DateTime",
+        "format": "yMd"
+      }
+    }
+  }
 }

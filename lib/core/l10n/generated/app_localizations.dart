@@ -1063,6 +1063,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Download list (CSV)'**
   String get importTvTimeDownloadUnmatched;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navDiscover.
+  ///
+  /// In en, this message translates to:
+  /// **'Discover'**
+  String get navDiscover;
+
+  /// No description provided for @navWatchlist.
+  ///
+  /// In en, this message translates to:
+  /// **'Watchlist'**
+  String get navWatchlist;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
+  /// No description provided for @loginTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Curate your personal gallery\nof cinematic works.'**
+  String get loginTagline;
+
+  /// No description provided for @registerTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Create your entry pass\nto the world of cinema.'**
+  String get registerTagline;
+
+  /// No description provided for @searchMoviesHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search movies, actors, directors...'**
+  String get searchMoviesHint;
+
+  /// No description provided for @searchTvHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search TV series...'**
+  String get searchTvHint;
+
+  /// No description provided for @filtersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filtersTitle;
+
+  /// No description provided for @clearFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// No description provided for @genresLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load genres.'**
+  String get genresLoadError;
+
+  /// No description provided for @releaseYearLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Release year'**
+  String get releaseYearLabel;
+
+  /// No description provided for @anyPeriod.
+  ///
+  /// In en, this message translates to:
+  /// **'Any period'**
+  String get anyPeriod;
+
+  /// No description provided for @noResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResultsTitle;
+
+  /// No description provided for @noResultsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Try different keywords.'**
+  String get noResultsHint;
+
+  /// No description provided for @mediaCardSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Media: {title}, rated {rating}'**
+  String mediaCardSemantics(String title, String rating);
+
+  /// No description provided for @seeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get seeAll;
+
+  /// No description provided for @ratingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating: {rating}'**
+  String ratingLabel(String rating);
+
+  /// No description provided for @trendingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trending'**
+  String get trendingTitle;
+
+  /// No description provided for @newThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'New this week'**
+  String get newThisWeek;
+
+  /// No description provided for @topRatedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Top Rated'**
+  String get topRatedTitle;
+
+  /// No description provided for @timelessClassics.
+  ///
+  /// In en, this message translates to:
+  /// **'Timeless classics'**
+  String get timelessClassics;
+
+  /// No description provided for @curatedForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Picked for You'**
+  String get curatedForYou;
+
+  /// No description provided for @watchCardSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Watch {title}, {subtitle}'**
+  String watchCardSemantics(String title, String subtitle);
+
+  /// No description provided for @episodeSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Episode {number}: {name}'**
+  String episodeSemantics(int number, String name);
+
+  /// No description provided for @watchlistStatusError.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t load watchlist status'**
+  String get watchlistStatusError;
+
+  /// No description provided for @noWatchlistsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No watchlists'**
+  String get noWatchlistsTitle;
+
+  /// No description provided for @noWatchlistsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a movie or a series from its details page to create your first watchlist!'**
+  String get noWatchlistsDescription;
+
+  /// No description provided for @titlesCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 title} other{{count} titles}}'**
+  String titlesCount(int count);
+
+  /// No description provided for @removeFromWatchlistSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove {title} from the watchlist'**
+  String removeFromWatchlistSemantics(String title);
+
+  /// No description provided for @addedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Added {date}'**
+  String addedOn(DateTime date);
+
+  /// A date on its own, formatted for the current locale (e.g. a person's birthday).
+  ///
+  /// In en, this message translates to:
+  /// **'{date}'**
+  String mediumDate(DateTime date);
+
+  /// No description provided for @genreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get genreLabel;
+
+  /// No description provided for @movieTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Movie'**
+  String get movieTag;
+
+  /// No description provided for @myWatchlistsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Watchlists'**
+  String get myWatchlistsTitle;
+
+  /// No description provided for @myWatchlistsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Organize movies and series in your personal lists.'**
+  String get myWatchlistsSubtitle;
+
+  /// No description provided for @watchlistItemSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Media: {title}, added {date}'**
+  String watchlistItemSemantics(String title, DateTime date);
 }
 
 class _AppLocalizationsDelegate

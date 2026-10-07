@@ -10,6 +10,7 @@ import '../../../../core/domain/enums/media_type.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watched/ui/widgets/watched_button.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class MediaGridCard extends ConsumerWidget {
   final int mediaId;
@@ -66,7 +67,9 @@ class MediaGridCard extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Semantics(
-      label: 'Media: $title, voto ${voteAverage.toStringAsFixed(1)}',
+      label: AppLocalizations.of(
+        context,
+      )!.mediaCardSemantics(title, voteAverage.toStringAsFixed(1)),
       button: true,
       child: GestureDetector(
         onTap: onTap,

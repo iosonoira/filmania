@@ -23,7 +23,6 @@
   "emptyCompleted": "Nessuna serie completata.",
   "emptyDropped": "Non hai interrotto nessuna serie.",
   "emptyWatchedMovies": "Nessun film visto. Segnane uno dalla sua pagina dettaglio.",
-
   "networkErrorDesc": "Controlla la tua connessione internet.",
   "genericErrorDesc": "Si è verificato un errore. Riprova.",
   "errorNoConnectionTitle": "Nessuna connessione.",
@@ -61,7 +60,6 @@
   "forgotPassword": "Password dimenticata?",
   "dontHavePass": "Non hai un pass?",
   "requestItHere": "Richiedilo qui",
-  
   "cancel": "Annulla",
   "create": "Crea",
   "deleteWatchlist": "Elimina watchlist",
@@ -80,7 +78,6 @@
   "signOut": "Esci",
   "retryBtn": "Riprova",
   "pageNotFound": "Pagina non trovata",
-  
   "addedToWatchlist": "Aggiunto alla watchlist!",
   "createNewWatchlist": "Crea nuova watchlist",
   "watchlistNameHint": "Nome della watchlist…",
@@ -135,7 +132,6 @@
       }
     }
   },
-
   "closeSelection": "Chiudi selezione",
   "addToListAction": "Aggiungi a lista",
   "toggleWatchedAction": "Segna come visto/non visto",
@@ -186,7 +182,6 @@
   "watchedButtonLabelUnwatched": "Segna come Visto",
   "undoAction": "Annulla",
   "unwatchedSnackbarMessage": "Rimosso dalla cronologia visti.",
-
   "dataSection": "Dati",
   "importTvTimeTitle": "Importa da TV Time",
   "importTvTimeSubtitle": "Porta la cronologia visti e le liste dentro Filmania",
@@ -221,5 +216,42 @@
       }
     }
   },
-  "importTvTimeDownloadUnmatched": "Scarica lista (CSV)"
+  "importTvTimeDownloadUnmatched": "Scarica lista (CSV)",
+  "navHome": "Home",
+  "navDiscover": "Scopri",
+  "navWatchlist": "Watchlist",
+  "navProfile": "Profilo",
+  "loginTagline": "Cura la tua galleria personale\ndi opere cinematografiche.",
+  "registerTagline": "Crea il tuo pass d'ingresso\nper il mondo del cinema.",
+  "searchMoviesHint": "Cerca film, attori, registi...",
+  "searchTvHint": "Cerca serie TV...",
+  "filtersTitle": "Filtri",
+  "clearFilters": "Cancella filtri",
+  "genresLoadError": "Impossibile caricare i generi.",
+  "releaseYearLabel": "Anno di uscita",
+  "anyPeriod": "Qualsiasi periodo",
+  "noResultsTitle": "Nessun risultato trovato",
+  "noResultsHint": "Prova con parole chiave diverse.",
+  "mediaCardSemantics": "Media: {title}, voto {rating}",
+  "seeAll": "Vedi tutti",
+  "ratingLabel": "Voto: {rating}",
+  "trendingTitle": "Tendenze",
+  "newThisWeek": "Novità questa settimana",
+  "topRatedTitle": "I Più Votati",
+  "timelessClassics": "Classici intramontabili",
+  "curatedForYou": "Selezionati per Te",
+  "watchCardSemantics": "Guarda {title}, {subtitle}",
+  "episodeSemantics": "Episodio {number}: {name}",
+  "watchlistStatusError": "Impossibile caricare lo stato della watchlist",
+  "noWatchlistsTitle": "Nessuna Watchlist",
+  "noWatchlistsDescription": "Aggiungi un film o una serie dalla pagina dettaglio per creare la tua prima watchlist!",
+  "titlesCount": "{count, plural, =1{1 titolo} other{{count} titoli}}",
+  "removeFromWatchlistSemantics": "Rimuovi {title} dalla watchlist",
+  "addedOn": "Aggiunto il {date}",
+  "mediumDate": "{date}",
+  "genreLabel": "Genere",
+  "movieTag": "Film",
+  "myWatchlistsTitle": "Le mie Watchlist",
+  "myWatchlistsSubtitle": "Organizza film e serie nelle tue liste personali.",
+  "watchlistItemSemantics": "Media: {title}, aggiunto il {date}"
 }

@@ -517,4 +517,152 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get importTvTimeDownloadUnmatched => 'Download list (CSV)';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navDiscover => 'Discover';
+
+  @override
+  String get navWatchlist => 'Watchlist';
+
+  @override
+  String get navProfile => 'Profile';
+
+  @override
+  String get loginTagline =>
+      'Curate your personal gallery\nof cinematic works.';
+
+  @override
+  String get registerTagline =>
+      'Create your entry pass\nto the world of cinema.';
+
+  @override
+  String get searchMoviesHint => 'Search movies, actors, directors...';
+
+  @override
+  String get searchTvHint => 'Search TV series...';
+
+  @override
+  String get filtersTitle => 'Filters';
+
+  @override
+  String get clearFilters => 'Clear filters';
+
+  @override
+  String get genresLoadError => 'Couldn\'t load genres.';
+
+  @override
+  String get releaseYearLabel => 'Release year';
+
+  @override
+  String get anyPeriod => 'Any period';
+
+  @override
+  String get noResultsTitle => 'No results found';
+
+  @override
+  String get noResultsHint => 'Try different keywords.';
+
+  @override
+  String mediaCardSemantics(String title, String rating) {
+    return 'Media: $title, rated $rating';
+  }
+
+  @override
+  String get seeAll => 'See all';
+
+  @override
+  String ratingLabel(String rating) {
+    return 'Rating: $rating';
+  }
+
+  @override
+  String get trendingTitle => 'Trending';
+
+  @override
+  String get newThisWeek => 'New this week';
+
+  @override
+  String get topRatedTitle => 'Top Rated';
+
+  @override
+  String get timelessClassics => 'Timeless classics';
+
+  @override
+  String get curatedForYou => 'Picked for You';
+
+  @override
+  String watchCardSemantics(String title, String subtitle) {
+    return 'Watch $title, $subtitle';
+  }
+
+  @override
+  String episodeSemantics(int number, String name) {
+    return 'Episode $number: $name';
+  }
+
+  @override
+  String get watchlistStatusError => 'Couldn\'t load watchlist status';
+
+  @override
+  String get noWatchlistsTitle => 'No watchlists';
+
+  @override
+  String get noWatchlistsDescription =>
+      'Add a movie or a series from its details page to create your first watchlist!';
+
+  @override
+  String titlesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count titles',
+      one: '1 title',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String removeFromWatchlistSemantics(String title) {
+    return 'Remove $title from the watchlist';
+  }
+
+  @override
+  String addedOn(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Added $dateString';
+  }
+
+  @override
+  String mediumDate(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String get genreLabel => 'Genre';
+
+  @override
+  String get movieTag => 'Movie';
+
+  @override
+  String get myWatchlistsTitle => 'My Watchlists';
+
+  @override
+  String get myWatchlistsSubtitle =>
+      'Organize movies and series in your personal lists.';
+
+  @override
+  String watchlistItemSemantics(String title, DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Media: $title, added $dateString';
+  }
 }

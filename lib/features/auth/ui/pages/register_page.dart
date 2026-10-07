@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/register_form.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});
@@ -42,7 +43,7 @@ class RegisterPage extends StatelessWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'Crea il tuo pass d\'ingresso\nper il mondo del cinema.',
+                AppLocalizations.of(context)!.registerTagline,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: colors.onSurfaceSecondary,
                   height: 1.5,

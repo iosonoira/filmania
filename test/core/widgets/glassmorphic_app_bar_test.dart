@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 
 Widget _wrapWithRouter({required Widget appBarUnderTest}) {
@@ -27,7 +28,12 @@ Widget _wrapWithRouter({required Widget appBarUnderTest}) {
 
   return ProviderScope(
     overrides: [authStateProvider.overrideWith((ref) => Stream.value(null))],
-    child: MaterialApp.router(theme: AppTheme.dark(), routerConfig: router),
+    child: MaterialApp.router(
+      theme: AppTheme.dark(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: router,
+    ),
   );
 }
 
@@ -70,7 +76,12 @@ Widget _wrapWithShellAndPushedRoute({required Widget appBarUnderTest}) {
 
   return ProviderScope(
     overrides: [authStateProvider.overrideWith((ref) => Stream.value(null))],
-    child: MaterialApp.router(theme: AppTheme.dark(), routerConfig: router),
+    child: MaterialApp.router(
+      theme: AppTheme.dark(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: router,
+    ),
   );
 }
 

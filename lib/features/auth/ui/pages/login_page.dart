@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../widgets/login_form.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -43,7 +44,7 @@ class LoginPage extends ConsumerWidget {
               ),
               const SizedBox(height: AppSpacing.lg),
               Text(
-                'Cura la tua galleria personale\ndi opere cinematografiche.',
+                AppLocalizations.of(context)!.loginTagline,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   color: colors.onSurfaceSecondary,
                   height: 1.5,

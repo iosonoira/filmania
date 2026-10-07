@@ -516,4 +516,153 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get importTvTimeDownloadUnmatched => 'Scarica lista (CSV)';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navDiscover => 'Scopri';
+
+  @override
+  String get navWatchlist => 'Watchlist';
+
+  @override
+  String get navProfile => 'Profilo';
+
+  @override
+  String get loginTagline =>
+      'Cura la tua galleria personale\ndi opere cinematografiche.';
+
+  @override
+  String get registerTagline =>
+      'Crea il tuo pass d\'ingresso\nper il mondo del cinema.';
+
+  @override
+  String get searchMoviesHint => 'Cerca film, attori, registi...';
+
+  @override
+  String get searchTvHint => 'Cerca serie TV...';
+
+  @override
+  String get filtersTitle => 'Filtri';
+
+  @override
+  String get clearFilters => 'Cancella filtri';
+
+  @override
+  String get genresLoadError => 'Impossibile caricare i generi.';
+
+  @override
+  String get releaseYearLabel => 'Anno di uscita';
+
+  @override
+  String get anyPeriod => 'Qualsiasi periodo';
+
+  @override
+  String get noResultsTitle => 'Nessun risultato trovato';
+
+  @override
+  String get noResultsHint => 'Prova con parole chiave diverse.';
+
+  @override
+  String mediaCardSemantics(String title, String rating) {
+    return 'Media: $title, voto $rating';
+  }
+
+  @override
+  String get seeAll => 'Vedi tutti';
+
+  @override
+  String ratingLabel(String rating) {
+    return 'Voto: $rating';
+  }
+
+  @override
+  String get trendingTitle => 'Tendenze';
+
+  @override
+  String get newThisWeek => 'Novità questa settimana';
+
+  @override
+  String get topRatedTitle => 'I Più Votati';
+
+  @override
+  String get timelessClassics => 'Classici intramontabili';
+
+  @override
+  String get curatedForYou => 'Selezionati per Te';
+
+  @override
+  String watchCardSemantics(String title, String subtitle) {
+    return 'Guarda $title, $subtitle';
+  }
+
+  @override
+  String episodeSemantics(int number, String name) {
+    return 'Episodio $number: $name';
+  }
+
+  @override
+  String get watchlistStatusError =>
+      'Impossibile caricare lo stato della watchlist';
+
+  @override
+  String get noWatchlistsTitle => 'Nessuna Watchlist';
+
+  @override
+  String get noWatchlistsDescription =>
+      'Aggiungi un film o una serie dalla pagina dettaglio per creare la tua prima watchlist!';
+
+  @override
+  String titlesCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count titoli',
+      one: '1 titolo',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String removeFromWatchlistSemantics(String title) {
+    return 'Rimuovi $title dalla watchlist';
+  }
+
+  @override
+  String addedOn(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Aggiunto il $dateString';
+  }
+
+  @override
+  String mediumDate(DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMMMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return '$dateString';
+  }
+
+  @override
+  String get genreLabel => 'Genere';
+
+  @override
+  String get movieTag => 'Film';
+
+  @override
+  String get myWatchlistsTitle => 'Le mie Watchlist';
+
+  @override
+  String get myWatchlistsSubtitle =>
+      'Organizza film e serie nelle tue liste personali.';
+
+  @override
+  String watchlistItemSemantics(String title, DateTime date) {
+    final intl.DateFormat dateDateFormat = intl.DateFormat.yMd(localeName);
+    final String dateString = dateDateFormat.format(date);
+
+    return 'Media: $title, aggiunto il $dateString';
+  }
 }

@@ -504,12 +504,13 @@ class _RecentActivitySection extends ConsumerWidget {
                 (index) => const ActivityRowSkeleton(),
               ),
             ),
-            error: (e, _) => Text('Errore: $e'),
+            error: (e, _) =>
+                Text(AppLocalizations.of(context)!.genericErrorDesc),
           ),
           loading: () => Column(
             children: List.generate(4, (index) => const ActivityRowSkeleton()),
           ),
-          error: (e, _) => Text('Errore: $e'),
+          error: (e, _) => Text(AppLocalizations.of(context)!.genericErrorDesc),
         ),
       ],
     );
