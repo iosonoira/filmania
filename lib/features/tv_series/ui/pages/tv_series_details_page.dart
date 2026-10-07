@@ -307,7 +307,7 @@ class _WatchlistButton extends ConsumerWidget {
     return isInWatchlistAsync.when(
       data: (isIn) {
         if (isIn) {
-          return OutlinedButton.icon(
+          return FilledButton.tonalIcon(
             onPressed: isLoading
                 ? null
                 : () => showWatchlistPicker(
@@ -326,12 +326,14 @@ class _WatchlistButton extends ConsumerWidget {
                   )
                 : const Icon(Icons.bookmark_rounded),
             label: Text(AppLocalizations.of(context)!.inYourWatchlists),
-            style: OutlinedButton.styleFrom(
+            // Secondary style from DESIGN.md: tonal fill, primary text and no
+            // border (No-Line Rule), matching the "mark as watched" button.
+            style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
-              side: BorderSide(color: colors.primary.withValues(alpha: 0.5)),
               foregroundColor: colors.primary,
+              backgroundColor: colors.primary.withValues(alpha: 0.15),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
               ),
             ),
           );
@@ -341,7 +343,7 @@ class _WatchlistButton extends ConsumerWidget {
           width: double.infinity,
           decoration: BoxDecoration(
             gradient: colors.primaryGradient,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
             boxShadow: [
               BoxShadow(
                 color: colors.primary.withValues(alpha: 0.3),
@@ -378,7 +380,7 @@ class _WatchlistButton extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(vertical: 16),
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
               ),
             ),
           ),
@@ -386,7 +388,9 @@ class _WatchlistButton extends ConsumerWidget {
       },
       loading: () => Skeleton(
         height: 56,
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(AppSpacing.radius),
+        ),
       ),
       error: (error, stack) {
         AppLogger.error(
