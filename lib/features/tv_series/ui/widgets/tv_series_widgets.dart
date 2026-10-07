@@ -41,48 +41,61 @@ class EpisodesSection extends ConsumerWidget {
     if (mainSeasons.isEmpty) return const SizedBox.shrink();
 
     final selectedSeason = ref.watch(selectedSeasonProvider(tvId));
+
+    // The SelectionScope<EpisodeSelectionItem> lives on the details page,
+    // which also pins [EpisodeSelectionBar] to the bottom of the screen.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _EpisodesSectionHeader(
+          tvId: tvId,
+          seasons: mainSeasons,
+          selectedSeason: selectedSeason,
+        ),
+        const SizedBox(height: AppSpacing.md),
+        _EpisodesList(
+          tvId: tvId,
+          seasonNumber: selectedSeason,
+          seriesTitle: seriesTitle,
+          seriesPosterPath: seriesPosterPath,
+        ),
+      ],
+    );
+  }
+}
+
+/// Bulk actions for selected episodes. Pinned to the bottom of the TV series
+/// details page instead of sitting inside [EpisodesSection], so it stays
+/// reachable while scrolling the episode list and doesn't push it down when
+/// selection starts.
+class EpisodeSelectionBar extends ConsumerWidget {
+  const EpisodeSelectionBar({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
-    return SelectionScope<EpisodeSelectionItem>(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _EpisodesSectionHeader(
-            tvId: tvId,
-            seasons: mainSeasons,
-            selectedSeason: selectedSeason,
-          ),
-          const SizedBox(height: AppSpacing.sm),
-          SelectionActionBar<EpisodeSelectionItem>(
-            closeTooltip: l10n.closeSelection,
-            actions: [
-              SelectionAction<EpisodeSelectionItem>(
-                icon: Icons.check_circle_rounded,
-                label: l10n.markSelectedEpisodesWatchedAction,
-                onPressed: (selected) async {
-                  final failures = await markEpisodesWatchedBulk(
-                    ref,
-                    items: selected.toList(),
-                  );
-                  if (!context.mounted) return;
-                  handleBulkSelectionResult<EpisodeSelectionItem>(
-                    context,
-                    ref,
-                    failureCount: failures,
-                  );
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          _EpisodesList(
-            tvId: tvId,
-            seasonNumber: selectedSeason,
-            seriesTitle: seriesTitle,
-            seriesPosterPath: seriesPosterPath,
-          ),
-        ],
-      ),
+    return SelectionActionBar<EpisodeSelectionItem>(
+      pinnedToBottom: true,
+      closeTooltip: l10n.closeSelection,
+      actions: [
+        SelectionAction<EpisodeSelectionItem>(
+          icon: Icons.check_circle_rounded,
+          label: l10n.markSelectedEpisodesWatchedAction,
+          onPressed: (selected) async {
+            final failures = await markEpisodesWatchedBulk(
+              ref,
+              items: selected.toList(),
+            );
+            if (!context.mounted) return;
+            handleBulkSelectionResult<EpisodeSelectionItem>(
+              context,
+              ref,
+              failureCount: failures,
+            );
+          },
+        ),
+      ],
     );
   }
 }

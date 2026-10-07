@@ -8,6 +8,8 @@ import 'package:filmania/core/utils/logger.dart';
 import '../../domain/entities/tv_series.dart';
 import '../providers/tv_series_provider.dart';
 import '../widgets/tv_series_widgets.dart';
+import '../../../../core/widgets/selection/episode_selection_item.dart';
+import '../../../../core/widgets/selection/selection_scope.dart';
 import '../../../watchlist/ui/providers/watchlist_providers.dart';
 import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -32,15 +34,20 @@ class TVSeriesDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final seriesAsync = ref.watch(tvSeriesDetailsProvider(seriesId));
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
-      body: seriesAsync.when(
-        data: (series) => _TVSeriesDetailsContent(series: series),
-        loading: () => const MediaDetailsSkeleton(),
-        error: (err, stack) => AppErrorView(
-          error: err,
-          onRetry: () => ref.invalidate(tvSeriesDetailsProvider(seriesId)),
+    // Scope at page level so the episode cards in the body and the bar in
+    // bottomNavigationBar share one selection.
+    return SelectionScope<EpisodeSelectionItem>(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
+        bottomNavigationBar: const EpisodeSelectionBar(),
+        body: seriesAsync.when(
+          data: (series) => _TVSeriesDetailsContent(series: series),
+          loading: () => const MediaDetailsSkeleton(),
+          error: (err, stack) => AppErrorView(
+            error: err,
+            onRetry: () => ref.invalidate(tvSeriesDetailsProvider(seriesId)),
+          ),
         ),
       ),
     );

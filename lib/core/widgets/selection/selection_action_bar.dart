@@ -32,9 +32,16 @@ class SelectionActionBar<T> extends StatefulWidget {
     super.key,
     required this.actions,
     this.closeTooltip = 'Chiudi selezione',
+    this.pinnedToBottom = false,
   });
 
   final List<SelectionAction<T>> actions;
+
+  /// Set when the bar sits at the bottom of the screen (e.g. as a
+  /// `Scaffold.bottomNavigationBar`): it then pads for the bottom system
+  /// inset instead of the top one, which would otherwise add an empty block
+  /// as tall as the app bar above the controls.
+  final bool pinnedToBottom;
 
   /// Tooltip for the close button. `core/widgets/selection/` is a
   /// framework layer and may not depend on `core/l10n/` (see the
@@ -74,7 +81,8 @@ class _SelectionActionBarState<T> extends State<SelectionActionBar<T>> {
         return Material(
           color: colors.surface,
           child: SafeArea(
-            bottom: false,
+            top: !widget.pinnedToBottom,
+            bottom: widget.pinnedToBottom,
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.sm,
