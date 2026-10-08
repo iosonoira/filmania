@@ -9,6 +9,7 @@ import 'package:filmania/ui/core/view_models/categorized_tv_series_provider.dart
 import 'package:filmania/data/repositories/watched/watched_providers.dart';
 import 'package:filmania/data/repositories/auth/auth_providers.dart';
 import 'package:filmania/ui/core/view_models/is_media_watched.dart';
+import 'package:filmania/domain/use_cases/mark_as_watched_use_case.dart';
 
 /// Bulk actions apply to at most a screenful of selected items, but run
 /// against Supabase over the network — bounded concurrency (matching the
@@ -41,6 +42,7 @@ Future<int> toggleWatchedBulk(
   final user = ref.read(authStateProvider).value;
   if (user == null) return items.length;
   final repo = ref.read(watchedRepositoryProvider);
+  final markAsWatched = ref.read(markAsWatchedUseCaseProvider);
 
   final affectedMediaTypes = <MediaType>{};
   final results = await mapWithConcurrency<MediaSelectionItem, bool>(
@@ -61,7 +63,7 @@ Future<int> toggleWatchedBulk(
             mediaType: item.mediaType,
           );
         } else {
-          await repo.markAsWatched(
+          await markAsWatched.markMedia(
             WatchedItem(
               id: '',
               userId: user.id,
@@ -190,7 +192,7 @@ Future<int> markEpisodesWatchedBulk(
 }) async {
   final user = ref.read(authStateProvider).value;
   if (user == null) return items.length;
-  final repo = ref.read(watchedRepositoryProvider);
+  final markAsWatched = ref.read(markAsWatchedUseCaseProvider);
 
   final affectedSeriesIds = <int>{};
   final results = await mapWithConcurrency<EpisodeSelectionItem, bool>(
@@ -198,7 +200,7 @@ Future<int> markEpisodesWatchedBulk(
     _bulkActionConcurrency,
     (item) async {
       try {
-        await repo.markEpisodeAsWatched(
+        await markAsWatched.markEpisode(
           userId: user.id,
           seriesId: item.seriesId,
           seasonNumber: item.seasonNumber,

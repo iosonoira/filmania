@@ -10,6 +10,7 @@ import 'package:filmania/data/repositories/watched/watched_repository_impl.dart'
 import 'package:filmania/data/repositories/watched/watched_providers.dart';
 import 'package:filmania/data/repositories/auth/auth_providers.dart';
 import 'package:filmania/ui/core/view_models/is_media_watched.dart';
+import 'package:filmania/domain/use_cases/mark_as_watched_use_case.dart';
 
 class WatchedEpisodeButton extends ConsumerWidget {
   final int seriesId;
@@ -54,16 +55,17 @@ class WatchedEpisodeButton extends ConsumerWidget {
   Future<void> _markEpisodeWatched(WidgetRef ref) async {
     final user = ref.read(authStateProvider).value;
     if (user == null) return;
-    final repo = ref.read(watchedRepositoryProvider);
-    await repo.markEpisodeAsWatched(
-      userId: user.id,
-      seriesId: seriesId,
-      seasonNumber: seasonNumber,
-      episodeNumber: episodeNumber,
-      seriesTitle: seriesTitle,
-      seriesPosterPath: seriesPosterPath,
-      runtimeMinutes: runtimeMinutes,
-    );
+    await ref
+        .read(markAsWatchedUseCaseProvider)
+        .markEpisode(
+          userId: user.id,
+          seriesId: seriesId,
+          seasonNumber: seasonNumber,
+          episodeNumber: episodeNumber,
+          seriesTitle: seriesTitle,
+          seriesPosterPath: seriesPosterPath,
+          runtimeMinutes: runtimeMinutes,
+        );
     _refreshEpisodeState(ref);
   }
 

@@ -1,8 +1,17 @@
 import 'package:filmania/domain/models/watched_item.dart';
 import 'package:filmania/domain/models/media_type.dart';
+import 'package:filmania/domain/models/tv_series.dart';
 
+/// Writes and reads the user's watched list only. The TMDB data a write
+/// needs (movie runtime, the series' episode list) is passed in by the
+/// caller — see `MarkAsWatchedUseCase` — because the Flutter architecture
+/// guide keeps repositories unaware of each other.
 abstract class IWatchedRepository {
-  Future<void> markAsWatched(WatchedItem item);
+  /// Stores [item] as given: a missing runtime stays missing.
+  Future<void> markMovieAsWatched(WatchedItem item);
+
+  /// Marks every episode of [series] (specials excluded) and the series itself.
+  Future<void> markSeriesAsWatched(WatchedItem item, TVSeries series);
   Future<void> removeFromWatched({
     required String userId,
     required int mediaId,
@@ -27,6 +36,7 @@ abstract class IWatchedRepository {
     required String seriesTitle,
     String? seriesPosterPath,
     int? runtimeMinutes,
+    required TVSeries series,
   });
   Future<void> markEpisodeAsUnwatched({
     required String userId,

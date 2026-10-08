@@ -1,81 +1,61 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/domain/models/watched_item.dart';
+import 'package:filmania/domain/models/tv_series.dart';
 import 'package:filmania/data/repositories/watched/i_watched_repository.dart';
-import 'package:filmania/data/repositories/tv_series/i_tv_series_repository.dart';
-import 'package:filmania/data/repositories/tv_series/tv_series_repository_impl.dart';
 import 'package:filmania/data/services/supabase/i_watched_remote_datasource.dart';
 import 'package:filmania/data/services/supabase/watched_remote_datasource_impl.dart';
 import 'package:filmania/data/models/watched_episode_dto.dart';
 import 'package:filmania/data/models/watched_item_dto.dart';
-import 'package:filmania/data/repositories/movies/i_movies_repository.dart';
-import 'package:filmania/data/repositories/movies/movies_repository_impl.dart';
 
 part 'watched_repository_impl.g.dart';
 
 class WatchedRepositoryImpl implements IWatchedRepository {
   final IWatchedRemoteDataSource _remoteDS;
-  final ITVSeriesRepository _tvRepo;
-  final IMoviesRepository _movieRepo;
 
-  WatchedRepositoryImpl(this._remoteDS, this._tvRepo, this._movieRepo);
+  WatchedRepositoryImpl(this._remoteDS);
 
   @override
-  Future<void> markAsWatched(WatchedItem item) async {
-    if (item.mediaType == MediaType.tv) {
-      // 1. Get series details to know all episodes and runtimes
-      final series = await _tvRepo.getTVSeriesDetails(item.mediaId);
-      final avgRuntime = series.episodeRunTime.isNotEmpty
-          ? series.episodeRunTime.first
-          : 0;
+  Future<void> markMovieAsWatched(WatchedItem item) {
+    return _remoteDS.markAsWatched(WatchedItemDto.fromEntity(item));
+  }
 
-      // 2. Prepare episodes for batch upsert with runtime
-      final episodes = <WatchedEpisodeDto>[];
-      for (final season in series.seasons) {
-        if (season.seasonNumber == 0) continue; // Skip specials
-        for (int i = 1; i <= season.episodeCount; i++) {
-          episodes.add(
-            WatchedEpisodeDto(
-              userId: item.userId,
-              seriesId: item.mediaId,
-              seasonNumber: season.seasonNumber,
-              episodeNumber: i,
-              runtimeMinutes: avgRuntime,
-              watchedAt: DateTime.now(),
-            ),
-          );
-        }
-      }
+  @override
+  Future<void> markSeriesAsWatched(WatchedItem item, TVSeries series) async {
+    // 1. Use the series details to know all episodes and runtimes
+    final avgRuntime = series.episodeRunTime.isNotEmpty
+        ? series.episodeRunTime.first
+        : 0;
 
-      // 3. Mark episodes as watched (batch)
-      if (episodes.isNotEmpty) {
-        await _remoteDS.markEpisodesAsWatched(episodes);
-      }
-
-      // 4. Mark the series itself in watched_items with total calculated runtime
-      final totalRuntime = episodes.length * avgRuntime;
-      final seriesDto = WatchedItemDto.fromEntity(
-        item.copyWith(runtimeMinutes: totalRuntime > 0 ? totalRuntime : null),
-      );
-      await _remoteDS.markAsWatched(seriesDto);
-      return;
-    }
-
-    // 4. For Movies, ensure we have the runtime before marking
-    var runtime = item.runtimeMinutes;
-    if (runtime == null && item.mediaType == MediaType.movie) {
-      try {
-        final details = await _movieRepo.getMovieDetails(item.mediaId);
-        runtime = details.runtime;
-      } catch (_) {
-        // Fallback to null if fetch fails
+    // 2. Prepare episodes for batch upsert with runtime
+    final episodes = <WatchedEpisodeDto>[];
+    for (final season in series.seasons) {
+      if (season.seasonNumber == 0) continue; // Skip specials
+      for (int i = 1; i <= season.episodeCount; i++) {
+        episodes.add(
+          WatchedEpisodeDto(
+            userId: item.userId,
+            seriesId: item.mediaId,
+            seasonNumber: season.seasonNumber,
+            episodeNumber: i,
+            runtimeMinutes: avgRuntime,
+            watchedAt: DateTime.now(),
+          ),
+        );
       }
     }
 
-    final dto = WatchedItemDto.fromEntity(
-      item.copyWith(runtimeMinutes: runtime),
+    // 3. Mark episodes as watched (batch)
+    if (episodes.isNotEmpty) {
+      await _remoteDS.markEpisodesAsWatched(episodes);
+    }
+
+    // 4. Mark the series itself in watched_items with total calculated runtime
+    final totalRuntime = episodes.length * avgRuntime;
+    final seriesDto = WatchedItemDto.fromEntity(
+      item.copyWith(runtimeMinutes: totalRuntime > 0 ? totalRuntime : null),
     );
-    await _remoteDS.markAsWatched(dto);
+    await _remoteDS.markAsWatched(seriesDto);
   }
 
   @override
@@ -130,6 +110,7 @@ class WatchedRepositoryImpl implements IWatchedRepository {
     required String seriesTitle,
     String? seriesPosterPath,
     int? runtimeMinutes,
+    required TVSeries series,
   }) async {
     // 1. Mark this episode as watched
     final episodeDto = WatchedEpisodeDto(
@@ -143,7 +124,6 @@ class WatchedRepositoryImpl implements IWatchedRepository {
     await _remoteDS.markEpisodeAsWatched(episodeDto);
 
     // 2. Refresh count and check if all episodes are watched
-    final series = await _tvRepo.getTVSeriesDetails(seriesId);
     final totalEpisodes = series.seasons
         .where((s) => s.seasonNumber > 0)
         .fold(0, (sum, s) => sum + s.episodeCount);
@@ -292,9 +272,5 @@ class WatchedRepositoryImpl implements IWatchedRepository {
 
 @riverpod
 IWatchedRepository watchedRepository(Ref ref) {
-  return WatchedRepositoryImpl(
-    ref.watch(watchedRemoteDataSourceProvider),
-    ref.watch(tvSeriesRepositoryProvider),
-    ref.watch(moviesRepositoryProvider),
-  );
+  return WatchedRepositoryImpl(ref.watch(watchedRemoteDataSourceProvider));
 }

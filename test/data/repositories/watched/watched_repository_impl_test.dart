@@ -1,13 +1,6 @@
-import 'package:filmania/domain/models/cast_member.dart';
-import 'package:filmania/domain/models/credits.dart';
-import 'package:filmania/domain/models/genre.dart';
 import 'package:filmania/domain/models/media_type.dart';
-import 'package:filmania/domain/models/movie.dart';
-import 'package:filmania/data/repositories/movies/i_movies_repository.dart';
-import 'package:filmania/domain/models/tv_episode.dart';
 import 'package:filmania/domain/models/tv_season.dart';
 import 'package:filmania/domain/models/tv_series.dart';
-import 'package:filmania/data/repositories/tv_series/i_tv_series_repository.dart';
 import 'package:filmania/data/services/supabase/i_watched_remote_datasource.dart';
 import 'package:filmania/data/models/watched_episode_dto.dart';
 import 'package:filmania/data/models/watched_item_dto.dart';
@@ -143,118 +136,6 @@ class _FakeWatchedRemoteDataSource implements IWatchedRemoteDataSource {
   }
 }
 
-/// Minimal fake covering only [getTVSeriesDetails], the only method
-/// [WatchedRepositoryImpl.markEpisodeAsWatched] calls on this repository.
-class _FakeTVSeriesRepository implements ITVSeriesRepository {
-  _FakeTVSeriesRepository(this.series);
-
-  final TVSeries series;
-
-  @override
-  Future<TVSeries> getTVSeriesDetails(int tvId) async => series;
-
-  @override
-  Future<List<TVSeries>> getTrendingTVSeries({int page = 1}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<TVSeries>> discoverTVSeries({
-    int page = 1,
-    List<int> genreIds = const [],
-    int? yearFrom,
-    int? yearTo,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<TVSeries>> searchTVSeries(String query, {int page = 1}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<TVEpisode>> getSeasonEpisodes(int tvId, int seasonNumber) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<TVEpisode> getTVEpisodeDetails(
-    int tvId,
-    int seasonNumber,
-    int episodeNumber,
-  ) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Credits> getTVSeriesCredits(int tvId) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<CastMember>> getTVEpisodeCredits(
-    int tvId,
-    int seasonNumber,
-    int episodeNumber,
-  ) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<TVSeries>> getTVSeriesRecommendations(int tvId) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Genre>> getGenres() {
-    throw UnimplementedError();
-  }
-}
-
-/// Not exercised by markEpisodeAsWatched, but required by the constructor.
-class _FakeMoviesRepository implements IMoviesRepository {
-  @override
-  Future<Movie> getMovieDetails(int movieId) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Movie>> getTrendingMovies({int page = 1}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Movie>> discoverMovies({
-    int page = 1,
-    List<int> genreIds = const [],
-    int? yearFrom,
-    int? yearTo,
-  }) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Movie>> searchMovies(String query, {int page = 1}) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Credits> getMovieCredits(int movieId) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Movie>> getMovieRecommendations(int movieId) {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<Genre>> getGenres() {
-    throw UnimplementedError();
-  }
-}
-
 TVSeries _buildSeries({required int totalEpisodesInSeason}) {
   return TVSeries(
     id: 1,
@@ -296,12 +177,7 @@ void main() {
         final series = _buildSeries(totalEpisodesInSeason: 7);
         final remoteDS = _FakeWatchedRemoteDataSource()
           ..watchedEpisodesCount = 7; // watchedCount >= totalEpisodes (7)
-        final tvRepo = _FakeTVSeriesRepository(series);
-        final repository = WatchedRepositoryImpl(
-          remoteDS,
-          tvRepo,
-          _FakeMoviesRepository(),
-        );
+        final repository = WatchedRepositoryImpl(remoteDS);
 
         await repository.markEpisodeAsWatched(
           userId: 'user-1',
@@ -309,6 +185,7 @@ void main() {
           seasonNumber: 1,
           episodeNumber: 7,
           seriesTitle: 'Breaking Bad',
+          series: series,
         );
 
         expect(remoteDS.markAsWatchedCallCount, 1);
@@ -323,12 +200,7 @@ void main() {
         final series = _buildSeries(totalEpisodesInSeason: 10);
         final remoteDS = _FakeWatchedRemoteDataSource()
           ..watchedEpisodesCount = 3; // watchedCount < totalEpisodes (10)
-        final tvRepo = _FakeTVSeriesRepository(series);
-        final repository = WatchedRepositoryImpl(
-          remoteDS,
-          tvRepo,
-          _FakeMoviesRepository(),
-        );
+        final repository = WatchedRepositoryImpl(remoteDS);
 
         await repository.markEpisodeAsWatched(
           userId: 'user-1',
@@ -336,6 +208,7 @@ void main() {
           seasonNumber: 1,
           episodeNumber: 3,
           seriesTitle: 'Breaking Bad',
+          series: series,
         );
 
         expect(remoteDS.markAsWatchedCallCount, 1);
