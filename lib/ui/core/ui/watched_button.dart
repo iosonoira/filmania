@@ -114,6 +114,9 @@ class WatchedButton extends ConsumerWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(l10n.unwatchedSnackbarMessage),
+              // With an action a SnackBar persists by default; the undo
+              // offer should disappear on its own after the timeout.
+              persist: false,
               action: SnackBarAction(
                 label: l10n.undoAction,
                 onPressed: () => _undoUnwatch(context, ref, l10n),
