@@ -621,7 +621,8 @@ class _WatchedGridCard extends StatelessWidget {
                 // Matches the grid's childAspectRatio (0.65) so the decoded
                 // bitmap isn't larger than what's ever painted on screen.
                 memCacheHeight: 462,
-                placeholder: (context, url) => Container(color: colors.surface),
+                placeholder: (context, url) =>
+                    Skeleton(borderRadius: BorderRadius.zero),
                 errorWidget: (context, url, error) =>
                     _NoPosterFallback(title: item.mediaTitle),
               )

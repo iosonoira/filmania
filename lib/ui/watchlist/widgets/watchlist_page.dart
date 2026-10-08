@@ -171,7 +171,7 @@ class _WatchlistCard extends ConsumerWidget {
                 fit: BoxFit.cover,
                 memCacheWidth: 300,
                 placeholder: (context, url) =>
-                    Container(color: colors.surface.withValues(alpha: 0.2)),
+                    Skeleton(borderRadius: BorderRadius.zero),
                 errorWidget: (context, url, err) =>
                     _WatchlistCoverPlaceholder(colors: colors),
               )

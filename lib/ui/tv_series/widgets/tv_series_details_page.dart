@@ -95,7 +95,7 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                     imageUrl: series.fullBackdropUrl ?? '',
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Container(color: colors.surface.withValues(alpha: 0.1)),
+                        Skeleton(borderRadius: BorderRadius.zero),
                     errorWidget: (context, url, error) => Container(
                       color: colors.surface.withValues(alpha: 0.1),
                       child: const Center(
@@ -135,9 +135,8 @@ class _TVSeriesDetailsContent extends StatelessWidget {
                           imageUrl: series.fullPosterUrl ?? '',
                           fit: BoxFit.cover,
                           memCacheWidth: 300,
-                          placeholder: (context, url) => Container(
-                            color: colors.surface.withValues(alpha: 0.1),
-                          ),
+                          placeholder: (context, url) =>
+                              Skeleton(borderRadius: BorderRadius.zero),
                           errorWidget: (context, url, error) => Container(
                             color: colors.surface.withValues(alpha: 0.1),
                             child: const Center(

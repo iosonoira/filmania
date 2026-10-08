@@ -410,9 +410,8 @@ class _EpisodeCardThumbnail extends StatelessWidget {
                       imageUrl: episode.fullStillUrl!,
                       fit: BoxFit.cover,
                       memCacheWidth: 320,
-                      placeholder: (context, url) => Container(
-                        color: colors.surface.withValues(alpha: 0.1),
-                      ),
+                      placeholder: (context, url) =>
+                          Skeleton(borderRadius: BorderRadius.zero),
                       errorWidget: (context, url, error) =>
                           _EpisodeCardThumbnailFallback(colors: colors),
                     )

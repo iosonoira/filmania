@@ -117,7 +117,7 @@ class _TVEpisodeDetailsContent extends StatelessWidget {
                   imageUrl: episode.fullStillUrl ?? '',
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      Container(color: colors.surface.withValues(alpha: 0.1)),
+                      Skeleton(borderRadius: BorderRadius.zero),
                   errorWidget: (context, url, error) => Container(
                     color: colors.surface.withValues(alpha: 0.1),
                     child: const Center(

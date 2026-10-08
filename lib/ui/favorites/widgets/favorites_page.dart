@@ -155,7 +155,7 @@ class _FavoriteCard extends StatelessWidget {
                 memCacheWidth: 300,
                 memCacheHeight: 353,
                 placeholder: (context, url) =>
-                    Container(color: colors.surface.withValues(alpha: 0.2)),
+                    Skeleton(borderRadius: BorderRadius.zero),
                 errorWidget: (context, url, err) =>
                     _FavoritePosterPlaceholder(colors: colors),
               )

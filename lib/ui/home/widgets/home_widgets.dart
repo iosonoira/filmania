@@ -190,7 +190,7 @@ class WatchingCard extends ConsumerWidget {
                       memCacheWidth:
                           (MediaQuery.sizeOf(context).width * 0.85 * 2).toInt(),
                       placeholder: (context, url) =>
-                          Container(color: Colors.black.withValues(alpha: 0.1)),
+                          Skeleton(borderRadius: BorderRadius.zero),
                       errorWidget: (context, url, error) => Container(
                         color: Colors.black.withValues(alpha: 0.1),
                         child: const Icon(
@@ -458,10 +458,10 @@ class _UpcomingEpisodeItem extends ConsumerWidget {
                       height: 80,
                       fit: BoxFit.cover,
                       memCacheWidth: 160,
-                      placeholder: (context, url) => Container(
+                      placeholder: (context, url) => Skeleton(
                         width: 80,
                         height: 80,
-                        color: colors.surface.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.zero,
                       ),
                       errorWidget: (context, url, error) => Container(
                         width: 80,
@@ -685,7 +685,7 @@ class _FeaturedBentoCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 memCacheHeight: 600,
                 placeholder: (context, url) =>
-                    Container(color: Colors.black.withValues(alpha: 0.1)),
+                    Skeleton(borderRadius: BorderRadius.zero),
                 errorWidget: (context, url, error) => Container(
                   color: Colors.black.withValues(alpha: 0.1),
                   child: const Icon(Icons.broken_image, color: Colors.grey),
