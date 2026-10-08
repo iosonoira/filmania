@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/core/utils/concurrency.dart';
-import 'package:filmania/core/widgets/selection/episode_selection_item.dart';
-import 'package:filmania/core/widgets/selection/media_selection_item.dart';
+import 'package:filmania/utils/concurrency.dart';
+import 'package:filmania/ui/core/ui/selection/episode_selection_item.dart';
+import 'package:filmania/ui/core/ui/selection/media_selection_item.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/features/watched/data/repositories/watched_repository_impl.dart';
 import 'package:filmania/features/watched/domain/entities/watched_item.dart';

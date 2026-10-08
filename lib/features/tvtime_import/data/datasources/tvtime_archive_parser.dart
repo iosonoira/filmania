@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:csv/csv.dart';
-import 'package:filmania/core/utils/logger.dart';
+import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/tvtime_import/domain/entities/tvtime_raw_export.dart';
 import 'package:filmania/features/tvtime_import/domain/failures/tvtime_import_failure.dart';
 

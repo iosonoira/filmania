@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:filmania/core/theme/app_theme.dart';
-import 'package:filmania/core/l10n/app_localizations_provider.dart';
-import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
+import 'package:filmania/l10n/app_localizations_provider.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/features/settings/ui/pages/settings_page.dart';
 
 Widget _wrap(SharedPreferences prefs) {

@@ -1,7 +1,7 @@
 import 'package:filmania/core/domain/entities/cast_member.dart';
 import 'package:filmania/core/domain/entities/credits.dart';
 import 'package:filmania/core/domain/entities/genre.dart';
-import 'package:filmania/core/network/tmdb_client.dart';
+import 'package:filmania/data/services/tmdb/tmdb_client.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
 import 'package:filmania/features/tv_series/data/datasources/tv_series_remote_datasource_impl.dart';
 import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';

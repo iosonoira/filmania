@@ -1,9 +1,9 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/core/utils/logger.dart';
-import 'package:filmania/core/supabase/supabase_client.dart';
-import 'package:filmania/core/utils/concurrency.dart';
+import 'package:filmania/utils/logger.dart';
+import 'package:filmania/data/services/supabase/supabase_client.dart';
+import 'package:filmania/utils/concurrency.dart';
 import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
 import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
 import 'package:filmania/features/tvtime_import/domain/enums/tvtime_import_phase.dart';

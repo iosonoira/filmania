@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/core/utils/concurrency.dart';
+import 'package:filmania/utils/concurrency.dart';
 import 'package:filmania/features/tvtime_import/domain/entities/tvtime_raw_export.dart';
 import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
 import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';

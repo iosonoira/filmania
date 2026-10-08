@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:filmania/core/theme/app_colors.dart';
-import 'package:filmania/core/theme/app_theme.dart';
-import 'package:filmania/core/widgets/error_view.dart';
-import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
-import 'package:filmania/core/router/app_router.dart';
-import 'package:filmania/core/widgets/skeleton.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
+import 'package:filmania/ui/core/ui/error_view.dart';
+import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
+import 'package:filmania/routing/app_router.dart';
+import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/features/tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
-import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/l10n/app_localizations_provider.dart';
 
 class TrendingTVSeriesPage extends ConsumerWidget {
   const TrendingTVSeriesPage({super.key});

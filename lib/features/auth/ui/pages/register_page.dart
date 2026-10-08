@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:filmania/core/theme/app_colors.dart';
-import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/features/auth/ui/widgets/register_form.dart';
-import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
 
 class RegisterPage extends StatelessWidget {
   const RegisterPage({super.key});

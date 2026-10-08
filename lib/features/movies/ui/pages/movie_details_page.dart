@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/core/theme/app_colors.dart';
-import 'package:filmania/core/theme/app_theme.dart';
-import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
-import 'package:filmania/core/utils/logger.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
+import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
+import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
 import 'package:filmania/features/movies/ui/providers/movies_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
-import 'package:filmania/core/widgets/error_view.dart';
-import 'package:filmania/core/widgets/skeleton.dart';
+import 'package:filmania/ui/core/ui/error_view.dart';
+import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/features/watched/ui/widgets/watched_button.dart';
 import 'package:filmania/features/favorites/ui/widgets/favorite_button.dart';
-import 'package:filmania/core/widgets/cast_section.dart';
-import 'package:filmania/core/widgets/crew_section.dart';
-import 'package:filmania/core/widgets/recommendations_section.dart';
-import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/ui/core/ui/cast_section.dart';
+import 'package:filmania/ui/core/ui/crew_section.dart';
+import 'package:filmania/ui/core/ui/recommendations_section.dart';
+import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
   final int movieId;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';

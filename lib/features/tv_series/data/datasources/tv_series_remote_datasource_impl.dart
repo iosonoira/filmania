@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
-import 'package:filmania/core/network/network_failure.dart';
+import 'package:filmania/data/services/network_failure.dart';
 import 'package:filmania/core/data/models/cast_member_dto.dart';
 import 'package:filmania/core/data/models/credits_dto.dart';
 import 'package:filmania/core/data/models/genre_dto.dart';

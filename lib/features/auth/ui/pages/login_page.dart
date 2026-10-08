@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:filmania/core/theme/app_colors.dart';
-import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/features/auth/ui/widgets/login_form.dart';
-import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});

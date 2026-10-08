@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/core/theme/app_colors.dart';
-import 'package:filmania/core/theme/app_theme.dart';
-import 'package:filmania/core/widgets/glass_overlay.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
+import 'package:filmania/ui/core/ui/glass_overlay.dart';
 import 'package:filmania/features/watchlist/domain/entities/watchlist_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
 
 class WatchlistMediaCard extends StatelessWidget {
   final WatchlistItem item;

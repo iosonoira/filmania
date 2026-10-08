@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/features/tv_series/ui/widgets/tv_series_widgets.dart';
 import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';

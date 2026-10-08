@@ -1,4 +1,4 @@
-import 'package:filmania/core/network/tmdb_client.dart';
+import 'package:filmania/data/services/tmdb/tmdb_client.dart';
 import 'package:filmania/features/person/data/datasources/i_person_remote_datasource.dart';
 import 'package:filmania/features/person/data/datasources/person_remote_datasource_impl.dart';
 import 'package:filmania/features/person/domain/entities/person.dart';

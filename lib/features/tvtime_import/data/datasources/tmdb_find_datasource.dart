@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/core/network/tmdb_client.dart';
+import 'package:filmania/data/services/tmdb/tmdb_client.dart';
 
 part 'tmdb_find_datasource.g.dart';
 

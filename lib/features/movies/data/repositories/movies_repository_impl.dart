@@ -1,5 +1,5 @@
 import 'package:filmania/core/domain/entities/genre.dart';
-import 'package:filmania/core/network/tmdb_client.dart';
+import 'package:filmania/data/services/tmdb/tmdb_client.dart';
 import 'package:filmania/features/movies/data/datasources/i_movies_remote_datasource.dart';
 import 'package:filmania/features/movies/data/datasources/movies_remote_datasource_impl.dart';
 import 'package:filmania/features/movies/domain/entities/movie.dart';
