@@ -1,4 +1,4 @@
-import 'package:filmania/core/domain/entities/genre.dart';
+import 'package:filmania/domain/models/genre.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'genre_dto.freezed.dart';

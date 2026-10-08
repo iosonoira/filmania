@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
@@ -11,7 +11,7 @@ import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/glass_overlay.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
-import 'package:filmania/features/favorites/domain/entities/favorite_item.dart';
+import 'package:filmania/domain/models/favorite_item.dart';
 import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
 import 'package:filmania/features/favorites/ui/widgets/favorite_button.dart';
 

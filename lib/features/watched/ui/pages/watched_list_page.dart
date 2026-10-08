@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
@@ -10,7 +10,7 @@ import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
 import 'package:filmania/features/watched/ui/providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/routing/app_router.dart';
-import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/domain/models/watched_item.dart';
 import 'package:filmania/ui/core/ui/confirm_dialog.dart';
 import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';

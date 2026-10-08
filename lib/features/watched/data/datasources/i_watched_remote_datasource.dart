@@ -1,6 +1,6 @@
 import 'package:filmania/features/watched/data/models/watched_episode_dto.dart';
 import 'package:filmania/features/watched/data/models/watched_item_dto.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 
 abstract class IWatchedRemoteDataSource {
   Future<void> markAsWatched(WatchedItemDto item);

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
-import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/domain/models/tvtime_import_progress.dart';
+import 'package:filmania/domain/models/tvtime_matched_data.dart';
 import 'package:filmania/features/tvtime_import/domain/repositories/i_tvtime_import_repository.dart';
 import 'package:filmania/features/tvtime_import/data/datasources/tvtime_archive_parser.dart';
 import 'package:filmania/features/tvtime_import/data/datasources/tvtime_match_service.dart';

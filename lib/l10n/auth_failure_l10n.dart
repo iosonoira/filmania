@@ -1,4 +1,4 @@
-import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 
 /// Maps each [AuthFailure] subtype to its localized message. Centralized

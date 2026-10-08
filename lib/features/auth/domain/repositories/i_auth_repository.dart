@@ -1,4 +1,4 @@
-import 'package:filmania/features/auth/domain/entities/auth_user.dart';
+import 'package:filmania/domain/models/auth_user.dart';
 
 abstract interface class IAuthRepository {
   /// Signs in a user with email and password.

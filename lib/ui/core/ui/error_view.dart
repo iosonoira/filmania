@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/data/services/network_failure.dart';
-import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/auth_failure_l10n.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';

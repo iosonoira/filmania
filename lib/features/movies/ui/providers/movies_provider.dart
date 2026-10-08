@@ -1,7 +1,7 @@
-import 'package:filmania/core/domain/entities/genre.dart';
+import 'package:filmania/domain/models/genre.dart';
 import 'package:filmania/features/movies/data/repositories/movies_repository_impl.dart';
-import 'package:filmania/features/movies/domain/entities/movie.dart';
-import 'package:filmania/core/domain/entities/credits.dart';
+import 'package:filmania/domain/models/movie.dart';
+import 'package:filmania/domain/models/credits.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

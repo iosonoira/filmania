@@ -1,5 +1,5 @@
 import 'package:filmania/features/person/data/models/person_credit_dto.dart';
-import 'package:filmania/features/person/domain/entities/person_credit.dart';
+import 'package:filmania/domain/models/person_credit.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'person_combined_credits_dto.freezed.dart';

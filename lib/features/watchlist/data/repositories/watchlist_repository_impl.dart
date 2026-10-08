@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
-import 'package:filmania/features/watchlist/domain/entities/watchlist_item.dart';
+import 'package:filmania/domain/models/media_type.dart';
+import 'package:filmania/domain/models/watchlist.dart';
+import 'package:filmania/domain/models/watchlist_item.dart';
 import 'package:filmania/features/watchlist/domain/repositories/i_watchlist_repository.dart';
 import 'package:filmania/features/watchlist/data/datasources/i_watchlist_remote_datasource.dart';
 import 'package:filmania/features/watchlist/data/datasources/watchlist_remote_datasource_impl.dart';

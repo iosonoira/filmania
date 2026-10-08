@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/routing/app_router.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glass_overlay.dart';

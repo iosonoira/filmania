@@ -1,4 +1,4 @@
-import 'package:filmania/features/person/domain/entities/person.dart';
+import 'package:filmania/domain/models/person.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'person_dto.freezed.dart';

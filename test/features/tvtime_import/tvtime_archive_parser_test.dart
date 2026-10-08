@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:archive/archive.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:filmania/features/tvtime_import/data/datasources/tvtime_archive_parser.dart';
-import 'package:filmania/features/tvtime_import/domain/failures/tvtime_import_failure.dart';
+import 'package:filmania/domain/failures/tvtime_import_failure.dart';
 
 Uint8List _buildZip(Map<String, String> csvByFilename) {
   final archive = Archive();

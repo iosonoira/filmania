@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/features/favorites/ui/widgets/favorite_button.dart';
 import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';

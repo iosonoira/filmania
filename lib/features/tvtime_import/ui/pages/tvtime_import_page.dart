@@ -13,9 +13,9 @@ import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/tvtime_import/ui/providers/tvtime_import_notifier.dart';
 import 'package:filmania/features/tvtime_import/ui/providers/tvtime_import_state.dart';
-import 'package:filmania/features/tvtime_import/domain/enums/tvtime_import_phase.dart';
-import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
-import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/domain/models/tvtime_import_phase.dart';
+import 'package:filmania/domain/models/tvtime_import_progress.dart';
+import 'package:filmania/domain/models/tvtime_matched_data.dart';
 
 class TvTimeImportPage extends ConsumerWidget {
   const TvTimeImportPage({super.key});

@@ -1,4 +1,4 @@
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/features/person/data/models/person_combined_credits_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 

@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmania/core/domain/entities/crew_member.dart';
+import 'package:filmania/domain/models/crew_member.dart';
 import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';

@@ -1,5 +1,5 @@
-import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/features/person/domain/entities/person_credit.dart';
+import 'package:filmania/domain/models/media_type.dart';
+import 'package:filmania/domain/models/person_credit.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'person_credit_dto.freezed.dart';

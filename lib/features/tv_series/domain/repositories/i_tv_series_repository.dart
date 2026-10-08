@@ -1,8 +1,8 @@
-import 'package:filmania/core/domain/entities/cast_member.dart';
-import 'package:filmania/core/domain/entities/credits.dart';
-import 'package:filmania/core/domain/entities/genre.dart';
-import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
-import 'package:filmania/features/tv_series/domain/entities/tv_series.dart';
+import 'package:filmania/domain/models/cast_member.dart';
+import 'package:filmania/domain/models/credits.dart';
+import 'package:filmania/domain/models/genre.dart';
+import 'package:filmania/domain/models/tv_episode.dart';
+import 'package:filmania/domain/models/tv_series.dart';
 
 abstract class ITVSeriesRepository {
   Future<List<TVSeries>> getTrendingTVSeries({int page = 1});

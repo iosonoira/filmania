@@ -9,7 +9,7 @@ import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
 import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
-import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
+import 'package:filmania/domain/models/watchlist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 

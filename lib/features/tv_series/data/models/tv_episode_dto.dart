@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
+import 'package:filmania/domain/models/tv_episode.dart';
 
 part 'tv_episode_dto.freezed.dart';
 part 'tv_episode_dto.g.dart';

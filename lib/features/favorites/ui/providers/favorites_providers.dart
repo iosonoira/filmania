@@ -1,7 +1,7 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/favorites/domain/entities/favorite_item.dart';
+import 'package:filmania/domain/models/favorite_item.dart';
 import 'package:filmania/features/favorites/data/repositories/favorites_repository_impl.dart';
 
 part 'favorites_providers.g.dart';

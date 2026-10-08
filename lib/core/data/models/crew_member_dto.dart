@@ -1,4 +1,4 @@
-import 'package:filmania/core/domain/entities/crew_member.dart';
+import 'package:filmania/domain/models/crew_member.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'crew_member_dto.freezed.dart';

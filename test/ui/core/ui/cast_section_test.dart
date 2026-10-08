@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
-import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/domain/models/cast_member.dart';
 import 'package:filmania/ui/core/ui/cast_section.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 

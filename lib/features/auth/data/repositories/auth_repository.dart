@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthUser;
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/auth/domain/repositories/i_auth_repository.dart';
-import 'package:filmania/features/auth/domain/entities/auth_user.dart';
-import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/domain/models/auth_user.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
 import 'package:filmania/data/services/supabase/supabase_client.dart';
 
 part 'auth_repository.g.dart';

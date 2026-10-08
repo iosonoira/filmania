@@ -1,6 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
-import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/domain/models/media_type.dart';
+import 'package:filmania/domain/models/watched_item.dart';
 import 'package:filmania/features/watched/domain/repositories/i_watched_repository.dart';
 import 'package:filmania/features/tv_series/domain/repositories/i_tv_series_repository.dart';
 import 'package:filmania/features/tv_series/data/repositories/tv_series_repository_impl.dart';

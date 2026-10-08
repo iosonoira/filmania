@@ -9,7 +9,7 @@ import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/ui/core/ui/cast_section.dart';
 import 'package:filmania/features/watched/ui/widgets/watched_episode_button.dart';
-import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
+import 'package:filmania/domain/models/tv_episode.dart';
 import 'package:filmania/features/tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 

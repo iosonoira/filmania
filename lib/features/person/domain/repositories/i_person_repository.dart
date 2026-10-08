@@ -1,5 +1,5 @@
-import 'package:filmania/features/person/domain/entities/person.dart';
-import 'package:filmania/features/person/domain/entities/person_credit.dart';
+import 'package:filmania/domain/models/person.dart';
+import 'package:filmania/domain/models/person_credit.dart';
 
 abstract class IPersonRepository {
   Future<Person> getPersonDetails(int personId);

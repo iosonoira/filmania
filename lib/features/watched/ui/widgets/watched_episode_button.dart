@@ -4,7 +4,7 @@ import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/features/watched/data/repositories/watched_repository_impl.dart';

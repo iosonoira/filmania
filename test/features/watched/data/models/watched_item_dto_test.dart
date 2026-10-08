@@ -1,6 +1,6 @@
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/features/watched/data/models/watched_item_dto.dart';
-import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/domain/models/watched_item.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

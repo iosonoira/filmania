@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/favorites/domain/entities/favorite_item.dart';
+import 'package:filmania/domain/models/favorite_item.dart';
 import 'package:filmania/features/favorites/data/repositories/favorites_repository_impl.dart';
 import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
 

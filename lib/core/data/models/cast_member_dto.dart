@@ -1,4 +1,4 @@
-import 'package:filmania/core/domain/entities/cast_member.dart';
+import 'package:filmania/domain/models/cast_member.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'cast_member_dto.freezed.dart';

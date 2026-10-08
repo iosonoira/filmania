@@ -8,16 +8,16 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
-import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/domain/models/watched_item.dart';
 import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/auth_failure_l10n.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
-import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
 import 'package:filmania/features/profile/ui/providers/user_stats_provider.dart';
 
 class ProfilePage extends ConsumerWidget {

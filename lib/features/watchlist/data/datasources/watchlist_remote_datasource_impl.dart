@@ -1,11 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/data/services/supabase/supabase_client.dart';
 import 'package:filmania/features/watchlist/data/models/watchlist_item_dto.dart';
 import 'package:filmania/features/watchlist/data/models/watchlist_dto.dart';
-import 'package:filmania/features/watchlist/domain/failures/watchlist_failure.dart';
+import 'package:filmania/domain/failures/watchlist_failure.dart';
 import 'package:filmania/features/watchlist/data/datasources/i_watchlist_remote_datasource.dart';
 
 part 'watchlist_remote_datasource_impl.g.dart';

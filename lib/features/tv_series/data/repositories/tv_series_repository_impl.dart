@@ -1,11 +1,11 @@
-import 'package:filmania/core/domain/entities/cast_member.dart';
-import 'package:filmania/core/domain/entities/credits.dart';
-import 'package:filmania/core/domain/entities/genre.dart';
+import 'package:filmania/domain/models/cast_member.dart';
+import 'package:filmania/domain/models/credits.dart';
+import 'package:filmania/domain/models/genre.dart';
 import 'package:filmania/data/services/tmdb/tmdb_client.dart';
 import 'package:filmania/features/tv_series/data/datasources/i_tv_series_remote_datasource.dart';
 import 'package:filmania/features/tv_series/data/datasources/tv_series_remote_datasource_impl.dart';
-import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
-import 'package:filmania/features/tv_series/domain/entities/tv_series.dart';
+import 'package:filmania/domain/models/tv_episode.dart';
+import 'package:filmania/domain/models/tv_series.dart';
 import 'package:filmania/features/tv_series/domain/repositories/i_tv_series_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 

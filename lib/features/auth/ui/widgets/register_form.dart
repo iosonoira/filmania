@@ -6,7 +6,7 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/auth_failure_l10n.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
 
 class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({super.key});

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:filmania/features/tvtime_import/data/datasources/tmdb_find_datasource.dart';
 import 'package:filmania/features/tvtime_import/data/datasources/tvtime_match_service.dart';
-import 'package:filmania/features/tvtime_import/domain/entities/tvtime_raw_export.dart';
+import 'package:filmania/domain/models/tvtime_raw_export.dart';
 
 class _FakeAdapter implements HttpClientAdapter {
   int callCount = 0;

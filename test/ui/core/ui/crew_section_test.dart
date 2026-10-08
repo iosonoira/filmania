@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
-import 'package:filmania/core/domain/entities/crew_member.dart';
+import 'package:filmania/domain/models/crew_member.dart';
 import 'package:filmania/ui/core/ui/crew_section.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 

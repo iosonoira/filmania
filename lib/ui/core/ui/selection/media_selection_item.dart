@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 
 /// Identifies a movie or TV series inside a multi-select selection [Set].
 ///

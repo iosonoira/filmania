@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/data/services/network_failure.dart';
 import 'package:filmania/data/services/supabase/supabase_client.dart';
 import 'package:filmania/features/watched/data/models/watched_episode_dto.dart';
 import 'package:filmania/features/watched/data/models/watched_item_dto.dart';
-import 'package:filmania/features/watched/domain/failures/watched_failure.dart';
+import 'package:filmania/domain/failures/watched_failure.dart';
 import 'package:filmania/features/watched/data/datasources/i_watched_remote_datasource.dart';
 
 part 'watched_remote_datasource_impl.g.dart';

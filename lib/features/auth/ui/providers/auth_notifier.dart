@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/features/auth/domain/entities/auth_user.dart';
+import 'package:filmania/domain/models/auth_user.dart';
 import 'package:filmania/features/auth/data/repositories/auth_repository.dart';
 
 part 'auth_notifier.g.dart';

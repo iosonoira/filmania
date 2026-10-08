@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:filmania/features/watchlist/domain/entities/watchlist_item.dart';
+import 'package:filmania/domain/models/watchlist_item.dart';
 
 part 'watchlist.freezed.dart';
 

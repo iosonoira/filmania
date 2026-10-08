@@ -4,7 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:filmania/data/services/supabase/supabase_client.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
 
 part 'image_upload_controller.g.dart';
 

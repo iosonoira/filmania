@@ -1,5 +1,5 @@
-import 'package:filmania/features/favorites/domain/entities/favorite_item.dart';
-import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/domain/models/favorite_item.dart';
+import 'package:filmania/domain/models/media_type.dart';
 
 abstract class IFavoritesRepository {
   Future<void> addFavorite(FavoriteItem item);

@@ -1,8 +1,8 @@
 import 'package:filmania/data/services/tmdb/tmdb_client.dart';
 import 'package:filmania/features/person/data/datasources/i_person_remote_datasource.dart';
 import 'package:filmania/features/person/data/datasources/person_remote_datasource_impl.dart';
-import 'package:filmania/features/person/domain/entities/person.dart';
-import 'package:filmania/features/person/domain/entities/person_credit.dart';
+import 'package:filmania/domain/models/person.dart';
+import 'package:filmania/domain/models/person_credit.dart';
 import 'package:filmania/features/person/domain/repositories/i_person_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
