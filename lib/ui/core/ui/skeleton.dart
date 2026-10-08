@@ -8,7 +8,11 @@ enum SkeletonShape { rect, circle }
 /// layout (grid cards, list rows, avatars, buttons). Consolidates three
 /// near-identical hand-rolled placeholders that existed independently in
 /// episodes, favorites, and watchlist. Includes a subtle breathing animation
-/// — opacité oscillates from 0.5 to 1.0 over ~1.2 seconds.
+/// — opacity oscillates from 0.5 to 1.0 over ~1.2 seconds.
+///
+/// Drawn with the primary text colour at low opacity rather than the surface
+/// colour: surface at 15% was ~1.01:1 against the background in every theme,
+/// so the placeholder was invisible and only image spinners showed.
 class Skeleton extends StatefulWidget {
   Skeleton({
     super.key,
@@ -30,6 +34,11 @@ class Skeleton extends StatefulWidget {
   @override
   State<Skeleton> createState() => _SkeletonState();
 }
+
+/// Opacities of the text colour; the breathing animation halves them at its
+/// low point.
+const _skeletonFillAlpha = 0.12;
+const _skeletonGradientEdgeAlpha = 0.08;
 
 class _SkeletonState extends State<Skeleton>
     with SingleTickerProviderStateMixin {
@@ -73,15 +82,21 @@ class _SkeletonState extends State<Skeleton>
           borderRadius: isCircle ? null : widget.borderRadius,
           color: widget.gradient
               ? null
-              : colors.surface.withValues(alpha: 0.15),
+              : colors.onSurfacePrimary.withValues(alpha: _skeletonFillAlpha),
           gradient: widget.gradient
               ? LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: [
-                    colors.surface.withValues(alpha: 0.05),
-                    colors.surface.withValues(alpha: 0.15),
-                    colors.surface.withValues(alpha: 0.05),
+                    colors.onSurfacePrimary.withValues(
+                      alpha: _skeletonGradientEdgeAlpha,
+                    ),
+                    colors.onSurfacePrimary.withValues(
+                      alpha: _skeletonFillAlpha,
+                    ),
+                    colors.onSurfacePrimary.withValues(
+                      alpha: _skeletonGradientEdgeAlpha,
+                    ),
                   ],
                 )
               : null,

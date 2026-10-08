@@ -142,9 +142,8 @@ class _ProfileHero extends StatelessWidget {
                         child: CachedNetworkImage(
                           imageUrl: photoUrl!,
                           fit: BoxFit.cover,
-                          placeholder: (context, url) => const Center(
-                            child: CircularProgressIndicator(strokeWidth: 2),
-                          ),
+                          placeholder: (context, url) =>
+                              Skeleton(shape: SkeletonShape.circle),
                           errorWidget: (context, url, error) => Icon(
                             Icons.person,
                             color: colors.primary,

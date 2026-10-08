@@ -11,6 +11,7 @@ import 'package:filmania/ui/core/ui/watchlist_picker_sheet.dart';
 import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/ui/core/ui/watched_button.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/ui/core/ui/skeleton.dart';
 
 class MediaGridCard extends ConsumerWidget {
   final int mediaId;
@@ -95,12 +96,9 @@ class MediaGridCard extends ConsumerWidget {
                   imageUrl: posterUrl!,
                   fit: BoxFit.cover,
                   memCacheWidth: 300,
-                  placeholder: (context, url) => Container(
-                    color: colors.surface.withValues(alpha: 0.1),
-                    child: const Center(
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    ),
-                  ),
+                  // The card clips the corners, so the skeleton stays square.
+                  placeholder: (context, url) =>
+                      Skeleton(borderRadius: BorderRadius.zero),
                   errorWidget: (context, url, error) => Container(
                     color: colors.surface,
                     child: const Icon(Icons.movie_rounded, size: 40),

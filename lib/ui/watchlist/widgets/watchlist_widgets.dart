@@ -6,6 +6,7 @@ import 'package:filmania/ui/core/ui/glass_overlay.dart';
 import 'package:filmania/domain/models/watchlist_item.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/ui/core/ui/skeleton.dart';
 
 class WatchlistMediaCard extends StatelessWidget {
   final WatchlistItem item;
@@ -51,12 +52,9 @@ class WatchlistMediaCard extends StatelessWidget {
                 imageUrl: item.fullPosterUrl ?? '',
                 fit: BoxFit.cover,
                 memCacheWidth: 300,
-                placeholder: (context, url) => Container(
-                  color: colors.surface.withValues(alpha: 0.1),
-                  child: const Center(
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                ),
+                // The card clips the corners, so the skeleton stays square.
+                placeholder: (context, url) =>
+                    Skeleton(borderRadius: BorderRadius.zero),
                 errorWidget: (context, url, error) => Container(
                   color: colors.surface,
                   child: Center(
