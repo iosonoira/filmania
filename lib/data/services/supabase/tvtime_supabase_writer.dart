@@ -236,7 +236,7 @@ class TvTimeSupabaseWriter {
 
   /// Scrive una riga di riepilogo per serie su `watched_items` (media_type='tv'),
   /// mancante rispetto a `_writeEpisodes` che scrive solo su `watched_episodes`.
-  /// Senza questa riga, `categorizedTvSeries` (features/watched) non trova mai
+  /// Senza questa riga, `categorizedTvSeries` (ui/core/view_models) non trova mai
   /// le serie importate e le 4 categorie del profilo restano vuote, anche se
   /// gli episodi risultano correttamente visti in `watched_episodes`.
   ///

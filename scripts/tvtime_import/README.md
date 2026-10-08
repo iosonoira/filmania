@@ -21,8 +21,8 @@ silenzio. Controllalo dopo ogni run.
 ## Prima di iniziare — verifica lo schema Supabase
 
 Le colonne usate da questo script replicano lo schema SQL documentato nei commenti dei
-datasource Flutter (`lib/features/watched/.../*_impl.dart`,
-`lib/features/watchlist/.../*_impl.dart`), **non** una introspezione diretta del
+datasource Flutter (`lib/data/services/supabase/watched_remote_datasource_impl.dart`,
+`lib/data/services/supabase/watchlist_remote_datasource_impl.dart`), **non** una introspezione diretta del
 database (questo ambiente non aveva accesso al progetto Supabase reale). Prima di
 lanciare con `--apply`, apri Supabase Studio → Table Editor e controlla che esistano
 esattamente:

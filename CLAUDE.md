@@ -49,46 +49,62 @@ flutter run --profile
 
 ## Architecture
 
-Feature-first Clean Architecture. No flat `screens/` folder.
+Follows the structure of the official Flutter architecture case study (https://docs.flutter.dev/app-architecture/case-study): **data and domain are shared and organised by type, the UI is organised by feature**. Repositories and services are not tied to a single feature; each feature owns only its screens and view models. The guide uses `ChangeNotifier` + `provider`; here Riverpod providers play the view-model and dependency-injection roles (the guide leaves state management to preference).
 
 ```
 lib/
-├── core/
-│   ├── domain/          # Shared entities (CastMember, MediaType)
-│   ├── data/            # Shared DTOs (CastMemberDto)
-│   ├── env/             # Envied secrets (env.dart + env.g.dart)
-│   ├── network/         # Singleton Dio (tmdb_client), interceptors, NetworkFailure
-│   ├── router/          # GoRouter AppRouter + AppRoutes constants
-│   ├── supabase/        # supabaseClientProvider
-│   ├── theme/           # AppColors, AppTheme, AppSpacing, theme_provider
-│   ├── utils/           # logger.dart
-│   └── widgets/         # Shared widgets (GlassmorphicAppBar, ErrorView, etc.)
-├── features/
-│   ├── auth/            # Supabase auth (login, register, AuthNotifier)
-│   ├── discover/        # TMDB discover/search
-│   ├── home/            # Home feed (trending bento sections)
-│   ├── movies/          # Movie domain + TMDB datasource + details page
-│   ├── tv_series/       # TV series domain + TMDB datasource + details/episode pages
-│   ├── watched/         # Watched items (Supabase) + categorized TV provider
-│   ├── watchlist/       # Watchlists (Supabase) + picker sheet
-│   ├── profile/         # Profile page, user stats, image upload
-│   └── settings/        # Settings page
+├── config/              # Envied secrets (env.dart; env.g.dart is generated and gitignored)
+├── routing/             # GoRouter AppRouter + AppRoutes constants
+├── utils/               # logger, concurrency helpers
+├── l10n/                # ARB files, generated AppLocalizations, AuthFailure messages
+├── domain/
+│   ├── models/          # Freezed entities and enums (Movie, TVSeries, WatchedItem, MediaType…)
+│   ├── failures/        # Sealed failure types (AuthFailure, WatchedFailure…)
+│   └── use_cases/       # Logic that needs several repositories and is shared by several view models
+├── data/
+│   ├── models/          # DTOs with toEntity()
+│   ├── services/        # tmdb/ (Dio client, interceptors, TMDB datasources), supabase/ (client,
+│   │                    # Supabase datasources), tvtime/ (import parser and matcher), NetworkFailure
+│   └── repositories/    # <name>/: interface (i_*.dart), implementation, <name>_providers.dart
+├── ui/
+│   ├── core/
+│   │   ├── themes/      # AppColors, AppTheme, AppSpacing, theme_provider
+│   │   ├── ui/          # Widgets used by several features (GlassmorphicAppBar, MediaGridCard,
+│   │   │                # WatchedButton, FavoriteButton, watchlist picker, bottom nav bar…)
+│   │   └── view_models/ # State and actions used by several features (WatchlistNotifier,
+│   │                    # isMediaWatched, categorizedTvSeries, bulk actions)
+│   └── <feature>/       # auth, discover, home, movies, tv_series, person, watched, watchlist,
+│       ├── view_models/ # favorites, profile, settings, tvtime_import
+│       └── widgets/     # The feature's pages and widgets
 └── main.dart
 ```
 
-### Layer Import Rules
+`test/` mirrors `lib/`.
 
-| Layer | May Import |
+### Where things go
+
+| What | Where |
 |---|---|
-| `data/datasources` | `core/`, Supabase/Dio |
-| `data/models` | Dart SDK only |
-| `data/repositories` | `domain/`, `data/datasources` |
-| `domain/entities` | Dart SDK only |
-| `domain/repositories` | `domain/entities` |
-| `ui/providers` | `domain/repositories`, other providers |
-| `ui/pages` + `ui/widgets` | `ui/providers`, `core/theme` |
+| Used by one feature only | `ui/<feature>/view_models` or `ui/<feature>/widgets` |
+| Widget used by several features | `ui/core/ui/` |
+| State or action used by several features | `ui/core/view_models/` |
+| Provider that only reads one repository | `data/repositories/<name>/<name>_providers.dart` |
+| Logic combining several repositories, repeated across view models | `domain/use_cases/` |
 
-**No cross-feature imports.** Features talk to each other only via `core/` or shared domain entities.
+### Import Rules
+
+Enforced by `test/architecture/import_rules_test.dart` — run `flutter test test/architecture` after moving code.
+
+| Folder | Never imports |
+|---|---|
+| `ui/<feature>/` | another `ui/<feature>/` — features share only through `ui/core`, `data` and `domain` |
+| `ui/core/` | any `ui/<feature>/` |
+| `data/` | `ui/`, `routing/` |
+| `data/repositories/<a>/` | `data/repositories/<b>/` — repositories are never aware of each other (the auth session in `auth/auth_providers.dart` is the one shared input) |
+| `domain/use_cases/` | `ui/`, `routing/` |
+| `domain/models/`, `domain/failures/` | anything outside `domain/models` and `domain/failures` |
+
+`routing/` may import every feature's pages.
 
 ---
 
@@ -107,12 +123,12 @@ lib/
 
 ## Networking
 
-- **Dio**: one singleton via `@Riverpod(keepAlive: true)` in `core/network/tmdb_client.dart`. Never instantiate `Dio()` in features.
+- **Dio**: one singleton via `@Riverpod(keepAlive: true)` in `data/services/tmdb/tmdb_client.dart`. Never instantiate `Dio()` anywhere else.
 - Interceptor order: Auth (`TmdbAuthInterceptor`) → Logging (`PrettyDioLogger`, debug only) → Retry (`TmdbRetryInterceptor`).
 - Retry only `GET` requests (idempotent). Up to 3 retries, exponential back-off. Never retry `POST`/`PUT`/`DELETE`.
 - Map all `DioException` to sealed `NetworkFailure` types in the datasource. Repositories translate to domain `Result`/`Failure`. Raw exceptions never reach UI.
-- **Supabase**: init once in `main.dart`. Access via `supabaseClientProvider`. Never use `Supabase.instance.client` in features.
-- Auth state = `StreamProvider` on `onAuthStateChange` via `AuthNotifier`.
+- **Supabase**: init once in `main.dart`. Access via `supabaseClientProvider`. Never use `Supabase.instance.client` outside `data/services/supabase/`.
+- Auth state = `authStateProvider` (stream on `onAuthStateChange`) in `data/repositories/auth/auth_providers.dart`; login/register live in `ui/auth/view_models/auth_notifier.dart`.
 - Supabase Realtime → exposed as `Stream<T>` from datasource. Cancel in `ref.onDispose`.
 - **RLS**: Must be enabled on every user-data table. Naming convention: `[table]_[role]_[action]`. Never disable RLS for convenience.
 
@@ -121,7 +137,7 @@ lib/
 ## Secrets (Envied)
 
 - All secrets live in `.env` (gitignored). Never `String.fromEnvironment` or hardcoded literals.
-- Access via `lib/core/env/env.dart` (`Env.tmdbApiKey`, `Env.supabaseUrl`, `Env.supabaseAnonKey`).
+- Access via `lib/config/env.dart` (`Env.tmdbApiKey`, `Env.supabaseUrl`, `Env.supabaseAnonKey`).
 - `env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible and the repo is public. Regenerate it locally with `build_runner`; CI regenerates it from GitHub Secrets.
 - After changing `.env`, run: `dart run build_runner build --delete-conflicting-outputs`.
 - `.env.example` (key names only, no values) **is committed** — documents required secrets for new devs.
@@ -135,7 +151,7 @@ lib/
 
 - **Colors**: Always `AppColors.of(context)`. Never `Theme.of(context).colorScheme`, `Colors.black`, or hex literals.
 - **Spacing**: Always `AppSpacing` tokens (8dp multiples). Never raw doubles for padding.
-- **Typography**: `AppTextStyles`. No raw `TextStyle` outside `core/theme/`.
+- **Typography**: `AppTextStyles`. No raw `TextStyle` outside `ui/core/themes/`.
 - **No-Line Rule**: No 1px borders/dividers. Use 8dp whitespace or tonal surface shifts.
 - **Dark mode default**: `#0F0E13` background, `#1B1A23` surface, `#7C4DFF` primary.
 - **Slivers**: Dynamic lists must use `SliverList`/`SliverGrid` inside `CustomScrollView`. No `Column` + `SingleChildScrollView` for unbounded content.
@@ -157,7 +173,7 @@ lib/
 - **Widget decomposition**: `build()` max 50 lines. Extract to `StatelessWidget`/`ConsumerWidget`. Private helper methods returning `Widget` are forbidden.
 - **Entities**: Must use `@freezed`. No mutation — use `.copyWith()`. No JSON logic in entities.
 - **DTOs**: `@JsonSerializable` in `data/models/`. Include `toEntity()` extension/method. Mapping only in repository layer.
-- **Failures**: Each feature defines a `sealed class` in `domain/failures/`. Repositories catch and map; UI sees only failure types.
+- **Failures**: One `sealed class` per area in `domain/failures/`. Repositories catch and map; UI sees only failure types.
 - **Documentation**: Public APIs need `///` doc-comments explaining *why*, not what.
 - **DRY**: Extract logic repeated more than 2 times.
 - **Naming** (Effective Dart):
@@ -184,7 +200,7 @@ lib/
 
 ## Routing (GoRouter)
 
-- Router in `lib/core/router/app_router.dart`. Auth state tied via `RefreshListenable`.
+- Router in `lib/routing/app_router.dart`. Auth state tied via `RefreshListenable`.
 - All path strings centralized in `AppRoutes` constants. Never hardcode path strings outside that file.
 - Navigate with `context.go('/path')`.
 - Primary app sections = `StatefulShellBranch` under the root `StatefulShellRoute`. New top-level tabs go there, not as standalone routes.

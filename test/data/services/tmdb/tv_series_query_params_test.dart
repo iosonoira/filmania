@@ -1,4 +1,4 @@
-// test/features/tv_series/data/datasources/tv_series_query_params_test.dart
+// test/data/services/tmdb/tv_series_query_params_test.dart
 import 'package:filmania/data/services/tmdb/tv_series_remote_datasource_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 

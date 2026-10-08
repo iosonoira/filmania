@@ -2,7 +2,7 @@
 
 Colli di bottiglia di rendering trovati nell'app e come risolverli. Ogni raccomandazione rimanda alla documentazione ufficiale Flutter da cui deriva; dove la documentazione non si esprime, è scritto esplicitamente.
 
-> **Ultima verifica sul codice: 2026-10-07** (Flutter 3.41.7). Nessuno degli interventi sotto è ancora stato applicato. I numeri di riga si riferiscono a quella data.
+> **Ultima verifica sul codice: 2026-10-07** (Flutter 3.41.7). Nessuno degli interventi sotto è ancora stato applicato. I numeri di riga si riferiscono a quella data. Il 2026-10-08 i file sono stati spostati nella nuova struttura (`ui/core/ui/`, `ui/<feature>/widgets/`): i nomi citati restano validi tranne `discover_widgets.dart`, diventato `ui/core/ui/media_grid_card.dart` (righe aggiornate).
 
 ---
 
@@ -12,10 +12,10 @@ Colli di bottiglia di rendering trovati nell'app e come risolverli. Ogni raccoma
 Dalla [pagina API di `BackdropFilter`](https://api.flutter.dev/flutter/widgets/BackdropFilter-class.html): l'effetto è "relatively expensive, especially if the filter is non-local, such as a blur". Più filtri che condividono un `BackdropKey` (tramite `BackdropGroup` e il costruttore `BackdropFilter.grouped`) vengono combinati dal motore in un'unica operazione. I filtri che si sovrappongono non devono condividere la stessa chiave.
 
 ### Dove si trova nel codice
-Tutta la sfocatura passa da `GlassOverlay` (`core/widgets/glass_overlay.dart`), che avvolge un `BackdropFilter` in un `RepaintBoundary`.
+Tutta la sfocatura passa da `GlassOverlay` (`ui/core/ui/glass_overlay.dart`), che avvolge un `BackdropFilter` in un `RepaintBoundary`.
 
 Elementi piccoli ripetuti in griglie e liste (i casi peggiori):
-- `MediaGridCard`: **due** bottoni sfocati per card (`discover_widgets.dart:137`, `:162`). In una griglia con 8 card visibili sono 16 sfocature durante lo scroll.
+- `MediaGridCard`: **due** bottoni sfocati per card (`media_grid_card.dart:140`, `:165`). In una griglia con 8 card visibili sono 16 sfocature durante lo scroll.
 - `_FavoriteCard`: badge cuore (`favorites_page.dart:197`).
 - `_WatchlistCard`: badge segnalibro (`watchlist_page.dart:231`).
 - `WatchlistMediaCard`: bottone rimuovi (`watchlist_widgets.dart:99`).
@@ -78,7 +78,7 @@ Dalla [pagina API di `Clip`](https://api.flutter.dev/flutter/dart-ui/Clip.html):
 
 ### Dove si trova nel codice
 15 usi di `Clip.antiAlias`, 1 solo di `Clip.hardEdge`. Quelli in liste e griglie scorrevoli:
-- `MediaGridCard` (`discover_widgets.dart:85`).
+- `MediaGridCard` (`media_grid_card.dart:88`).
 - `cast_section.dart:88`, `crew_section.dart:88`.
 - `favorites_page.dart:147`, `watchlist_page.dart:162`, `watchlist_widgets.dart:43`.
 - `home_widgets.dart:178`, `:672`; `profile_page.dart:563`, `:574`; `tv_series_widgets.dart:342`.

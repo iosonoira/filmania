@@ -65,63 +65,42 @@ Cinematic editorial app for discovering movies and TV series, building watchlist
 
 ## Architecture
 
-Feature-first Clean Architecture. No flat `screens/` folder. Features are siblings — no cross-feature imports.
+The code follows the structure of the [official Flutter architecture case study](https://docs.flutter.dev/app-architecture/case-study): **data and domain are shared and organised by type, the UI is organised by feature**. Repositories and services serve every screen that needs them; each feature owns only its pages and view models. Riverpod providers play the view-model and dependency-injection roles that the guide shows with `ChangeNotifier` + `provider`.
 
 ```
 lib/
-├── core/
-│   ├── data/models/          # Shared DTOs (CastMemberDto)
-│   ├── domain/               # Shared entities (CastMember, MediaType enum)
-│   ├── env/                  # Envied secrets (env.dart + env.g.dart)
-│   ├── l10n/                 # Localizations + localeProvider
-│   ├── network/              # Singleton Dio, interceptors, NetworkFailure sealed class
-│   ├── router/               # GoRouter AppRouter + AppRoutes constants
-│   ├── supabase/             # supabaseClientProvider (keepAlive)
-│   ├── theme/                # AppColors, AppTheme, AppSpacing, theme_provider
-│   ├── utils/                # logger.dart
-│   └── widgets/              # GlassmorphicAppBar, ErrorView, GlassOverlay, MainScaffold
-├── features/
-│   ├── auth/                 # Supabase email auth
-│   ├── discover/             # TMDB search + browse
-│   ├── home/                 # Trending editorial feed
-│   ├── movies/               # Movie domain + TMDB + details
-│   ├── tv_series/            # TV domain + TMDB + season/episode pages
-│   ├── watched/              # Watched tracking (Supabase) + categorized provider
-│   ├── watchlist/            # Watchlists (Supabase) + picker sheet
-│   ├── profile/              # Profile page, user stats, avatar upload
-│   └── settings/             # Theme + locale settings
+├── config/                   # Envied secrets (env.dart; env.g.dart generated, gitignored)
+├── routing/                  # GoRouter AppRouter + AppRoutes constants
+├── utils/                    # logger, concurrency helpers
+├── l10n/                     # ARB files, generated AppLocalizations
+├── domain/
+│   ├── models/               # Immutable entities and enums (@freezed)
+│   ├── failures/             # Sealed failure types
+│   └── use_cases/            # Logic that needs several repositories (MarkAsWatchedUseCase)
+├── data/
+│   ├── models/               # DTOs (@JsonSerializable, toEntity())
+│   ├── services/             # tmdb/ (Dio client, interceptors, datasources), supabase/, tvtime/
+│   └── repositories/         # <name>/: interface (i_*.dart), implementation, read providers
+├── ui/
+│   ├── core/
+│   │   ├── themes/           # AppColors, AppTheme, AppSpacing, theme_provider
+│   │   ├── ui/               # Widgets shared by several features
+│   │   └── view_models/      # State and actions shared by several features
+│   └── <feature>/            # auth, discover, home, movies, tv_series, person, watched,
+│       ├── view_models/      # watchlist, favorites, profile, settings, tvtime_import
+│       └── widgets/          # Pages and widgets of the feature
 └── main.dart
 ```
 
-Each feature follows the same internal structure:
+### Import Rules
 
-```
-features/<name>/
-├── data/
-│   ├── datasources/          # Remote/local raw I/O
-│   ├── models/               # DTOs (@JsonSerializable, toEntity())
-│   └── repositories/         # Concrete repo implementations
-├── domain/
-│   ├── entities/             # Immutable models (@freezed)
-│   ├── failures/             # Sealed class failure types
-│   └── repositories/         # Abstract interfaces (i_*.dart)
-└── ui/
-    ├── pages/                # Full-screen GoRouter pages
-    ├── widgets/              # Local reusable components
-    └── providers/            # @riverpod providers / notifiers
-```
+Checked by `test/architecture/import_rules_test.dart`, so a violation fails the test suite:
 
-### Layer Import Rules
-
-| Layer | May Import |
-|---|---|
-| `data/datasources` | `core/`, Supabase/Dio |
-| `data/models` | Dart SDK only |
-| `data/repositories` | `domain/`, `data/datasources` |
-| `domain/entities` | Dart SDK only |
-| `domain/repositories` | `domain/entities` |
-| `ui/providers` | `domain/repositories`, other providers |
-| `ui/pages` + `ui/widgets` | `ui/providers`, `core/theme` |
+- a feature never imports another feature: they share only through `ui/core`, `data` and `domain`;
+- `ui/core` never imports a feature;
+- `data` never imports `ui` or `routing`;
+- repositories are never aware of each other (the auth session is the one shared input);
+- `domain/models` and `domain/failures` depend only on the domain.
 
 Raw exceptions never reach the UI. Every datasource maps `DioException` / Supabase errors to sealed `Failure` types. Repositories translate to domain results.
 
@@ -157,7 +136,7 @@ class WatchedNotifier extends _$WatchedNotifier {
 
 ### TMDB (Dio)
 
-Single `Dio` instance via `@Riverpod(keepAlive: true)` in `core/network/tmdb_client.dart`. Interceptor order is fixed:
+Single `Dio` instance via `@Riverpod(keepAlive: true)` in `data/services/tmdb/tmdb_client.dart`. Interceptor order is fixed:
 
 1. `TmdbAuthInterceptor` — appends Bearer token from `Env.tmdbApiKey`
 2. `PrettyDioLogger` — debug builds only (`kReleaseMode` check)
@@ -172,13 +151,13 @@ Single `Dio` instance via `@Riverpod(keepAlive: true)` in `core/network/tmdb_cli
 
 ### Supabase
 
-Initialized once in `main.dart`. Accessed via `supabaseClientProvider` — never via `Supabase.instance.client` in features. Auth state is a Riverpod `StreamProvider` on `onAuthStateChange`. RLS is required on every user-data table.
+Initialized once in `main.dart`. Accessed via `supabaseClientProvider` — never via `Supabase.instance.client` outside `data/services/supabase/`. Auth state is a Riverpod `StreamProvider` on `onAuthStateChange`. RLS is required on every user-data table.
 
 ---
 
 ## Secrets & Environment
 
-All secrets live in `.env` (gitignored). Accessed via `lib/core/env/env.dart` using [envied](https://pub.dev/packages/envied).
+All secrets live in `.env` (gitignored). Accessed via `lib/config/env.dart` using [envied](https://pub.dev/packages/envied).
 
 ```
 TMDB_API_KEY=...
@@ -200,7 +179,7 @@ dart run build_runner build --delete-conflicting-outputs
 
 > "Digital Curator" — editorial experience, not a database. High-end gallery for cinematic art.
 
-Full specification in [`DESIGN.md`](DESIGN.md). The system is enforced via `core/theme/` — nothing is hardcoded in feature code.
+Full specification in [`DESIGN.md`](DESIGN.md). The system is enforced via `ui/core/themes/` — nothing is hardcoded in feature code.
 
 ### Colors
 
@@ -222,7 +201,7 @@ Always use `AppColors.of(context)`. Never `Theme.of(context).colorScheme`, `Colo
 - **Manrope** — display, headlines (300–800 weight). Geometric precision.
 - **Inter** — body, labels, metadata (100–900 weight). Legibility at small sizes.
 
-Always use `AppTextStyles`. No raw `TextStyle` outside `core/theme/`.
+Always use `AppTextStyles`. No raw `TextStyle` outside `ui/core/themes/`.
 
 ### Spacing
 
@@ -274,7 +253,7 @@ flutter run --profile
 
 ## Routing
 
-GoRouter in `lib/core/router/app_router.dart`. Auth state wired via `RefreshListenable`. All path strings centralized in `AppRoutes` constants — no hardcoded path strings in feature code.
+GoRouter in `lib/routing/app_router.dart`. Auth state wired via `RefreshListenable`. All path strings centralized in `AppRoutes` constants — no hardcoded path strings in feature code.
 
 Primary sections use `StatefulShellBranch` under a root `StatefulShellRoute` (persistent bottom nav). Navigate with `context.go('/path')`.
 
@@ -383,10 +362,13 @@ flutter run --profile
 
 ## Testing
 
-Widget tests live in `test/features/`. Current coverage focuses on UI behavior of key interactive components:
+`test/` mirrors `lib/`. Coverage focuses on DTO parsing, repositories and use cases, and the UI behaviour of key interactive components, for example:
 
-- `test/features/watched/ui/widgets/watched_episode_button_icon_test.dart`
-- `test/features/tv_series/ui/widgets/episode_card_test.dart`
+- `test/architecture/import_rules_test.dart` — the import rules above
+- `test/domain/use_cases/mark_as_watched_use_case_test.dart`
+- `test/data/repositories/watched/watched_repository_impl_test.dart`
+- `test/ui/core/ui/watched_episode_button_icon_test.dart`
+- `test/ui/tv_series/widgets/episode_card_test.dart`
 
 Tests use `ProviderScope` overrides to inject mock repositories — never Mockito mocks of Supabase/Dio directly.
 
