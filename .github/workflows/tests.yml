@@ -1,0 +1,41 @@
+name: Analyze and test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # env.g.dart only has to exist for the code to compile: no test calls
+      # TMDB or Supabase, so placeholder values are enough and the real
+      # secrets never reach this job (pull requests from forks have none).
+      - name: Create placeholder .env
+        run: |
+          echo "TMDB_API_KEY=placeholder" >> .env
+          echo "SUPABASE_URL=https://placeholder.supabase.co" >> .env
+          echo "SUPABASE_ANON_KEY=placeholder" >> .env
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Generate code (Envied/Freezed/Riverpod)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: Analyze
+        run: dart analyze
+
+      # Includes test/architecture/import_rules_test.dart, which fails when
+      # a feature imports another one or a layer imports the wrong way.
+      - name: Run tests
+        run: flutter test
