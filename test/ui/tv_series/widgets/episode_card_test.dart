@@ -6,6 +6,12 @@ import 'package:filmania/ui/tv_series/widgets/tv_series_widgets.dart';
 import 'package:filmania/domain/models/tv_episode.dart';
 import 'package:filmania/data/repositories/watched/watched_providers.dart';
 import 'package:filmania/data/repositories/auth/auth_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:filmania/l10n/app_localizations_provider.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/ui/core/ui/selection/selection_scope.dart';
+import 'package:filmania/ui/core/ui/selection/episode_selection_item.dart';
+import '../../../helpers/preferences.dart';
 
 const _episode = TVEpisode(
   id: 101,
@@ -19,9 +25,10 @@ const _episode = TVEpisode(
   runtime: 62,
 );
 
-Widget _wrap({bool isWatched = false}) {
+Widget _wrap(SharedPreferences prefs, {bool isWatched = false}) {
   return ProviderScope(
     overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
       authStateProvider.overrideWith((ref) => Stream.value(null)),
       isEpisodeWatchedProvider(
         seriesId: 1,
@@ -31,12 +38,17 @@ Widget _wrap({bool isWatched = false}) {
     ],
     child: MaterialApp(
       theme: AppTheme.dark(),
-      home: const Scaffold(
-        body: EpisodeCard(
-          episode: _episode,
-          tvId: 1,
-          seriesTitle: 'Game of Thrones',
-          seriesPosterPath: null,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      // The details page provides the selection scope for its episode cards.
+      home: const SelectionScope<EpisodeSelectionItem>(
+        child: Scaffold(
+          body: EpisodeCard(
+            episode: _episode,
+            tvId: 1,
+            seriesTitle: 'Game of Thrones',
+            seriesPosterPath: null,
+          ),
         ),
       ),
     ),
@@ -47,7 +59,9 @@ void main() {
   testWidgets(
     'EpisodeCard renders a toggle button when episode is not watched',
     (tester) async {
-      await tester.pumpWidget(_wrap(isWatched: false));
+      await tester.pumpWidget(
+        _wrap(await emptyPreferences(), isWatched: false),
+      );
       await tester.pump();
       expect(find.byIcon(Icons.check_circle_outline_rounded), findsOneWidget);
     },
@@ -56,7 +70,7 @@ void main() {
   testWidgets(
     'EpisodeCard renders a filled check icon when episode is watched',
     (tester) async {
-      await tester.pumpWidget(_wrap(isWatched: true));
+      await tester.pumpWidget(_wrap(await emptyPreferences(), isWatched: true));
       await tester.pump();
       expect(find.byIcon(Icons.check_circle_rounded), findsNWidgets(2));
     },
@@ -65,7 +79,9 @@ void main() {
   testWidgets(
     'EpisodeCard does not show a vote star even when voteAverage > 0',
     (tester) async {
-      await tester.pumpWidget(_wrap(isWatched: false));
+      await tester.pumpWidget(
+        _wrap(await emptyPreferences(), isWatched: false),
+      );
       await tester.pump();
 
       expect(find.byIcon(Icons.star_rounded), findsNothing);

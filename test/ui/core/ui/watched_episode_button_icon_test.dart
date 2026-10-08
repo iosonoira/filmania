@@ -5,10 +5,14 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/watched_episode_button.dart';
 import 'package:filmania/data/repositories/watched/watched_providers.dart';
 import 'package:filmania/data/repositories/auth/auth_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:filmania/l10n/app_localizations_provider.dart';
+import '../../../helpers/preferences.dart';
 
-Widget _buildSubject({bool isWatched = false}) {
+Widget _buildSubject(SharedPreferences prefs, {bool isWatched = false}) {
   return ProviderScope(
     overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
       authStateProvider.overrideWith((ref) => Stream.value(null)),
       isEpisodeWatchedProvider(
         seriesId: 1,
@@ -37,7 +41,9 @@ void main() {
   testWidgets(
     'isIconOnly shows check_circle_outline_rounded when not watched',
     (tester) async {
-      await tester.pumpWidget(_buildSubject(isWatched: false));
+      await tester.pumpWidget(
+        _buildSubject(await emptyPreferences(), isWatched: false),
+      );
       await tester.pump();
       expect(find.byIcon(Icons.check_circle_outline_rounded), findsOneWidget);
       expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
@@ -47,7 +53,9 @@ void main() {
   testWidgets('isIconOnly shows check_circle_rounded when watched', (
     tester,
   ) async {
-    await tester.pumpWidget(_buildSubject(isWatched: true));
+    await tester.pumpWidget(
+      _buildSubject(await emptyPreferences(), isWatched: true),
+    );
     await tester.pump();
     expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
     expect(find.byIcon(Icons.check_circle_outline_rounded), findsNothing);

@@ -35,6 +35,8 @@ void main() {
 
     await tester.pumpWidget(_wrap(prefs));
     await tester.pumpAndSettle();
+    // The Account section is the last one of a lazily built SliverList.
+    await tester.scrollUntilVisible(find.text('Esci'), 200);
 
     expect(find.text('Esci'), findsOneWidget);
   });

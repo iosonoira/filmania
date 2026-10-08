@@ -12,6 +12,9 @@ import 'package:filmania/data/repositories/person/person_providers.dart';
 import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/data/repositories/auth/auth_providers.dart';
 import 'package:filmania/ui/core/view_models/is_media_watched.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:filmania/l10n/app_localizations_provider.dart';
+import '../../../helpers/preferences.dart';
 
 const _person = Person(
   id: 138,
@@ -33,7 +36,7 @@ const _credits = [
   ),
 ];
 
-Widget _wrap() {
+Widget _wrap(SharedPreferences prefs) {
   final router = GoRouter(
     initialLocation: '/person/138',
     routes: [
@@ -46,6 +49,7 @@ Widget _wrap() {
 
   return ProviderScope(
     overrides: [
+      sharedPreferencesProvider.overrideWithValue(prefs),
       authStateProvider.overrideWith((ref) => Stream.value(null)),
       personDetailsProvider(138).overrideWith((ref) => Future.value(_person)),
       personFilmographyProvider(
@@ -73,7 +77,7 @@ void main() {
   testWidgets('shows person name, place of birth and biography', (
     tester,
   ) async {
-    await tester.pumpWidget(_wrap());
+    await tester.pumpWidget(_wrap(await emptyPreferences()));
     await tester.pumpAndSettle();
 
     expect(find.text('Quentin Tarantino'), findsOneWidget);
@@ -82,7 +86,7 @@ void main() {
   });
 
   testWidgets('shows filmography credit title', (tester) async {
-    await tester.pumpWidget(_wrap());
+    await tester.pumpWidget(_wrap(await emptyPreferences()));
     await tester.pumpAndSettle();
 
     expect(find.text('Pulp Fiction'), findsOneWidget);
