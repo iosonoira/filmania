@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'app_colors.dart';
+import 'package:filmania/core/theme/app_colors.dart';
 
 /// AppSpacing class based on the 8dp grid system mentioned in DESIGN.md.
 abstract class AppSpacing {

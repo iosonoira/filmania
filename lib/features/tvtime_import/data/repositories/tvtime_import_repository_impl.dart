@@ -1,12 +1,12 @@
 import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../domain/entities/tvtime_import_progress.dart';
-import '../../domain/entities/tvtime_matched_data.dart';
-import '../../domain/repositories/i_tvtime_import_repository.dart';
-import '../datasources/tvtime_archive_parser.dart';
-import '../datasources/tvtime_match_service.dart';
-import '../datasources/tvtime_supabase_writer.dart';
-import '../datasources/tmdb_find_datasource.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/features/tvtime_import/domain/repositories/i_tvtime_import_repository.dart';
+import 'package:filmania/features/tvtime_import/data/datasources/tvtime_archive_parser.dart';
+import 'package:filmania/features/tvtime_import/data/datasources/tvtime_match_service.dart';
+import 'package:filmania/features/tvtime_import/data/datasources/tvtime_supabase_writer.dart';
+import 'package:filmania/features/tvtime_import/data/datasources/tmdb_find_datasource.dart';
 
 part 'tvtime_import_repository_impl.g.dart';
 

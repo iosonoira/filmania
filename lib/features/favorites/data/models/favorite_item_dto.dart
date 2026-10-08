@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../core/domain/enums/media_type.dart';
-import '../../domain/entities/favorite_item.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/features/favorites/domain/entities/favorite_item.dart';
 
 part 'favorite_item_dto.freezed.dart';
 part 'favorite_item_dto.g.dart';

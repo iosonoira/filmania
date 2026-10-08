@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/domain/enums/media_type.dart';
-import '../../../../core/utils/concurrency.dart';
-import '../../../../core/widgets/selection/episode_selection_item.dart';
-import '../../../../core/widgets/selection/media_selection_item.dart';
-import '../../../auth/ui/providers/auth_notifier.dart';
-import '../../data/repositories/watched_repository_impl.dart';
-import '../../domain/entities/watched_item.dart';
-import '../providers/categorized_tv_series_provider.dart';
-import '../providers/watched_providers.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/core/utils/concurrency.dart';
+import 'package:filmania/core/widgets/selection/episode_selection_item.dart';
+import 'package:filmania/core/widgets/selection/media_selection_item.dart';
+import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/features/watched/data/repositories/watched_repository_impl.dart';
+import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/features/watched/ui/providers/categorized_tv_series_provider.dart';
+import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
 
 /// Bulk actions apply to at most a screenful of selected items, but run
 /// against Supabase over the network — bounded concurrency (matching the

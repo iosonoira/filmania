@@ -1,11 +1,11 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import '../../domain/failures/watchlist_failure.dart';
-import '../../../movies/domain/entities/movie.dart';
-import '../../../tv_series/domain/entities/tv_series.dart';
-import '../../data/repositories/watchlist_repository_impl.dart';
-import '../../domain/entities/watchlist.dart';
-import '../../domain/entities/watchlist_item.dart';
+import 'package:filmania/features/watchlist/domain/failures/watchlist_failure.dart';
+import 'package:filmania/features/movies/domain/entities/movie.dart';
+import 'package:filmania/features/tv_series/domain/entities/tv_series.dart';
+import 'package:filmania/features/watchlist/data/repositories/watchlist_repository_impl.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist_item.dart';
 
 part 'watchlist_providers.g.dart';
 

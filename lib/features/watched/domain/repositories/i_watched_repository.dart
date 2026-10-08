@@ -1,5 +1,5 @@
-import '../entities/watched_item.dart';
-import '../../../../core/domain/enums/media_type.dart';
+import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 
 abstract class IWatchedRepository {
   Future<void> markAsWatched(WatchedItem item);

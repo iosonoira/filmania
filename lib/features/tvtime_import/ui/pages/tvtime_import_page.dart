@@ -6,16 +6,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/glassmorphic_app_bar.dart';
-import '../../../../core/l10n/app_localizations_provider.dart';
-import '../../../../core/utils/logger.dart';
-import '../providers/tvtime_import_notifier.dart';
-import '../providers/tvtime_import_state.dart';
-import '../../domain/enums/tvtime_import_phase.dart';
-import '../../domain/entities/tvtime_import_progress.dart';
-import '../../domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/utils/logger.dart';
+import 'package:filmania/features/tvtime_import/ui/providers/tvtime_import_notifier.dart';
+import 'package:filmania/features/tvtime_import/ui/providers/tvtime_import_state.dart';
+import 'package:filmania/features/tvtime_import/domain/enums/tvtime_import_phase.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
 
 class TvTimeImportPage extends ConsumerWidget {
   const TvTimeImportPage({super.key});

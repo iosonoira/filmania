@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../domain/entities/auth_user.dart';
+import 'package:filmania/features/auth/domain/entities/auth_user.dart';
 
 part 'auth_user_model.g.dart';
 

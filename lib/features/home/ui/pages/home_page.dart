@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/app_theme.dart';
+import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
-import '../../../../core/l10n/app_localizations_provider.dart';
-import '../../../../core/widgets/selection_action_feedback.dart';
-import '../../../../core/widgets/selection/media_selection_item.dart';
-import '../../../../core/widgets/selection/selection_action_bar.dart';
-import '../../../../core/widgets/selection/selection_scope.dart';
-import '../../../watched/ui/widgets/watched_bulk_actions.dart';
-import '../../../watchlist/ui/widgets/watchlist_picker_sheet.dart';
-import '../widgets/home_widgets.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/widgets/selection_action_feedback.dart';
+import 'package:filmania/core/widgets/selection/media_selection_item.dart';
+import 'package:filmania/core/widgets/selection/selection_action_bar.dart';
+import 'package:filmania/core/widgets/selection/selection_scope.dart';
+import 'package:filmania/features/watched/ui/widgets/watched_bulk_actions.dart';
+import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
+import 'package:filmania/features/home/ui/widgets/home_widgets.dart';
 
 // Pattern for future AsyncValue sections:
 // sectionAsync.when(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../theme/app_theme.dart';
+import 'package:filmania/core/theme/app_theme.dart';
 
 class RecommendationsSection extends StatelessWidget {
   final String title;

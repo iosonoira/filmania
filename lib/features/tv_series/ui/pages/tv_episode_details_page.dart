@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
 import 'package:filmania/core/utils/logger.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import '../../../../core/widgets/error_view.dart';
-import '../../../../core/widgets/skeleton.dart';
-import '../../../../core/widgets/cast_section.dart';
-import '../../../watched/ui/widgets/watched_episode_button.dart';
-import '../../domain/entities/tv_episode.dart';
-import '../providers/tv_series_provider.dart';
+import 'package:filmania/core/widgets/error_view.dart';
+import 'package:filmania/core/widgets/skeleton.dart';
+import 'package:filmania/core/widgets/cast_section.dart';
+import 'package:filmania/features/watched/ui/widgets/watched_episode_button.dart';
+import 'package:filmania/features/tv_series/domain/entities/tv_episode.dart';
+import 'package:filmania/features/tv_series/ui/providers/tv_series_provider.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 class TVEpisodeDetailsPage extends ConsumerWidget {

@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import '../entities/tvtime_import_progress.dart';
-import '../entities/tvtime_matched_data.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
 
 abstract class ITvTimeImportRepository {
   /// Estrae lo zip, parsifica i CSV e matcha tutto su TMDB.

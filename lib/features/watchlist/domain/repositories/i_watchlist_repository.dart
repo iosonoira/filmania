@@ -1,6 +1,6 @@
 import 'package:filmania/core/domain/enums/media_type.dart';
-import '../entities/watchlist.dart';
-import '../entities/watchlist_item.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist_item.dart';
 
 abstract interface class IWatchlistRepository {
   // ── Watchlist CRUD ──────────────────────────────────────────────────────────

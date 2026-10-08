@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/error_view.dart';
-import '../../../../core/widgets/glassmorphic_app_bar.dart';
-import '../../../../core/router/app_router.dart';
-import '../../../../core/widgets/skeleton.dart';
-import '../providers/tv_series_provider.dart';
-import '../../../discover/ui/widgets/discover_widgets.dart';
-import '../../../../core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/core/widgets/error_view.dart';
+import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
+import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/core/widgets/skeleton.dart';
+import 'package:filmania/features/tv_series/ui/providers/tv_series_provider.dart';
+import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
 
 class TrendingTVSeriesPage extends ConsumerWidget {
   const TrendingTVSeriesPage({super.key});

@@ -4,9 +4,9 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:filmania/core/env/env.dart';
-import '../l10n/app_localizations_provider.dart';
-import 'tmdb_auth_interceptor.dart';
-import 'tmdb_retry_interceptor.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/network/tmdb_auth_interceptor.dart';
+import 'package:filmania/core/network/tmdb_retry_interceptor.dart';
 
 part 'tmdb_client.g.dart';
 

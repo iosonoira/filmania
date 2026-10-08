@@ -1,6 +1,6 @@
 import 'package:filmania/core/domain/enums/media_type.dart';
-import '../models/watchlist_item_dto.dart';
-import '../models/watchlist_dto.dart';
+import 'package:filmania/features/watchlist/data/models/watchlist_item_dto.dart';
+import 'package:filmania/features/watchlist/data/models/watchlist_dto.dart';
 
 abstract interface class IWatchlistRemoteDataSource {
   // ── Watchlist CRUD ──────────────────────────────────────────────────────────

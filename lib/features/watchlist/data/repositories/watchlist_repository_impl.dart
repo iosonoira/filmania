@@ -1,12 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import '../../domain/entities/watchlist.dart';
-import '../../domain/entities/watchlist_item.dart';
-import '../../domain/repositories/i_watchlist_repository.dart';
-import '../datasources/i_watchlist_remote_datasource.dart';
-import '../datasources/watchlist_remote_datasource_impl.dart';
-import '../models/watchlist_item_dto.dart';
-import '../../../auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist_item.dart';
+import 'package:filmania/features/watchlist/domain/repositories/i_watchlist_repository.dart';
+import 'package:filmania/features/watchlist/data/datasources/i_watchlist_remote_datasource.dart';
+import 'package:filmania/features/watchlist/data/datasources/watchlist_remote_datasource_impl.dart';
+import 'package:filmania/features/watchlist/data/models/watchlist_item_dto.dart';
+import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 
 part 'watchlist_repository_impl.g.dart';
 

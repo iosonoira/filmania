@@ -1,8 +1,8 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../l10n/app_localizations_provider.dart';
-import 'app_toast.dart';
-import 'selection/selection_scope.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/widgets/app_toast.dart';
+import 'package:filmania/core/widgets/selection/selection_scope.dart';
 
 /// Shared after-bulk-action UX for every multi-select action bar wiring
 /// site: shows a success/failure toast depending on [failureCount], then

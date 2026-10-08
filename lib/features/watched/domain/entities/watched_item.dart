@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../core/domain/enums/media_type.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 
 part 'watched_item.freezed.dart';
 

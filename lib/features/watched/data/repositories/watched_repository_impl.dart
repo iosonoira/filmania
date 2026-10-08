@@ -1,15 +1,15 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/domain/enums/media_type.dart';
-import '../../domain/entities/watched_item.dart';
-import '../../domain/repositories/i_watched_repository.dart';
-import '../../../tv_series/domain/repositories/i_tv_series_repository.dart';
-import '../../../tv_series/data/repositories/tv_series_repository_impl.dart';
-import '../datasources/i_watched_remote_datasource.dart';
-import '../datasources/watched_remote_datasource_impl.dart';
-import '../models/watched_episode_dto.dart';
-import '../models/watched_item_dto.dart';
-import '../../../movies/domain/repositories/i_movies_repository.dart';
-import '../../../movies/data/repositories/movies_repository_impl.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/features/watched/domain/entities/watched_item.dart';
+import 'package:filmania/features/watched/domain/repositories/i_watched_repository.dart';
+import 'package:filmania/features/tv_series/domain/repositories/i_tv_series_repository.dart';
+import 'package:filmania/features/tv_series/data/repositories/tv_series_repository_impl.dart';
+import 'package:filmania/features/watched/data/datasources/i_watched_remote_datasource.dart';
+import 'package:filmania/features/watched/data/datasources/watched_remote_datasource_impl.dart';
+import 'package:filmania/features/watched/data/models/watched_episode_dto.dart';
+import 'package:filmania/features/watched/data/models/watched_item_dto.dart';
+import 'package:filmania/features/movies/domain/repositories/i_movies_repository.dart';
+import 'package:filmania/features/movies/data/repositories/movies_repository_impl.dart';
 
 part 'watched_repository_impl.g.dart';
 

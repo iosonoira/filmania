@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../domain/entities/user_stats.dart';
+import 'package:filmania/features/profile/domain/entities/user_stats.dart';
 
 part 'user_stats_dto.freezed.dart';
 part 'user_stats_dto.g.dart';

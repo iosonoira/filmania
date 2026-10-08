@@ -4,12 +4,12 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'core/env/env.dart';
-import 'core/router/app_router.dart';
-import 'core/theme/app_theme.dart';
-import 'core/theme/theme_provider.dart';
-import 'core/l10n/app_localizations_provider.dart';
-import 'core/l10n/generated/app_localizations.dart';
+import 'package:filmania/core/env/env.dart';
+import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/core/theme/theme_provider.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

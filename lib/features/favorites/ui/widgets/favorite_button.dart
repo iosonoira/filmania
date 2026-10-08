@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/domain/enums/media_type.dart';
-import '../../../../core/l10n/generated/app_localizations.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/logger.dart';
-import '../../../auth/ui/providers/auth_notifier.dart';
-import '../../domain/entities/favorite_item.dart';
-import '../../data/repositories/favorites_repository_impl.dart';
-import '../providers/favorites_providers.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/utils/logger.dart';
+import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/features/favorites/domain/entities/favorite_item.dart';
+import 'package:filmania/features/favorites/data/repositories/favorites_repository_impl.dart';
+import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
 
 /// Icon-only toggle for adding/removing a movie or TV series from
 /// favorites. Reused as a secondary action on detail pages and as the

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'generated/app_localizations.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
 
 part 'app_localizations_provider.g.dart';
 

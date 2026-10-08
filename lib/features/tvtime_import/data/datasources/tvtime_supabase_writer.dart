@@ -4,11 +4,11 @@ import 'package:filmania/core/domain/enums/media_type.dart';
 import 'package:filmania/core/utils/logger.dart';
 import 'package:filmania/core/supabase/supabase_client.dart';
 import 'package:filmania/core/utils/concurrency.dart';
-import '../../domain/entities/tvtime_matched_data.dart';
-import '../../domain/entities/tvtime_import_progress.dart';
-import '../../domain/enums/tvtime_import_phase.dart';
-import '../../domain/failures/tvtime_import_failure.dart';
-import 'tmdb_details_datasource.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
+import 'package:filmania/features/tvtime_import/domain/enums/tvtime_import_phase.dart';
+import 'package:filmania/features/tvtime_import/domain/failures/tvtime_import_failure.dart';
+import 'package:filmania/features/tvtime_import/data/datasources/tmdb_details_datasource.dart';
 
 part 'tvtime_supabase_writer.g.dart';
 

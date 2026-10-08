@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../domain/entities/tvtime_import_progress.dart';
-import '../../domain/entities/tvtime_matched_data.dart';
-import '../../domain/failures/tvtime_import_failure.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/features/tvtime_import/domain/failures/tvtime_import_failure.dart';
 
 part 'tvtime_import_state.freezed.dart';
 

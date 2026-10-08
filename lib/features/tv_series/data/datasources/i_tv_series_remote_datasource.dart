@@ -1,8 +1,8 @@
 import 'package:filmania/core/data/models/cast_member_dto.dart';
 import 'package:filmania/core/data/models/credits_dto.dart';
 import 'package:filmania/core/data/models/genre_dto.dart';
-import '../models/tv_episode_dto.dart';
-import '../models/tv_series_dto.dart';
+import 'package:filmania/features/tv_series/data/models/tv_episode_dto.dart';
+import 'package:filmania/features/tv_series/data/models/tv_series_dto.dart';
 
 abstract class ITVSeriesRemoteDataSource {
   Future<List<TVSeriesDto>> getTrendingTVSeries({int page = 1});

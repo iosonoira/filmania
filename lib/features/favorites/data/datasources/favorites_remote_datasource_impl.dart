@@ -2,10 +2,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
 import 'package:filmania/core/utils/logger.dart';
-import '../../../../core/supabase/supabase_client.dart';
-import '../models/favorite_item_dto.dart';
-import '../../domain/failures/favorite_failure.dart';
-import 'i_favorites_remote_datasource.dart';
+import 'package:filmania/core/supabase/supabase_client.dart';
+import 'package:filmania/features/favorites/data/models/favorite_item_dto.dart';
+import 'package:filmania/features/favorites/domain/failures/favorite_failure.dart';
+import 'package:filmania/features/favorites/data/datasources/i_favorites_remote_datasource.dart';
 
 part 'favorites_remote_datasource_impl.g.dart';
 

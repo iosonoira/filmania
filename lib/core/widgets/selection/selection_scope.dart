@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'selection_controller.dart';
+import 'package:filmania/core/widgets/selection/selection_controller.dart';
 
 /// Hosts one [SelectionController] for a subtree and exposes it via
 /// [controllerOf], so pages can drop a grid inside [SelectionScope]

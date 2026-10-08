@@ -1,5 +1,5 @@
-import '../models/favorite_item_dto.dart';
-import '../../../../core/domain/enums/media_type.dart';
+import 'package:filmania/features/favorites/data/models/favorite_item_dto.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
 
 abstract class IFavoritesRemoteDataSource {
   Future<void> addFavorite(FavoriteItemDto item);

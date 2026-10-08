@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:filmania/core/domain/enums/media_type.dart';
 import 'package:filmania/core/utils/concurrency.dart';
-import '../../domain/entities/tvtime_raw_export.dart';
-import '../../domain/entities/tvtime_matched_data.dart';
-import '../../domain/entities/tvtime_import_progress.dart';
-import '../../domain/enums/tvtime_import_phase.dart';
-import 'tmdb_find_datasource.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_raw_export.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_matched_data.dart';
+import 'package:filmania/features/tvtime_import/domain/entities/tvtime_import_progress.dart';
+import 'package:filmania/features/tvtime_import/domain/enums/tvtime_import_phase.dart';
+import 'package:filmania/features/tvtime_import/data/datasources/tmdb_find_datasource.dart';
 
 class TvTimeMatchService {
   final TmdbFindDataSource _tmdb;

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../network/network_failure.dart';
-import '../../features/auth/domain/failures/auth_failure.dart';
-import '../l10n/app_localizations_provider.dart';
-import '../l10n/auth_failure_l10n.dart';
-import '../l10n/generated/app_localizations.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_theme.dart';
+import 'package:filmania/core/network/network_failure.dart';
+import 'package:filmania/features/auth/domain/failures/auth_failure.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/l10n/auth_failure_l10n.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
 
 class AppErrorView extends ConsumerWidget {
   final Object error;

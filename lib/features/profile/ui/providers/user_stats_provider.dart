@@ -1,12 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../../../core/supabase/supabase_client.dart';
-import '../../../auth/ui/providers/auth_notifier.dart';
-import '../../data/models/user_stats_dto.dart';
-import '../../domain/entities/user_stats.dart';
-import '../../../../core/domain/enums/media_type.dart';
-import '../../../../core/utils/logger.dart';
-import '../../../watched/ui/providers/watched_providers.dart';
-import '../../../watched/domain/entities/watched_item.dart';
+import 'package:filmania/core/supabase/supabase_client.dart';
+import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/features/profile/data/models/user_stats_dto.dart';
+import 'package:filmania/features/profile/domain/entities/user_stats.dart';
+import 'package:filmania/core/domain/enums/media_type.dart';
+import 'package:filmania/core/utils/logger.dart';
+import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
+import 'package:filmania/features/watched/domain/entities/watched_item.dart';
 
 part 'user_stats_provider.g.dart';
 

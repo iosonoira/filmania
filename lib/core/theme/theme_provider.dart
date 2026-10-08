@@ -1,5 +1,5 @@
-import '../l10n/app_localizations_provider.dart';
-import 'app_theme.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/theme/app_theme.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'theme_provider.g.dart';

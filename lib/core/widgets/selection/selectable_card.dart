@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../theme/app_colors.dart';
-import '../../theme/app_theme.dart';
-import 'selection_scope.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/core/widgets/selection/selection_scope.dart';
 
 /// Wraps any existing card [child] with long-press-to-select behaviour.
 ///

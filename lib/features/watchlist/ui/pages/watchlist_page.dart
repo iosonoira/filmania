@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/router/app_router.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:filmania/core/router/app_router.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
 import 'package:filmania/core/widgets/glass_overlay.dart';
 import 'package:filmania/core/widgets/glassmorphic_app_bar.dart';
-import '../providers/watchlist_providers.dart';
-import '../../../../core/widgets/error_view.dart';
-import '../../../../core/widgets/skeleton.dart';
-import '../../domain/entities/watchlist.dart';
+import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/core/widgets/error_view.dart';
+import 'package:filmania/core/widgets/skeleton.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmania/core/l10n/generated/app_localizations.dart';
 

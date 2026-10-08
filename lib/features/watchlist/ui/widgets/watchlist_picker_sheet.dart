@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/core/domain/enums/media_type.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_theme.dart';
-import '../../../../core/l10n/app_localizations_provider.dart';
-import '../../../../core/l10n/generated/app_localizations.dart';
-import '../../../../core/widgets/selection/media_selection_item.dart';
-import '../../domain/entities/watchlist.dart';
-import '../providers/watchlist_providers.dart';
-import '../../../../core/widgets/app_toast.dart';
-import '../../../../core/widgets/skeleton.dart';
+import 'package:filmania/core/theme/app_colors.dart';
+import 'package:filmania/core/theme/app_theme.dart';
+import 'package:filmania/core/l10n/app_localizations_provider.dart';
+import 'package:filmania/core/l10n/generated/app_localizations.dart';
+import 'package:filmania/core/widgets/selection/media_selection_item.dart';
+import 'package:filmania/features/watchlist/domain/entities/watchlist.dart';
+import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/core/widgets/app_toast.dart';
+import 'package:filmania/core/widgets/skeleton.dart';
 
 /// Opens the WatchlistPickerSheet and handles result.
 /// Call from movie/tv detail pages instead of toggling directly.
