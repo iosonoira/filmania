@@ -49,4 +49,4 @@ final class CategorizedTvSeriesProvider
 }
 
 String _$categorizedTvSeriesHash() =>
-    r'09b8ef232894db73d812dadc7e2c016cc6e6a900';
+    r'3d053c232407117ce138f739058cc306277e5f6f';
