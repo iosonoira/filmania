@@ -31,7 +31,8 @@ class Skeleton extends StatefulWidget {
   State<Skeleton> createState() => _SkeletonState();
 }
 
-class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin {
+class _SkeletonState extends State<Skeleton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
 
@@ -43,9 +44,10 @@ class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin
       vsync: this,
     );
 
-    _opacityAnimation = Tween<double>(begin: 0.5, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _opacityAnimation = Tween<double>(
+      begin: 0.5,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.repeat(reverse: true);
   }
@@ -69,7 +71,9 @@ class _SkeletonState extends State<Skeleton> with SingleTickerProviderStateMixin
         decoration: BoxDecoration(
           shape: isCircle ? BoxShape.circle : BoxShape.rectangle,
           borderRadius: isCircle ? null : widget.borderRadius,
-          color: widget.gradient ? null : colors.surface.withValues(alpha: 0.15),
+          color: widget.gradient
+              ? null
+              : colors.surface.withValues(alpha: 0.15),
           gradient: widget.gradient
               ? LinearGradient(
                   begin: Alignment.topLeft,
@@ -118,13 +122,9 @@ class PersonDetailsSkeleton extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                Center(
-                  child: Skeleton(height: 28, width: 180),
-                ),
+                Center(child: Skeleton(height: 28, width: 180)),
                 const SizedBox(height: AppSpacing.xs),
-                Center(
-                  child: Skeleton(height: 16, width: 220),
-                ),
+                Center(child: Skeleton(height: 16, width: 220)),
                 const SizedBox(height: AppSpacing.lg),
                 Skeleton(height: 24, width: 120),
                 const SizedBox(height: AppSpacing.md),
@@ -394,11 +394,8 @@ class CastRowSkeleton extends StatelessWidget {
         itemCount: 4,
         separatorBuilder: (context, index) =>
             const SizedBox(width: AppSpacing.md),
-        itemBuilder: (context, index) => Skeleton(
-          width: 100,
-          height: 100,
-          shape: SkeletonShape.circle,
-        ),
+        itemBuilder: (context, index) =>
+            Skeleton(width: 100, height: 100, shape: SkeletonShape.circle),
       ),
     );
   }
@@ -421,11 +418,8 @@ class TrendingRowSkeleton extends StatelessWidget {
         itemCount: 4,
         separatorBuilder: (context, index) =>
             const SizedBox(width: AppSpacing.lg),
-        itemBuilder: (context, index) => SizedBox(
-          width: 140,
-          height: 280,
-          child: Skeleton(),
-        ),
+        itemBuilder: (context, index) =>
+            SizedBox(width: 140, height: 280, child: Skeleton()),
       ),
     );
   }
@@ -631,8 +625,7 @@ class RecommendationsRowSkeleton extends StatelessWidget {
         itemCount: 4,
         separatorBuilder: (context, index) =>
             const SizedBox(width: AppSpacing.md),
-        itemBuilder: (context, index) =>
-            Skeleton(width: 140, height: 200),
+        itemBuilder: (context, index) => Skeleton(width: 140, height: 200),
       ),
     );
   }
