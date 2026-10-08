@@ -1,0 +1,238 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
+import 'package:filmania/l10n/app_localizations_provider.dart';
+import 'package:filmania/l10n/auth_failure_l10n.dart';
+import 'package:filmania/ui/auth/view_models/auth_notifier.dart';
+import 'package:filmania/domain/failures/auth_failure.dart';
+
+class RegisterForm extends ConsumerStatefulWidget {
+  const RegisterForm({super.key});
+
+  @override
+  ConsumerState<RegisterForm> createState() => _RegisterFormState();
+}
+
+class _RegisterFormState extends ConsumerState<RegisterForm> {
+  final _emailController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  final _usernameFocusNode = FocusNode();
+  final _passwordFocusNode = FocusNode();
+  final _confirmPasswordFocusNode = FocusNode();
+
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _usernameFocusNode.dispose();
+    _passwordFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleSubmit() {
+    if (_formKey.currentState?.validate() ?? false) {
+      ref
+          .read(authProvider.notifier)
+          .register(
+            _emailController.text,
+            _passwordController.text,
+            _usernameController.text,
+          );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final authState = ref.watch(authProvider);
+    final isLoading = authState is AsyncLoading;
+    final colors = AppColors.of(context);
+    final l10n = ref.watch(appLocalizationsProvider);
+
+    // Rule: Use ref.listen for side-effects like snackbars (Rule 120 State Management)
+    ref.listen(authProvider, (previous, next) {
+      if (next case AsyncError(:final error)) {
+        final message = switch (error) {
+          final AuthFailure failure => authFailureMessage(failure, l10n),
+          _ => l10n.genericErrorDesc,
+        };
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: colors.error,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.md),
+            ),
+          ),
+        );
+      }
+    });
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          TextFormField(
+            controller: _emailController,
+            decoration: InputDecoration(hintText: l10n.emailAddress),
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _usernameFocusNode.requestFocus(),
+            validator: (value) {
+              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+              if (value == null || !emailRegex.hasMatch(value)) {
+                return l10n.enterValidEmail;
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: AppSpacing.md),
+          TextFormField(
+            controller: _usernameController,
+            focusNode: _usernameFocusNode,
+            decoration: InputDecoration(hintText: l10n.username),
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _passwordFocusNode.requestFocus(),
+            validator: (value) =>
+                (value?.length ?? 0) >= 3 ? null : l10n.min3Chars,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          TextFormField(
+            controller: _passwordController,
+            focusNode: _passwordFocusNode,
+            textInputAction: TextInputAction.next,
+            onFieldSubmitted: (_) => _confirmPasswordFocusNode.requestFocus(),
+            decoration: InputDecoration(
+              hintText: l10n.password,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                  size: 20,
+                  color: colors.onSurfaceSecondary,
+                ),
+                onPressed: () =>
+                    setState(() => _obscurePassword = !_obscurePassword),
+              ),
+            ),
+            obscureText: _obscurePassword,
+            validator: (value) =>
+                (value?.length ?? 0) >= 6 ? null : l10n.min6Chars,
+          ),
+          const SizedBox(height: AppSpacing.md),
+          TextFormField(
+            controller: _confirmPasswordController,
+            focusNode: _confirmPasswordFocusNode,
+            decoration: InputDecoration(
+              hintText: l10n.confirmPassword,
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _obscureConfirmPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility,
+                  size: 20,
+                  color: colors.onSurfaceSecondary,
+                ),
+                onPressed: () => setState(
+                  () => _obscureConfirmPassword = !_obscureConfirmPassword,
+                ),
+              ),
+            ),
+            obscureText: _obscureConfirmPassword,
+            validator: (value) {
+              if ((value?.length ?? 0) < 6) {
+                return l10n.min6Chars;
+              }
+              if (value != _passwordController.text) {
+                return l10n.passwordsMismatch;
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: AppSpacing.xl),
+
+          // Hero CTA styling from DESIGN.md
+          Material(
+            color: Colors.transparent,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOutCubic,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
+                gradient: const LinearGradient(
+                  colors: [Color(0xFFCDBDFF), Color(0xFF7C4DFF)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: colors.primary.withValues(alpha: 0.2),
+                    blurRadius: 32,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
+                onTap: isLoading ? null : _handleSubmit,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.md + 4,
+                  ),
+                  child: Center(
+                    child: isLoading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text(
+                            l10n.createYourPass,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                l10n.alreadyHavePass,
+                style: TextStyle(color: colors.onSurfaceSecondary),
+              ),
+              TextButton(
+                onPressed: isLoading ? null : () => context.go('/login'),
+                child: Text(l10n.signIn),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

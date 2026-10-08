@@ -1,0 +1,497 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:filmania/domain/models/media_type.dart';
+import 'package:filmania/ui/core/themes/app_colors.dart';
+import 'package:filmania/ui/core/themes/app_theme.dart';
+import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
+import 'package:filmania/utils/logger.dart';
+import 'package:filmania/domain/models/movie.dart';
+import 'package:filmania/data/repositories/movies/movies_providers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
+import 'package:filmania/ui/core/ui/watchlist_picker_sheet.dart';
+import 'package:filmania/ui/core/ui/error_view.dart';
+import 'package:filmania/ui/core/ui/skeleton.dart';
+import 'package:filmania/ui/core/ui/watched_button.dart';
+import 'package:filmania/ui/core/ui/favorite_button.dart';
+import 'package:filmania/ui/core/ui/cast_section.dart';
+import 'package:filmania/ui/core/ui/crew_section.dart';
+import 'package:filmania/ui/core/ui/recommendations_section.dart';
+import 'package:filmania/routing/app_router.dart';
+import 'package:filmania/ui/core/ui/media_grid_card.dart';
+import 'package:go_router/go_router.dart';
+import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/ui/core/view_models/watchlist_notifier.dart';
+
+class MovieDetailsPage extends ConsumerWidget {
+  final int movieId;
+
+  const MovieDetailsPage({super.key, required this.movieId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final movieAsync = ref.watch(movieDetailsProvider(movieId));
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: const GlassmorphicAppBar(showBackButton: true, minimal: true),
+      body: movieAsync.when(
+        data: (movie) => _MovieDetailsContent(movie: movie),
+        loading: () => const MediaDetailsSkeleton(),
+        error: (err, stack) => AppErrorView(
+          error: err,
+          onRetry: () => ref.invalidate(movieDetailsProvider(movieId)),
+        ),
+      ),
+    );
+  }
+}
+
+class _MovieDetailsContent extends StatelessWidget {
+  final Movie movie;
+
+  const _MovieDetailsContent({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: SizedBox(height: MediaQuery.of(context).padding.top),
+        ),
+        _MovieHeroHeader(movie: movie),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: AppSpacing.xxxl + AppSpacing.md),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          sliver: SliverToBoxAdapter(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _WatchlistButton(movie: movie),
+                const SizedBox(height: AppSpacing.md),
+                Row(
+                  children: [
+                    Expanded(
+                      child: WatchedButton(
+                        mediaId: movie.id,
+                        mediaTitle: movie.title,
+                        mediaType: MediaType.movie,
+                        posterPath: movie.posterPath,
+                        runtimeMinutes: movie.runtime,
+                        isIconOnly: false,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.md),
+                    FavoriteButton(
+                      mediaId: movie.id,
+                      mediaTitle: movie.title,
+                      mediaType: MediaType.movie,
+                      posterPath: movie.posterPath,
+                      size: 44,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        _MovieOverviewSection(overview: movie.overview),
+        SliverToBoxAdapter(child: _MovieCastSection(movieId: movie.id)),
+        SliverToBoxAdapter(
+          child: _MovieRecommendationsSection(movieId: movie.id),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: AppSpacing.xxxl + AppSpacing.xl + AppSpacing.xs,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _MovieHeroHeader extends StatelessWidget {
+  final Movie movie;
+
+  const _MovieHeroHeader({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    return SliverToBoxAdapter(
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          Hero(
+            tag: 'backdrop_${movie.id}',
+            child: Container(
+              height: 300,
+              width: double.infinity,
+              foregroundDecoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.transparent,
+                    colors.surface.withValues(alpha: 0.5),
+                  ],
+                ),
+              ),
+              child: CachedNetworkImage(
+                imageUrl: movie.fullBackdropUrl ?? '',
+                fit: BoxFit.cover,
+                placeholder: (context, url) =>
+                    Container(color: colors.surface.withValues(alpha: 0.1)),
+                errorWidget: (context, url, error) => Container(
+                  color: colors.surface.withValues(alpha: 0.1),
+                  child: const Center(
+                    child: Icon(Icons.broken_image_rounded, color: Colors.grey),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -60,
+            left: AppSpacing.lg,
+            right: AppSpacing.lg,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Hero(
+                  tag: 'poster_${movie.id}',
+                  child: Container(
+                    height: 180,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.3),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: CachedNetworkImage(
+                      imageUrl: movie.fullPosterUrl ?? '',
+                      fit: BoxFit.cover,
+                      memCacheWidth: 300,
+                      placeholder: (context, url) => Container(
+                        color: colors.surface.withValues(alpha: 0.1),
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        color: colors.surface.withValues(alpha: 0.1),
+                        child: const Center(
+                          child: Icon(
+                            Icons.broken_image_rounded,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: AppSpacing.lg),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        movie.title,
+                        style: textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: colors.onSurfacePrimary,
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xs),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.star_rounded,
+                            color: Colors.amber,
+                            size: 18,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            movie.voteAverage.toStringAsFixed(1),
+                            style: textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colors.onSurfacePrimary,
+                            ),
+                          ),
+                          const SizedBox(width: AppSpacing.md),
+                          if (movie.releaseDate != null)
+                            Text(
+                              movie.releaseDate!.year.toString(),
+                              style: textTheme.labelLarge?.copyWith(
+                                color: colors.onSurfaceSecondary,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MovieOverviewSection extends StatelessWidget {
+  const _MovieOverviewSection({required this.overview});
+
+  final String overview;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = AppColors.of(context);
+    final textTheme = Theme.of(context).textTheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return SliverPadding(
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      sliver: SliverToBoxAdapter(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.overviewTitle,
+              style: textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: AppSpacing.md),
+            Text(
+              overview.isNotEmpty ? overview : l10n.noDescription,
+              style: textTheme.bodyLarge?.copyWith(
+                color: colors.onSurfaceSecondary,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WatchlistButton extends ConsumerWidget {
+  final Movie movie;
+
+  const _WatchlistButton({required this.movie});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final colors = AppColors.of(context);
+    final isInWatchlistAsync = ref.watch(
+      isMediaInWatchlistProvider(movie.id, MediaType.movie),
+    );
+    final notifierState = ref.watch(watchlistProvider);
+    final isLoading = notifierState.isLoading;
+
+    return isInWatchlistAsync.when(
+      data: (isIn) {
+        if (isIn) {
+          return FilledButton.tonalIcon(
+            onPressed: isLoading
+                ? null
+                : () => showWatchlistPicker(
+                    context,
+                    ref,
+                    mediaId: movie.id,
+                    mediaTitle: movie.title,
+                    mediaType: MediaType.movie,
+                    posterPath: movie.posterPath,
+                  ),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.bookmark_rounded),
+            label: Text(AppLocalizations.of(context)!.inYourWatchlists),
+            // Secondary style from DESIGN.md: tonal fill, primary text and no
+            // border (No-Line Rule), matching the "mark as watched" button.
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              foregroundColor: colors.primary,
+              backgroundColor: colors.primary.withValues(alpha: 0.15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
+              ),
+            ),
+          );
+        }
+
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: colors.primaryGradient,
+            borderRadius: BorderRadius.circular(AppSpacing.radius),
+            boxShadow: [
+              BoxShadow(
+                color: colors.primary.withValues(alpha: 0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: ElevatedButton.icon(
+            onPressed: isLoading
+                ? null
+                : () => showWatchlistPicker(
+                    context,
+                    ref,
+                    mediaId: movie.id,
+                    mediaTitle: movie.title,
+                    mediaType: MediaType.movie,
+                    posterPath: movie.posterPath,
+                  ),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(Icons.bookmark_add_rounded, color: Colors.white),
+            label: Text(AppLocalizations.of(context)!.addToWatchlist),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(AppSpacing.radius),
+              ),
+            ),
+          ),
+        );
+      },
+      loading: () => Skeleton(
+        height: 56,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(AppSpacing.radius),
+        ),
+      ),
+      error: (error, stack) {
+        AppLogger.error(
+          'Watchlist status load failed',
+          tag: 'WatchlistButton',
+          exception: error,
+        );
+        return Center(
+          child: Text(
+            AppLocalizations.of(context)!.watchlistStatusError,
+            style: TextStyle(color: colors.error, fontSize: 12),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _MovieCastSection extends ConsumerWidget {
+  final int movieId;
+
+  const _MovieCastSection({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final creditsAsync = ref.watch(movieCreditsProvider(movieId));
+
+    return creditsAsync.when(
+      data: (credits) => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            child: CastSection(cast: credits.cast),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: AppSpacing.lg),
+            child: CrewSection(crew: credits.crew),
+          ),
+        ],
+      ),
+      loading: () => const CastCrewSkeleton(),
+      error: (err, stack) {
+        AppLogger.error(
+          'Cast/crew load failed',
+          tag: 'MovieCastSection',
+          exception: err,
+        );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () => ref.invalidate(movieCreditsProvider(movieId)),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _MovieRecommendationsSection extends ConsumerWidget {
+  final int movieId;
+
+  const _MovieRecommendationsSection({required this.movieId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recommendationsAsync = ref.watch(
+      movieRecommendationsProvider(movieId),
+    );
+
+    return recommendationsAsync.when(
+      data: (movies) => RecommendationsSection(
+        title: AppLocalizations.of(context)!.recommendedMoviesTitle,
+        itemCount: movies.length,
+        itemBuilder: (context, index) {
+          final movie = movies[index];
+          return SizedBox(
+            width: 140,
+            child: MediaGridCard.movie(
+              movie: movie,
+              onTap: () => context.push(
+                AppRoutes.movieDetails.replaceAll(':id', movie.id.toString()),
+              ),
+            ),
+          );
+        },
+      ),
+      loading: () => const RecommendationsRowSkeleton(),
+      error: (err, stack) {
+        AppLogger.error(
+          'Recommendations load failed',
+          tag: 'MovieRecommendationsSection',
+          exception: err,
+        );
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: AppErrorView(
+            error: err,
+            compact: true,
+            onRetry: () =>
+                ref.invalidate(movieRecommendationsProvider(movieId)),
+          ),
+        );
+      },
+    );
+  }
+}

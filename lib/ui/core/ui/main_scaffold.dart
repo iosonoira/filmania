@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:filmania/features/home/ui/widgets/home_widgets.dart';
+import 'package:filmania/ui/core/ui/floating_bottom_nav_bar.dart';
 
 class MainScaffold extends StatelessWidget {
   final StatefulNavigationShell navigationShell;
