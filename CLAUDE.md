@@ -122,7 +122,7 @@ lib/
 
 - All secrets live in `.env` (gitignored). Never `String.fromEnvironment` or hardcoded literals.
 - Access via `lib/core/env/env.dart` (`Env.tmdbApiKey`, `Env.supabaseUrl`, `Env.supabaseAnonKey`).
-- `env.g.dart` **is committed** (obfuscated values, no plain strings).
+- `env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible and the repo is public. Regenerate it locally with `build_runner`; CI regenerates it from GitHub Secrets.
 - After changing `.env`, run: `dart run build_runner build --delete-conflicting-outputs`.
 - `.env.example` (key names only, no values) **is committed** — documents required secrets for new devs.
 - CI/CD: store secrets in GitHub Secrets, never in workflow YAML. `.env` is created ephemerally in the runner.

@@ -4,6 +4,8 @@
 *.pyc
 *.swp
 *.env
+# Envied output: obfuscation is reversible, regenerate locally with build_runner
+env.g.dart
 .DS_Store
 .atom/
 .build/

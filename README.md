@@ -186,7 +186,7 @@ SUPABASE_URL=...
 SUPABASE_ANON_KEY=...
 ```
 
-`env.g.dart` **is committed** — it contains obfuscated values, not plain strings.
+`env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible, so the generated file is rebuilt locally and in CI from the secrets.
 
 After modifying `.env`, run:
 
