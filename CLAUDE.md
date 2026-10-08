@@ -93,7 +93,7 @@ lib/
 
 ### Import Rules
 
-Enforced by `test/architecture/import_rules_test.dart` — run `flutter test test/architecture` after moving code.
+Enforced by `test/architecture/import_rules_test.dart`, which CI runs on every push and pull request (`.github/workflows/tests.yml`) — run `flutter test test/architecture` after moving code.
 
 | Folder | Never imports |
 |---|---|
@@ -138,10 +138,11 @@ Enforced by `test/architecture/import_rules_test.dart` — run `flutter test tes
 
 - All secrets live in `.env` (gitignored). Never `String.fromEnvironment` or hardcoded literals.
 - Access via `lib/config/env.dart` (`Env.tmdbApiKey`, `Env.supabaseUrl`, `Env.supabaseAnonKey`).
-- `env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible and the repo is public. Regenerate it locally with `build_runner`; CI regenerates it from GitHub Secrets.
+- `env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible and the repo is public. Regenerate it locally with `build_runner`; the iOS build regenerates it from GitHub Secrets, the test job from placeholder values.
 - After changing `.env`, run: `dart run build_runner build --delete-conflicting-outputs`.
 - `.env.example` (key names only, no values) **is committed** — documents required secrets for new devs.
-- CI/CD: store secrets in GitHub Secrets, never in workflow YAML. `.env` is created ephemerally in the runner.
+- CI/CD: store secrets in GitHub Secrets, never in workflow YAML. `.env` is created ephemerally in the runner. The test job (`tests.yml`) needs no secrets: widget tests must override every provider that would reach TMDB or Supabase.
+- Widget tests that show translated text need `sharedPreferencesProvider` overridden: use `emptyPreferences()` from `test/helpers/preferences.dart`.
 
 ---
 

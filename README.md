@@ -94,7 +94,7 @@ lib/
 
 ### Import Rules
 
-Checked by `test/architecture/import_rules_test.dart`, so a violation fails the test suite:
+Checked by `test/architecture/import_rules_test.dart`, which CI runs on every push and pull request, so a violation fails the build:
 
 - a feature never imports another feature: they share only through `ui/core`, `data` and `domain`;
 - `ui/core` never imports a feature;
@@ -165,7 +165,7 @@ SUPABASE_URL=...
 SUPABASE_ANON_KEY=...
 ```
 
-`env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible, so the generated file is rebuilt locally and in CI from the secrets.
+`env.g.dart` is **not** committed (gitignored): Envied obfuscation is reversible, so the generated file is rebuilt locally, in the iOS build from the secrets, and in the test job from placeholder values.
 
 After modifying `.env`, run:
 
@@ -370,7 +370,9 @@ flutter run --profile
 - `test/ui/core/ui/watched_episode_button_icon_test.dart`
 - `test/ui/tv_series/widgets/episode_card_test.dart`
 
-Tests use `ProviderScope` overrides to inject mock repositories — never Mockito mocks of Supabase/Dio directly.
+Tests use `ProviderScope` overrides to inject mock repositories — never Mockito mocks of Supabase/Dio directly, and no test reaches the network.
+
+CI (`.github/workflows/tests.yml`) runs `dart analyze` and `flutter test` on every push and pull request; `ios-build.yml` builds an unsigned iOS app on pushes to `main`.
 
 ---
 
