@@ -8,7 +8,7 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_widgets.dart';
 import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/selection_action_feedback.dart';
@@ -19,6 +19,7 @@ import 'package:filmania/ui/core/ui/selection/selection_action_bar.dart';
 import 'package:filmania/ui/core/ui/selection/selection_scope.dart';
 import 'package:filmania/features/watched/ui/widgets/watched_bulk_actions.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
+import 'package:filmania/features/watchlist/ui/providers/watchlist_notifier.dart';
 
 class WatchlistDetailPage extends ConsumerWidget {
   final String watchlistId;

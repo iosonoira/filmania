@@ -1,0 +1,42 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:filmania/domain/models/tv_series.dart';
+import 'package:filmania/data/models/tv_season_dto.dart';
+
+part 'tv_series_dto.freezed.dart';
+part 'tv_series_dto.g.dart';
+
+@freezed
+abstract class TVSeriesDto with _$TVSeriesDto {
+  const factory TVSeriesDto({
+    required int id,
+    required String name,
+    required String overview,
+    @JsonKey(name: 'poster_path') String? posterPath,
+    @JsonKey(name: 'backdrop_path') String? backdropPath,
+    @JsonKey(name: 'first_air_date') String? firstAirDate,
+    @JsonKey(name: 'vote_average') double? voteAverage,
+    @JsonKey(name: 'status') String? status,
+    @JsonKey(name: 'episode_run_time') @Default([]) List<int> episodeRunTime,
+    @Default([]) List<TVSeasonDto> seasons,
+  }) = _TVSeriesDto;
+
+  factory TVSeriesDto.fromJson(Map<String, dynamic> json) =>
+      _$TVSeriesDtoFromJson(json);
+
+  const TVSeriesDto._();
+
+  TVSeries toEntity() => TVSeries(
+    id: id,
+    name: name,
+    overview: overview,
+    posterPath: posterPath,
+    backdropPath: backdropPath,
+    firstAirDate: firstAirDate != null
+        ? DateTime.tryParse(firstAirDate!)
+        : null,
+    voteAverage: voteAverage ?? 0.0,
+    status: status ?? '',
+    episodeRunTime: episodeRunTime,
+    seasons: seasons.map((s) => s.toEntity()).toList(),
+  );
+}

@@ -6,7 +6,7 @@ import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
-import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
+import 'package:filmania/data/repositories/watched/watched_providers.dart';
 import 'package:filmania/features/watched/ui/providers/categorized_tv_series_provider.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/routing/app_router.dart';

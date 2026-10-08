@@ -1,0 +1,816 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'tv_series_providers.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(TrendingTVSeries)
+final trendingTVSeriesProvider = TrendingTVSeriesFamily._();
+
+final class TrendingTVSeriesProvider
+    extends $AsyncNotifierProvider<TrendingTVSeries, List<TVSeries>> {
+  TrendingTVSeriesProvider._({
+    required TrendingTVSeriesFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'trendingTVSeriesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$trendingTVSeriesHash();
+
+  @override
+  String toString() {
+    return r'trendingTVSeriesProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  TrendingTVSeries create() => TrendingTVSeries();
+
+  @override
+  bool operator ==(Object other) {
+    return other is TrendingTVSeriesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$trendingTVSeriesHash() => r'7accc7dabb0b6fb8d854cdd509bff191292ac452';
+
+final class TrendingTVSeriesFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          TrendingTVSeries,
+          AsyncValue<List<TVSeries>>,
+          List<TVSeries>,
+          FutureOr<List<TVSeries>>,
+          int
+        > {
+  TrendingTVSeriesFamily._()
+    : super(
+        retry: null,
+        name: r'trendingTVSeriesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TrendingTVSeriesProvider call({int page = 1}) =>
+      TrendingTVSeriesProvider._(argument: page, from: this);
+
+  @override
+  String toString() => r'trendingTVSeriesProvider';
+}
+
+abstract class _$TrendingTVSeries extends $AsyncNotifier<List<TVSeries>> {
+  late final _$args = ref.$arg as int;
+  int get page => _$args;
+
+  FutureOr<List<TVSeries>> build({int page = 1});
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<TVSeries>>, List<TVSeries>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<TVSeries>>, List<TVSeries>>,
+              AsyncValue<List<TVSeries>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, () => build(page: _$args));
+  }
+}
+
+@ProviderFor(DiscoverTVSeries)
+final discoverTVSeriesProvider = DiscoverTVSeriesFamily._();
+
+final class DiscoverTVSeriesProvider
+    extends $AsyncNotifierProvider<DiscoverTVSeries, List<TVSeries>> {
+  DiscoverTVSeriesProvider._({
+    required DiscoverTVSeriesFamily super.from,
+    required ({int page, String genreIds, int? yearFrom, int? yearTo})
+    super.argument,
+  }) : super(
+         retry: null,
+         name: r'discoverTVSeriesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$discoverTVSeriesHash();
+
+  @override
+  String toString() {
+    return r'discoverTVSeriesProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  DiscoverTVSeries create() => DiscoverTVSeries();
+
+  @override
+  bool operator ==(Object other) {
+    return other is DiscoverTVSeriesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$discoverTVSeriesHash() => r'd64339558d7fcd1412955d3594efb4212086fabe';
+
+final class DiscoverTVSeriesFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          DiscoverTVSeries,
+          AsyncValue<List<TVSeries>>,
+          List<TVSeries>,
+          FutureOr<List<TVSeries>>,
+          ({int page, String genreIds, int? yearFrom, int? yearTo})
+        > {
+  DiscoverTVSeriesFamily._()
+    : super(
+        retry: null,
+        name: r'discoverTVSeriesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  DiscoverTVSeriesProvider call({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  }) => DiscoverTVSeriesProvider._(
+    argument: (
+      page: page,
+      genreIds: genreIds,
+      yearFrom: yearFrom,
+      yearTo: yearTo,
+    ),
+    from: this,
+  );
+
+  @override
+  String toString() => r'discoverTVSeriesProvider';
+}
+
+abstract class _$DiscoverTVSeries extends $AsyncNotifier<List<TVSeries>> {
+  late final _$args =
+      ref.$arg as ({int page, String genreIds, int? yearFrom, int? yearTo});
+  int get page => _$args.page;
+  String get genreIds => _$args.genreIds;
+  int? get yearFrom => _$args.yearFrom;
+  int? get yearTo => _$args.yearTo;
+
+  FutureOr<List<TVSeries>> build({
+    int page = 1,
+    String genreIds = '',
+    int? yearFrom,
+    int? yearTo,
+  });
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<List<TVSeries>>, List<TVSeries>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<TVSeries>>, List<TVSeries>>,
+              AsyncValue<List<TVSeries>>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(
+      ref,
+      () => build(
+        page: _$args.page,
+        genreIds: _$args.genreIds,
+        yearFrom: _$args.yearFrom,
+        yearTo: _$args.yearTo,
+      ),
+    );
+  }
+}
+
+@ProviderFor(tvSeriesDetails)
+final tvSeriesDetailsProvider = TvSeriesDetailsFamily._();
+
+final class TvSeriesDetailsProvider
+    extends
+        $FunctionalProvider<AsyncValue<TVSeries>, TVSeries, FutureOr<TVSeries>>
+    with $FutureModifier<TVSeries>, $FutureProvider<TVSeries> {
+  TvSeriesDetailsProvider._({
+    required TvSeriesDetailsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvSeriesDetailsProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvSeriesDetailsHash();
+
+  @override
+  String toString() {
+    return r'tvSeriesDetailsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<TVSeries> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TVSeries> create(Ref ref) {
+    final argument = this.argument as int;
+    return tvSeriesDetails(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvSeriesDetailsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvSeriesDetailsHash() => r'c76fb8cd9af407e6e6fcb557770988e1ae15ff92';
+
+final class TvSeriesDetailsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<TVSeries>, int> {
+  TvSeriesDetailsFamily._()
+    : super(
+        retry: null,
+        name: r'tvSeriesDetailsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  TvSeriesDetailsProvider call(int tvId) =>
+      TvSeriesDetailsProvider._(argument: tvId, from: this);
+
+  @override
+  String toString() => r'tvSeriesDetailsProvider';
+}
+
+@ProviderFor(searchTVSeries)
+final searchTVSeriesProvider = SearchTVSeriesFamily._();
+
+final class SearchTVSeriesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<TVSeries>>,
+          List<TVSeries>,
+          FutureOr<List<TVSeries>>
+        >
+    with $FutureModifier<List<TVSeries>>, $FutureProvider<List<TVSeries>> {
+  SearchTVSeriesProvider._({
+    required SearchTVSeriesFamily super.from,
+    required (String, {int page}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'searchTVSeriesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$searchTVSeriesHash();
+
+  @override
+  String toString() {
+    return r'searchTVSeriesProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<TVSeries>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<TVSeries>> create(Ref ref) {
+    final argument = this.argument as (String, {int page});
+    return searchTVSeries(ref, argument.$1, page: argument.page);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SearchTVSeriesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$searchTVSeriesHash() => r'e3b240bbf7284b1a2d9a6296108ca9c100793785';
+
+final class SearchTVSeriesFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<TVSeries>>,
+          (String, {int page})
+        > {
+  SearchTVSeriesFamily._()
+    : super(
+        retry: null,
+        name: r'searchTVSeriesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  SearchTVSeriesProvider call(String query, {int page = 1}) =>
+      SearchTVSeriesProvider._(argument: (query, page: page), from: this);
+
+  @override
+  String toString() => r'searchTVSeriesProvider';
+}
+
+@ProviderFor(seasonEpisodes)
+final seasonEpisodesProvider = SeasonEpisodesFamily._();
+
+final class SeasonEpisodesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<TVEpisode>>,
+          List<TVEpisode>,
+          FutureOr<List<TVEpisode>>
+        >
+    with $FutureModifier<List<TVEpisode>>, $FutureProvider<List<TVEpisode>> {
+  SeasonEpisodesProvider._({
+    required SeasonEpisodesFamily super.from,
+    required (int, int) super.argument,
+  }) : super(
+         retry: null,
+         name: r'seasonEpisodesProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$seasonEpisodesHash();
+
+  @override
+  String toString() {
+    return r'seasonEpisodesProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<TVEpisode>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<TVEpisode>> create(Ref ref) {
+    final argument = this.argument as (int, int);
+    return seasonEpisodes(ref, argument.$1, argument.$2);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is SeasonEpisodesProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$seasonEpisodesHash() => r'9e75f30279dff8126a6e4a404db09362c1c3c842';
+
+final class SeasonEpisodesFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<TVEpisode>>, (int, int)> {
+  SeasonEpisodesFamily._()
+    : super(
+        retry: null,
+        name: r'seasonEpisodesProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  SeasonEpisodesProvider call(int tvId, int seasonNumber) =>
+      SeasonEpisodesProvider._(argument: (tvId, seasonNumber), from: this);
+
+  @override
+  String toString() => r'seasonEpisodesProvider';
+}
+
+@ProviderFor(tvEpisodeDetails)
+final tvEpisodeDetailsProvider = TvEpisodeDetailsFamily._();
+
+final class TvEpisodeDetailsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<TVEpisode>,
+          TVEpisode,
+          FutureOr<TVEpisode>
+        >
+    with $FutureModifier<TVEpisode>, $FutureProvider<TVEpisode> {
+  TvEpisodeDetailsProvider._({
+    required TvEpisodeDetailsFamily super.from,
+    required ({int tvId, int seasonNumber, int episodeNumber}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvEpisodeDetailsProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvEpisodeDetailsHash();
+
+  @override
+  String toString() {
+    return r'tvEpisodeDetailsProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<TVEpisode> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<TVEpisode> create(Ref ref) {
+    final argument =
+        this.argument as ({int tvId, int seasonNumber, int episodeNumber});
+    return tvEpisodeDetails(
+      ref,
+      tvId: argument.tvId,
+      seasonNumber: argument.seasonNumber,
+      episodeNumber: argument.episodeNumber,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvEpisodeDetailsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvEpisodeDetailsHash() => r'9dbb08d009932312207138f7849091280bd4a84d';
+
+final class TvEpisodeDetailsFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<TVEpisode>,
+          ({int tvId, int seasonNumber, int episodeNumber})
+        > {
+  TvEpisodeDetailsFamily._()
+    : super(
+        retry: null,
+        name: r'tvEpisodeDetailsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  TvEpisodeDetailsProvider call({
+    required int tvId,
+    required int seasonNumber,
+    required int episodeNumber,
+  }) => TvEpisodeDetailsProvider._(
+    argument: (
+      tvId: tvId,
+      seasonNumber: seasonNumber,
+      episodeNumber: episodeNumber,
+    ),
+    from: this,
+  );
+
+  @override
+  String toString() => r'tvEpisodeDetailsProvider';
+}
+
+@ProviderFor(tvSeriesCredits)
+final tvSeriesCreditsProvider = TvSeriesCreditsFamily._();
+
+final class TvSeriesCreditsProvider
+    extends $FunctionalProvider<AsyncValue<Credits>, Credits, FutureOr<Credits>>
+    with $FutureModifier<Credits>, $FutureProvider<Credits> {
+  TvSeriesCreditsProvider._({
+    required TvSeriesCreditsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvSeriesCreditsProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvSeriesCreditsHash();
+
+  @override
+  String toString() {
+    return r'tvSeriesCreditsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<Credits> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<Credits> create(Ref ref) {
+    final argument = this.argument as int;
+    return tvSeriesCredits(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvSeriesCreditsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvSeriesCreditsHash() => r'5744e55e371663d3965adf014e8f11e6725ccfb6';
+
+final class TvSeriesCreditsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<Credits>, int> {
+  TvSeriesCreditsFamily._()
+    : super(
+        retry: null,
+        name: r'tvSeriesCreditsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  TvSeriesCreditsProvider call(int tvId) =>
+      TvSeriesCreditsProvider._(argument: tvId, from: this);
+
+  @override
+  String toString() => r'tvSeriesCreditsProvider';
+}
+
+@ProviderFor(tvEpisodeCredits)
+final tvEpisodeCreditsProvider = TvEpisodeCreditsFamily._();
+
+final class TvEpisodeCreditsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<CastMember>>,
+          List<CastMember>,
+          FutureOr<List<CastMember>>
+        >
+    with $FutureModifier<List<CastMember>>, $FutureProvider<List<CastMember>> {
+  TvEpisodeCreditsProvider._({
+    required TvEpisodeCreditsFamily super.from,
+    required ({int tvId, int seasonNumber, int episodeNumber}) super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvEpisodeCreditsProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvEpisodeCreditsHash();
+
+  @override
+  String toString() {
+    return r'tvEpisodeCreditsProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<CastMember>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<CastMember>> create(Ref ref) {
+    final argument =
+        this.argument as ({int tvId, int seasonNumber, int episodeNumber});
+    return tvEpisodeCredits(
+      ref,
+      tvId: argument.tvId,
+      seasonNumber: argument.seasonNumber,
+      episodeNumber: argument.episodeNumber,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvEpisodeCreditsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvEpisodeCreditsHash() => r'0719b0db7720867455c5b7ec4375dd44776b19b6';
+
+final class TvEpisodeCreditsFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<List<CastMember>>,
+          ({int tvId, int seasonNumber, int episodeNumber})
+        > {
+  TvEpisodeCreditsFamily._()
+    : super(
+        retry: null,
+        name: r'tvEpisodeCreditsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  TvEpisodeCreditsProvider call({
+    required int tvId,
+    required int seasonNumber,
+    required int episodeNumber,
+  }) => TvEpisodeCreditsProvider._(
+    argument: (
+      tvId: tvId,
+      seasonNumber: seasonNumber,
+      episodeNumber: episodeNumber,
+    ),
+    from: this,
+  );
+
+  @override
+  String toString() => r'tvEpisodeCreditsProvider';
+}
+
+@ProviderFor(tvSeriesRecommendations)
+final tvSeriesRecommendationsProvider = TvSeriesRecommendationsFamily._();
+
+final class TvSeriesRecommendationsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<TVSeries>>,
+          List<TVSeries>,
+          FutureOr<List<TVSeries>>
+        >
+    with $FutureModifier<List<TVSeries>>, $FutureProvider<List<TVSeries>> {
+  TvSeriesRecommendationsProvider._({
+    required TvSeriesRecommendationsFamily super.from,
+    required int super.argument,
+  }) : super(
+         retry: null,
+         name: r'tvSeriesRecommendationsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvSeriesRecommendationsHash();
+
+  @override
+  String toString() {
+    return r'tvSeriesRecommendationsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<TVSeries>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<TVSeries>> create(Ref ref) {
+    final argument = this.argument as int;
+    return tvSeriesRecommendations(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TvSeriesRecommendationsProvider &&
+        other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$tvSeriesRecommendationsHash() =>
+    r'bb681ea1c274759f342395f0aac40aa75c3d936c';
+
+final class TvSeriesRecommendationsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<TVSeries>>, int> {
+  TvSeriesRecommendationsFamily._()
+    : super(
+        retry: null,
+        name: r'tvSeriesRecommendationsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  TvSeriesRecommendationsProvider call(int tvId) =>
+      TvSeriesRecommendationsProvider._(argument: tvId, from: this);
+
+  @override
+  String toString() => r'tvSeriesRecommendationsProvider';
+}
+
+@ProviderFor(tvGenres)
+final tvGenresProvider = TvGenresProvider._();
+
+final class TvGenresProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<Genre>>,
+          List<Genre>,
+          FutureOr<List<Genre>>
+        >
+    with $FutureModifier<List<Genre>>, $FutureProvider<List<Genre>> {
+  TvGenresProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'tvGenresProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$tvGenresHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<Genre>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<Genre>> create(Ref ref) {
+    return tvGenres(ref);
+  }
+}
+
+String _$tvGenresHash() => r'd1304ccd2001601d55ba261dc9d0f5d328d160ee';

@@ -6,11 +6,11 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/domain/models/tv_series.dart';
-import 'package:filmania/features/tv_series/ui/providers/tv_series_provider.dart';
+import 'package:filmania/data/repositories/tv_series/tv_series_providers.dart';
 import 'package:filmania/features/tv_series/ui/widgets/tv_series_widgets.dart';
 import 'package:filmania/ui/core/ui/selection/episode_selection_item.dart';
 import 'package:filmania/ui/core/ui/selection/selection_scope.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:filmania/ui/core/ui/error_view.dart';
@@ -24,6 +24,7 @@ import 'package:go_router/go_router.dart';
 import 'package:filmania/features/watched/ui/widgets/watched_button.dart';
 import 'package:filmania/features/favorites/ui/widgets/favorite_button.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/features/watchlist/ui/providers/watchlist_notifier.dart';
 
 class TVSeriesDetailsPage extends ConsumerWidget {
   final int seriesId;

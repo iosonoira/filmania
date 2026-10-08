@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/features/tv_series/ui/widgets/tv_series_widgets.dart';
 import 'package:filmania/domain/models/tv_episode.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
+import 'package:filmania/data/repositories/watched/watched_providers.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
 
 const _episode = TVEpisode(
   id: 101,

@@ -13,7 +13,7 @@ import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:filmania/domain/models/person.dart';
 import 'package:filmania/domain/models/person_credit.dart';
-import 'package:filmania/features/person/ui/providers/person_provider.dart';
+import 'package:filmania/data/repositories/person/person_providers.dart';
 
 class PersonDetailsPage extends ConsumerWidget {
   final int personId;

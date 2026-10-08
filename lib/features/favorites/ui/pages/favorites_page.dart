@@ -12,7 +12,7 @@ import 'package:filmania/ui/core/ui/glass_overlay.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/domain/models/favorite_item.dart';
-import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
+import 'package:filmania/data/repositories/favorites/favorites_providers.dart';
 import 'package:filmania/features/favorites/ui/widgets/favorite_button.dart';
 
 class FavoritesPage extends ConsumerWidget {

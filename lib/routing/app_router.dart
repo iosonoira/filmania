@@ -4,7 +4,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:filmania/features/auth/ui/pages/login_page.dart';
 import 'package:filmania/features/auth/ui/pages/register_page.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/features/home/ui/pages/home_page.dart';
 import 'package:filmania/ui/core/ui/main_scaffold.dart';
 import 'package:filmania/features/discover/ui/pages/discover_page.dart';
@@ -24,6 +23,7 @@ import 'package:filmania/features/tvtime_import/ui/pages/tvtime_import_page.dart
 import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/ui/core/ui/splash_page.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
 
 part 'app_router.g.dart';
 

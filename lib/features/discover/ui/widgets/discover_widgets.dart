@@ -8,7 +8,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/features/watched/ui/widgets/watched_button.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 

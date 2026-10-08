@@ -6,7 +6,7 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
 
 Widget _wrapWithRouter({required Widget appBarUnderTest}) {
   final router = GoRouter(

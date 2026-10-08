@@ -6,7 +6,7 @@ import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glass_overlay.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
 import 'package:filmania/domain/models/watchlist.dart';

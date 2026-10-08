@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/domain/models/media_type.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/domain/models/favorite_item.dart';
-import 'package:filmania/features/favorites/ui/providers/favorites_providers.dart';
+import 'package:filmania/data/repositories/favorites/favorites_providers.dart';
 import 'package:filmania/features/favorites/ui/pages/favorites_page.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
 
 Widget _buildSubject(List<FavoriteItem> items) {
   return ProviderScope(

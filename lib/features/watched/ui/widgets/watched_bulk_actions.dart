@@ -3,11 +3,12 @@ import 'package:filmania/domain/models/media_type.dart';
 import 'package:filmania/utils/concurrency.dart';
 import 'package:filmania/ui/core/ui/selection/episode_selection_item.dart';
 import 'package:filmania/ui/core/ui/selection/media_selection_item.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/watched/data/repositories/watched_repository_impl.dart';
+import 'package:filmania/data/repositories/watched/watched_repository_impl.dart';
 import 'package:filmania/domain/models/watched_item.dart';
 import 'package:filmania/features/watched/ui/providers/categorized_tv_series_provider.dart';
-import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
+import 'package:filmania/data/repositories/watched/watched_providers.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
+import 'package:filmania/features/watched/ui/providers/is_media_watched.dart';
 
 /// Bulk actions apply to at most a screenful of selected items, but run
 /// against Supabase over the network — bounded concurrency (matching the

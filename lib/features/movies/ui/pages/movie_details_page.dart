@@ -6,9 +6,9 @@ import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/utils/logger.dart';
 import 'package:filmania/domain/models/movie.dart';
-import 'package:filmania/features/movies/ui/providers/movies_provider.dart';
+import 'package:filmania/data/repositories/movies/movies_providers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/features/watchlist/ui/widgets/watchlist_picker_sheet.dart';
 import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
@@ -21,6 +21,7 @@ import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/features/watchlist/ui/providers/watchlist_notifier.dart';
 
 class MovieDetailsPage extends ConsumerWidget {
   final int movieId;

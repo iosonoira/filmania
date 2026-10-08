@@ -7,9 +7,10 @@ import 'package:filmania/l10n/app_localizations_provider.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/ui/core/ui/selection/media_selection_item.dart';
 import 'package:filmania/domain/models/watchlist.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
 import 'package:filmania/ui/core/ui/app_toast.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
+import 'package:filmania/features/watchlist/ui/providers/watchlist_notifier.dart';
 
 /// Opens the WatchlistPickerSheet and handles result.
 /// Call from movie/tv detail pages instead of toggling directly.

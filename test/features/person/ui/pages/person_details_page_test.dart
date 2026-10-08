@@ -8,10 +8,10 @@ import 'package:filmania/l10n/generated/app_localizations.dart';
 import 'package:filmania/domain/models/person.dart';
 import 'package:filmania/domain/models/person_credit.dart';
 import 'package:filmania/features/person/ui/pages/person_details_page.dart';
-import 'package:filmania/features/person/ui/providers/person_provider.dart';
-import 'package:filmania/features/watchlist/ui/providers/watchlist_providers.dart';
-import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
+import 'package:filmania/data/repositories/person/person_providers.dart';
+import 'package:filmania/data/repositories/watchlist/watchlist_providers.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
+import 'package:filmania/features/watched/ui/providers/is_media_watched.dart';
 
 const _person = Person(
   id: 138,

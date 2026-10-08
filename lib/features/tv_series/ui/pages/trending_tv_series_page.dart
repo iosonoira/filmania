@@ -7,7 +7,7 @@ import 'package:filmania/ui/core/ui/error_view.dart';
 import 'package:filmania/ui/core/ui/glassmorphic_app_bar.dart';
 import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/ui/core/ui/skeleton.dart';
-import 'package:filmania/features/tv_series/ui/providers/tv_series_provider.dart';
+import 'package:filmania/data/repositories/tv_series/tv_series_providers.dart';
 import 'package:filmania/features/discover/ui/widgets/discover_widgets.dart';
 import 'package:filmania/l10n/app_localizations_provider.dart';
 

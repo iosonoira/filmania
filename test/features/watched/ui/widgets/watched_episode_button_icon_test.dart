@@ -3,8 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/features/watched/ui/widgets/watched_episode_button.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
-import 'package:filmania/features/watched/ui/providers/watched_providers.dart';
+import 'package:filmania/data/repositories/watched/watched_providers.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
 
 Widget _buildSubject({bool isWatched = false}) {
   return ProviderScope(

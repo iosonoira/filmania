@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:filmania/features/tvtime_import/data/repositories/tvtime_import_repository_impl.dart';
+import 'package:filmania/data/repositories/tvtime_import/tvtime_import_repository_impl.dart';
 import 'package:filmania/domain/failures/tvtime_import_failure.dart';
 import 'package:filmania/features/tvtime_import/ui/providers/tvtime_import_state.dart';
 

@@ -4,9 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:filmania/ui/core/themes/app_colors.dart';
 import 'package:filmania/ui/core/themes/app_theme.dart';
 import 'package:filmania/ui/core/ui/glass_overlay.dart';
-import 'package:filmania/features/auth/ui/providers/auth_notifier.dart';
 import 'package:filmania/routing/app_router.dart';
 import 'package:filmania/l10n/generated/app_localizations.dart';
+import 'package:filmania/data/repositories/auth/auth_providers.dart';
 
 class GlassmorphicAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final bool showBackButton;
